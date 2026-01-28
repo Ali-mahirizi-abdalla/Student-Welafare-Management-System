@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-import datetime
+from datetime import date, datetime
 
 class Student(models.Model):
     """Extended profile for students"""
@@ -11,6 +11,16 @@ class Student(models.Model):
     profile_image = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     timetable = models.FileField(upload_to='timetables/', blank=True, null=True)
     room_number = models.CharField(max_length=10, blank=True, null=True)
+    HOSTEL_CHOICES = [
+        ('Hostel 1', 'Hostel 1'),
+        ('Hostel 2', 'Hostel 2'),
+        ('Hostel 3', 'Hostel 3'),
+        ('Hostel 4', 'Hostel 4'),
+        ('Hostel 5', 'Hostel 5'),
+        ('Hostel 6', 'Hostel 6'),
+        ('Hostel 7', 'Hostel 7'),
+    ]
+    hostel = models.CharField(max_length=20, choices=HOSTEL_CHOICES, blank=True, null=True)
     is_warden = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -22,7 +32,7 @@ class Student(models.Model):
 class Meal(models.Model):
     """Daily meal submission"""
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='meals')
-    date = models.DateField(default=datetime.date.today)
+    date = models.DateField(default=date.today)
     breakfast = models.BooleanField(default=False)
     early = models.BooleanField(default=False) # Early breakfast
     supper = models.BooleanField(default=False)
@@ -145,7 +155,7 @@ class MaintenanceRequest(models.Model):
 
 
 class Room(models.Model):
-    """Hostel room information"""
+    """Student room information"""
     ROOM_TYPES = [
         ('single', 'Single'),
         ('double', 'Double'),
@@ -186,7 +196,7 @@ class RoomAssignment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='room_assignments')
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='assignments')
     bed_number = models.IntegerField(null=True, blank=True)
-    assigned_date = models.DateField(default=datetime.date.today)
+    assigned_date = models.DateField(default=date.today)
     checkout_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     notes = models.TextField(blank=True)
@@ -227,31 +237,40 @@ class RoomChangeRequest(models.Model):
         return f"{self.student} - Room Change Request ({self.get_status_display()})"
 
 
-class LeaveRequest(models.Model):
-    """Leave applications from students"""
+class DefermentRequest(models.Model):
+    """Student deferment applications for various reasons"""
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
+        ('pending', 'Pending Application'),
+        ('under_review', 'Sent for Review'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
+        ('resumed', 'Resumed Studies'),
     ]
     
-    LEAVE_TYPES = [
-        ('home', 'Going Home'),
-        ('medical', 'Medical Leave'),
-        ('emergency', 'Emergency'),
-        ('other', 'Other'),
+    DEFERMENT_TYPES = [
+        ('fee_challenges', 'Fee Challenges'),
+        ('motherhood_fatherhood', 'Motherhood/Fatherhood'),
+        ('gainful_employment', 'Pursuing Gainful Employment'),
+        ('family_disruption', 'Disruption of Family'),
+        ('moving_country', 'Moving Out of the Country'),
+        ('natural_calamity', 'Natural Calamity'),
+        ('political_calamity', 'Political Calamity'),
+        ('program_challenges', 'Challenges in the Current Program'),
+        ('other', 'Others (Please State)'),
     ]
     
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='leave_requests')
-    leave_type = models.CharField(max_length=20, choices=LEAVE_TYPES, default='home')
-    start_date = models.DateField()
-    end_date = models.DateField()
-    reason = models.TextField()
-    contact_during_leave = models.CharField(max_length=15, blank=True, help_text="Phone number during leave")
-    destination = models.CharField(max_length=200, blank=True)
+    deferment_type = models.CharField(max_length=30, choices=DEFERMENT_TYPES, help_text="Select the reason for deferment")
+    other_reason_detail = models.TextField(blank=True, help_text="If 'Others', please provide details")
+    start_date = models.DateField(help_text="Expected deferment start date")
+    end_date = models.DateField(help_text="Expected deferment end date")
+    reason = models.TextField(help_text="Detailed explanation of your deferment request")
+    contact_during_deferment = models.CharField(max_length=15, blank=True, help_text="Phone number during deferment")
+    supporting_documents = models.FileField(upload_to='deferment_docs/', blank=True, null=True, help_text="Upload supporting documents if any")
     
+    # Status tracking
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    admin_notes = models.TextField(blank=True)
+    admin_notes = models.TextField(blank=True, help_text="Administrative notes and feedback")
     reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_leaves')
     reviewed_at = models.DateTimeField(null=True, blank=True)
     
@@ -260,23 +279,32 @@ class LeaveRequest(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+        verbose_name = 'Deferment Request'
+        verbose_name_plural = 'Deferment Requests'
+        db_table = 'hms_leaverequest'  # Keep existing table name for compatibility
     
     def __str__(self):
-        return f"{self.student} - Leave ({self.start_date} to {self.end_date})"
+        return f"{self.student} - Deferment ({self.get_deferment_type_display()})"
     
     def clean(self):
         from django.core.exceptions import ValidationError
         if self.start_date > self.end_date:
             raise ValidationError("End date must be after start date.")
+        if self.deferment_type == 'other' and not self.other_reason_detail:
+            raise ValidationError("Please provide details when selecting 'Others' as deferment type.")
     
     @property
     def duration_days(self):
-        """Calculate leave duration in days"""
+        """Calculate deferment duration in days"""
         return (self.end_date - self.start_date).days + 1
 
 
+# Keep LeaveRequest as an alias for backwards compatibility during migration
+LeaveRequest = DefermentRequest
+
+
 class Visitor(models.Model):
-    """Visitor logbook for hostel security"""
+    """Visitor logbook for security"""
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='visitors')
     name = models.CharField(max_length=200)
     phone = models.CharField(max_length=15, blank=True)
@@ -302,7 +330,7 @@ class Visitor(models.Model):
 
 
 class Event(models.Model):
-    """Hostel events and activities"""
+    """Events and activities"""
     EVENT_CATEGORIES = [
         ('social', 'Social Event'),
         ('educational', 'Educational'),

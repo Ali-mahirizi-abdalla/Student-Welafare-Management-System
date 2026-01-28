@@ -116,24 +116,22 @@ class NotificationService:
 
 # ==================== NOTIFICATION TEMPLATES ====================
 
-def notify_leave_request_submitted(leave_request):
-    """Notify admin when a new leave request is submitted"""
-    from .models import LeaveRequest
+def notify_deferment_request_submitted(deferment_request):
+    """Notify admin when a new deferment request is submitted"""
     
     admin_email = getattr(settings, 'ADMIN_EMAIL', None)
     if not admin_email:
         return False
     
-    subject = f"🏠 New Leave Request from {leave_request.student.user.get_full_name()}"
+    subject = f"🏠 New Deferment Request from {deferment_request.student.user.get_full_name()}"
     message = f"""
-A new leave request has been submitted:
+A new deferment request has been submitted:
 
-Student: {leave_request.student.user.get_full_name()}
-University ID: {leave_request.student.university_id}
-Leave Type: {leave_request.get_leave_type_display()}
-Duration: {leave_request.start_date} to {leave_request.end_date}
-Destination: {leave_request.destination}
-Reason: {leave_request.reason}
+Student: {deferment_request.student.user.get_full_name()}
+University ID: {deferment_request.student.university_id}
+Deferment Type: {deferment_request.get_deferment_type_display()}
+Duration: {deferment_request.start_date} to {deferment_request.end_date}
+Reason: {deferment_request.reason}
 
 Please review this request in the admin dashboard.
     """
@@ -141,60 +139,63 @@ Please review this request in the admin dashboard.
     return NotificationService.send_email(admin_email, subject, message)
 
 
-def notify_leave_request_status(leave_request):
-    """Notify student when their leave request is approved/rejected"""
-    student_email = leave_request.student.user.email
-    student_phone = leave_request.student.phone
+def notify_deferment_status(deferment_request):
+    """Notify student when their deferment request status changes"""
+    student_email = deferment_request.student.user.email
+    student_phone = deferment_request.student.phone
     
-    if leave_request.status == 'approved':
-        subject = "✅ Leave Request Approved"
-        message = f"""
-Dear {leave_request.student.user.first_name},
-
-Your leave request has been APPROVED!
-
-Details:
-- Leave Type: {leave_request.get_leave_type_display()}
-- Duration: {leave_request.start_date} to {leave_request.end_date}
-- Destination: {leave_request.destination}
-
-Admin Notes: {leave_request.admin_notes or 'None'}
-
-Have a safe trip!
-
-Best regards,
-Hostel Management System
-        """
-        sms_message = f"HMS: Your leave from {leave_request.start_date} to {leave_request.end_date} is APPROVED. Have a safe trip!"
+    status_display = deferment_request.get_status_display()
+    
+    if deferment_request.status == 'approved':
+        subject = "✅ Deferment Request Approved"
+        headers = "Your deferment request has been APPROVED!"
+        sms_body = f"HMS: Your deferment from {deferment_request.start_date} to {deferment_request.end_date} is APPROVED."
+    elif deferment_request.status == 'rejected':
+        subject = "❌ Deferment Request Rejected"
+        headers = "Unfortunately, your deferment request has been rejected."
+        sms_body = "HMS: Your deferment request has been REJECTED. Check your email for details."
+    elif deferment_request.status == 'under_review':
+        subject = "👀 Deferment Request Under Review"
+        headers = "Your deferment application is now under review."
+        sms_body = "HMS: Your deferment application is being reviewed. You will be notified of the decision soon."
+    elif deferment_request.status == 'resumed':
+        subject = "🎓 Studies Resumed"
+        headers = "Welcome back! Your status has been updated to Resumed Studies."
+        sms_body = "HMS: Welcome back! Your student status has been updated to Resumed Studies."
     else:
-        subject = "❌ Leave Request Rejected"
-        message = f"""
-Dear {leave_request.student.user.first_name},
+        # Pending or other
+        subject = f"📄 Deferment Status: {status_display}"
+        headers = f"Your deferment request status is now: {status_display}"
+        sms_body = f"HMS: Your deferment status is now {status_display}."
 
-Unfortunately, your leave request has been rejected.
+    message = f"""
+Dear {deferment_request.student.user.first_name},
+
+{headers}
 
 Details:
-- Leave Type: {leave_request.get_leave_type_display()}
-- Requested: {leave_request.start_date} to {leave_request.end_date}
+- Type: {deferment_request.get_deferment_type_display()}
+- Duration: {deferment_request.start_date} to {deferment_request.end_date}
 
-Admin Notes: {leave_request.admin_notes or 'No reason provided'}
-
-Please contact the hostel administration if you have questions.
+Admin Notes: {deferment_request.admin_notes or 'None'}
 
 Best regards,
-Hostel Management System
-        """
-        sms_message = f"HMS: Your leave request has been REJECTED. Check your email for details."
+Student Welfare Management System
+    """
     
     # Send email
     email_sent = NotificationService.send_email(student_email, subject, message)
     
     # Send SMS if phone available
     sms_sent = False
-    if student_phone:
-        sms_sent = NotificationService.send_sms(student_phone, sms_message)
+    if student_phone and getattr(settings, 'SMS_ENABLED', False):
+        sms_sent = NotificationService.send_sms(student_phone, sms_body)
     
     return email_sent or sms_sent
+
+# Aliases for backward compatibility
+notify_leave_request_submitted = notify_deferment_request_submitted
+notify_leave_request_status = notify_deferment_status
 
 
 def notify_maintenance_status_update(maintenance_request):
@@ -225,7 +226,7 @@ Description: {maintenance_request.description}
 Thank you for your patience.
 
 Best regards,
-Hostel Management System
+Student Welfare Management System
     """
     
     sms_message = f"HMS: Your maintenance request '{maintenance_request.title}' is now {maintenance_request.get_status_display()}."
@@ -263,7 +264,7 @@ Dear Student,
 {announcement.content}
 
 ---
-This is an official announcement from the Hostel Management System.
+This is an official announcement from the Student Welfare Management System.
 Priority: {announcement.get_priority_display()}
 Posted: {announcement.created_at.strftime('%B %d, %Y at %H:%M')}
     """
@@ -292,10 +293,10 @@ Dear {student.user.first_name},
 
 This is a friendly reminder to confirm your meal preferences for {meal_date.strftime('%A, %B %d, %Y')}.
 
-Please log in to the Hostel Management System and confirm your meals before 8:00 AM.
+Please log in to the Student Welfare Management System and confirm your meals before 8:00 AM.
 
 Best regards,
-Hostel Management System
+Student Welfare Management System
     """
     
     sms_message = f"HMS: Please confirm your meals for {meal_date.strftime('%b %d')} before 8 AM."

@@ -9,7 +9,7 @@ function insertBrowserTiming() {
             return (
                 ((performance.timing[stat] - timingOffset) / totalTime) * 100.0
             );
-        }
+        }   
         return 0;
     }
     function getCSSWidth(stat, endStat) {

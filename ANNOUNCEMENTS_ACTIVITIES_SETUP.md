@@ -15,7 +15,7 @@ Added `Announcement` model with the following fields:
 - `is_active`: BooleanField (default True)
 - `priority`: CharField with choices (low, normal, high, urgent)
 
-### 2. Views (`hms/views.py`)
+### 2. Views (`swm/views.py`)
 Added the following views:
 - `announcements_list()`: View all active announcements
 - `manage_announcements()`: Admin page to create/delete announcements

@@ -92,7 +92,7 @@
                         </div>
                         <div>
                             <p class="font-bold text-gray-900 dark:text-white">{{ event.location }}</p>
-                            <p class="text-sm text-gray-500">Check hostel map if unsure</p>
+                            <p class="text-sm text-gray-500">Check campus map if unsure</p>
                         </div>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                         {% if my_rsvp %}Update RSVP{% else %}RSVP Now{% endif %}
                     </a>
                     <p class="text-center text-xs text-gray-500 mt-2">
-                        {% if event.spots_remaining <= 10 and event.spots_remaining > 0 %}
+                        {% if event.spots_remaining <= 10 and event.spots_remaining> 0 %}
                             <span class="text-red-500 font-bold">Hurry! Only {{ event.spots_remaining }} spots
                                 left!</span>
                             {% else %}

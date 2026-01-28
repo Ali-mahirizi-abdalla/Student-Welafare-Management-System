@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ============================================
 # SECURITY
 # ============================================
-SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-secret-key-for-dev-only')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-swms-default-key')
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
 # Render-specific host configuration
@@ -182,9 +182,13 @@ AUTHENTICATION_BACKENDS = [
 # ============================================
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 SOCIALACCOUNT_AUTO_SIGNUP = True
+# Allauth explicit settings
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+# ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
+    # ACCOUNT_SIGNUP_FIELDS = ['email', 'username', 'first_name', 'last_name']  # Removed invalid setting
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

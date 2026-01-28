@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeHolographicCards();
     initializeElectricSparks();
 
-    console.log('🏨 Smart Hostel Management System Initialized');
+    console.log('🏨 Student Welfare Management System Initialized');
     console.log('✨ Premium 3D UI Effects Active');
     console.log('🌙 Theme System Ready');
     console.log('⚡ Glowing Borders Active');

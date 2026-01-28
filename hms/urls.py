@@ -59,12 +59,25 @@ urlpatterns = [
     path('manage/maintenance/', views.manage_maintenance, name='manage_maintenance'),
     path('manage/maintenance/update/<int:pk>/', views.update_maintenance_status, name='update_maintenance_status'),
 
-    # Leave Requests
-    path('student/leave/', views.student_leave_list, name='student_leave_list'),
-    path('student/leave/create/', views.submit_leave_request, name='submit_leave_request'),
-    path('student/leave/delete/<int:pk>/', views.delete_leave_request, name='delete_leave_request'),
-    path('manage/leave/', views.manage_leave_requests, name='manage_leave_requests'),
-    path('manage/leave/approve/<int:pk>/', views.approve_leave_request, name='approve_leave_request'),
+    # Deferment Requests (formerly Leave Requests)
+    path('student/deferment/', views.student_leave_list, name='student_leave_list'),  # Keep old name for compatibility
+    path('student/deferment/create/', views.submit_leave_request, name='submit_leave_request'),  # Keep old name
+    path('student/leave_request/', views.submit_leave_request, name='submit_leave_request_legacy'), # Fix 404 for old links
+    path('student/deferment/delete/<int:pk>/', views.delete_leave_request, name='delete_leave_request'),  # Keep old name
+    
+    # Admin Deferment Management with Status Filters
+    path('manage/deferment/all/', views.admin_deferment_all, name='admin_deferment_all'),
+    path('manage/deferment/pending/', views.admin_deferment_pending, name='admin_deferment_pending'),
+    path('manage/deferment/under-review/', views.admin_deferment_under_review, name='admin_deferment_under_review'),
+    path('manage/deferment/approved/', views.admin_deferment_approved, name='admin_deferment_approved'),
+    path('manage/deferment/rejected/', views.admin_deferment_rejected, name='admin_deferment_rejected'),
+    path('manage/deferment/resumed/', views.admin_deferment_resumed, name='admin_deferment_resumed'),
+    path('manage/deferment/review/<int:pk>/', views.review_deferment, name='review_deferment'),
+    
+    # Legacy URLs (redirect to new deferment URLs)
+    path('manage/leave/', views.admin_deferment_all, name='manage_leave_requests'),
+    path('manage/leave/approve/<int:pk>/', views.review_deferment, name='approve_leave_request'),
+
 
     # Room Management
     path('manage/rooms/', views.room_list, name='room_list'),

@@ -1,7 +1,7 @@
 <!-- templates/hms/student/away_status.html -->
 {% extends 'hms/base.html' %}
 
-{% block title %}Away Status - Hostel Meal System{% endblock %}
+{% block title %}Away Status - Student Welfare System{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -45,7 +45,7 @@
                 <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r">
                     <h5 class="font-bold text-green-800 mb-1">You are currently marked as present</h5>
                     <p class="text-green-700 mb-0">You can update your status if you're planning to be away from the
-                        hostel.</p>
+                        campus.</p>
                 </div>
 
                 <form method="post" action="{% url 'hms:update_away_status' %}" class="needs-validation" novalidate>

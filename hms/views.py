@@ -6,12 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document, Message, MaintenanceRequest,
-                     Room, RoomAssignment, RoomChangeRequest, LeaveRequest, Visitor, Event, EventRSVP, Payment, Notification)
+                     Room, RoomAssignment, RoomChangeRequest, LeaveRequest, DefermentRequest, Visitor, Event, EventRSVP, Payment, Notification)
 from .forms import (
-    StudentRegistrationForm, AwayModeForm, ActivityForm, DocumentForm, 
+    StudentRegistrationForm, ProfileEditForm, AwayModeForm, ActivityForm, DocumentForm, 
     TimetableForm, RoomSelectionForm, MessageForm, MaintenanceRequestForm,
     MaintenanceStatusForm, RoomForm, RoomAssignmentForm, RoomChangeRequestForm,
-    LeaveRequestForm, LeaveApprovalForm, VisitorForm, EventForm, EventRSVPForm
+    LeaveRequestForm, DefermentRequestForm, LeaveApprovalForm, VisitorForm, EventForm, EventRSVPForm
 )
 from datetime import date, datetime, time, timedelta
 from django.db import transaction, models
@@ -26,20 +26,34 @@ from .mpesa import MpesaClient
 # ==================== Authentication ====================
 
 def register_student(request):
+    """
+    Handle student registration logic.
+    Creates a user and a student profile within a transaction.
+    """
     if request.method == 'POST':
+        print("DEBUG: Registration POST received")
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
+            print("DEBUG: Form is valid")
             try:
                 with transaction.atomic():
                     student = form.save()
+                    print(f"DEBUG: Student created: {student}")
                 
-                # Log in AFTER transaction commits to avoid session race conditions
+                # Log in AFTER transaction commits
                 login(request, student.user, backend='django.contrib.auth.backends.ModelBackend')
                 messages.success(request, 'Registration successful!')
                 return redirect('hms:student_dashboard')
 
             except Exception as e:
+                print(f"DEBUG: Registration Exception: {e}")
+                import traceback
+                traceback.print_exc()
                 messages.error(request, f"Registration failed: {str(e)}")
+        else:
+            print(f"DEBUG: Form Errors: {form.errors}")
+            for field, errors in form.errors.items():
+                messages.error(request, f"{field}: {', '.join(errors)}")
     else:
         form = StudentRegistrationForm()
     return render(request, 'hms/registration/register.html', {'form': form})
@@ -78,6 +92,14 @@ def user_logout(request):
 
 @login_required
 def student_dashboard(request):
+    """
+    Main dashboard for students.
+    Displays:
+    - Meal status for today/tomorrow
+    - Daily announcements
+    - Activities
+    - Quick actions (Away mode, etc.)
+    """
     try:
         student = request.user.student_profile
     except Student.DoesNotExist:
@@ -156,16 +178,28 @@ def student_profile(request):
 
     if request.method == 'POST':
         if 'update_profile' in request.POST:
-            phone = request.POST.get('phone')
-            if phone:
-                student.phone = phone
+            profile_form = ProfileEditForm(
+                request.POST,
+                user=request.user,
+                student=student
+            )
             
-            if 'profile_image' in request.FILES:
-                student.profile_image = request.FILES['profile_image']
-            
-            student.save()
-            messages.success(request, 'Profile updated successfully.')
-            return redirect('hms:student_profile')
+            if profile_form.is_valid():
+                # Handle profile image separately
+                if 'profile_image' in request.FILES:
+                    student.profile_image = request.FILES['profile_image']
+                    student.save()
+                
+                # Save form data (user and student fields)
+                profile_form.save()
+                messages.success(request, 'Profile updated successfully.')
+                return redirect('hms:student_profile')
+            else:
+                for field, errors in profile_form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{field}: {error}")
+    else:
+        profile_form = ProfileEditForm(user=request.user, student=student)
 
     # Get recent meal history
     meal_history = student.meals.all().order_by('-date')[:10]
@@ -178,7 +212,8 @@ def student_profile(request):
         'student': student,
         'meal_history': meal_history,
         'room_form': room_form,
-        'timetable_form': timetable_form
+        'timetable_form': timetable_form,
+        'profile_form': profile_form,
     }
     return render(request, 'hms/student/profile.html', context)
 
@@ -197,7 +232,7 @@ def confirm_meals(request):
         # Check away status first
         if AwayPeriod.objects.filter(student=student, start_date__lte=meal_date, end_date__gte=meal_date).exists():
             messages.error(request, "You are marked as away for this date. Change your 'Away Mode' settings first.")
-            return redirect('hms:student_dashboard')
+            return redirect('swm:student_dashboard')
         
         # Enforce 8:00 AM Lock for breakfast/early
         now = timezone.now()
@@ -231,7 +266,7 @@ def confirm_meals(request):
     except Exception as e:
         messages.error(request, f"Error: {str(e)}")
         
-    return redirect('hms:student_dashboard')
+    return redirect('swm:student_dashboard')
 
 @login_required
 def toggle_away_mode(request):
@@ -259,11 +294,11 @@ def toggle_away_mode(request):
                  messages.error(request, f"Error setting away mode: {str(e)}")
         else:
             messages.error(request, "Invalid dates provided.")
-    return redirect('hms:student_dashboard')
+    return redirect('swm:student_dashboard')
 
 @login_required
 def toggle_early_breakfast(request):
-    return redirect('hms:student_dashboard')
+    return redirect('swm:student_dashboard')
 
 # ==================== Admin/Kitchen ====================
 
@@ -272,7 +307,7 @@ def dashboard_admin(request):
     """Kitchen/Admin Dashboard"""
     if not request.user.is_staff:
         messages.error(request, "Access denied. Admin only.")
-        return redirect('hms:student_dashboard')
+        return redirect('swm:student_dashboard')
     
     today = date.today()
     tomorrow = today + timedelta(days=1)
@@ -460,7 +495,7 @@ def send_meal_notifications(request):
     message = f"""
 Hello Admin,
 
-This is an automated notification from the Hostel Management System.
+This is an automated notification from the Student Welfare Management System.
 
 📅 Date: {tomorrow.strftime("%A, %B %d, %Y")}
 ⚠️ Unconfirmed Students: {unconfirmed_count} out of {all_students.count()}
@@ -474,7 +509,7 @@ Please remind these students to confirm their meal preferences before the deadli
 ---
 🔗 Access the admin dashboard: {request.build_absolute_uri('/kitchen/dashboard/')}
 
-This is an automated message from Hostel Management System.
+This is an automated message from Student Welfare Management System.
 Do not reply to this email.
     """
     
@@ -1344,15 +1379,15 @@ def submit_leave_request(request):
     from .forms import LeaveRequestForm
     
     if request.method == 'POST':
-        form = LeaveRequestForm(request.POST)
+        form = LeaveRequestForm(request.POST, request.FILES)
         if form.is_valid():
             leave_request = form.save(commit=False)
             leave_request.student = student
             leave_request.save()
             
             # Notify admin
-            from .notifications import notify_leave_request_submitted
-            notify_leave_request_submitted(leave_request)
+            from .notifications import notify_deferment_request_submitted
+            notify_deferment_request_submitted(leave_request)
             
             messages.success(request, 'Leave request submitted successfully! Awaiting approval.')
             return redirect('hms:student_leave_list')
@@ -1402,76 +1437,161 @@ def delete_leave_request(request, pk):
     return redirect('hms:student_leave_list')
 
 
+# ========== DEFERMENT MANAGEMENT VIEWS ==========
+
 @login_required
-def manage_leave_requests(request):
-    """Admin views all leave requests"""
+def admin_deferment_all(request):
+    """Admin views all deferment requests"""
     if not request.user.is_staff:
         messages.error(request, "Access denied. Admin only.")
         return redirect('hms:student_dashboard')
     
-    leave_requests = LeaveRequest.objects.all().select_related('student__user').order_by(
-        models.Case(
-            models.When(status='pending', then=0),
-            models.When(status='approved', then=1),
-            models.When(status='rejected', then=2),
-            default=3,
-        ),
-        '-created_at'
-    )
-    
-    # Filter by status if provided
-    status_filter = request.GET.get('status')
-    if status_filter:
-        leave_requests = leave_requests.filter(status=status_filter)
+    deferments = DefermentRequest.objects.all().select_related('student__user').order_by('-created_at')
     
     context = {
-        'leave_requests': leave_requests,
-        'pending_count': LeaveRequest.objects.filter(status='pending').count(),
-        'status_filter': status_filter,
+        'deferments': deferments,
+        'title': 'All Deferment Requests',
+        'active_tab': 'all'
     }
-    
-    return render(request, 'hms/admin/leave_requests.html', context)
-
+    return render(request, 'hms/admin/deferment_list.html', context)
 
 @login_required
-def approve_leave_request(request, pk):
-    """Admin approves/rejects a leave request"""
+def admin_deferment_pending(request):
+    """Admin views pending deferment requests"""
     if not request.user.is_staff:
         messages.error(request, "Access denied. Admin only.")
         return redirect('hms:student_dashboard')
     
-    from .forms import LeaveApprovalForm
+    deferments = DefermentRequest.objects.filter(status='pending').select_related('student__user').order_by('-created_at')
     
-    leave_request = get_object_or_404(LeaveRequest, pk=pk)
+    context = {
+        'deferments': deferments,
+        'title': 'Pending Applications',
+        'active_tab': 'pending'
+    }
+    return render(request, 'hms/admin/deferment_list.html', context)
+
+@login_required
+def admin_deferment_under_review(request):
+    """Admin views deferment requests under review"""
+    if not request.user.is_staff:
+        messages.error(request, "Access denied. Admin only.")
+        return redirect('hms:student_dashboard')
+    
+    deferments = DefermentRequest.objects.filter(status='under_review').select_related('student__user').order_by('-created_at')
+    
+    context = {
+        'deferments': deferments,
+        'title': 'Applications Under Review',
+        'active_tab': 'under_review'
+    }
+    return render(request, 'hms/admin/deferment_list.html', context)
+
+@login_required
+def admin_deferment_approved(request):
+    """Admin views approved deferment requests"""
+    if not request.user.is_staff:
+        messages.error(request, "Access denied. Admin only.")
+        return redirect('hms:student_dashboard')
+    
+    deferments = DefermentRequest.objects.filter(status='approved').select_related('student__user').order_by('-created_at')
+    
+    context = {
+        'deferments': deferments,
+        'title': 'Approved Deferments',
+        'active_tab': 'approved'
+    }
+    return render(request, 'hms/admin/deferment_list.html', context)
+
+@login_required
+def admin_deferment_rejected(request):
+    """Admin views rejected deferment requests"""
+    if not request.user.is_staff:
+        messages.error(request, "Access denied. Admin only.")
+        return redirect('hms:student_dashboard')
+    
+    deferments = DefermentRequest.objects.filter(status='rejected').select_related('student__user').order_by('-created_at')
+    
+    context = {
+        'deferments': deferments,
+        'title': 'Rejected Applications',
+        'active_tab': 'rejected'
+    }
+    return render(request, 'hms/admin/deferment_list.html', context)
+
+@login_required
+def admin_deferment_resumed(request):
+    """Admin views resumed studies deferment requests"""
+    if not request.user.is_staff:
+        messages.error(request, "Access denied. Admin only.")
+        return redirect('hms:student_dashboard')
+    
+    deferments = DefermentRequest.objects.filter(status='resumed').select_related('student__user').order_by('-created_at')
+    
+    context = {
+        'deferments': deferments,
+        'title': 'Resumed Studies',
+        'active_tab': 'resumed'
+    }
+    return render(request, 'hms/admin/deferment_list.html', context)
+
+@login_required
+def review_deferment(request, pk):
+    """Admin approves/rejects/updates a deferment request"""
+    if not request.user.is_staff:
+        messages.error(request, "Access denied. Admin only.")
+        return redirect('hms:student_dashboard')
+    
+    from .forms import DefermentApprovalForm
+    
+    deferment = get_object_or_404(DefermentRequest, pk=pk)
     
     if request.method == 'POST':
-        form = LeaveApprovalForm(request.POST, instance=leave_request)
+        form = DefermentApprovalForm(request.POST, instance=deferment)
         if form.is_valid():
-            leave_req = form.save(commit=False)
-            leave_req.reviewed_by = request.user
-            leave_req.reviewed_at = timezone.now()
-            leave_req.save()
+            defer_req = form.save(commit=False)
+            defer_req.reviewed_by = request.user
+            defer_req.reviewed_at = timezone.now()
+            defer_req.save()
             
             # If approved, create AwayPeriod automatically
-            if leave_req.status == 'approved':
+            if defer_req.status == 'approved':
                 AwayPeriod.objects.create(
-                    student=leave_req.student,
-                    start_date=leave_req.start_date,
-                    end_date=leave_req.end_date
+                    student=defer_req.student,
+                    start_date=defer_req.start_date,
+                    end_date=defer_req.end_date
                 )
-                messages.success(request, f'Leave request approved for {leave_req.student.user.get_full_name()}. Away period created.')
+                messages.success(request, f'Deferment approved for {defer_req.student.user.get_full_name()}. Away period created.')
             else:
-                messages.info(request, f'Leave request updated to {leave_req.get_status_display()}.')
+                messages.info(request, f'Deferment status updated to {defer_req.get_status_display()}.')
             
             # Notify student
-            from .notifications import notify_leave_request_status
-            notify_leave_request_status(leave_req)
+            from .notifications import notify_deferment_status
+            notify_deferment_status(defer_req)
             
-            return redirect('hms:manage_leave_requests')
+            # Redirect back to the list of the updated status
+            if defer_req.status == 'pending':
+                return redirect('hms:admin_deferment_pending')
+            elif defer_req.status == 'under_review':
+                return redirect('hms:admin_deferment_under_review')
+            elif defer_req.status == 'approved':
+                return redirect('hms:admin_deferment_approved')
+            elif defer_req.status == 'rejected':
+                return redirect('hms:admin_deferment_rejected')
+            elif defer_req.status == 'resumed':
+                return redirect('hms:admin_deferment_resumed')
+            else:
+                return redirect('hms:admin_deferment_all')
+                
     else:
-        form = LeaveApprovalForm(instance=leave_request)
+        form = DefermentApprovalForm(instance=deferment)
     
-    return render(request, 'hms/admin/approve_leave.html', {'form': form, 'leave_request': leave_request})
+    return render(request, 'hms/admin/review_deferment.html', {'form': form, 'deferment': deferment})
+
+
+# Maintain alias for compatibility with old URLs if needed
+manage_leave_requests = admin_deferment_all
+approve_leave_request = review_deferment
 
 
 # ==================== ANALYTICS DASHBOARD ====================
