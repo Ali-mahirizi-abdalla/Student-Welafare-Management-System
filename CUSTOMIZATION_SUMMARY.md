@@ -1,7 +1,7 @@
 # Customization Summary - Ali Mahirizi Abdalla
 
 ## Overview
-This document summarizes all customizations made to personalize the Hostel Management System with your name and branding.
+This document summarizes all customizations made to personalize the Student Welfare Management System with your name and branding.
 
 ---
 

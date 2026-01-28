@@ -2,12 +2,12 @@
 
 ## Overview
 
-This guide explains how to migrate from the old Hostel Management System (HMS) to the new Student Welfare Management System (SWMS), or how to set up SWMS from scratch with MySQL.
+This guide explains how to migrate from the old Student Welfare Management System (SWMS) to the new Student Welfare Management System (SWMS), or how to set up SWMS from scratch with MySQL.
 
 ## What Changed?
 
 ### 1. **Project Name**
-- **Old:** Hostel Management System (HMS)
+- **Old:** Student Welfare Management System (SWMS)
 - **New:** Student Welfare Management System (SWMS)
 
 ### 2. **Database**
@@ -15,11 +15,11 @@ This guide explains how to migrate from the old Hostel Management System (HMS) t
 - **New:** MySQL 8.0+
 
 ### 3. **Project Structure**
-- **Old:** `Hostel_System/` directory
-- **New:** `swms/` directory
+- **Old:** `Student_Welfare_System/` directory
+- **New:** `Student_Welfare_System/` directory
 
 ### 4. **Code Organization**
-- Added utility modules in `hms/utils/`:
+- Added utility modules in `Student_Welfare_System/utils/`:
   - `constants.py` - System-wide constants
   - `helpers.py` - Reusable helper functions
   - `validators.py` - Custom validation functions
@@ -102,7 +102,7 @@ python manage.py shell
 
 ```python
 from django.contrib.auth.models import User
-from hms.models import Student, Room, Meal, Payment
+from Student_Welfare_System.models import Student, Room, Meal, Payment
 
 print(f"Users: {User.objects.count()}")
 print(f"Students: {Student.objects.count()}")
@@ -186,11 +186,11 @@ brew services start mysql
    ```bash
    # Export and import by app
    python manage.py dumpdata auth.user --indent 2 > users.json
-   python manage.py dumpdata hms --indent 2 > hms_data.json
+   python manage.py dumpdata Student_Welfare_System --indent 2 > Student_Welfare_System_data.json
    
    # Then import separately
    python manage.py loaddata users.json
-   python manage.py loaddata hms_data.json
+   python manage.py loaddata Student_Welfare_System_data.json
    ```
 
 ### Issue: Character Encoding Problems
@@ -236,10 +236,10 @@ SET FOREIGN_KEY_CHECKS=1;
    - Other templates - Automated branding updates
 
 4. **New Utility Modules**
-   - `hms/utils/constants.py`
-   - `hms/utils/helpers.py`
-   - `hms/utils/validators.py`
-   - `hms/utils/decorators.py`
+   - `Student_Welfare_System/utils/constants.py`
+   - `Student_Welfare_System/utils/helpers.py`
+   - `Student_Welfare_System/utils/validators.py`
+   - `Student_Welfare_System/utils/decorators.py`
 
 ### Removed Files
 

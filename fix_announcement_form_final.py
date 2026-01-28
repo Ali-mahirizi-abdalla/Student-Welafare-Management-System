@@ -1,9 +1,9 @@
 
 import os
 
-file_path = r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\templates\hms\admin\announcement_form.html"
+file_path = r"c:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System\Student_Welfare_System\templates\Student_Welfare_System\admin\announcement_form.html"
 
-new_content = """{% extends 'hms/base.html' %}
+new_content = """{% extends 'Student_Welfare_System/base.html' %}
 
 {% block title %}{% if edit_mode %}Edit{% else %}Create{% endif %} Announcement - HMS{% endblock %}
 

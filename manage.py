@@ -19,7 +19,7 @@ def main():
 
     # 2. Aggressively clean sys.path to remove conflicting entries
     cleaned_path = []
-    conflict_marker = 'Hostel-Management-System-HMS--master'
+    conflict_marker = 'Student-Welfare-Management-System-SWMS--master'
     
     for p in sys.path:
         p_str = str(p)

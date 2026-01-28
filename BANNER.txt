@@ -1,6 +1,6 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
-║                     HOSTEL MANAGEMENT SYSTEM (HMS)                           ║
+║                     STUDENT WELFARE MANAGEMENT SYSTEM (SWS)                           ║
 ║                     ═══════════════════════════════                          ║
 ║                                                                              ║
 ║                    Full Stack Web Application v2.0                           ║

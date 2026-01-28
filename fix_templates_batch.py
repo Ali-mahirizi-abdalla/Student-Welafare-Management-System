@@ -2,9 +2,9 @@
 import os
 
 files = {
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\templates\hms\admin\announcement_form.html": r"""{% extends 'hms/base.html' %}
+    r"c:\Users\jamal\OneDrive\Desktop\HMS\Student_Welfare_System\templates\Student_Welfare_System\admin\announcement_form.html": r"""{% extends 'Student_Welfare_System/base.html' %}
 
-{% block title %}{% if edit_mode %}Edit{% else %}Create{% endif %} Announcement - HMS{% endblock %}
+{% block title %}{% if edit_mode %}Edit{% else %}Create{% endif %} Announcement - Student_Welfare_System{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-8">

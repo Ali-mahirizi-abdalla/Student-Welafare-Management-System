@@ -1,7 +1,7 @@
-# Hostel Management System - Vibrant Color Scheme Update
+# Student Welfare Management System - Vibrant Color Scheme Update
 
 ## Overview
-Successfully updated the Hostel Management System to match the vibrant color scheme from your reference image.
+Successfully updated the Student Welfare Management System to match the vibrant color scheme from your reference image.
 
 ## Color Palette Applied
 

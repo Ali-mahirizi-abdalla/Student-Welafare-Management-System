@@ -2,8 +2,8 @@
 import os
 
 files = [
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\management\__init__.py",
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\management\commands\__init__.py"
+    r"c:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System\Student_Welfare_System\management\__init__.py",
+    r"c:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System\Student_Welfare_System\management\commands\__init__.py"
 ]
 
 for path in files:

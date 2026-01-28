@@ -1,10 +1,10 @@
 
 import os
 
-# --- Content for hms/templates/hms/admin/room_list.html ---
-room_list_content = """{% extends 'hms/base.html' %}
+# --- Content for Student_Welfare_System/templates/Student_Welfare_System/admin/room_list.html ---
+room_list_content = """{% extends 'Student_Welfare_System/base.html' %}
 
-{% block title %}Manage Rooms - HMS{% endblock %}
+{% block title %}Manage Rooms - Student_Welfare_System{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">

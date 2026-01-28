@@ -2,12 +2,12 @@
 import os
 
 files = [
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\models.py",
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\signals.py",
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\middleware.py",
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\admin.py",
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\management\commands\send_meal_reminders.py",
-    r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\Hostel_System\settings.py"
+    r"c:\Users\jamal\OneDrive\Desktop\HMS\Student_Welfare_System\Student_Welfare_System\models.py",
+    r"c:\Users\jamal\OneDrive\Desktop\HMS\Student_Welfare_System\Student_Welfare_System\signals.py",
+    r"c:\Users\jamal\OneDrive\Desktop\HMS\Student_Welfare_System\Student_Welfare_System\middleware.py",
+    r"c:\Users\jamal\OneDrive\Desktop\HMS\Student_Welfare_System\Student_Welfare_System\admin.py",
+    r"c:\Users\jamal\OneDrive\Desktop\HMS\Student_Welfare_System\Student_Welfare_System\management\commands\send_meal_reminders.py",
+    r"c:\Users\jamal\OneDrive\Desktop\HMS\Student_Welfare_System\Student_Welfare_System\settings.py"
 ]
 
 for path in files:

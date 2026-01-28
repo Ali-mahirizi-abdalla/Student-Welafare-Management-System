@@ -1,11 +1,11 @@
 # Announcements and Activities Setup
 
 ## Summary
-Successfully added announcements and activities functionality to the Hostel Management System.
+Successfully added announcements and activities functionality to the Student Welfare Management System.
 
 ## Changes Made
 
-### 1. Models (`hms/models.py`)
+### 1. Models (`swm/models.py`)
 Added `Announcement` model with the following fields:
 - `title`: CharField (max 200 characters)
 - `content`: TextField

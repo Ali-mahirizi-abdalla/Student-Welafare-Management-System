@@ -5,7 +5,7 @@
 ## Changes Made
 
 ### Overview
-Updated the Hostel Management System's background color scheme from a vibrant purple/indigo theme to a more professional slate/gray palette suitable for enterprise applications.
+Updated the Student Welfare Management System's background color scheme from a vibrant purple/indigo theme to a more professional slate/gray palette suitable for enterprise applications.
 
 ### Specific Changes
 

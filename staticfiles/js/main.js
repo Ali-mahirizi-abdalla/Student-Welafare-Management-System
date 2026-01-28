@@ -1,5 +1,5 @@
 /**
- * Smart Hostel Management System
+ * Student Welfare Management System
  * Premium Interactive JavaScript with 3D Effects & Glowing UI
  */
 

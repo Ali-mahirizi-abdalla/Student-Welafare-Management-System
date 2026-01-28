@@ -1,7 +1,7 @@
-# Hostel Management System (HMS) Documentation
+# Student Welfare Management System (HMS) Documentation
 
 **Author:** Ali Mahirizi Abdalla  
-**Project:** Hostel Management System  
+**Project:** Student Welfare Management System  
 **Version:** 2.0  
 
 ## 1. Introduction

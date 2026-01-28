@@ -1,4 +1,4 @@
-# Hostel Meal Management System
+# Student Welfare Management System
 
 A comprehensive web application for managing hostel meals, student attendance, and kitchen operations.
 
@@ -7,7 +7,7 @@ A comprehensive web application for managing hostel meals, student attendance, a
 - **Student Portal**
   - View and update meal preferences
   - Mark away status
-  - View meal history and statistics
+  - View welfare history and statistics
   - Check announcements and activities
 
 - **Kitchen Staff Portal**

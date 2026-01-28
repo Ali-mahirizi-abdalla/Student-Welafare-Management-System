@@ -2,7 +2,7 @@
 import os
 
 def fix_base_html():
-    file_path = os.path.join('hms', 'templates', 'hms', 'base.html')
+    file_path = os.path.join('Student_Welfare_System', 'templates', 'Student_Welfare_System', 'base.html')
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 

@@ -1,7 +1,7 @@
 
 import os
 
-file_path = r"c:\Users\jamal\OneDrive\Desktop\HMS\Hostel-Management-System-HMS-\hms\templates\hms\admin\announcement_form.html"
+file_path = r"c:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System\Student_Welfare_System\templates\Student_Welfare_System\admin\announcement_form.html"
 
 # Read the file
 with open(file_path, 'r', encoding='utf-8') as f:

@@ -3,7 +3,7 @@ import os
 import re
 
 def fix_variable_tags():
-    file_path = os.path.join('hms', 'templates', 'hms', 'admin', 'manage_announcements.html')
+    file_path = os.path.join('Student_Welfare_System', 'templates', 'Student_Welfare_System', 'admin', 'manage_announcements.html')
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 

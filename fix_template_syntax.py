@@ -4,7 +4,7 @@
 import sys
 
 # Read the file
-with open('hms/templates/hms/admin/maintenance_list.html', 'r', encoding='utf-8') as f:
+with open('Student_Welfare_System/templates/Student_Welfare_System/admin/maintenance_list.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
 # Fix the syntax errors - add spaces around ==

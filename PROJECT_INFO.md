@@ -1,14 +1,14 @@
-# Hostel Management System - Project Information
+# Student Welfare Management System - Project Information
 
 ## Developer
 **Name:** Ali Mahirizi Abdalla  
 **Role:** Full Stack Developer & System Architect  
-**Project:** Hostel Management System (HMS)  
+**Project:** Student Welfare Management System (SWMS)  
 **Version:** 2.0  
 **Year:** 2026  
 
 ## Project Overview
-This Hostel Management System is a comprehensive web-based application designed to streamline hostel operations, including:
+This Student Welfare Management System is a comprehensive web-based application designed to streamline hostel operations, including:
 - Student accommodation management
 - Meal booking and tracking
 - Maintenance request handling

@@ -1,11 +1,11 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Hostel_System.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Student_Welfare_System.settings')
 django.setup()
 
 from django.contrib.auth.models import User
-from hms.models import Student
+from Student_Welfare_System.models import Student
 
 print("--- Users ---")
 for user in User.objects.all():
