@@ -240,3 +240,5 @@ Developer & Maintainer
 ---
 
 **© 2026 Ali Mahirizi Abdalla. All rights reserved.**
+#   S t u d e n t - W e l a f a r e - M a n a g e m e n t - S y s t e m  
+ 
