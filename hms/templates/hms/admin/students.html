@@ -28,8 +28,7 @@
                 <tr style="border-bottom: 1px solid var(--glass-border);">
                     <td style="padding: var(--spacing-sm); font-weight: 600;">{{ student.user.get_full_name }}</td>
                     <td style="padding: var(--spacing-sm);">{{ student.university_id }}</td>
-                    <td style="padding: var(--spacing-sm); color: var(--text-muted);">{{
-                        student.phone|default:"N/A" }}</td>
+                    <td style="padding: var(--spacing-sm); color: var(--text-muted);">{{ student.phone|default:"N/A" }}</td>
                     <td style="padding: var(--spacing-sm); text-align: center;">
                         <span style="color: var(--danger);">🏠 Away</span>
                     </td>

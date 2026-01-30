@@ -46,7 +46,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
             </svg>
-            Leave Requests
+            Deferment
         </a>
         <a href="{% url 'hms:manage_maintenance' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/maintenance' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">
@@ -108,7 +108,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
             </svg>
-            Leave Requests
+            Deferment
         </a>
         <a href="{% url 'hms:student_maintenance_list' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'maintenance' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">

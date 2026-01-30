@@ -28,13 +28,33 @@ ALLOWED_HOSTS += ['.onrender.com', 'localhost', '127.0.0.1', '.ngrok-free.app', 
 CSRF_TRUSTED_ORIGINS = []
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
-CSRF_TRUSTED_ORIGINS += ['https://*.onrender.com', 'https://*.ngrok-free.app', 'https://*.ngrok.io', 'https://*.ngrok-free.dev']
+CSRF_TRUSTED_ORIGINS += [
+    'https://*.onrender.com',
+    'https://*.ngrok-free.app',
+    'https://*.ngrok.io',
+    'https://*.ngrok-free.dev',
+    'http://127.0.0.1',
+    'http://localhost',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
+
+# CSRF Cookie Settings
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_DOMAIN = None  # Allow cookies on localhost/127.0.0.1
+if DEBUG:
+    CSRF_COOKIE_SECURE = False
+    CSRF_USE_SESSIONS = False
+    CSRF_TRUSTED_ORIGINS += ['http://127.0.0.1:8000', 'http://localhost:8000']
+else:
+    CSRF_COOKIE_SECURE = True
 
 # Production security
 if not DEBUG:
+    CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_HSTS_SECONDS = 31536000
@@ -219,7 +239,7 @@ else:
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # ============================================
-# MPESA CONFIGURATION
+# MPESA CONFIGURATION 
 # ============================================
 MPESA_CONSUMER_KEY = os.getenv('MPESA_CONSUMER_KEY', 'gvRvRQGv2IPDe51LWBlWDswROQ5QbkTEO5FhATaDbAOwuPYt')
 MPESA_CONSUMER_SECRET = os.getenv('MPESA_CONSUMER_SECRET', 'oAodSnD4w7KSilIXho1Q1BjzW1nQr0he9rB6uk3kUVQ4Nvb5MyDUrrcz3bPnQz0O')

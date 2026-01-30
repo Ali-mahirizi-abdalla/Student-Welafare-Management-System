@@ -177,7 +177,7 @@ Details:
 - Type: {deferment_request.get_deferment_type_display()}
 - Duration: {deferment_request.start_date} to {deferment_request.end_date}
 
-Admin Notes: {deferment_request.admin_notes or 'None'}
+Admin Notes: {deferment_request.admin_response or 'None'}
 
 Best regards,
 Student Welfare Management System

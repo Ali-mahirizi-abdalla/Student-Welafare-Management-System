@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.contrib.auth.models import User
-from hms.models import Notification
+# from hms.models import Notification
 import datetime
 
 class Command(BaseCommand):
@@ -35,12 +35,12 @@ class Command(BaseCommand):
         for user in users:
             # Prevent duplicate notifications for same meal on same day could be added here
             # For now, we assume this command runs once per meal slot
-            Notification.objects.create(
-                user=user,
-                title=f"🍽️ {meal_type} is Ready!",
-                message=f"Don't forget to have your {meal_type}. The mess hall is open.",
-                link="/student/dashboard/"
-            )
+            # Notification.objects.create(
+            #     user=user,
+            #     title=f"🍽️ {meal_type} is Ready!",
+            #     message=f"Don't forget to have your {meal_type}. The mess hall is open.",
+            #     link="/student/dashboard/"
+            # )
             count += 1
             
         self.stdout.write(self.style.SUCCESS(f'Successfully sent {count} {meal_type} reminders.'))

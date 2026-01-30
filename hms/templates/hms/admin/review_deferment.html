@@ -43,8 +43,7 @@
                         {{ deferment.student.user.first_name.0 }}{{ deferment.student.user.last_name.0 }}
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{
-                            deferment.student.user.get_full_name }}</h3>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{ deferment.student.user.get_full_name }}</h3>
                         <p class="text-slate-600 dark:text-slate-400">{{ deferment.student.university_id }}</p>
                         <p class="text-sm text-slate-500 dark:text-slate-500">{{ deferment.student.user.email }}</p>
                     </div>
@@ -52,13 +51,11 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                         <p class="text-xs text-slate-500 dark:text-slate-400 uppercase">Phone</p>
-                        <p class="font-medium text-slate-900 dark:text-white">{{ deferment.student.phone|default:"Not
-                            provided" }}</p>
+                        <p class="font-medium text-slate-900 dark:text-white">{{ deferment.student.phone|default:"Not provided" }}</p>
                     </div>
                     <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                         <p class="text-xs text-slate-500 dark:text-slate-400 uppercase">Room</p>
-                        <p class="font-medium text-slate-900 dark:text-white">{{
-                            deferment.student.room_number|default:"Not assigned" }}</p>
+                        <p class="font-medium text-slate-900 dark:text-white">{{ deferment.student.room_number|default:"Not assigned" }}</p>
                     </div>
                 </div>
             </div>
@@ -202,7 +199,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Admin Notes
                             (Optional)</label>
-                        {{ form.admin_notes }}
+                        {{ form.admin_response }}
                         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">This will be visible to the student
                         </p>
                     </div>

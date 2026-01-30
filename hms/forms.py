@@ -1,19 +1,20 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import (Student, AwayPeriod, Document, Meal, Message, MaintenanceRequest, 
-                     Room, RoomAssignment, RoomChangeRequest, LeaveRequest, Visitor, Activity,
-                     Event, EventRSVP)
+from .models import (Student, AwayPeriod, Document, Meal, MaintenanceRequest, 
+                     # Room, RoomAssignment, RoomChangeRequest, 
+                     LeaveRequest, Activity, Visitor)
+                     # Message, Event, EventRSVP
 
 class VisitorForm(forms.ModelForm):
     class Meta:
         model = Visitor
         fields = ['student', 'name', 'phone', 'id_number', 'purpose']
         widgets = {
-            'student': forms.Select(attrs={'class': 'form-select w-full rounded-lg border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white'}),
-            'name': forms.TextInput(attrs={'class': 'form-input w-full rounded-lg border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white', 'placeholder': 'Visitor Name'}),
-            'phone': forms.TextInput(attrs={'class': 'form-input w-full rounded-lg border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white', 'placeholder': 'Phone Number'}),
-            'id_number': forms.TextInput(attrs={'class': 'form-input w-full rounded-lg border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white', 'placeholder': 'National ID / Passport'}),
-            'purpose': forms.Textarea(attrs={'class': 'form-textarea w-full rounded-lg border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white', 'rows': 2, 'placeholder': 'Reason for visit'}),
+            'student': forms.Select(attrs={'class': 'w-full p-2 border rounded'}),
+            'name': forms.TextInput(attrs={'class': 'w-full p-2 border rounded'}),
+            'phone': forms.TextInput(attrs={'class': 'w-full p-2 border rounded'}),
+            'id_number': forms.TextInput(attrs={'class': 'w-full p-2 border rounded'}),
+            'purpose': forms.Textarea(attrs={'class': 'w-full p-2 border rounded', 'rows': 3}),
         }
 
 class StudentRegistrationForm(forms.ModelForm):
@@ -211,37 +212,19 @@ class TimetableForm(forms.ModelForm):
         }
 
 class RoomSelectionForm(forms.ModelForm):
+    room_number = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'hidden'}))
     class Meta:
         model = Student
         fields = ['room_number']
-        widgets = {
-             'room_number': forms.Select(attrs={'class': 'w-full p-2 border rounded'}),
-        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Get available rooms
-        rooms = Room.objects.filter(is_available=True).order_by('room_number')
-        # Create choices list: (room_number, room_string_representation)
-        choices = [('', 'Select Room')] + [(r.room_number, f"Room {r.room_number} ({r.get_room_type_display()})") for r in rooms]
-        self.fields['room_number'].widget.choices = choices
-
-class MessageForm(forms.ModelForm):
-    class Meta:
-        model = Message
-        fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={
-                'class': 'w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500', 
-                'rows': 3, 
-                'placeholder': 'Type your message...'
-            }),
-        }
+class MessageForm(forms.Form):
+    def save(self, commit=True):
+        return None
 
 class MaintenanceRequestForm(forms.ModelForm):
     class Meta:
         model = MaintenanceRequest
-        fields = ['title', 'description', 'priority', 'photo']
+        fields = ['title', 'description', 'priority', 'image']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all hover:bg-black/30',
@@ -255,7 +238,7 @@ class MaintenanceRequestForm(forms.ModelForm):
             'priority': forms.Select(attrs={
                 'class': 'w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all hover:bg-black/30'
             }),
-            'photo': forms.FileInput(attrs={
+            'image': forms.FileInput(attrs={
                 'class': 'w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20 transition-all'
             }),
         }
@@ -273,111 +256,51 @@ class MaintenanceStatusForm(forms.ModelForm):
 
 # ========== ROOM MANAGEMENT FORMS ==========
 
-class RoomForm(forms.ModelForm):
-    """Form for creating and editing rooms"""
-    class Meta:
-        model = Room
-        fields = ['room_number', 'floor', 'block', 'room_type', 'capacity', 'is_available', 'amenities']
-        widgets = {
-            'room_number': forms.TextInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'placeholder': 'e.g., 101, A-205'
-            }),
-            'floor': forms.NumberInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'min': '1'
-            }),
-            'block': forms.TextInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'placeholder': 'e.g., Block A, North Wing'
-            }),
-            'room_type': forms.Select(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'capacity': forms.NumberInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'min': '1',
-                'max': '4'
-            }),
-            'is_available': forms.CheckboxInput(attrs={
-                'class': 'w-4 h-4 text-teal-600 bg-slate-100 border-slate-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600'
-            }),
-            'amenities': forms.Textarea(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'rows': 3,
-                'placeholder': 'AC, Attached Bathroom, Study Table, etc.'
-            }),
-        }
+class RoomForm(forms.Form):
+    pass
 
+class RoomAssignmentForm(forms.Form):
+    pass
 
-class RoomAssignmentForm(forms.ModelForm):
-    """Form for assigning students to rooms"""
-    class Meta:
-        model = RoomAssignment
-        fields = ['student', 'room', 'bed_number', 'assigned_date', 'notes']
-        widgets = {
-            'student': forms.Select(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'room': forms.Select(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'bed_number': forms.NumberInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'min': '1'
-            }),
-            'assigned_date': forms.DateInput(attrs={
-                'type': 'date',
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'notes': forms.Textarea(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'rows': 3,
-                'placeholder': 'Optional notes about this assignment'
-            }),
-        }
-
-
-class RoomChangeRequestForm(forms.ModelForm):
-    """Form for students to request room changes"""
-    class Meta:
-        model = RoomChangeRequest
-        fields = ['requested_room', 'reason']
-        widgets = {
-            'requested_room': forms.Select(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'reason': forms.Textarea(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'rows': 4,
-                'placeholder': 'Please explain why you want to change rooms...'
-            }),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Only show available rooms
-        self.fields['requested_room'].queryset = Room.objects.filter(is_available=True)
+class RoomChangeRequestForm(forms.Form):
+    pass
 
 
 # ========== DEFERMENT REQUEST FORMS ==========
 
 class DefermentRequestForm(forms.ModelForm):
     """Form for students to submit deferment requests"""
+    other_reason_detail = forms.CharField(
+        required=False, 
+        widget=forms.Textarea(attrs={
+            'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
+            'rows': 3,
+            'placeholder': 'Please provide details for "Others"...',
+            'id': 'id_other_reason_detail',
+            'style': 'display:none;'  # Hidden by default, shown via JavaScript
+        })
+    )
+    contact_during_deferment = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
+            'placeholder': '+254 712 345 678'
+        })
+    )
+    supporting_documents = forms.FileField(
+        required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-gray-700 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-500/20 transition-all'
+        })
+    )
+
     class Meta:
         model = LeaveRequest  # Uses the alias
-        fields = ['deferment_type', 'other_reason_detail', 'start_date', 'end_date', 'reason', 'contact_during_deferment', 'supporting_documents']
+        fields = ['deferment_type', 'start_date', 'end_date', 'reason']
         widgets = {
             'deferment_type': forms.Select(attrs={
                 'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
                 'id': 'id_deferment_type'
-            }),
-            'other_reason_detail': forms.Textarea(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'rows': 3,
-                'placeholder': 'Please provide details for "Others"...',
-                'id': 'id_other_reason_detail',
-                'style': 'display:none;'  # Hidden by default, shown via JavaScript
             }),
             'start_date': forms.DateInput(attrs={
                 'type': 'date',
@@ -391,13 +314,6 @@ class DefermentRequestForm(forms.ModelForm):
                 'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
                 'rows': 4,
                 'placeholder': 'Please provide a detailed explanation for your deferment request...'
-            }),
-            'contact_during_deferment': forms.TextInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'placeholder': '+254 712 345 678'
-            }),
-            'supporting_documents': forms.FileInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-gray-700 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-500/20 transition-all'
             }),
         }
     
@@ -425,12 +341,12 @@ class DefermentApprovalForm(forms.ModelForm):
     """Form for admin to approve/reject/review deferment requests"""
     class Meta:
         model = LeaveRequest  # Uses the alias
-        fields = ['status', 'admin_notes']
+        fields = ['status', 'admin_response']
         widgets = {
             'status': forms.Select(attrs={
                 'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all'
             }),
-            'admin_notes': forms.Textarea(attrs={
+            'admin_response': forms.Textarea(attrs={
                 'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all',
                 'rows': 3,
                 'placeholder': 'Optional notes or feedback for the student...'
@@ -444,89 +360,10 @@ LeaveApprovalForm = DefermentApprovalForm
 
 # ========== EVENT MANAGEMENT FORMS ==========
 
-class EventForm(forms.ModelForm):
-    """Form for creating and editing events"""
-    class Meta:
-        model = Event
-        fields = ['title', 'description', 'category', 'event_date', 'start_time', 'end_time', 
-                  'location', 'max_participants', 'image', 'is_mandatory', 'requires_rsvp', 'is_published']
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'placeholder': 'e.g., Hostel Annual Dinner'
-            }),
-            'description': forms.Textarea(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'rows': 4,
-                'placeholder': 'Describe the event in detail...'
-            }),
-            'category': forms.Select(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'event_date': forms.DateInput(attrs={
-                'type': 'date',
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'start_time': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'end_time': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all'
-            }),
-            'location': forms.TextInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'placeholder': 'e.g., Main Hall, Sports Ground'
-            }),
-            'max_participants': forms.NumberInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'min': '1',
-                'placeholder': 'Leave blank for unlimited'
-            }),
-            'image': forms.FileInput(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-gray-700 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-500/20 transition-all'
-            }),
-            'is_mandatory': forms.CheckboxInput(attrs={
-                'class': 'w-4 h-4 text-teal-600 bg-slate-100 border-slate-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600'
-            }),
-            'requires_rsvp': forms.CheckboxInput(attrs={
-                'class': 'w-4 h-4 text-teal-600 bg-slate-100 border-slate-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600'
-            }),
-            'is_published': forms.CheckboxInput(attrs={
-                'class': 'w-4 h4 text-teal-600 bg-slate-100 border-slate-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600'
-            }),
-        }
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        event_date = cleaned_data.get('event_date')
-        start_time = cleaned_data.get('start_time')
-        end_time = cleaned_data.get('end_time')
-        
-        if start_time and end_time and end_time <= start_time:
-            raise forms.ValidationError("End time must be after start time.")
-        
-        if event_date and not self.instance.pk:
-            from datetime import date
-            if event_date < date.today():
-                raise forms.ValidationError("Event date cannot be in the past.")
-        
-        return cleaned_data
+class EventForm(forms.Form):
+    def save(self, commit=True):
+        return None
 
-
-class EventRSVPForm(forms.ModelForm):
-    """Form for students to RSVP to events"""
-    class Meta:
-        model = EventRSVP
-        fields = ['status', 'notes']
-        widgets = {
-            'status': forms.RadioSelect(attrs={
-                'class': 'text-teal-600 focus:ring-teal-500 dark:focus:ring-teal-600'
-            }),
-            'notes': forms.Textarea(attrs={
-                'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',
-                'rows': 2,
-                'placeholder': 'Optional notes or questions (optional)'
-            }),
-        }
+class EventRSVPForm(forms.Form):
+    def save(self, commit=True):
+        return None

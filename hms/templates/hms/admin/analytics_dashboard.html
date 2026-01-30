@@ -111,7 +111,7 @@
             <a href="{% url 'hms:manage_leave_requests' %}?status=pending"
                 class="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow hover:shadow-md transition">
                 <span class="text-yellow-600 dark:text-yellow-400 font-bold">{{ pending_leaves }}</span>
-                <span class="text-slate-600 dark:text-slate-400">Pending Leave Requests</span>
+                <span class="text-slate-600 dark:text-slate-400">Pending Deferment Requests</span>
                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -162,7 +162,7 @@
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                     </path>
                 </svg>
-                Leave Requests Overview
+                Deferment Overview
             </h3>
             <div class="h-64">
                 <canvas id="leaveStatusChart"></canvas>
@@ -241,7 +241,7 @@
         <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl">
             <h3 class="font-semibold text-slate-900 dark:text-white mb-4 flex items-center justify-between">
                 <span class="flex items-center gap-2">
-                    🏠 Recent Leave Requests
+                    🏠 Recent Deferment Requests
                 </span>
                 <a href="{% url 'hms:manage_leave_requests' %}"
                     class="text-sm text-blue-600 dark:text-blue-400 hover:underline">View All</a>
@@ -260,7 +260,7 @@
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No recent leave requests</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No recent deferment requests</p>
                 {% endfor %}
             </div>
         </div>
@@ -362,29 +362,51 @@
         }
     });
 
-    // Leave Status Chart
+    // Deferment Type Chart
+    const leaveTypeData = chartData.leave_type || {};
     new Chart(document.getElementById('leaveStatusChart'), {
         type: 'bar',
         data: {
-            labels: ['Pending', 'Approved', 'Rejected'],
+            labels: Object.keys(leaveTypeData),
             datasets: [{
-                label: 'Leave Requests',
-                data: [
-                    chartData.leave_status.pending,
-                    chartData.leave_status.approved,
-                    chartData.leave_status.rejected
+                label: 'Deferment Requests',
+                data: Object.values(leaveTypeData),
+                backgroundColor: [
+                    'rgba(245, 158, 11, 0.7)',  // amber
+                    'rgba(16, 185, 129, 0.7)',  // emerald
+                    'rgba(59, 130, 246, 0.7)',  // blue
+                    'rgba(239, 68, 68, 0.7)',   // red
+                    'rgba(139, 92, 246, 0.7)',  // purple
+                    'rgba(236, 72, 153, 0.7)',  // pink
                 ],
-                backgroundColor: ['#eab308', '#22c55e', '#ef4444'],
-                borderRadius: 8
+                borderRadius: 6,
+                borderWidth: 1,
+                borderColor: gridColor
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return context.raw + ' Requests';
+                        }
+                    }
+                }
+            },
             scales: {
-                x: { grid: { display: false }, ticks: { color: textColor } },
-                y: { grid: { color: gridColor }, ticks: { color: textColor } }
+                y: {
+                    beginAtZero: true,
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, precision: 0 }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: textColor }
+                }
             }
         }
     });

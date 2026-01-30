@@ -21,21 +21,24 @@
             Students
         </a>
         <!-- Deferment Management with Dropdown -->
-        <div x-data="{ open: {{ request.path|slice:':15' == '/admin/deferment' }} }" class="relative">
-            <button @click="open = !open" 
+        <div x-data="{ open: {% if '/admin/deferment' in request.path %}true{% else %}false{% endif %} }"
+            class="relative">
+            <button @click="open = !open"
                 class="flex items-center justify-between w-full gap-3 px-4 py-3 {% if '/deferment' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} text-white rounded-xl transition">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
                     </svg>
                     <span>Deferment</span>
                 </div>
-                <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            
+
             <div x-show="open" x-collapse class="mt-2 ml-4 space-y-1">
                 <a href="{% url 'hms:admin_deferment_all' %}"
                     class="flex items-center gap-2 px-4 py-2 text-sm {% if 'deferment/all' in request.path %}bg-white/20 text-white{% else %}text-white/70 hover:text-white hover:bg-white/10{% endif %} rounded-lg transition">

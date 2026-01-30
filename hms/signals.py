@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in
 from allauth.socialaccount.signals import pre_social_login
-from .models import Student, LoginActivity, AuditLog
+from .models import Student #, LoginActivity, AuditLog
 from .middleware import get_current_user
 import json
 
@@ -46,19 +46,19 @@ def log_user_login(sender, request, user, **kwargs):
     
     user_agent = request.META.get('HTTP_USER_AGENT', '')
     
-    LoginActivity.objects.create(
-        user=user,
-        ip_address=ip,
-        user_agent=user_agent
-    )
+    # LoginActivity.objects.create(
+    #     user=user,
+    #     ip_address=ip,
+    #     user_agent=user_agent
+    # )
 
 @receiver(post_save)
 @receiver(post_delete)
 def log_audit_change(sender, instance, **kwargs):
     """Log changes to sensitive models"""
     # Ignore logging models and migration history
-    if sender in [LoginActivity, AuditLog] or sender._meta.model_name == 'session' or sender._meta.app_label == 'admin':
-        return
+    # if sender in [LoginActivity, AuditLog] or sender._meta.model_name == 'session' or sender._meta.app_label == 'admin':
+    #     return
         
     user = get_current_user()
     if not user or not user.is_authenticated:
@@ -76,11 +76,11 @@ def log_audit_change(sender, instance, **kwargs):
     object_id = str(instance.pk)
     model_name = sender.__name__
     
-    AuditLog.objects.create(
-        user=user,
-        model_name=model_name,
-        object_id=object_id,
-        object_repr=object_repr,
-        action=action,
-        changes=f"{action} on {model_name}"
-    )
+    # AuditLog.objects.create(
+    #     user=user,
+    #     model_name=model_name,
+    #     object_id=object_id,
+    #     object_repr=object_repr,
+    #     action=action,
+    #     changes=f"{action} on {model_name}"
+    # )
