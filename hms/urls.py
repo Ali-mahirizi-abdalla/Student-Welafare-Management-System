@@ -10,6 +10,7 @@ urlpatterns = [
     path('register/', views.register_student, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('terms/', views.terms_and_conditions, name='terms'),
     
     # Student
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
@@ -97,16 +98,17 @@ urlpatterns = [
     path('manage/visitors/', views.visitor_management, name='visitor_management'),
     path('manage/visitors/checkout/<int:visitor_id>/', views.checkout_visitor, name='checkout_visitor'),
 
-    # Event Management
-    path('events/', views.events_list, name='events_list'),
-    path('events/my-rsvps/', views.my_events, name='my_events'),
-    path('events/<int:pk>/', views.event_detail, name='event_detail'),
-    path('events/<int:pk>/rsvp/', views.event_rsvp, name='event_rsvp'),
-    path('manage/events/', views.manage_events, name='manage_events'),
-    path('manage/events/create/', views.create_event, name='create_event'),
-    path('manage/events/edit/<int:pk>/', views.edit_event, name='edit_event'),
-    path('manage/events/delete/<int:pk>/', views.delete_event, name='delete_event'),
-    path('manage/events/<int:pk>/attendees/', views.event_attendees, name='event_attendees'),
+    
+    # Event Management - DISABLED
+    # path('events/', views.events_list, name='events_list'),
+    # path('events/my-rsvps/', views.my_events, name='my_events'),
+    # path('events/<int:pk>/', views.event_detail, name='event_detail'),
+    # path('events/<int:pk>/rsvp/', views.event_rsvp, name='event_rsvp'),
+    # path('manage/events/', views.manage_events, name='manage_events'),
+    # path('manage/events/create/', views.create_event, name='create_event'),
+    # path('manage/events/edit/<int:pk>/', views.edit_event, name='edit_event'),
+    # path('manage/events/delete/<int:pk>/', views.delete_event, name='delete_event'),
+    # path('manage/events/<int:pk>/attendees/', views.event_attendees, name='event_attendees'),
 
 
     

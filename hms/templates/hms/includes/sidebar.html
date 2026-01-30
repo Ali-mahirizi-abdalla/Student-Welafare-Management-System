@@ -60,15 +60,6 @@
             </svg>
             Maintenance
         </a>
-        <a href="{% url 'hms:manage_events' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/events' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">
-            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            Manage Events
-        </a>
         <a href="{% url 'hms:manage_announcements' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'announcements' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -91,15 +82,6 @@
                 </path>
             </svg>
             Dashboard
-        </a>
-        <a href="{% url 'hms:events_list' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'events' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">
-            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            Events
         </a>
         <a href="{% url 'hms:student_leave_list' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'leave' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">
@@ -131,6 +113,16 @@
                 </path>
             </svg>
             Payments
+        </a>
+        <a href="{% url 'hms:chat' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if 'chat' in request.path %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">
+            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                </path>
+            </svg>
+            Chat with Admin
         </a>
         <a href="{% url 'hms:student_profile' %}"
             class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'student_profile' %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">

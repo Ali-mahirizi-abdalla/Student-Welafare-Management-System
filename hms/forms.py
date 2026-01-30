@@ -2,8 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import (Student, AwayPeriod, Document, Meal, MaintenanceRequest, 
                      # Room, RoomAssignment, RoomChangeRequest, 
-                     LeaveRequest, Activity, Visitor)
-                     # Message, Event, EventRSVP
+                     LeaveRequest, Activity, Visitor,
+                     Message)
 
 class VisitorForm(forms.ModelForm):
     class Meta:
@@ -217,9 +217,17 @@ class RoomSelectionForm(forms.ModelForm):
         model = Student
         fields = ['room_number']
 
-class MessageForm(forms.Form):
-    def save(self, commit=True):
-        return None
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'w-full bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 border border-gray-300 dark:border-white/20 rounded-lg p-3 resize-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-white/30 focus:outline-none',
+                'rows': 1,
+                'placeholder': 'Type a message...'
+            })
+        }
 
 class MaintenanceRequestForm(forms.ModelForm):
     class Meta:

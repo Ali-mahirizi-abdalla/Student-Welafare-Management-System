@@ -83,6 +83,9 @@ INSTALLED_APPS = [
     
     # Whitenoise
     'whitenoise.runserver_nostatic',
+
+    # Backup
+    'dbbackup',
 ]
 
 SITE_ID = 1
@@ -153,7 +156,7 @@ DATABASES = {
 # ============================================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 10}},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
@@ -172,7 +175,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'hms/static')]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # ============================================
 # MEDIA FILES
@@ -246,3 +249,39 @@ MPESA_CONSUMER_SECRET = os.getenv('MPESA_CONSUMER_SECRET', 'oAodSnD4w7KSilIXho1Q
 MPESA_SHORTCODE = os.getenv('MPESA_SHORTCODE', '174379') # Sandbox Paybill
 MPESA_PASSKEY = os.getenv('MPESA_PASSKEY', 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919') # Sandbox Passkey
 MPESA_CALLBACK_URL = os.getenv('MPESA_CALLBACK_URL', 'https://balustraded-unsatirizable-marhta.ngrok-free.dev/payment/callback/')
+
+
+# ============================================
+# STORAGES (Django 4.2+)
+# ============================================
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    "dbbackup": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+            "location": os.path.join(BASE_DIR, "backups"),
+        },
+    },
+}
+
+DBBACKUP_STORAGE_ALIAS = 'dbbackup'
+
+
+# Add MySQL to PATH for dbbackup
+os.environ['PATH'] += r';C:\Program Files\MySQL\MySQL Server 8.0\bin'
+
+DBBACKUP_CONNECTORS = {
+    'default': {
+        'CONNECTOR': 'dbbackup.db.mysql.MysqlDumpConnector',
+    }
+}
+
+
+
+
+

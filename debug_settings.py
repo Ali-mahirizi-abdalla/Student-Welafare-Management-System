@@ -1,21 +1,20 @@
+
 import os
 import django
 from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'swms.settings')
+django.setup()
 
+print("--- DEBUG SETTINGS ---")
 try:
-    django.setup()
-    print("Django setup successful!")
+    print(f"DBBACKUP_STORAGE: {getattr(settings, 'DBBACKUP_STORAGE', 'NOT FOUND')}")
+    print(f"DBBACKUP_STORAGE_OPTIONS: {getattr(settings, 'DBBACKUP_STORAGE_OPTIONS', 'NOT FOUND')}")
 except Exception as e:
-    print(f"Django setup failed: {e}")
-    import traceback
-    traceback.print_exc()
+    print(f"Error accessing backup settings: {e}")
 
-# Also try running system checks manually if setup works
-if django.apps.apps.ready:
-    from django.core.management import call_command
-    try:
-        call_command('check')
-    except Exception as e:
-        print(f"Check failed: {e}")
+if 'dbbackup' in settings.INSTALLED_APPS:
+    print("APP: dbbackup found in INSTALLED_APPS")
+else:
+    print("APP: dbbackup NOT found in INSTALLED_APPS")
+print("----------------------")

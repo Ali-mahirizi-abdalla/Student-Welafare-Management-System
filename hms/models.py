@@ -12,13 +12,16 @@ class Student(models.Model):
     timetable = models.FileField(upload_to='timetables/', blank=True, null=True)
     room_number = models.CharField(max_length=10, blank=True, null=True)
     HOSTEL_CHOICES = [
-        ('Hostel 1', 'Hostel 1'),
-        ('Hostel 2', 'Hostel 2'),
-        ('Hostel 3', 'Hostel 3'),
-        ('Hostel 4', 'Hostel 4'),
-        ('Hostel 5', 'Hostel 5'),
-        ('Hostel 6', 'Hostel 6'),
-        ('Hostel 7', 'Hostel 7'),
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5'),
+        ('6', '6'),
+        ('7', '7'),
+        ('8', '8'),
+        ('9', '9'),
+        ('10', '10'),
     ]
     hostel = models.CharField(max_length=20, choices=HOSTEL_CHOICES, blank=True, null=True)
     is_warden = models.BooleanField(default=False)
@@ -117,14 +120,14 @@ class MaintenanceRequest(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='maintenance_requests')
     title = models.CharField(max_length=200)
     description = models.TextField()
-    location = models.CharField(max_length=100, help_text="Specific location, e.g., Room 101, Common Room")
+    location = models.CharField(max_length=100, help_text="Specific location, e.g., Room 101, Common Room", blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     image = models.ImageField(upload_to='maintenance_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     resolved_at = models.DateTimeField(null=True, blank=True)
-    admin_notes = models.TextField(blank=True, help_text="Notes from admin/warden")
+    admin_notes = models.TextField(blank=True, help_text="Notes from admin/warden", default='')
 
     class Meta:
         ordering = ['-created_at']
@@ -230,3 +233,17 @@ class Visitor(models.Model):
         self.check_out_time = timezone.now()
         self.is_active = False
         self.save()
+
+class Message(models.Model):
+    """Chat messages between users"""
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"From {self.sender} to {self.recipient}: {self.content[:20]}"

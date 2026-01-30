@@ -5,8 +5,9 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.db.models import Q
 from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document, MaintenanceRequest,
-                     # Message, Room, RoomAssignment, RoomChangeRequest, 
+                     Message, 
                      LeaveRequest, DefermentRequest, Visitor) #, Event, EventRSVP, Payment, Notification)
 
 # ==================== DUMMY MODELS FOR MISSING FILES ====================
@@ -57,11 +58,7 @@ class DummyModel:
 class Room(DummyModel): pass
 class RoomAssignment(DummyModel): pass
 class RoomChangeRequest(DummyModel): pass
-class Message(DummyModel): pass
-class Message(DummyModel): pass
 # class Visitor(DummyModel): pass
-class Event(DummyModel): pass
-class EventRSVP(DummyModel): pass
 class Payment(DummyModel): pass
 class Notification(DummyModel): pass
 class LoginActivity(DummyModel): pass 
@@ -71,7 +68,7 @@ from .forms import (
     StudentRegistrationForm, ProfileEditForm, AwayModeForm, ActivityForm, DocumentForm, 
     TimetableForm, RoomSelectionForm, MessageForm, MaintenanceRequestForm,
     MaintenanceStatusForm, RoomForm, RoomAssignmentForm, RoomChangeRequestForm,
-    LeaveRequestForm, DefermentRequestForm, LeaveApprovalForm, VisitorForm, EventForm, EventRSVPForm
+    LeaveRequestForm, DefermentRequestForm, LeaveApprovalForm, VisitorForm
 )
 from datetime import date, datetime, time, timedelta
 from django.db import transaction, models
@@ -116,7 +113,7 @@ def register_student(request):
                 messages.error(request, f"{field}: {', '.join(errors)}")
     else:
         form = StudentRegistrationForm()
-    return render(request, 'hms/registration/register.html', {'form': form})
+    return render(request, 'hms/register.html', {'form': form})
 
 
 def user_login(request):
@@ -147,6 +144,11 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('hms:login')
+
+def terms_and_conditions(request):
+    """Terms and Conditions page"""
+    return render(request, 'hms/terms.html')
+
 
 # ==================== Student ====================
 
@@ -292,7 +294,7 @@ def confirm_meals(request):
         # Check away status first
         if AwayPeriod.objects.filter(student=student, start_date__lte=meal_date, end_date__gte=meal_date).exists():
             messages.error(request, "You are marked as away for this date. Change your 'Away Mode' settings first.")
-            return redirect('swm:student_dashboard')
+            return redirect('hms:student_dashboard')
         
         # Enforce 8:00 AM Lock for breakfast/early
         now = timezone.now()
@@ -326,7 +328,7 @@ def confirm_meals(request):
     except Exception as e:
         messages.error(request, f"Error: {str(e)}")
         
-    return redirect('swm:student_dashboard')
+    return redirect('hms:student_dashboard')
 
 @login_required
 def toggle_away_mode(request):
@@ -354,11 +356,11 @@ def toggle_away_mode(request):
                  messages.error(request, f"Error setting away mode: {str(e)}")
         else:
             messages.error(request, "Invalid dates provided.")
-    return redirect('swm:student_dashboard')
+    return redirect('hms:student_dashboard')
 
 @login_required
 def toggle_early_breakfast(request):
-    return redirect('swm:student_dashboard')
+    return redirect('hms:student_dashboard')
 
 # ==================== Admin/Kitchen ====================
 
@@ -367,7 +369,7 @@ def dashboard_admin(request):
     """Kitchen/Admin Dashboard"""
     if not request.user.is_staff:
         messages.error(request, "Access denied. Admin only.")
-        return redirect('swm:student_dashboard')
+        return redirect('hms:student_dashboard')
     
     today = date.today()
     tomorrow = today + timedelta(days=1)
@@ -1047,12 +1049,14 @@ def chat_view(request, recipient_id=None):
     messages_qs = []
     if other_user:
         messages_qs = Message.objects.filter(
-            (models.Q(sender=request.user) & models.Q(recipient=other_user)) |
-            (models.Q(sender=other_user) & models.Q(recipient=request.user))
+            (Q(sender=request.user) & Q(recipient=other_user)) |
+            (Q(sender=other_user) & Q(recipient=request.user))
         ).order_by('timestamp')
         
-        # Mark as read
-        Message.objects.filter(recipient=request.user, sender=other_user).update(is_read=True)
+        # Mark as read only if messages exist
+        unread_messages = Message.objects.filter(recipient=request.user, sender=other_user, is_read=False)
+        if unread_messages.exists():
+            unread_messages.update(is_read=True)
 
     if request.method == 'POST':
         form = MessageForm(request.POST)
@@ -1871,295 +1875,6 @@ def checkout_visitor(request, visitor_id):
         
     return redirect('hms:visitor_management')
 
-
-# ==================== EVENT MANAGEMENT ====================
-
-@login_required
-def events_list(request):
-    """List all published events for students"""
-    today = date.today()
-    
-    # Get all published events
-    upcoming_events = Event.objects.filter(
-        is_published=True,
-        event_date__gte=today
-    ).order_by('event_date', 'start_time')
-    
-    past_events = Event.objects.filter(
-        is_published=True,
-        event_date__lt=today
-    ).order_by('-event_date', '-start_time')[:10]
-    
-    # Get student's RSVPs if user is a student
-    my_rsvps = {}
-    
-    # Convert queryset to list so we can attach attributes
-    upcoming_events = list(upcoming_events)
-    
-    if hasattr(request.user, 'student_profile'):
-        student = request.user.student_profile
-        rsvps = EventRSVP.objects.filter(student=student).select_related('event')
-        my_rsvps = {rsvp.event_id: rsvp for rsvp in rsvps}
-        
-        # Attach RSVP status directly to event objects
-        for event in upcoming_events:
-            event.user_rsvp = my_rsvps.get(event.id)
-    
-    context = {
-        'upcoming_events': upcoming_events,
-        'past_events': past_events,
-        'my_rsvps': my_rsvps,
-        'today': today,
-    }
-    return render(request, 'hms/events/event_list.html', context)
-
-
-@login_required
-def event_detail(request, pk):
-    """View single event details"""
-    event = get_object_or_404(Event, pk=pk)
-    
-    # Check if user has RSVPed
-    my_rsvp = None
-    can_rsvp = False
-    
-    if hasattr(request.user, 'student_profile'):
-        student = request.user.student_profile
-        try:
-            my_rsvp = EventRSVP.objects.get(event=event, student=student)
-        except EventRSVP.DoesNotExist:
-            pass
-        
-        # Can RSVP if event requires RSVP, isn't full, and isn't in the past
-        can_rsvp = event.requires_rsvp and not event.is_past and not event.is_full
-    
-    # Get all attend RSVPs for attendance list
-    attending_rsvps = event.rsvps.filter(status='attending').select_related('student__user')
-    
-    context = {
-        'event': event,
-        'my_rsvp': my_rsvp,
-        'can_rsvp': can_rsvp,
-        'attending_rsvps': attending_rsvps,
-    }
-    return render(request, 'hms/events/event_detail.html', context)
-
-
-@login_required
-def event_rsvp(request, pk):
-    """Student RSVPs to an event"""
-    if not hasattr(request.user, 'student_profile'):
-        messages.error(request, "Only students can RSVP to events.")
-        return redirect('hms:events_list')
-    
-    event = get_object_or_404(Event, pk=pk)
-    student = request.user.student_profile
-    
-    # Check if event allows RSVP
-    if not event.requires_rsvp:
-        messages.info(request, "This event does not require RSVP.")
-        return redirect('hms:event_detail', pk=pk)
-    
-    # Check if event is full
-    if event.is_full:
-        messages.error(request, "Sorry, this event is full.")
-        return redirect('hms:event_detail', pk=pk)
-    
-    # Check if event is in the past
-    if event.is_past:
-        messages.error(request, "Cannot RSVP to past events.")
-        return redirect('hms:event_detail', pk=pk)
-    
-    if request.method == 'POST':
-        # Get or create RSVP
-        rsvp, created = EventRSVP.objects.get_or_create(
-            event=event,
-            student=student
-        )
-        
-        form = EventRSVPForm(request.POST, instance=rsvp)
-        if form.is_valid():
-            form.save()
-            if created:
-                messages.success(request, f"Successfully RSVPed to {event.title}!")
-            else:
-                messages.success(request, "RSVP updated successfully!")
-            return redirect('hms:event_detail', pk=pk)
-    else:
-        try:
-            rsvp = EventRSVP.objects.get(event=event, student=student)
-            form = EventRSVPForm(instance=rsvp)
-        except EventRSVP.DoesNotExist:
-            form = EventRSVPForm()
-    
-    context = {
-        'event': event,
-        'form': form,
-    }
-    return render(request, 'hms/events/event_rsvp.html', context)
-
-
-@login_required
-def my_events(request):
-    """Student views their event RSVPs"""
-    if not hasattr(request.user, 'student_profile'):
-        messages.error(request, "Access denied.")
-        return redirect('hms:events_list')
-    
-    student = request.user.student_profile
-    today = date.today()
-    
-    # Get upcoming events the student has RSVPed to
-    upcoming_rsvps = EventRSVP.objects.filter(
-        student=student,
-        event__event_date__gte=today
-    ).select_related('event').order_by('event__event_date', 'event__start_time')
-    
-    # Get past events
-    past_rsvps = EventRSVP.objects.filter(
-        student=student,
-        event__event_date__lt=today
-    ).select_related('event').order_by('-event__event_date', '-event__start_time')[:10]
-    
-    context = {
-        'upcoming_rsvps': upcoming_rsvps,
-        'past_rsvps': past_rsvps,
-    }
-    return render(request, 'hms/events/my_events.html', context)
-
-
-@login_required
-def manage_events(request):
-    """Admin manages all events"""
-    if not request.user.is_staff:
-        messages.error(request, "Access denied. Admin only.")
-        return redirect('hms:events_list')
-    
-    today = date.today()
-    
-    # Get all events
-    upcoming_events = Event.objects.filter(
-        event_date__gte=today
-    ).order_by('event_date', 'start_time')
-    
-    past_events = Event.objects.filter(
-        event_date__lt=today
-    ).order_by('-event_date', '-start_time')[:20]
-    
-    context = {
-        'upcoming_events': upcoming_events,
-        'past_events': past_events,
-    }
-    return render(request, 'hms/events/manage_events.html', context)
-
-
-@login_required
-def create_event(request):
-    """Admin creates a new event"""
-    if not request.user.is_staff:
-        messages.error(request, "Access denied. Admin only.")
-        return redirect('hms:events_list')
-    
-    if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.created_by = request.user
-            event.save()
-            messages.success(request, f"Event '{event.title}' created successfully!")
-            return redirect('hms:manage_events')
-    else:
-        form = EventForm()
-    
-    context = {
-        'form': form,
-        'title': 'Create New Event',
-    }
-    return render(request, 'hms/events/event_form.html', context)
-
-
-@login_required
-def edit_event(request, pk):
-    """Admin edits an event"""
-    if not request.user.is_staff:
-        messages.error(request, "Access denied. Admin only.")
-        return redirect('hms:events_list')
-    
-    event = get_object_or_404(Event, pk=pk)
-    
-    if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES, instance=event)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"Event '{event.title}' updated successfully!")
-            return redirect('hms:manage_events')
-    else:
-        form = EventForm(instance=event)
-    
-    context = {
-        'form': form,
-        'event': event,
-        'title': 'Edit Event',
-    }
-    return render(request, 'hms/events/event_form.html', context)
-
-
-@login_required
-def delete_event(request, pk):
-    """Admin deletes an event"""
-    if not request.user.is_staff:
-        messages.error(request, "Access denied. Admin only.")
-        return redirect('hms:events_list')
-    
-    if request.method != 'POST':
-        messages.error(request, "Invalid request method.")
-        return redirect('hms:manage_events')
-    
-    event = get_object_or_404(Event, pk=pk)
-    event_title = event.title
-    event.delete()
-    messages.success(request, f"Event '{event_title}' deleted successfully!")
-    return redirect('hms:manage_events')
-
-
-@login_required
-def event_attendees(request, pk):
-    """Admin views event attendees and marks attendance"""
-    if not request.user.is_staff:
-        messages.error(request,  "Access denied. Admin only.")
-        return redirect('hms:events_list')
-    
-    event = get_object_or_404(Event, pk=pk)
-    
-    if request.method == 'POST':
-        # Mark attendance
-        rsvp_id = request.POST.get('rsvp_id')
-        attended = request.POST.get('attended') == 'on'
-        
-        try:
-            rsvp = EventRSVP.objects.get(id=rsvp_id, event=event)
-            rsvp.attended = attended
-            rsvp.save()
-            messages.success(request, "Attendance updated!")
-        except EventRSVP.DoesNotExist:
-            messages.error(request, "RSVP not found.")
-    
-    # Get all RSVPs for this event
-    rsvps = event.rsvps.select_related('student__user').order_by('student__user__first_name')
-    
-    # Statistics
-    total_rsvps = rsvps.count()
-    attending_count = rsvps.filter(status='attending').count()
-    attended_count = rsvps.filter(attended=True).count()
-    
-    context = {
-        'event': event,
-        'rsvps': rsvps,
-        'total_rsvps': total_rsvps,
-        'attending_count': attending_count,
-        'attended_count': attended_count,
-    }
-    return render(request, 'hms/events/event_attendees.html', context)
 
 # ==================== Payment & M-Pesa ====================
 
