@@ -149,6 +149,63 @@ def terms_and_conditions(request):
     """Terms and Conditions page"""
     return render(request, 'hms/terms.html')
 
+@login_required
+def global_search(request):
+    """Global search across students, announcements, and maintenance requests"""
+    query = request.GET.get('q', '').strip()
+    
+    context = {
+        'query': query,
+        'students': [],
+        'announcements': [],
+        'maintenance': [],
+        'total_count': 0,
+    }
+    
+    if query:
+        # Search students (admin only)
+        if request.user.is_staff:
+            students = Student.objects.filter(
+                Q(user__first_name__icontains=query) |
+                Q(user__last_name__icontains=query) |
+                Q(university_id__icontains=query) |
+                Q(phone__icontains=query)
+            ).select_related('user')[:10]
+            context['students'] = students
+        
+        # Search announcements
+        announcements = Announcement.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query),
+            is_active=True
+        ).order_by('-created_at')[:10]
+        context['announcements'] = announcements
+        
+        # Search maintenance requests (own requests for students, all for admin)
+        if request.user.is_staff:
+            maintenance = MaintenanceRequest.objects.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(location__icontains=query)
+            ).select_related('student__user').order_by('-created_at')[:10]
+        else:
+            try:
+                student = request.user.student_profile
+                maintenance = MaintenanceRequest.objects.filter(
+                    student=student
+                ).filter(
+                    Q(title__icontains=query) |
+                    Q(description__icontains=query) |
+                    Q(location__icontains=query)
+                ).order_by('-created_at')[:10]
+            except Student.DoesNotExist:
+                maintenance = []
+        
+        context['maintenance'] = maintenance
+        context['total_count'] = len(context['students']) + len(context['announcements']) + len(context['maintenance'])
+    
+    return render(request, 'hms/search_results.html', context)
+
 
 # ==================== Student ====================
 
@@ -1036,7 +1093,16 @@ def chat_view(request, recipient_id=None):
         if recipient_id:
              other_user = get_object_or_404(User, id=recipient_id)
         else:
-             other_user = None
+             # Auto-select: Try to find student with unread messages first
+             unread_student = next((s for s in students if getattr(s, 'unread_count', 0) > 0), None)
+             
+             if unread_student:
+                 return redirect('hms:chat_with', recipient_id=unread_student.user.id)
+             # Fallback: Select the first student in the list
+             elif students.exists():
+                 return redirect('hms:chat_with', recipient_id=students.first().user.id)
+             else:
+                 other_user = None
     else:
         # Student view: Chat with Admin 
         admin_user = User.objects.filter(is_staff=True).first()
@@ -2021,3 +2087,94 @@ def check_payment_status(request, payment_id):
         messages.error(request, f"Query failed: {response.get('ResponseDescription', response.get('errorMessage'))}")
         
     return redirect('hms:payment_history')
+
+
+# ==================== Global Search ====================
+
+@login_required
+def global_search(request):
+    """
+    Global search across all modules:
+    - Students (name, email, university_id)
+    - Announcements (title, content)
+    - Maintenance Requests (description, location)
+    - Deferment Requests (reason)
+    """
+    query = request.GET.get('q', '').strip()
+    
+    results = {
+        'students': [],
+        'announcements': [],
+        'maintenance': [],
+        'deferments': [],
+        'query': query,
+        'total_count': 0
+    }
+    
+    if query and len(query) >= 2:
+        # Search Students (admin only)
+        if request.user.is_staff:
+            students = Student.objects.filter(
+                Q(user__first_name__icontains=query) |
+                Q(user__last_name__icontains=query) |
+                Q(user__email__icontains=query) |
+                Q(university_id__icontains=query) |
+                Q(phone__icontains=query)
+            ).select_related('user')[:10]
+            results['students'] = students
+        
+        # Search Announcements
+        announcements = Announcement.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query),
+            is_active=True
+        ).order_by('-created_at')[:10]
+        results['announcements'] = announcements
+        
+        # Search Maintenance Requests
+        if request.user.is_staff:
+            maintenance = MaintenanceRequest.objects.filter(
+                Q(description__icontains=query) |
+                Q(location__icontains=query)
+            ).select_related('student__user').order_by('-created_at')[:10]
+        else:
+            # Students can only see their own requests
+            try:
+                student = request.user.student_profile
+                maintenance = MaintenanceRequest.objects.filter(
+                    Q(description__icontains=query) |
+                    Q(location__icontains=query),
+                    student=student
+                ).order_by('-created_at')[:10]
+            except:
+                maintenance = []
+        results['maintenance'] = maintenance
+        
+        # Search Deferment Requests
+        if request.user.is_staff:
+            deferments = DefermentRequest.objects.filter(
+                Q(reason__icontains=query) |
+                Q(student__user__first_name__icontains=query) |
+                Q(student__user__last_name__icontains=query)
+            ).select_related('student__user').order_by('-created_at')[:10]
+        else:
+            try:
+                student = request.user.student_profile
+                deferments = DefermentRequest.objects.filter(
+                    Q(reason__icontains=query),
+                    student=student
+                ).order_by('-created_at')[:10]
+            except:
+                deferments = []
+        results['deferments'] = deferments
+        
+        # Calculate total
+        results['total_count'] = (
+            len(results['students']) + 
+            len(results['announcements']) + 
+            len(results['maintenance']) + 
+            len(results['deferments'])
+        )
+    
+    return render(request, 'hms/search_results.html', results)
+

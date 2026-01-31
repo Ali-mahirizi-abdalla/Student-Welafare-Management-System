@@ -5,7 +5,7 @@ Centralizes magic numbers and repeated strings for better maintainability
 
 # System Information
 SYSTEM_NAME = "Student Welfare Management System"
-SYSTEM_SHORT_NAME = "SWMS"
+SYSTEM_SHORT_NAME = "CampusCare"
 SYSTEM_VERSION = "2.0"
 
 # Pagination

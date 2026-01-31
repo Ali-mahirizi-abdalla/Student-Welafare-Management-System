@@ -12,6 +12,9 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('terms/', views.terms_and_conditions, name='terms'),
     
+    # Global Search
+    path('search/', views.global_search, name='global_search'),
+    
     # Student
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
     path('student/profile/', views.student_profile, name='student_profile'),

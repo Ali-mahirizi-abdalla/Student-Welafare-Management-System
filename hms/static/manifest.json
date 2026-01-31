@@ -1,0 +1,27 @@
+{
+    "name": "CampusCare",
+    "short_name": "CampusCare",
+    "description": "Student Welfare Management System - Manage student welfare, meals, maintenance, and more",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#001f3f",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/static/img/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/static/img/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["education", "productivity"],
+    "lang": "en",
+    "dir": "ltr"
+}

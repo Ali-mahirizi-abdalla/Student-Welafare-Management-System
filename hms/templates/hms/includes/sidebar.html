@@ -123,6 +123,9 @@
                 </path>
             </svg>
             Chat with Admin
+            {% if unread_messages > 0 %}
+            <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{{ unread_messages }}</span>
+            {% endif %}
         </a>
         <a href="{% url 'hms:student_profile' %}"
             class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'student_profile' %}bg-white/20 border border-white/30 shadow-lg{% else %}hover:bg-white/10 text-white/80 hover:text-white{% endif %} rounded-xl transition group">

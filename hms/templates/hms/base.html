@@ -5,7 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SWMS - Student Welfare Management System{% endblock %}</title>
+    <title>{% block title %}CampusCare - Student Welfare Management System{% endblock %}</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#001f3f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CampusCare">
+    <link rel="apple-touch-icon" href="{% static 'img/icon-192.png' %}">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
@@ -76,8 +85,9 @@
                         </svg>
                     </div>
                     <div class="hidden sm:block">
-                        <h1 class="text-xl font-bold text-white tracking-tight leading-none">SWMS</h1>
-                        <p class="text-[10px] text-indigo-200 uppercase tracking-widest font-semibold">Student Welfare Portal
+                        <h1 class="text-xl font-bold text-white tracking-tight leading-none">CampusCare</h1>
+                        <p class="text-[10px] text-indigo-200 uppercase tracking-widest font-semibold">Student Welfare
+                            Management System
                         </p>
                     </div>
                 </a>
@@ -85,7 +95,7 @@
 
             <!-- Center: Global Search -->
             <div class="hidden md:block flex-1 max-w-xl mx-8">
-                <div class="relative group">
+                <form action="{% url 'hms:global_search' %}" method="GET" class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <svg class="w-5 h-5 text-indigo-300 group-focus-within:text-white transition-colors" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -93,10 +103,10 @@
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <input type="text"
+                    <input type="text" name="q"
                         class="block w-full pl-11 pr-4 py-2.5 border border-white/10 rounded-full leading-5 bg-[#002855] text-white placeholder-indigo-300 focus:outline-none focus:bg-[#003366] focus:border-indigo-400 focus:placeholder-white focus:ring-1 focus:ring-indigo-400 sm:text-sm transition-all shadow-inner"
-                        placeholder="Search for students, events, or resources...">
-                </div>
+                        placeholder="Search students, announcements, maintenance...">
+                </form>
             </div>
 
             <!-- Right: Global Actions -->
@@ -122,20 +132,44 @@
                     </svg>
                 </button>
 
-                <!-- Notifications -->
-                <button
-                    class="p-2 text-indigo-200 hover:text-white hover:bg-white/10 rounded-full transition-all relative group">
-                    <div
-                        class="absolute inset-0 bg-white/5 rounded-full scale-0 group-hover:scale-100 transition-transform">
+                <!-- Notifications with Dropdown -->
+                <div class="relative" x-data="{ open: false }">
+                    <button id="notification-bell" onclick="toggleNotificationDropdown()"
+                        class="p-2 text-indigo-200 hover:text-white hover:bg-white/10 rounded-full transition-all relative group">
+                        <div
+                            class="absolute inset-0 bg-white/5 rounded-full scale-0 group-hover:scale-100 transition-transform">
+                        </div>
+                        <svg class="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                            </path>
+                        </svg>
+                        <span id="notification-dot"
+                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[#003366] animate-pulse"></span>
+                    </button>
+
+                    <!-- Notification Dropdown -->
+                    <div id="notification-dropdown"
+                        class="hidden absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-gray-200 dark:border-slate-700 z-50 overflow-hidden">
+                        <div class="p-4 border-b border-gray-100 dark:border-slate-700">
+                            <h3 class="font-bold text-gray-900 dark:text-white">Notifications</h3>
+                            <p id="notification-status" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Click to
+                                enable notifications</p>
+                        </div>
+                        <div class="p-3">
+                            <button onclick="enableNotifications()"
+                                class="w-full py-2 px-4 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-medium rounded-lg transition-all transform hover:scale-[1.02]">
+                                🔔 Enable Push Notifications
+                            </button>
+                        </div>
+                        <div class="px-4 pb-3">
+                            <button onclick="testNotification()"
+                                class="w-full py-2 px-4 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-all">
+                                🧪 Test Notification
+                            </button>
+                        </div>
                     </div>
-                    <svg class="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                        </path>
-                    </svg>
-                    <span
-                        class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[#003366] animate-pulse"></span>
-                </button>
+                </div>
 
                 <!-- Profile -->
                 {% if user.is_authenticated %}
@@ -155,7 +189,7 @@
                         <p
                             class="text-sm font-bold text-white group-hover:text-teal-300 transition-colors leading-tight">
                             {{ user.first_name }}</p>
-                        <p class="text-[10px] text-indigo-300 uppercase tracking-widest">{% if user.is_staff %}Admin{% else %}Student{% endif %}</p>
+                        <p class="text-[10px] text-indigo-300 uppercase tracking-widest">{% if user.is_staff %}Admin{% endif %}</p>
                     </div>
                 </a>
                 {% else %}
@@ -218,7 +252,7 @@
             <!-- Footer -->
             <footer class="mt-auto border-t border-gray-200 dark:border-slate-700/50 py-6 text-center">
                 <p class="text-sm text-gray-500 dark:text-slate-500">
-                    &copy; {% now "Y" %} Student Welfare Management System (SWMS).
+                    &copy; {% now "Y" %} Student Welfare Management System (CampusCare).
                     <span class="hidden sm:inline">Developed by <strong class="text-indigo-600 dark:text-indigo-400">Ali
                             Mahirizi Abdalla</strong>.</span>
                 </p>
@@ -296,8 +330,89 @@
                 setTimeout(() => m.remove(), 500);
             });
         }, 5000);
+
+        // Notification Dropdown Toggle
+        function toggleNotificationDropdown() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const bell = document.getElementById('notification-bell');
+            const dropdown = document.getElementById('notification-dropdown');
+            if (bell && dropdown && !bell.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Enable Push Notifications
+        async function enableNotifications() {
+            if (!('Notification' in window)) {
+                alert('Your browser does not support notifications');
+                return;
+            }
+
+            const permission = await Notification.requestPermission();
+            const status = document.getElementById('notification-status');
+            const bell = document.getElementById('notification-bell');
+
+            if (permission === 'granted') {
+                status.textContent = '✅ Notifications enabled!';
+                bell.classList.add('text-teal-400');
+                bell.classList.remove('text-indigo-200');
+                localStorage.setItem('notificationsEnabled', 'true');
+
+                new Notification('CampusCare', {
+                    body: 'Push notifications are now enabled!',
+                    icon: '{% static "img/icon-192.png" %}'
+                });
+            } else {
+                status.textContent = '❌ Notifications blocked';
+                bell.classList.add('text-red-400');
+            }
+        }
+
+        // Test Notification
+        function testNotification() {
+            if (Notification.permission === 'granted') {
+                new Notification('CampusCare Test', {
+                    body: '🎉 This is a test notification. Everything works!',
+                    icon: '{% static "img/icon-192.png" %}'
+                });
+            } else {
+                alert('Please enable notifications first!');
+            }
+        }
+
+        // Check notification status on load
+        (function () {
+            const status = document.getElementById('notification-status');
+            const bell = document.getElementById('notification-bell');
+            if (Notification.permission === 'granted') {
+                if (status) status.textContent = '✅ Notifications enabled';
+                if (bell) {
+                    bell.classList.add('text-teal-400');
+                    bell.classList.remove('text-indigo-200');
+                }
+            } else if (Notification.permission === 'denied') {
+                if (status) status.textContent = '❌ Notifications blocked in browser';
+            }
+        })();
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{% static "sw.js" %}')
+                    .then(reg => console.log('Service Worker registered:', reg.scope))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
+        }
     </script>
-    
+
+    <!-- Notification Utilities -->
+    <script src="{% static 'js/notifications.js' %}"></script>
+
     {% block extra_js %}{% endblock %}
 </body>
 
