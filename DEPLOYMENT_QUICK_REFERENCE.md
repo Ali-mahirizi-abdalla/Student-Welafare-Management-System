@@ -57,7 +57,19 @@ project_home = '/home/YOURUSERNAME/Student-Welafare-Management-System/Student-We
 
 ## 🔑 Required Environment Variables
 
+### Option A: Free Tier (SQLite)
+*(Use this if you have a free PythonAnywhere account)*
 ```env
+USE_SQLITE=True
+SECRET_KEY=generate-new-secret-key
+DEBUG=False
+ALLOWED_HOSTS=yourusername.pythonanywhere.com
+```
+
+### Option B: Paid Tier (MySQL)
+*(Use this if you upgraded your account)*
+```env
+USE_SQLITE=False
 SECRET_KEY=generate-new-secret-key
 DEBUG=False
 ALLOWED_HOSTS=yourusername.pythonanywhere.com
