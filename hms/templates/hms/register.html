@@ -1,0 +1,443 @@
+{% extends 'hms/base.html' %}
+
+{% block title %}Register - Student Welfare System{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-2xl mx-auto py-12">
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Create an Account</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2">Join our student welfare management system</p>
+    </div>
+
+    <div
+        class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+        <div class="p-8">
+            <form method="post" action="{% url 'hms:register' %}" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 p-3 rounded text-sm mb-4">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <label for="first_name"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">First Name</label>
+                        <input type="text"
+                            class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            id="first_name" name="first_name" value="{{ form.first_name.value|default:'' }}" required>
+                        {% if form.first_name.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.first_name.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="last_name"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Last Name</label>
+                        <input type="text"
+                            class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            id="last_name" name="last_name" value="{{ form.last_name.value|default:'' }}" required>
+                        {% if form.last_name.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.last_name.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="email"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                    <input type="email"
+                        class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        id="email" name="email" value="{{ form.email.value|default:'' }}" required>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">This will be your login ID</div>
+                    {% if form.email.errors %}
+                    <div class="text-red-500 text-xs mt-1">{{ form.email.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <label for="university_id"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Reg Number</label>
+                        <input type="text"
+                            class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition uppercase"
+                            id="university_id" name="university_id" value="{{ form.university_id.value|default:'' }}"
+                            placeholder="e.g., SD06/PU/30104/25" style="text-transform: uppercase;" required>
+                        {% if form.university_id.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.university_id.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="phone"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Phone
+                            Number</label>
+                        <input type="tel"
+                            class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            id="phone" name="phone" value="{{ form.phone.value|default:'' }}">
+                        {% if form.phone.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.phone.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <label for="gender"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Gender</label>
+                        {{ form.gender }}
+                        {% if form.gender.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.gender.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="program_of_study"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Program of Study /
+                            Department</label>
+                        {{ form.program_of_study }}
+                        {% if form.program_of_study.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.program_of_study.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="disability"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Disability</label>
+                    {{ form.disability }}
+                    {% if form.disability.errors %}
+                    <div class="text-red-500 text-xs mt-1">{{ form.disability.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div id="disability-details-container" class="mb-3 hidden">
+                    <label for="disability_details"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Specify Disability
+                        Details / Type</label>
+                    {{ form.disability_details }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">County</label>
+                    <div class="relative">
+                        <input type="text" id="county-search" placeholder="Type to search county..."
+                            class="w-full px-4 py-2 mb-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <select id="county-select" name="county"
+                            class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required>
+                            <option value="">-- Select County --</option>
+                            <option value="baringo">Baringo</option>
+                            <option value="bomet">Bomet</option>
+                            <option value="bungoma">Bungoma</option>
+                            <option value="busia">Busia</option>
+                            <option value="elgeyo_marakwet">Elgeyo Marakwet</option>
+                            <option value="embu">Embu</option>
+                            <option value="garissa">Garissa</option>
+                            <option value="homa_bay">Homa Bay</option>
+                            <option value="isiolo">Isiolo</option>
+                            <option value="kajiado">Kajiado</option>
+                            <option value="kakamega">Kakamega</option>
+                            <option value="kericho">Kericho</option>
+                            <option value="kiambu">Kiambu</option>
+                            <option value="kilifi">Kilifi</option>
+                            <option value="kirinyaga">Kirinyaga</option>
+                            <option value="kisii">Kisii</option>
+                            <option value="kisumu">Kisumu</option>
+                            <option value="kitui">Kitui</option>
+                            <option value="kwale">Kwale</option>
+                            <option value="laikipia">Laikipia</option>
+                            <option value="lamu">Lamu</option>
+                            <option value="machakos">Machakos</option>
+                            <option value="makueni">Makueni</option>
+                            <option value="mandera">Mandera</option>
+                            <option value="marsabit">Marsabit</option>
+                            <option value="meru">Meru</option>
+                            <option value="migori">Migori</option>
+                            <option value="mombasa">Mombasa</option>
+                            <option value="muranga">Murang'a</option>
+                            <option value="nairobi">Nairobi</option>
+                            <option value="nakuru">Nakuru</option>
+                            <option value="nandi">Nandi</option>
+                            <option value="narok">Narok</option>
+                            <option value="nyamira">Nyamira</option>
+                            <option value="nyandarua">Nyandarua</option>
+                            <option value="nyeri">Nyeri</option>
+                            <option value="samburu">Samburu</option>
+                            <option value="siaya">Siaya</option>
+                            <option value="taita_taveta">Taita Taveta</option>
+                            <option value="tana_river">Tana River</option>
+                            <option value="tharaka_nithi">Tharaka Nithi</option>
+                            <option value="trans_nzoia">Trans Nzoia</option>
+                            <option value="turkana">Turkana</option>
+                            <option value="uasin_gishu">Uasin Gishu</option>
+                            <option value="vihiga">Vihiga</option>
+                            <option value="wajir">Wajir</option>
+                            <option value="west_pokot">West Pokot</option>
+                        </select>
+                    </div>
+                    {% if form.county.errors %}
+                    <div class="text-red-500 text-xs mt-1">{{ form.county.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Residence
+                        Type</label>
+                    <div class="flex gap-6">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="residence_type" value="hostel"
+                                class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" checked
+                                onchange="toggleHostelFields()">
+                            <span class="ml-2 text-sm text-slate-700 dark:text-slate-300">In Hostel</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="residence_type" value="off_campus"
+                                class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500"
+                                onchange="toggleHostelFields()">
+                            <span class="ml-2 text-sm text-slate-700 dark:text-slate-300">Off-Campus (Rental)</span>
+                        </label>
+                    </div>
+                    {% if form.residence_type.errors %}
+                    <div class="text-red-500 text-xs mt-1">{{ form.residence_type.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div id="hostel-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <label for="hostel"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Hostel</label>
+                        <select
+                            class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            id="hostel" name="hostel">
+                            <option value="">-- Select Hostel --</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                        {% if form.hostel.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.hostel.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="room_number"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Room
+                            Number</label>
+                        <input type="text"
+                            class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            id="room_number" name="room_number" value="{{ form.room_number.value|default:'' }}"
+                            placeholder="e.g., 201">
+                        {% if form.room_number.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.room_number.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <label for="password"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+                        <div class="relative">
+                            <input type="password"
+                                class="w-full pl-4 pr-10 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                id="password" name="password" required onkeyup="checkPasswordStrength()">
+                            <button type="button" onclick="togglePassword('password')"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="mt-2 h-1 w-full bg-slate-200 dark:bg-slate-700 rounded overflow-hidden">
+                            <div id="strength-bar" class="h-full bg-red-500 w-0 transition-all duration-300"></div>
+                        </div>
+                        <p id="strength-text" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Strength: <span
+                                class="font-medium">Too Short</span></p>
+                        {% if form.password.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.password.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="confirm_password"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Confirm
+                            Password</label>
+                        <div class="relative">
+                            <input type="password"
+                                class="w-full pl-4 pr-10 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                id="confirm_password" name="confirm_password" required>
+                            <button type="button" onclick="togglePassword('confirm_password')"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                        {% if form.confirm_password.errors %}
+                        <div class="text-red-500 text-xs mt-1">{{ form.confirm_password.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="flex items-center mb-6">
+                    <input class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500" type="checkbox"
+                        id="terms" name="terms" required>
+                    <label class="ml-2 text-sm text-slate-600 dark:text-slate-400" for="terms">
+                        I agree to the <a href="{% url 'hms:terms' %}" target="_blank"
+                            class="text-blue-600 hover:text-blue-800 underline">Terms and Conditions</a>
+                    </label>
+                </div>
+
+                <div class="grid gap-4">
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition duration-200 shadow-sm flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                            </path>
+                        </svg>
+                        Create Account
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center mt-6">
+                <p class="text-sm text-slate-600 dark:text-slate-400">Already have an account?
+                    <a href="{% url 'hms:login' %}" class="text-blue-600 hover:text-blue-800 font-bold">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <p class="text-slate-500 dark:text-slate-400 text-sm">
+            &copy; {% now "Y" %} Student Welfare System. All rights reserved.
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword(fieldId) {
+        const input = document.getElementById(fieldId);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+
+    function checkPasswordStrength() {
+        const password = document.getElementById('password').value;
+        const bar = document.getElementById('strength-bar');
+        const text = document.getElementById('strength-text');
+
+        let strength = 0;
+
+        if (password.length >= 8) strength++;
+        if (password.length >= 10) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+        if (password.length < 5) {
+            bar.style.width = '10%';
+            bar.className = 'h-full bg-red-500 transition-all duration-300';
+            text.innerHTML = 'Strength: <span class="font-medium text-red-500">Too Short</span>';
+        } else if (strength < 3) {
+            bar.style.width = '30%';
+            bar.className = 'h-full bg-orange-400 transition-all duration-300';
+            text.innerHTML = 'Strength: <span class="font-medium text-orange-500">Weak</span>';
+        } else if (strength < 5) {
+            bar.style.width = '60%';
+            bar.className = 'h-full bg-yellow-400 transition-all duration-300';
+            text.innerHTML = 'Strength: <span class="font-medium text-yellow-600">Medium</span>';
+        } else {
+            bar.style.width = '100%';
+            bar.className = 'h-full bg-green-500 transition-all duration-300';
+            text.innerHTML = 'Strength: <span class="font-medium text-green-600">Strong</span>';
+        }
+    }
+
+    // Toggle disability details visibility
+    function toggleDisabilityDetails() {
+        const select = document.getElementById('disability-select');
+        const container = document.getElementById('disability-details-container');
+        if (select.value === 'others') {
+            container.classList.remove('hidden');
+        } else {
+            container.classList.add('hidden');
+            document.getElementById('disability_details').value = '';
+        }
+    }
+
+    // Toggle hostel fields based on residence type
+    function toggleHostelFields() {
+        const hostelFields = document.getElementById('hostel-fields');
+        const residenceType = document.querySelector('input[name="residence_type"]:checked').value;
+
+        if (residenceType === 'hostel') {
+            hostelFields.style.display = 'grid';
+        } else {
+            hostelFields.style.display = 'none';
+            // Clear hostel fields when off-campus is selected
+            document.getElementById('hostel').value = '';
+            document.getElementById('room_number').value = '';
+        }
+    }
+
+    // Initialize county dropdown with search functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const countySelect = document.getElementById('county-select');
+        const searchInput = document.getElementById('county-search');
+
+        // Store options for filtering
+        const allOptions = Array.from(countySelect.options);
+
+        // Filter options on input
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+
+            // Clear select except first option
+            countySelect.innerHTML = '';
+            countySelect.appendChild(allOptions[0].cloneNode(true));
+
+            // Add matching options
+            allOptions.slice(1).forEach(option => {
+                if (option.text.toLowerCase().includes(searchTerm)) {
+                    countySelect.appendChild(option.cloneNode(true));
+                }
+            });
+        });
+
+        // Clear search when county is selected
+        countySelect.addEventListener('change', function () {
+            if (this.value) {
+                const selectedText = this.options[this.selectedIndex].text;
+                searchInput.value = selectedText;
+            }
+        });
+
+        // Initialize visibilities
+        toggleHostelFields();
+        toggleDisabilityDetails();
+    });
+</script>
+{% endblock %}

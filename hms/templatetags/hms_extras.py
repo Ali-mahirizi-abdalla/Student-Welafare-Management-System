@@ -1,0 +1,21 @@
+from django import template
+
+register = template.Library()
+
+@register.filter
+def get_item(dictionary, key):
+    """
+    Template filter to get a value from a dictionary using a key.
+    Usage: {{ dictionary|get_item:key }}
+    """
+    if dictionary is None:
+        return None
+    return dictionary.get(key)
+
+@register.filter
+def is_eq(value, arg):
+    """
+    Template filter to compare if two values are equal.
+    Usage: {{ value|is_eq:arg }}
+    """
+    return value == arg

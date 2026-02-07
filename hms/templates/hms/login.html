@@ -1,0 +1,121 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Login - SWMS{% endblock %}
+
+{% block extra_js %}
+<style>
+    /* Override base background for login page - Enhanced for better visibility */
+    body {
+        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 25%, #7dd3fc 50%, #38bdf8 75%, #0ea5e9 100%) !important;
+        background-attachment: fixed !important;
+    }
+
+    /* Enhance login card visibility */
+    .login-card {
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center py-12">
+    <div class="login-card w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <div class="bg-slate-900 p-6 text-center">
+            <div class="flex flex-col items-center justify-center mb-4">
+                <img src="{% static 'img/campus_care_logo.png' %}" alt="CampusCare Logo"
+                    class="w-20 h-20 mb-2 object-contain drop-shadow-md">
+                <h1
+                    class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-300">
+                    Campus Care</h1>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Welcome Back</h2>
+            <p class="text-slate-300 mt-1 opacity-90">Please login to your account</p>
+            <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-widest">Student Welfare Management System</p>
+        </div>
+
+        <div class="p-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="bg-red-50 text-red-600 p-3 rounded text-sm mb-4">
+                    {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Role Selection -->
+                <div>
+                    <label for="id_role" class="block text-sm font-medium text-slate-700 mb-1">Login As</label>
+                    <select name="role" id="id_role"
+                        class="w-full px-4 py-2 bg-white border border-slate-300 rounded text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <option value="student">Student</option>
+                        <option value="admin">Admin / Staff</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-slate-700 mb-1">Username or
+                        Email</label>
+                    <input type="text" name="username" id="id_username" required
+                        class="w-full px-4 py-2 bg-white border border-slate-300 rounded text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder-slate-400"
+                        placeholder="Enter your username">
+                </div>
+
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <div class="relative">
+                        <input type="password" name="password" id="id_password" required
+                            class="w-full pl-4 pr-10 py-2 bg-white border border-slate-300 rounded text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder-slate-400"
+                            placeholder="••••••••">
+                        <button type="button" onclick="togglePassword('id_password')"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center text-slate-600 cursor-pointer">
+                        <input type="checkbox"
+                            class="h-4 w-4 text-blue-600 bg-white border-slate-300 rounded focus:ring-blue-500 mr-2">
+                        Remember me
+                    </label>
+                    <a href="{% url 'hms:password_reset' %}"
+                        class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Forgot Password?</a>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition duration-200 shadow-sm">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-sm text-slate-600">
+                Don't have an account?
+                <a href="{% url 'hms:register' %}"
+                    class="text-blue-600 hover:text-blue-800 font-bold transition-colors">Register
+                    here</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword(fieldId) {
+        const input = document.getElementById(fieldId);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'hms/base.html' %}
+
+{% block title %}Manage Payments{% endblock %}
+
+{% block content %}
+<div class="container animate-fade-in">
+    <div class="page-header flex-between mb-0">
+        <div>
+            <h1 class="page-title">Payment Management</h1>
+            <p class="page-subtitle">View and monitor M-Pesa transaction records.</p>
+        </div>
+    </div>
+
+    <!-- Search and Filter Form -->
+    <div class="glass-card mb-4 mt-4">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="form-group mb-0">
+                <input type="text" name="q" class="form-input" placeholder="Transaction ID or Name..."
+                    value="{{ search_query|default:'' }}">
+            </div>
+            <div class="form-group mb-0">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="Completed" {% if status_filter=='Completed' %}selected{% endif %}>Completed</option>
+                    <option value="Pending" {% if status_filter=='Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Failed" {% if status_filter=='Failed' %}selected{% endif %}>Failed</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-search"></i> Filter
+            </button>
+        </form>
+    </div>
+
+    <!-- Payments List -->
+    {% if payments %}
+    <div class="glass-card overflow-auto p-1">
+        <table class="table-container">
+            <thead style="background-color: #334155; color: white;">
+                <tr>
+                    <th
+                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                        TRANSACTION ID</th>
+                    <th
+                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                        STUDENT</th>
+                    <th
+                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                        AMOUNT (KSH)</th>
+                    <th
+                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                        STATUS</th>
+                    <th
+                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                        DATE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;"
+                    onmouseover="this.style.backgroundColor='#f1f5f9'"
+                    onmouseout="this.style.backgroundColor='#ffffff'">
+                    <td style="padding: 12px; font-family: monospace; font-weight: 700; color: #1e293b;">
+                        {{ payment.transaction_id }}
+                    </td>
+                    <td style="padding: 12px;">
+                        <div style="font-weight: 700; color: #4f46e5; font-size: 0.95rem;">{{
+                            payment.student.user.get_full_name }}</div>
+                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">{{
+                            payment.student.university_id }}</div>
+                    </td>
+                    <td style="padding: 12px; color: #0f172a; font-weight: 700;">
+                        {{ payment.amount|floatformat:2 }}
+                    </td>
+                    <td style="padding: 12px;">
+                        {% if payment.status == 'Completed' %}
+                        <span class="badge badge-success">Completed</span>
+                        {% elif payment.status == 'Pending' %}
+                        <span class="badge badge-warning">Pending</span>
+                        {% else %}
+                        <span class="badge badge-danger">{{ payment.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 12px; color: #64748b; font-size: 0.85rem;">
+                        {{ payment.created_at|date:"M d, Y H:i" }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="glass-card flex-center py-5 text-center">
+        <div>
+            <i class="fas fa-credit-card fa-3x text-muted opacity-30 mb-3"></i>
+            <h3 class="text-secondary">No payment records found</h3>
+            <p class="text-muted">Try adjusting your filters or search query.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
