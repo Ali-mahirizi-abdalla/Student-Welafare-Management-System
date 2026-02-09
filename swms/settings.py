@@ -17,20 +17,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-# Render-specific host configuration
-RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
-ALLOWED_HOSTS = []
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-ALLOWED_HOSTS += ['.onrender.com', '.railway.app', 'localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', '.ngrok-free.dev', '*']
+ALLOWED_HOSTS += ['localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', '.ngrok-free.dev']
 
 # CSRF protection
-CSRF_TRUSTED_ORIGINS = []
-if RENDER_EXTERNAL_HOSTNAME:
-    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 CSRF_TRUSTED_ORIGINS += [
-    'https://*.onrender.com',
-    'https://*.railway.app',
     'https://*.ngrok-free.app',
     'https://*.ngrok.io',
     'https://*.ngrok-free.dev',
@@ -165,20 +155,10 @@ if os.getenv('USE_SQLITE', 'False') == 'True':
         }
     }
 else:
-    # Check for DATABASE_URL (Railway/Render Postgres)
-    if os.environ.get('DATABASE_URL'):
-        DATABASES = {
-            'default': dj_database_url.config(
-                default=os.environ.get('DATABASE_URL'),
-                conn_max_age=600,
-                conn_health_checks=True,
-            )
-        }
-    else:
-        # MySQL Database Configuration (Fallback or Local)
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
+    # MySQL Database Configuration
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
                 'NAME': os.getenv('DB_NAME', 'swms_db'),
                 'USER': os.getenv('DB_USER', 'root'),
                 'PASSWORD': os.getenv('DB_PASSWORD', ''),
