@@ -9,7 +9,10 @@ class ChatFileUploadTest(TestCase):
     def setUp(self):
         self.admin = User.objects.create_superuser(username='admin', password='password123')
         self.student_user = User.objects.create_user(username='student', password='password123')
-        self.student_profile = Student.objects.create(user=self.student_user, university_id='S999')
+        # Student profile is created via signal
+        self.student_profile = Student.objects.get(user=self.student_user)
+        self.student_profile.university_id = 'S999'
+        self.student_profile.save()
         self.client = Client()
 
     def test_message_with_attachment_saves(self):

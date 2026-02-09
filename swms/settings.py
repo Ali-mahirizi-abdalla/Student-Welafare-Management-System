@@ -230,6 +230,7 @@ LOGIN_REDIRECT_URL = 'hms:student_dashboard'
 LOGOUT_REDIRECT_URL = 'hms:login'
 
 AUTHENTICATION_BACKENDS = [
+    'hms.backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]

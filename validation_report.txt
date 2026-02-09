@@ -1,0 +1,17 @@
+HTML Template Validation Report
+===============================
+
+[ERROR] hms\templates\hms\admin\edit_student.html:
+  Could not parse the remainder: '==code' from 'student.county==code'
+
+[ERROR] hms\templates\hms\admin\manage_payments.html:
+  Could not parse the remainder: '=='Completed'' from 'status_filter=='Completed''
+
+[ERROR] hms\templates\hms\events\event_attendees.html:
+  Invalid block tag on line 121: 'else', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+
+[ERROR] hms\templates\hms\events\event_detail.html:
+  Could not parse the remainder: '>' from 'event.spots_remaining>'
+
+
+Summary: Checked 60 files. Found 4 errors.

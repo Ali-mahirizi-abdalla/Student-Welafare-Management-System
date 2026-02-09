@@ -295,13 +295,17 @@
                     </div>
                 </div>
 
-                <div class="flex items-center mb-6">
-                    <input class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500" type="checkbox"
-                        id="terms" name="terms" required>
-                    <label class="ml-2 text-sm text-slate-600 dark:text-slate-400" for="terms">
-                        I agree to the <a href="{% url 'hms:terms' %}" target="_blank"
-                            class="text-blue-600 hover:text-blue-800 underline">Terms and Conditions</a>
-                    </label>
+                <div class="mb-6">
+                    <div class="flex items-center">
+                        {{ form.terms }}
+                        <label class="ml-2 text-sm text-slate-600 dark:text-slate-400" for="{{ form.terms.id_for_label }}">
+                            I agree to the <a href="{% url 'hms:terms' %}" target="_blank"
+                                class="text-blue-600 hover:text-blue-800 underline">Terms and Conditions</a>
+                        </label>
+                    </div>
+                    {% if form.terms.errors %}
+                    <div class="text-red-500 text-xs mt-1">{{ form.terms.errors|join:", " }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="grid gap-4">
