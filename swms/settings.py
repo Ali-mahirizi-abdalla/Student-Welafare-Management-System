@@ -22,7 +22,7 @@ RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
 ALLOWED_HOSTS = []
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-ALLOWED_HOSTS += ['.onrender.com', 'localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', '.ngrok-free.dev']
+ALLOWED_HOSTS += ['.onrender.com', '.railway.app', 'localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', '.ngrok-free.dev', '*']
 
 # CSRF protection
 CSRF_TRUSTED_ORIGINS = []
@@ -30,6 +30,7 @@ if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 CSRF_TRUSTED_ORIGINS += [
     'https://*.onrender.com',
+    'https://*.railway.app',
     'https://*.ngrok-free.app',
     'https://*.ngrok.io',
     'https://*.ngrok-free.dev',
@@ -164,21 +165,31 @@ if os.getenv('USE_SQLITE', 'False') == 'True':
         }
     }
 else:
-    # MySQL Database Configuration
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME', 'swms_db'),
-            'USER': os.getenv('DB_USER', 'root'),
-            'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '3306'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                'charset': 'utf8mb4',
-            },
+    # Check for DATABASE_URL (Railway/Render Postgres)
+    if os.environ.get('DATABASE_URL'):
+        DATABASES = {
+            'default': dj_database_url.config(
+                default=os.environ.get('DATABASE_URL'),
+                conn_max_age=600,
+                conn_health_checks=True,
+            )
         }
-    }
+    else:
+        # MySQL Database Configuration (Fallback or Local)
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': os.getenv('DB_NAME', 'swms_db'),
+                'USER': os.getenv('DB_USER', 'root'),
+                'PASSWORD': os.getenv('DB_PASSWORD', ''),
+                'HOST': os.getenv('DB_HOST', 'localhost'),
+                'PORT': os.getenv('DB_PORT', '3306'),
+                'OPTIONS': {
+                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                    'charset': 'utf8mb4',
+                },
+            }
+        }
 
 # Persistent Database Connections (Performance)
 # Keep connections alive for 600 seconds (10 mins) to reduce overhead

@@ -123,7 +123,7 @@
                         {% if my_rsvp %}Update RSVP{% else %}RSVP Now{% endif %}
                     </a>
                     <p class="text-center text-xs text-gray-500 mt-2">
-                        {% if event.spots_remaining <= 10 and event.spots_remaining> 0 %}
+                        {% if event.spots_remaining <= 10 and event.spots_remaining > 0 %}
                             <span class="text-red-500 font-bold">Hurry! Only {{ event.spots_remaining }} spots
                                 left!</span>
                             {% else %}
@@ -162,7 +162,7 @@
                         <!-- Progress Bar -->
                         <div class="w-full bg-gray-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                             <div class="h-full bg-indigo-500"
-                                style="width: {{ widthratio event.rsvp_count event.max_participants 100 }}%"></div>
+                                style="width: {% widthratio event.rsvp_count event.max_participants 100 %}%"></div>
                         </div>
                         {% endif %}
                     </div>
