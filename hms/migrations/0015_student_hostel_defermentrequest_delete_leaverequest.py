@@ -13,6 +13,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.DeleteModel(
+            name='LeaveRequest',
+        ),
         migrations.AddField(
             model_name='student',
             name='hostel',
@@ -43,8 +46,5 @@ class Migration(migrations.Migration):
                 'db_table': 'hms_leaverequest',
                 'ordering': ['-created_at'],
             },
-        ),
-        migrations.DeleteModel(
-            name='LeaveRequest',
         ),
     ]

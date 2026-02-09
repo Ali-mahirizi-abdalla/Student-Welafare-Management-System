@@ -117,13 +117,12 @@
                                     <div
                                         class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600">
                                     </div>
-                                    <span class="ms-3 text-sm font-medium text-gray-700 dark:text-gray-300">{% if
-                                        rsvp.attended %}Present{% else %}Absent{% endif %}</span>
+                                    <span class="ms-3 text-sm font-medium text-gray-700 dark:text-gray-300">{% if rsvp.attended %}Present{% else %}Absent{% endif %}</span>
                                 </label>
                             </form>
                         </td>
                     </tr>
-                    {{ empty }}
+                    {% empty %}
                     <tr>
                         <td colspan="5" class="px-6 py-8 text-center text-gray-500">No RSVPs yet.</td>
                     </tr>

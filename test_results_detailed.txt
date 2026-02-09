@@ -1,0 +1,2303 @@
+﻿python : Creating 
+test database for 
+alias 'default' ('fil
+e:memorydb_default?mo
+de=memory&cache=share
+d')...
+At line:1 char:25
++ ... ITE="True"; 
+python manage.py 
+test hms --noinput 
+--verbosity 2 2>&1 | 
+ ...
++                 ~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Creatin   
+ g test d...che=s    
+hared')...:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+
+==================================================
+DEBUG: manage.py starting check
+DEBUG: Using CWD as project root: C:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System
+DEBUG: sys.path[0] enforced to: C:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System
+==================================================
+Found 13 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: allauth, cloudinary, cloudinary_storage, dbbackup, google, messages, rest_framework, runserver_nostatic, staticfiles, storages
+  Apply all migrations: account, admin, auth, contenttypes, hms, sessions, sites, socialaccount
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying account.0001_initial... OK
+  Applying account.0002_email_max_length... OK
+  Applying account.0003_alter_emailaddress_create_unique_verified_email... OK
+  Applying account.0004_alter_emailaddress_drop_unique_email... OK
+  Applying account.0005_emailaddress_idx_upper_email... OK
+  Applying account.0006_emailaddress_lower... OK
+  Applying account.0007_emailaddress_idx_email... OK
+  Applying account.0008_emailaddress_unique_primary_email_fixup... OK
+  Applying account.0009_emailaddress_unique_primary_email... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying hms.0001_initial... OK
+  Applying hms.0002_studentprofile_profile_picture... OK
+  Applying hms.0003_activity_awayperiod_meal_student_and_more... OK
+  Applying hms.0004_delete_announcement... OK
+  Applying hms.0005_announcement... OK
+  Applying hms.0006_document_student_room_number_student_timetable_and_more... OK
+  Applying hms.0007_maintenancerequest... OK
+  Applying hms.0008_room_leaverequest_roomassignment_roomchangerequest... OK
+  Applying hms.0009_visitor... OK
+  Applying hms.0010_alter_meal_date_alter_roomassignment_assigned_date... OK
+  Applying hms.0011_event_eventrsvp... OK
+  Applying hms.0012_auditlog_loginactivity_notification... OK
+  Applying hms.0013_payment... OK
+  Applying hms.0014_deferment_system_update... OK
+  Applying hms.0015_student_hostel_defermentrequest_delete_leaverequest... OK
+  Applying hms.0016_suggestion_remove_event_created_by_and_more... OK
+  Applying hms.0017_remove_event_created_by_remove_eventrsvp_event_and_more... OK
+  Applying hms.0018_auditlog... OK
+  Applying hms.0019_room_message_attachment_loginactivity_notification_and_more... OK
+  Applying hms.0020_alter_message_content... OK
+  Applying hms.0021_add_residence_type_and_county... OK
+  Applying hms.0022_student_is_graduating_student_is_on_attachment... OK
+  Applying hms.0023_visitor_category... OK
+  Applying hms.0024_student_disability_student_disability_details_and_more... OK
+  Applying hms.0025_room_price_per_month... OK
+  Applying hms.0026_lostitem... OK
+  Applying sessions.0001_initial... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+  Applying socialaccount.0001_initial... OK
+  Applying socialaccount.0002_token_max_lengths... OK
+  Applying socialaccount.0003_extra_data_default_dict... OK
+  Applying socialaccount.0004_app_provider_id_settings... OK
+  Applying socialaccount.0005_socialtoken_nullable_app... OK
+test_admin_access (hm
+s.tests.AdminDashboar
+dTest.test_admin_acce
+ss)
+Test admin dashboard 
+accessibility ... 
+FAIL
+test_stats_calculatio
+n (hms.tests.AdminDas
+hboardTest.test_stats
+_calculation)
+Test that stats are 
+calculated correctly 
+... ERROR
+test_breakfast_lock_l
+ogic (hms.tests.MealS
+ubmissionTest.test_br
+eakfast_lock_logic)
+Test that breakfast 
+cannot be changed 
+after 8:00 AM ... 
+ERROR
+test_meal_creation (h
+ms.tests.MealSubmissi
+onTest.test_meal_crea
+tion)
+Test basic meal 
+creation via model 
+... ERROR
+test_unique_constrain
+t (hms.tests.MealSubm
+issionTest.test_uniqu
+e_constraint)
+Test that a student 
+cannot have two meal 
+records for the same 
+day (DB level) ... 
+ERROR
+test_empty_content_wi
+th_attachment_is_vali
+d (hms.tests_chat.Cha
+tFileUploadTest.test_
+empty_content_with_at
+tachment_is_valid)
+Verify that sending 
+a file without text 
+is now allowed ... 
+ERROR
+test_message_form_wit
+h_attachment (hms.tes
+ts_chat.ChatFileUploa
+dTest.test_message_fo
+rm_with_attachment)
+Verify the 
+MessageForm handles 
+attachments ... ERROR
+test_message_with_att
+achment_saves (hms.te
+sts_chat.ChatFileUplo
+adTest.test_message_w
+ith_attachment_saves)
+Verify that a 
+message with a file 
+attachment is saved 
+correctly ... ERROR
+test_login_with_email
+ (hms.tests_login.Ema
+ilLoginTest.test_logi
+n_with_email)
+Test that 
+authentication works 
+using the email 
+address instead of 
+username ... ok
+test_login_with_inval
+id_credentials (hms.t
+ests_login.EmailLogin
+Test.test_login_with_
+invalid_credentials)
+Test that 
+authentication fails 
+with incorrect 
+credentials ... ok
+test_login_with_usern
+ame (hms.tests_login.
+EmailLoginTest.test_l
+ogin_with_username)
+Test that 
+authentication still 
+works with the 
+standard username 
+... ok
+test_registration_fai
+ls_without_terms (hms
+.tests_registration.R
+egistrationTermsTest.
+test_registration_fai
+ls_without_terms)
+Test that 
+registration fails 
+if terms are not 
+accepted. ... ERROR
+test_registration_suc
+ceeds_with_terms (hms
+.tests_registration.R
+egistrationTermsTest.
+test_registration_suc
+ceeds_with_terms)
+Test that 
+registration 
+succeeds if terms 
+are accepted. ... ok
+
+=====================
+=====================
+=====================
+=======
+ERROR: test_stats_cal
+culation (hms.tests.A
+dminDashboardTest.tes
+t_stats_calculation)
+Test that stats are 
+calculated correctly
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityErro
+r: UNIQUE constraint 
+failed: 
+hms_student.user_id
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests.py", line 54, 
+in test_stats_calcula
+tion
+    s1 = Student.obje
+cts.create(user=u1, 
+university_id='1')
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 665, in 
+create
+    obj.save(force_in
+sert=True, 
+using=self.db)
+    ~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields
+=update_fields,
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1008, in 
+save_base
+    updated = 
+self._save_table(
+        raw,
+    ...<4 lines>...
+        
+update_fields,
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1169, in 
+_save_table
+    results = 
+self._do_insert(
+        
+cls._base_manager, 
+using, fields, 
+returning_fields, raw
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1210, in 
+_do_insert
+    return 
+manager._insert(
+           
+~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 1873, in 
+_insert
+    return query.get_
+compiler(using=using)
+.execute_sql(returnin
+g_fields)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\sql\com
+piler.py", line 
+1882, in execute_sql
+    
+cursor.execute(sql, 
+params)
+    ~~~~~~~~~~~~~~^^^
+^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 79, in 
+execute
+    return self._exec
+ute_with_wrappers(
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^
+        sql, params, 
+many=False, executor=
+self._execute
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 92, in _ex
+ecute_with_wrappers
+    return 
+executor(sql, 
+params, many, 
+context)
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 100, in 
+_execute
+    with self.db.wrap
+_database_errors:
+         ^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\utils.py", 
+line 91, in __exit__
+    raise dj_exc_valu
+e.with_traceback(trac
+eback) from exc_value
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+django.db.utils.Integ
+rityError: UNIQUE 
+constraint failed: 
+hms_student.user_id
+
+=====================
+=====================
+=====================
+=======
+ERROR: test_breakfast
+_lock_logic (hms.test
+s.MealSubmissionTest.
+test_breakfast_lock_l
+ogic)
+Test that breakfast 
+cannot be changed 
+after 8:00 AM
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityErro
+r: UNIQUE constraint 
+failed: 
+hms_student.user_id
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests.py", line 12, 
+in setUp
+    self.student = St
+udent.objects.create(
+user=self.user, unive
+rsity_id='S12345')
+                   ~~
+~~~~~~~~~~~~~~~~~~~~^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 665, in 
+create
+    obj.save(force_in
+sert=True, 
+using=self.db)
+    ~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields
+=update_fields,
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1008, in 
+save_base
+    updated = 
+self._save_table(
+        raw,
+    ...<4 lines>...
+        
+update_fields,
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1169, in 
+_save_table
+    results = 
+self._do_insert(
+        
+cls._base_manager, 
+using, fields, 
+returning_fields, raw
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1210, in 
+_do_insert
+    return 
+manager._insert(
+           
+~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 1873, in 
+_insert
+    return query.get_
+compiler(using=using)
+.execute_sql(returnin
+g_fields)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\sql\com
+piler.py", line 
+1882, in execute_sql
+    
+cursor.execute(sql, 
+params)
+    ~~~~~~~~~~~~~~^^^
+^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 79, in 
+execute
+    return self._exec
+ute_with_wrappers(
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^
+        sql, params, 
+many=False, executor=
+self._execute
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 92, in _ex
+ecute_with_wrappers
+    return 
+executor(sql, 
+params, many, 
+context)
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 100, in 
+_execute
+    with self.db.wrap
+_database_errors:
+         ^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\utils.py", 
+line 91, in __exit__
+    raise dj_exc_valu
+e.with_traceback(trac
+eback) from exc_value
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+django.db.utils.Integ
+rityError: UNIQUE 
+constraint failed: 
+hms_student.user_id
+
+=====================
+=====================
+=====================
+=======
+ERROR: 
+test_meal_creation (h
+ms.tests.MealSubmissi
+onTest.test_meal_crea
+tion)
+Test basic meal 
+creation via model
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityErro
+r: UNIQUE constraint 
+failed: 
+hms_student.user_id
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests.py", line 12, 
+in setUp
+    self.student = St
+udent.objects.create(
+user=self.user, unive
+rsity_id='S12345')
+                   ~~
+~~~~~~~~~~~~~~~~~~~~^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 665, in 
+create
+    obj.save(force_in
+sert=True, 
+using=self.db)
+    ~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields
+=update_fields,
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1008, in 
+save_base
+    updated = 
+self._save_table(
+        raw,
+    ...<4 lines>...
+        
+update_fields,
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1169, in 
+_save_table
+    results = 
+self._do_insert(
+        
+cls._base_manager, 
+using, fields, 
+returning_fields, raw
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1210, in 
+_do_insert
+    return 
+manager._insert(
+           
+~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 1873, in 
+_insert
+    return query.get_
+compiler(using=using)
+.execute_sql(returnin
+g_fields)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\sql\com
+piler.py", line 
+1882, in execute_sql
+    
+cursor.execute(sql, 
+params)
+    ~~~~~~~~~~~~~~^^^
+^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 79, in 
+execute
+    return self._exec
+ute_with_wrappers(
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^
+        sql, params, 
+many=False, executor=
+self._execute
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 92, in _ex
+ecute_with_wrappers
+    return 
+executor(sql, 
+params, many, 
+context)
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 100, in 
+_execute
+    with self.db.wrap
+_database_errors:
+         ^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\utils.py", 
+line 91, in __exit__
+    raise dj_exc_valu
+e.with_traceback(trac
+eback) from exc_value
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+django.db.utils.Integ
+rityError: UNIQUE 
+constraint failed: 
+hms_student.user_id
+
+=====================
+=====================
+=====================
+=======
+ERROR: test_unique_co
+nstraint (hms.tests.M
+ealSubmissionTest.tes
+t_unique_constraint)
+Test that a student 
+cannot have two meal 
+records for the same 
+day (DB level)
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityErro
+r: UNIQUE constraint 
+failed: 
+hms_student.user_id
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests.py", line 12, 
+in setUp
+    self.student = St
+udent.objects.create(
+user=self.user, unive
+rsity_id='S12345')
+                   ~~
+~~~~~~~~~~~~~~~~~~~~^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 665, in 
+create
+    obj.save(force_in
+sert=True, 
+using=self.db)
+    ~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields
+=update_fields,
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1008, in 
+save_base
+    updated = 
+self._save_table(
+        raw,
+    ...<4 lines>...
+        
+update_fields,
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1169, in 
+_save_table
+    results = 
+self._do_insert(
+        
+cls._base_manager, 
+using, fields, 
+returning_fields, raw
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1210, in 
+_do_insert
+    return 
+manager._insert(
+           
+~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 1873, in 
+_insert
+    return query.get_
+compiler(using=using)
+.execute_sql(returnin
+g_fields)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\sql\com
+piler.py", line 
+1882, in execute_sql
+    
+cursor.execute(sql, 
+params)
+    ~~~~~~~~~~~~~~^^^
+^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 79, in 
+execute
+    return self._exec
+ute_with_wrappers(
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^
+        sql, params, 
+many=False, executor=
+self._execute
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 92, in _ex
+ecute_with_wrappers
+    return 
+executor(sql, 
+params, many, 
+context)
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 100, in 
+_execute
+    with self.db.wrap
+_database_errors:
+         ^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\utils.py", 
+line 91, in __exit__
+    raise dj_exc_valu
+e.with_traceback(trac
+eback) from exc_value
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+django.db.utils.Integ
+rityError: UNIQUE 
+constraint failed: 
+hms_student.user_id
+
+=====================
+=====================
+=====================
+=======
+ERROR: test_empty_con
+tent_with_attachment_
+is_valid (hms.tests_c
+hat.ChatFileUploadTes
+t.test_empty_content_
+with_attachment_is_va
+lid)
+Verify that sending 
+a file without text 
+is now allowed
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityErro
+r: UNIQUE constraint 
+failed: 
+hms_student.user_id
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests_chat.py", line 
+12, in setUp
+    
+self.student_profile 
+= Student.objects.cre
+ate(user=self.student
+_user, 
+university_id='S999')
+                     
+      ~~~~~~~~~~~~~~~
+~~~~~~~^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 665, in 
+create
+    obj.save(force_in
+sert=True, 
+using=self.db)
+    ~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields
+=update_fields,
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1008, in 
+save_base
+    updated = 
+self._save_table(
+        raw,
+    ...<4 lines>...
+        
+update_fields,
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1169, in 
+_save_table
+    results = 
+self._do_insert(
+        
+cls._base_manager, 
+using, fields, 
+returning_fields, raw
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1210, in 
+_do_insert
+    return 
+manager._insert(
+           
+~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 1873, in 
+_insert
+    return query.get_
+compiler(using=using)
+.execute_sql(returnin
+g_fields)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\sql\com
+piler.py", line 
+1882, in execute_sql
+    
+cursor.execute(sql, 
+params)
+    ~~~~~~~~~~~~~~^^^
+^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 79, in 
+execute
+    return self._exec
+ute_with_wrappers(
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^
+        sql, params, 
+many=False, executor=
+self._execute
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 92, in _ex
+ecute_with_wrappers
+    return 
+executor(sql, 
+params, many, 
+context)
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 100, in 
+_execute
+    with self.db.wrap
+_database_errors:
+         ^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\utils.py", 
+line 91, in __exit__
+    raise dj_exc_valu
+e.with_traceback(trac
+eback) from exc_value
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+django.db.utils.Integ
+rityError: UNIQUE 
+constraint failed: 
+hms_student.user_id
+
+=====================
+=====================
+=====================
+=======
+ERROR: test_message_f
+orm_with_attachment (
+hms.tests_chat.ChatFi
+leUploadTest.test_mes
+sage_form_with_attach
+ment)
+Verify the 
+MessageForm handles 
+attachments
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityErro
+r: UNIQUE constraint 
+failed: 
+hms_student.user_id
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests_chat.py", line 
+12, in setUp
+    
+self.student_profile 
+= Student.objects.cre
+ate(user=self.student
+_user, 
+university_id='S999')
+                     
+      ~~~~~~~~~~~~~~~
+~~~~~~~^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 665, in 
+create
+    obj.save(force_in
+sert=True, 
+using=self.db)
+    ~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields
+=update_fields,
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1008, in 
+save_base
+    updated = 
+self._save_table(
+        raw,
+    ...<4 lines>...
+        
+update_fields,
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1169, in 
+_save_table
+    results = 
+self._do_insert(
+        
+cls._base_manager, 
+using, fields, 
+returning_fields, raw
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1210, in 
+_do_insert
+    return 
+manager._insert(
+           
+~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 1873, in 
+_insert
+    return query.get_
+compiler(using=using)
+.execute_sql(returnin
+g_fields)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\sql\com
+piler.py", line 
+1882, in execute_sql
+    
+cursor.execute(sql, 
+params)
+    ~~~~~~~~~~~~~~^^^
+^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 79, in 
+execute
+    return self._exec
+ute_with_wrappers(
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^
+        sql, params, 
+many=False, executor=
+self._execute
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 92, in _ex
+ecute_with_wrappers
+    return 
+executor(sql, 
+params, many, 
+context)
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 100, in 
+_execute
+    with self.db.wrap
+_database_errors:
+         ^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\utils.py", 
+line 91, in __exit__
+    raise dj_exc_valu
+e.with_traceback(trac
+eback) from exc_value
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+django.db.utils.Integ
+rityError: UNIQUE 
+constraint failed: 
+hms_student.user_id
+
+=====================
+=====================
+=====================
+=======
+ERROR: test_message_w
+ith_attachment_saves 
+(hms.tests_chat.ChatF
+ileUploadTest.test_me
+ssage_with_attachment
+_saves)
+Verify that a 
+message with a file 
+attachment is saved 
+correctly
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityErro
+r: UNIQUE constraint 
+failed: 
+hms_student.user_id
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests_chat.py", line 
+12, in setUp
+    
+self.student_profile 
+= Student.objects.cre
+ate(user=self.student
+_user, 
+university_id='S999')
+                     
+      ~~~~~~~~~~~~~~~
+~~~~~~~^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 665, in 
+create
+    obj.save(force_in
+sert=True, 
+using=self.db)
+    ~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields
+=update_fields,
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1008, in 
+save_base
+    updated = 
+self._save_table(
+        raw,
+    ...<4 lines>...
+        
+update_fields,
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1169, in 
+_save_table
+    results = 
+self._do_insert(
+        
+cls._base_manager, 
+using, fields, 
+returning_fields, raw
+    )
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\base.py
+", line 1210, in 
+_do_insert
+    return 
+manager._insert(
+           
+~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\manager
+.py", line 87, in 
+manager_method
+    return getattr(se
+lf.get_queryset(), 
+name)(*args, 
+**kwargs)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\query.p
+y", line 1873, in 
+_insert
+  Applying socialaccount.0006_alter_socialaccount_extra_data... OK
+System check identified no issues (0 silenced).
+DEBUG: Registration POST received
+DEBUG: Form Errors: <ul class="errorlist"><li>terms<ul class="errorlist" id="id_terms_error"><li>You must agree to the terms and conditions to register.</li></ul></li></ul>
+DEBUG: Registration POST received
+DEBUG: Form is valid
+DEBUG: Student created: Test Student (SD06/PU/30104/25)
+    return query.get_
+compiler(using=using)
+.execute_sql(returnin
+g_fields)
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\models\sql\com
+piler.py", line 
+1882, in execute_sql
+    
+cursor.execute(sql, 
+params)
+    ~~~~~~~~~~~~~~^^^
+^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 79, in 
+execute
+    return self._exec
+ute_with_wrappers(
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^
+        sql, params, 
+many=False, executor=
+self._execute
+        ^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 92, in _ex
+ecute_with_wrappers
+    return 
+executor(sql, 
+params, many, 
+context)
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 100, in 
+_execute
+    with self.db.wrap
+_database_errors:
+         ^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\utils.py", 
+line 91, in __exit__
+    raise dj_exc_valu
+e.with_traceback(trac
+eback) from exc_value
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\utils
+.py", line 105, in 
+_execute
+    return self.curso
+r.execute(sql, 
+params)
+           ~~~~~~~~~~
+~~~~~~~~~^^^^^^^^^^^^
+^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\db\backends\sqlit
+e3\base.py", line 
+360, in execute
+    return super().ex
+ecute(query, params)
+           ~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^^^
+django.db.utils.Integ
+rityError: UNIQUE 
+constraint failed: 
+hms_student.user_id
+
+=====================
+=====================
+=====================
+=======
+ERROR: test_registrat
+ion_fails_without_ter
+ms (hms.tests_registr
+ation.RegistrationTer
+msTest.test_registrat
+ion_fails_without_ter
+ms)
+Test that 
+registration fails 
+if terms are not 
+accepted.
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests_registration.py
+", line 35, in test_r
+egistration_fails_wit
+hout_terms
+    self.assertFormEr
+ror(response, 
+'form', 'terms', 
+'You must agree to 
+the terms and 
+conditions to 
+register.')
+    ~~~~~~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\test\testcases.py
+", line 708, in 
+assertFormError
+    self._assert_form
+_error(form, field, 
+errors, msg_prefix, 
+f"form {form!r}")
+    ~~~~~~~~~~~~~~~~~
+~~~~~~^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+  File "C:\Users\jama
+l\AppData\Local\Progr
+ams\Python\Python313\
+Lib\site-packages\dja
+ngo\test\testcases.py
+", line 674, in 
+_assert_form_error
+    if not 
+form.is_bound:
+           
+^^^^^^^^^^^^^
+AttributeError: 
+'HttpResponse' 
+object has no 
+attribute 'is_bound'
+
+=====================
+=====================
+=====================
+=======
+FAIL: 
+test_admin_access (hm
+s.tests.AdminDashboar
+dTest.test_admin_acce
+ss)
+Test admin dashboard 
+accessibility
+---------------------
+---------------------
+---------------------
+-------
+Traceback (most 
+recent call last):
+  File "C:\Users\jama
+l\Downloads\Student-W
+elfare-Management-Sys
+tem\Student-Welfare-M
+anagement-System\hms\
+tests.py", line 48, 
+in test_admin_access
+    self.assertEqual(
+response.status_code,
+ 200)
+    ~~~~~~~~~~~~~~~~^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^
+AssertionError: 404 
+!= 200
+
+---------------------
+---------------------
+---------------------
+-------
+Ran 13 tests in 
+21.979s
+
+FAILED (failures=1, 
+errors=8)
+Destroying test 
+database for alias 
+'default' ('file:memo
+rydb_default?mode=mem
+ory&cache=shared')...
+

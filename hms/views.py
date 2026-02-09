@@ -1788,7 +1788,7 @@ def analytics_dashboard(request):
     from django.db.models.functions import TruncDate
     
     today = date.today()
-    week_start = today - timedelta(days=6)
+    week_start = today - timedelta(days=today.weekday())
     month_start = today - timedelta(days=29)
     
     # ==================== SUMMARY STATS ====================
@@ -1814,47 +1814,63 @@ def analytics_dashboard(request):
     pending_maintenance = MaintenanceRequest.objects.filter(status='pending').count()
     pending_leaves = LeaveRequest.objects.filter(status='pending').count()
     
-    # ==================== WEEKLY MEAL TRENDS ====================
-    weekly_labels = []
+    # ==================== DATA AGGREGATION HELPER ====================
+    def get_counts_for_dates(queryset, date_field, dates):
+        from django.db.models.functions import TruncDate
+        counts = queryset.filter(**{f"{date_field}__date__in": dates}) \
+                         .annotate(day=TruncDate(date_field)) \
+                         .values('day') \
+                         .annotate(count=Count('id'))
+        mapping = {item['day']: item['count'] for item in counts}
+        return [mapping.get(d, 0) for d in dates]
+
+    # Date ranges
+    weekly_dates = [week_start + timedelta(days=i) for i in range(7)]
+    monthly_dates = [month_start + timedelta(days=i) for i in range(30)]
+
+    # Weekly Trends
+    weekly_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    weekly_registrations = get_counts_for_dates(Student.objects, 'user__date_joined', weekly_dates)
+    weekly_payments = get_counts_for_dates(Payment.objects.filter(status='Completed'), 'created_at', weekly_dates)
+    weekly_maintenance = get_counts_for_dates(MaintenanceRequest.objects, 'created_at', weekly_dates)
+    weekly_visitors = get_counts_for_dates(Visitor.objects, 'check_in_time', weekly_dates)
+    weekly_deferments = get_counts_for_dates(DefermentRequest.objects, 'created_at', weekly_dates)
+    
+    # Weekly Meals (Special handled)
+    meal_stats = Meal.objects.filter(date__in=weekly_dates)
     weekly_breakfast = []
     weekly_supper = []
-    weekly_early = []
     weekly_away = []
+    for d in weekly_dates:
+        day_meals = meal_stats.filter(date=d)
+        weekly_breakfast.append(day_meals.filter(breakfast=True).count())
+        weekly_supper.append(day_meals.filter(supper=True).count())
+        weekly_away.append(day_meals.filter(away=True).count())
+
+    # Monthly Trends
+    monthly_labels = [d.strftime('%b %d') for d in monthly_dates]
+    monthly_registrations = get_counts_for_dates(Student.objects, 'user__date_joined', monthly_dates)
+    monthly_payments = get_counts_for_dates(Payment.objects.filter(status='Completed'), 'created_at', monthly_dates)
+    monthly_maintenance = get_counts_for_dates(MaintenanceRequest.objects, 'created_at', monthly_dates)
+    monthly_visitors = get_counts_for_dates(Visitor.objects, 'check_in_time', monthly_dates)
+    monthly_deferments = get_counts_for_dates(DefermentRequest.objects, 'created_at', monthly_dates)
     
-    for i in range(7):
-        d = week_start + timedelta(days=i)
-        weekly_labels.append(d.strftime('%a'))
-        stats = Meal.objects.filter(date=d).aggregate(
-            breakfast=Count('id', filter=Q(breakfast=True)),
-            supper=Count('id', filter=Q(supper=True)),
-            early=Count('id', filter=Q(early=True)),
-            away=Count('id', filter=Q(away=True)),
-        )
-        weekly_breakfast.append(stats['breakfast'] or 0)
-        weekly_supper.append(stats['supper'] or 0)
-        weekly_early.append(stats['early'] or 0)
-        weekly_away.append(stats['away'] or 0)
-    
-    # ==================== MONTHLY TRENDS ====================
-    monthly_labels = []
+    # Monthly Meals
+    monthly_meal_stats = Meal.objects.filter(date__in=monthly_dates)
     monthly_breakfast = []
     monthly_supper = []
-    
-    for i in range(30):
-        d = month_start + timedelta(days=i)
-        monthly_labels.append(d.strftime('%m/%d'))
-        stats = Meal.objects.filter(date=d).aggregate(
-            breakfast=Count('id', filter=Q(breakfast=True)),
-            supper=Count('id', filter=Q(supper=True)),
-        )
-        monthly_breakfast.append(stats['breakfast'] or 0)
-        monthly_supper.append(stats['supper'] or 0)
+    monthly_away = []
+    for d in monthly_dates:
+        day_meals = monthly_meal_stats.filter(date=d)
+        monthly_breakfast.append(day_meals.filter(breakfast=True).count())
+        monthly_supper.append(day_meals.filter(supper=True).count())
+        monthly_away.append(day_meals.filter(away=True).count())
     
     # ==================== MAINTENANCE STATS ====================
     maintenance_by_status = {
         'pending': MaintenanceRequest.objects.filter(status='pending').count(),
         'in_progress': MaintenanceRequest.objects.filter(status='in_progress').count(),
-        'resolved': MaintenanceRequest.objects.filter(status='resolved').count(),
+        'resolved': MaintenanceRequest.objects.filter(status__in=['resolved', 'completed']).count(),
     }
     
     maintenance_by_priority = {
@@ -1866,14 +1882,14 @@ def analytics_dashboard(request):
     
     # ==================== LEAVE REQUEST STATS ====================
     leave_by_status = {
-        'pending': LeaveRequest.objects.filter(status='pending').count(),
-        'approved': LeaveRequest.objects.filter(status='approved').count(),
-        'rejected': LeaveRequest.objects.filter(status='rejected').count(),
+        'pending': DefermentRequest.objects.filter(status='pending').count(),
+        'approved': DefermentRequest.objects.filter(status='approved').count(),
+        'rejected': DefermentRequest.objects.filter(status='rejected').count(),
     }
     
     leave_by_type = {}
-    for leave_type_code, leave_type_name in LeaveRequest.DEFERMENT_TYPES:
-        leave_by_type[leave_type_name] = LeaveRequest.objects.filter(deferment_type=leave_type_code).count()
+    for leave_type_code, leave_type_name in DefermentRequest.DEFERMENT_TYPES:
+        leave_by_type[leave_type_name] = DefermentRequest.objects.filter(deferment_type=leave_type_code).count()
     
     # ==================== ROOM OCCUPANCY ====================
     room_stats = {
@@ -1890,22 +1906,32 @@ def analytics_dashboard(request):
     
     # ==================== RECENT ACTIVITY ====================
     recent_maintenance = MaintenanceRequest.objects.select_related('student__user').order_by('-created_at')[:5]
-    recent_leaves = LeaveRequest.objects.select_related('student__user').order_by('-created_at')[:5]
+    recent_leaves = DefermentRequest.objects.select_related('student__user').order_by('-created_at')[:5]
     recent_announcements = Announcement.objects.order_by('-created_at')[:5]
     
     # ==================== CHART DATA JSON ====================
     chart_data = {
         'weekly': {
             'labels': weekly_labels,
+            'registrations': weekly_registrations,
+            'payments': weekly_payments,
+            'maintenance': weekly_maintenance,
+            'visitors': weekly_visitors,
+            'deferments': weekly_deferments,
             'breakfast': weekly_breakfast,
             'supper': weekly_supper,
-            'early': weekly_early,
             'away': weekly_away,
         },
         'monthly': {
             'labels': monthly_labels,
+            'registrations': monthly_registrations,
+            'payments': monthly_payments,
+            'maintenance': monthly_maintenance,
+            'visitors': monthly_visitors,
+            'deferments': monthly_deferments,
             'breakfast': monthly_breakfast,
             'supper': monthly_supper,
+            'away': monthly_away,
         },
         'maintenance_status': maintenance_by_status,
         'maintenance_priority': maintenance_by_priority,

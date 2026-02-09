@@ -96,7 +96,7 @@
                             class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all hover:bg-black/30">
                             <option value="">-- Select County --</option>
                             {% for code, name in county_choices %}
-                            <option value="{{ code }}" {% if student.county==code %}selected{% endif %}>{{ name }}
+                            <option value="{{ code }}" {% if student.county == code %}selected{% endif %}>{{ name }}
                             </option>
                             {% endfor %}
                         </select>
@@ -110,7 +110,7 @@
                             class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all hover:bg-black/30">
                             <option value="">-- Select Gender --</option>
                             {% for code, name in gender_choices %}
-                            <option value="{{ code }}" {% if student.gender==code %}selected{% endif %}>{{ name }}
+                            <option value="{{ code }}" {% if student.gender == code %}selected{% endif %}>{{ name }}
                             </option>
                             {% endfor %}
                         </select>
@@ -121,7 +121,7 @@
                         <select name="disability" id="disability-select" onchange="toggleDisabilityDetails()"
                             class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all hover:bg-black/30">
                             {% for code, name in disability_choices %}
-                            <option value="{{ code }}" {% if student.disability==code %}selected{% endif %}>{{ name }}
+                            <option value="{{ code }}" {% if student.disability == code %}selected{% endif %}>{{ name }}
                             </option>
                             {% endfor %}
                         </select>
@@ -143,8 +143,7 @@
                         <div class="flex gap-4">
                             {% for code, name in residence_choices %}
                             <label class="inline-flex items-center space-x-2 cursor-pointer">
-                                <input type="radio" name="residence_type" value="{{ code }}" {% if
-                                    student.residence_type==code %}checked{% endif %} onchange="toggleHostelFields()"
+                                <input type="radio" name="residence_type" value="{{ code }}" {% if student.residence_type == code %}checked{% endif %} onchange="toggleHostelFields()"
                                     class="form-radio text-indigo-500 focus:ring-indigo-500 h-4 w-4 bg-gray-800 border-gray-600">
                                 <span class="text-white">{{ name }}</span>
                             </label>
@@ -159,7 +158,7 @@
                                 class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all hover:bg-black/30">
                                 <option value="">-- Select Hostel --</option>
                                 {% for code, name in hostel_choices %}
-                                <option value="{{ code }}" {% if student.hostel==code %}selected{% endif %}>{{ name }}
+                                <option value="{{ code }}" {% if student.hostel == code %}selected{% endif %}>{{ name }}
                                 </option>
                                 {% endfor %}
                             </select>

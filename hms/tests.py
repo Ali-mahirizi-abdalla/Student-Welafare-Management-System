@@ -1,15 +1,19 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.urls import reverse
 from .models import Student, Meal
-from datetime import date, timedelta, time
+from datetime import date, timedelta, time, datetime
 from unittest.mock import patch
 
 class MealSubmissionTest(TestCase):
     def setUp(self):
-        # Create test user and student
+        # Create test user
         self.user = User.objects.create_user(username='teststudent', password='password123')
-        self.student = Student.objects.create(user=self.user, university_id='S12345')
+        # Student profile is created via signal, just update it
+        self.student = Student.objects.get(user=self.user)
+        self.student.university_id = 'S12345'
+        self.student.save()
         self.client = Client()
         self.client.login(username='teststudent', password='password123')
 
@@ -44,16 +48,18 @@ class AdminDashboardTest(TestCase):
 
     def test_admin_access(self):
         """Test admin dashboard accessibility"""
-        response = self.client.get('/kitchen/dashboard/')
+        response = self.client.get(reverse('hms:admin_dashboard'))
         self.assertEqual(response.status_code, 200)
 
     def test_stats_calculation(self):
         """Test that stats are calculated correctly"""
         # Create some meals
         u1 = User.objects.create_user(username='s1', password='p')
-        s1 = Student.objects.create(user=u1, university_id='1')
+        s1 = Student.objects.get(user=u1)
+        s1.university_id = '1'
+        s1.save()
         Meal.objects.create(student=s1, date=date.today(), breakfast=True, supper=True)
         
-        response = self.client.get('/kitchen/dashboard/')
+        response = self.client.get(reverse('hms:admin_dashboard'))
         self.assertEqual(response.context['today_stats']['breakfast'], 1)
         self.assertEqual(response.context['today_stats']['supper'], 1)

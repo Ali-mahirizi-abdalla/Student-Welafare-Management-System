@@ -1,0 +1,49 @@
+﻿python : Creating 
+test database for 
+alias 'default'...
+At line:1 char:25
++ $env:USE_SQLITE="Tr
+ue"; python 
+manage.py test hms 
+2>&1 | Out-File -En 
+...
++                    
+     ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Creatin   
+ g test d...as 'd    
+efault'...:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+
+.............
+---------------------
+---------------------
+---------------------
+-------
+Ran 13 tests in 
+27.250s
+
+OK
+Destroying test 
+database for alias 
+'default'...
+
+==================================================
+DEBUG: manage.py starting check
+DEBUG: Using CWD as project root: C:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System
+DEBUG: sys.path[0] enforced to: C:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System
+==================================================
+Found 13 test(s).
+System check identified no issues (0 silenced).
+DEBUG: Registration POST received
+DEBUG: Form Errors: <ul class="errorlist"><li>terms<ul class="errorlist" id="id_terms_error"><li>You must agree to the terms and conditions to register.</li></ul></li></ul>
+DEBUG: Registration POST received
+DEBUG: Form is valid
+DEBUG: Student created: Test Student (SD06/PU/30104/25)

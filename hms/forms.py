@@ -84,6 +84,16 @@ class StudentRegistrationForm(forms.ModelForm):
         required=False
     )
 
+    terms = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500'
+        }),
+        error_messages={
+            'required': 'You must agree to the terms and conditions to register.'
+        }
+    )
+
     class Meta:
         model = Student
         fields = ['university_id', 'residence_type', 'hostel', 'room_number', 'county', 'phone', 'gender', 'program_of_study', 'disability', 'disability_details']

@@ -378,12 +378,13 @@ class Message(models.Model):
 
 class Room(models.Model):
     """Rooms in hostels"""
+    ROOM_TYPES = [
+        ('single', 'Single'), ('double', 'Double'), ('triple', 'Triple'), ('quad', 'Quad')
+    ]
     room_number = models.CharField(max_length=10, unique=True)
     floor = models.IntegerField()
     block = models.CharField(max_length=50, blank=True)
-    room_type = models.CharField(max_length=20, choices=[
-        ('single', 'Single'), ('double', 'Double'), ('triple', 'Triple'), ('quad', 'Quad')
-    ], default='double')
+    room_type = models.CharField(max_length=20, choices=ROOM_TYPES, default='double')
     capacity = models.IntegerField(default=2)
     is_available = models.BooleanField(default=True)
     amenities = models.TextField(blank=True, help_text="List amenities (e.g., AC, attached bathroom)")

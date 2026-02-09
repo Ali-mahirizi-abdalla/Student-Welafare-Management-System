@@ -21,7 +21,7 @@ class ChatService:
                 'patterns': [r'\b(hi|hello|hey|greetings)\b'],
                 'responses': {
                     'admin': "Hello Admin! 👋 I'm here to help you manage the system. You can ask me about:\n• Viewing meal confirmations\n• Managing students\n• Understanding dashboard stats\n• System features",
-                    'student': "Hello! 👋 I'm here to help you navigate the hostel system. You can ask me about:\n• Confirming meals\n• Viewing room details\n• Submitting requests\n• Hostel policies"
+                    'student': "Hello! 👋 I'm here to help you navigate the Campus Care System. You can ask me about:\n• Confirming meals\n• Viewing room details\n• Submitting requests\n• Hostel policies"
                 }
             },
             
@@ -97,6 +97,15 @@ class ChatService:
                 }
             },
             
+            # System Owner / Developer
+            {
+                'patterns': [r'\b(owner|creator|developer|made|who created|author|background)\b'],
+                'responses': {
+                    'admin': "This system was developed and is maintained by **Ali Mahirizi Abdalla** (Software Engineer & Ethical Hacker). 👨‍💻",
+                    'student': "This system is proudly created by **Ali Mahirizi Abdalla**, a skilled Software Engineer and Ethical Hacker. 👨‍💻"
+                }
+            },
+
             # Help/General
             {
                 'patterns': [r'\b(help|how|what|where|guide|tutorial)\b'],
