@@ -1,5 +1,0 @@
-HTML Template Validation Report
-===============================
-
-
-Summary: Checked 64 files. Found 0 errors.
