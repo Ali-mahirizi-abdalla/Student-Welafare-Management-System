@@ -206,8 +206,7 @@
                         <canvas id="roomOccupancyChart"></canvas>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div>
-                                <p class="text-3xl font-bold text-slate-900 dark:text-white">{{
-                                    room_stats.occupancy_rate }}%</p>
+                                <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ room_stats.occupancy_rate }}%</p>
                                 <p class="text-sm text-slate-500 dark:text-slate-400">Occupied</p>
                             </div>
                         </div>
@@ -237,8 +236,7 @@
                     </span>
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-slate-900 dark:text-white text-sm truncate">{{ m.title }}</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ m.student.user.first_name }} • {{
-                            m.created_at|date:"M d" }}</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ m.student.user.first_name }} • {{ m.created_at|date:"M d" }}</p>
                     </div>
                 </div>
                 {{ empty }}
@@ -263,10 +261,8 @@
                         {% if l.status == 'pending' %}🟡{% elif l.status == 'approved' %}✅{% else %}❌{% endif %}
                     </span>
                     <div class="flex-1 min-w-0">
-                        <p class="font-medium text-slate-900 dark:text-white text-sm truncate">{{
-                            l.student.user.get_full_name }}</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ l.get_leave_type_display }} • {{
-                            l.start_date|date:"M d" }}-{{ l.end_date|date:"M d" }}</p>
+                        <p class="font-medium text-slate-900 dark:text-white text-sm truncate">{{ l.student.user.get_full_name }}</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ l.get_leave_type_display }} • {{ l.start_date|date:"M d" }}-{{ l.end_date|date:"M d" }}</p>
                     </div>
                 </div>
                 {{ empty }}
@@ -288,8 +284,7 @@
                 {% for a in recent_announcements %}
                 <div class="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
                     <p class="font-medium text-slate-900 dark:text-white text-sm truncate">{{ a.title }}</p>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ a.created_at|date:"M d, Y" }} • {{
-                        a.get_priority_display }}</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ a.created_at|date:"M d, Y" }} • {{ a.get_priority_display }}</p>
                 </div>
                 {{ empty }}
                 <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No recent announcements</p>
@@ -301,8 +296,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const chartData = {{ chart_data_json| safe
-    }};
+        const chartData = {{ chart_data_json|safe }};
     const isDark = document.documentElement.classList.contains('dark');
     const gridColor = isDark ? '#1e293b' : '#f1f5f9';
     const textColor = isDark ? '#94a3b8' : '#64748b';

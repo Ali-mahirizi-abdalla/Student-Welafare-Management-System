@@ -249,8 +249,25 @@ class MaintenanceRequest(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+
+class StaffProfile(models.Model):
+    ROLE_CHOICES = [
+        ('DEFERMENT', 'Deferment Manager'),
+        ('MAINTENANCE_HOSTEL', 'Maintenance & Hostel Manager'),
+        ('ACTIVITIES_ROOMS', 'Activities & Rooms Manager'),
+        ('NEWS_ALERT', 'News & Announcements Manager'),
+        ('VISITORS', 'Visitor Log Manager'),
+        ('AUDIT_LOGS', 'Audit Compliance Officer'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    national_id = models.CharField(max_length=20, unique=True, verbose_name="Role ID / National ID")
+    phone = models.CharField(max_length=15)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        return f"{self.title} ({self.status})"
+        return f"{self.user.get_full_name()} - {self.get_role_display()}"
 
 class Document(models.Model):
     """Uploaded documents for students"""
@@ -388,7 +405,7 @@ class Room(models.Model):
     capacity = models.IntegerField(default=2)
     is_available = models.BooleanField(default=True)
     amenities = models.TextField(blank=True, help_text="List amenities (e.g., AC, attached bathroom)")
-    price_per_month = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    price_per_semester = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

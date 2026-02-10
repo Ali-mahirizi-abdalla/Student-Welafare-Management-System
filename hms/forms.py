@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import (Student, AwayPeriod, Document, Meal, MaintenanceRequest, 
                      LeaveRequest, Activity, Visitor,
-                     Message, Announcement, Room, RoomAssignment, RoomChangeRequest, LostItem)
+                     Message, Announcement, Room, RoomAssignment, RoomChangeRequest, LostItem, StaffProfile)
 
 class VisitorForm(forms.ModelForm):
     class Meta:
@@ -163,13 +163,67 @@ class StudentRegistrationForm(forms.ModelForm):
             
         return student
 
+class StaffRegistrationForm(forms.ModelForm):
+    # User fields
+    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'First Name'}))
+    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Last Name'}))
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Email Address'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Password'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Confirm Password'}))
+
+    # Staff fields
+    role = forms.ChoiceField(choices=StaffProfile.ROLE_CHOICES, widget=forms.Select(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
+    national_id = forms.CharField(max_length=20, required=True, label='Role ID / National ID', widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Enter Role ID or National ID'}))
+    phone = forms.CharField(max_length=15, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Phone Number'}))
+
+    class Meta:
+        model = StaffProfile
+        fields = ['role', 'national_id', 'phone']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password != confirm_password:
+            raise forms.ValidationError("Passwords do not match")
+        
+        return cleaned_data
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email is already in use.")
+        return email
+
+    def save(self, commit=True):
+        # 1. Create the User
+        user = User.objects.create_user(
+            username=self.cleaned_data['email'],
+            email=self.cleaned_data['email'],
+            password=self.cleaned_data['password'],
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+            is_staff=True  # All staff get is_staff access
+        )
+        
+        # 2. Create the staff profile
+        staff = StaffProfile.objects.create(
+            user=user,
+            role=self.cleaned_data['role'],
+            national_id=self.cleaned_data['national_id'],
+            phone=self.cleaned_data['phone']
+        )
+        
+        return staff
+
 class ProfileEditForm(forms.Form):
     """Form for editing user profile information"""
     first_name = forms.CharField(
         max_length=30, 
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full text-sm border-slate-300 rounded focus:ring-blue-500 focus:border-blue-500',
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
             'placeholder': 'First Name'
         })
     )
@@ -177,14 +231,14 @@ class ProfileEditForm(forms.Form):
         max_length=30,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full text-sm border-slate-300 rounded focus:ring-blue-500 focus:border-blue-500',
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
             'placeholder': 'Last Name'
         })
     )
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={
-            'class': 'w-full text-sm border-slate-300 rounded focus:ring-blue-500 focus:border-blue-500',
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
             'placeholder': 'Email Address'
         })
     )
@@ -192,17 +246,89 @@ class ProfileEditForm(forms.Form):
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full text-sm border-slate-300 rounded focus:ring-blue-500 focus:border-blue-500',
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
             'placeholder': 'Username'
+        })
+    )
+    university_id = forms.CharField(
+        max_length=20,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 uppercase',
+            'placeholder': 'e.g., SD06/PU/30104/25'
         })
     )
     phone = forms.CharField(
         max_length=15,
         required=False,
         widget=forms.TextInput(attrs={
-            'class': 'pl-10 w-full text-sm border-slate-300 rounded focus:ring-blue-500 focus:border-blue-500',
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
             'placeholder': '+254...'
         })
+    )
+    gender = forms.ChoiceField(
+        choices=[('', '-- Select Gender --')] + Student.GENDER_CHOICES,
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'id': 'gender'
+        })
+    )
+    program_of_study = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'placeholder': 'e.g., Computer Science'
+        })
+    )
+    county = forms.ChoiceField(
+        choices=[('', '-- Select County --')] + Student.COUNTY_CHOICES,
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'id': 'county-select'
+        })
+    )
+    residence_type = forms.ChoiceField(
+        choices=Student.RESIDENCE_TYPE_CHOICES,
+        required=True,
+        widget=forms.RadioSelect(attrs={'class': 'residence-type-radio'})
+    )
+    hostel = forms.ChoiceField(
+        choices=[('', '-- Select Hostel --')] + Student.HOSTEL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'id': 'hostel'
+        })
+    )
+    room_number = forms.CharField(
+        max_length=10,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'placeholder': 'e.g., 201',
+            'id': 'room_number'
+        })
+    )
+    disability = forms.ChoiceField(
+        choices=Student.DISABILITY_CHOICES,
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'id': 'disability-select',
+            'onchange': 'toggleDisabilityDetails()'
+        })
+    )
+    disability_details = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'id': 'disability_details',
+            'placeholder': 'Please specify...',
+            'rows': '2'
+        }),
+        required=False
     )
 
     def __init__(self, *args, user=None, student=None, **kwargs):
@@ -218,6 +344,15 @@ class ProfileEditForm(forms.Form):
         
         if student:
             self.fields['phone'].initial = student.phone
+            self.fields['university_id'].initial = student.university_id
+            self.fields['gender'].initial = student.gender
+            self.fields['program_of_study'].initial = student.program_of_study
+            self.fields['county'].initial = student.county
+            self.fields['residence_type'].initial = student.residence_type
+            self.fields['hostel'].initial = student.hostel
+            self.fields['room_number'].initial = student.room_number
+            self.fields['disability'].initial = student.disability
+            self.fields['disability_details'].initial = student.disability_details
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -242,6 +377,21 @@ class ProfileEditForm(forms.Form):
         
         if self.student:
             self.student.phone = self.cleaned_data.get('phone', '')
+            self.student.university_id = self.cleaned_data.get('university_id')
+            self.student.gender = self.cleaned_data.get('gender')
+            self.student.program_of_study = self.cleaned_data.get('program_of_study')
+            self.student.county = self.cleaned_data.get('county')
+            self.student.residence_type = self.cleaned_data.get('residence_type')
+            
+            if self.student.residence_type == 'hostel':
+                self.student.hostel = self.cleaned_data.get('hostel')
+                self.student.room_number = self.cleaned_data.get('room_number')
+            else:
+                self.student.hostel = None
+                self.student.room_number = None
+                
+            self.student.disability = self.cleaned_data.get('disability')
+            self.student.disability_details = self.cleaned_data.get('disability_details')
             self.student.save()
         
         return self.user, self.student
@@ -352,16 +502,42 @@ class MaintenanceStatusForm(forms.ModelForm):
 class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
-        fields = ['room_number', 'block', 'floor', 'room_type', 'capacity', 'price_per_month', 'is_available', 'amenities']
+        fields = ['room_number', 'block', 'floor', 'room_type', 'capacity', 'price_per_semester', 'is_available', 'amenities']
         widgets = {
-            'room_number': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white'}),
-            'block': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white', 'placeholder': 'e.g., Block A'}),
-            'floor': forms.NumberInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white'}),
-            'room_type': forms.Select(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white'}),
-            'capacity': forms.NumberInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white'}),
-            'price_per_month': forms.NumberInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white', 'step': '0.01'}),
-            'is_available': forms.CheckboxInput(attrs={'class': 'rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'}),
-            'amenities': forms.Textarea(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white', 'rows': 3, 'placeholder': 'e.g., Attached bathroom, Study desks, WiFi'}),
+            'room_number': forms.TextInput(attrs={
+                'class': 'w-full p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all',
+                'placeholder': 'e.g., 101',
+                'list': 'room_numbers_list'
+            }),
+            'block': forms.TextInput(attrs={
+                'class': 'w-full p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all',
+                'placeholder': 'e.g., 1',
+                'list': 'blocks_list'
+            }),
+            'floor': forms.NumberInput(attrs={
+                'class': 'w-full p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all',
+                'placeholder': '0'
+            }),
+            'room_type': forms.Select(attrs={
+                'class': 'w-full p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all cursor-pointer'
+            }),
+            'capacity': forms.NumberInput(attrs={
+                'class': 'w-full p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all',
+                'placeholder': '1'
+            }),
+            'price_per_semester': forms.NumberInput(attrs={
+                'class': 'w-full p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all',
+                'placeholder': '0.00',
+                'step': '0.01'
+            }),
+            'is_available': forms.CheckboxInput(attrs={
+                'class': 'w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer'
+            }),
+            'amenities': forms.Textarea(attrs={
+                'class': 'w-full p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all',
+                'rows': 3,
+                'placeholder': 'e.g., WiFi, Attached Bathroom, Study Table'
+            }),
         }
 
 class RoomAssignmentForm(forms.ModelForm):

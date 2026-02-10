@@ -23,6 +23,11 @@ def role_required(allowed_roles=[]):
             if any(role in user_groups for role in allowed_roles):
                 return view_func(request, *args, **kwargs)
             
+            # Check StaffProfile role
+            staff_profile = getattr(request.user, 'staff_profile', None)
+            if staff_profile and staff_profile.role in allowed_roles:
+                return view_func(request, *args, **kwargs)
+            
             # Use request objects to log permission denied in future if needed
             raise PermissionDenied("You do not have permission to access this resource.")
             

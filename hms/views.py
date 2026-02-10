@@ -11,12 +11,12 @@ from django.db.models import Q
 from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document, MaintenanceRequest,
                      Message, AuditLog,
                      LeaveRequest, DefermentRequest, Visitor,
-                     Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem)
+                     Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile)
 from .decorators import role_required, admin_only
 
 # ==================== Authentication ====================
 from .forms import (
-    StudentRegistrationForm, ProfileEditForm, AwayModeForm, ActivityForm, DocumentForm, 
+    StudentRegistrationForm, StaffRegistrationForm, ProfileEditForm, AwayModeForm, ActivityForm, DocumentForm, 
     TimetableForm, RoomSelectionForm, MessageForm, MaintenanceRequestForm,
     MaintenanceStatusForm, RoomForm, RoomAssignmentForm, RoomChangeRequestForm,
     LeaveRequestForm, DefermentRequestForm, LeaveApprovalForm, VisitorForm, AnnouncementForm, LostItemForm
@@ -39,32 +39,51 @@ def register_student(request):
     Creates a user and a student profile within a transaction.
     """
     if request.method == 'POST':
-        print("DEBUG: Registration POST received")
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
-            print("DEBUG: Form is valid")
             try:
                 with transaction.atomic():
                     student = form.save()
-                    print(f"DEBUG: Student created: {student}")
-                
-                # Log in AFTER transaction commits
                 login(request, student.user, backend='django.contrib.auth.backends.ModelBackend')
                 messages.success(request, 'Registration successful!')
                 return redirect('hms:student_dashboard')
-
             except Exception as e:
-                print(f"DEBUG: Registration Exception: {e}")
-                import traceback
-                traceback.print_exc()
                 messages.error(request, f"Registration failed: {str(e)}")
         else:
-            print(f"DEBUG: Form Errors: {form.errors}")
             for field, errors in form.errors.items():
                 messages.error(request, f"{field}: {', '.join(errors)}")
     else:
         form = StudentRegistrationForm()
     return render(request, 'hms/register.html', {'form': form})
+
+
+@login_required
+@admin_only
+def register_staff(request):
+    """
+    Handle staff registration logic for super admins.
+    Registers staff with name, role, national ID, phone, and password.
+    """
+    if not request.user.is_superuser:
+        messages.error(request, "Access Denied: Only super admins can register staff.")
+        return redirect('hms:admin_dashboard')
+
+    if request.method == 'POST':
+        form = StaffRegistrationForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    staff = form.save()
+                messages.success(request, f"Staff member {staff.user.get_full_name()} registered successfully!")
+                return redirect('hms:admin_dashboard')
+            except Exception as e:
+                messages.error(request, f"Error creating staff: {str(e)}")
+        else:
+            messages.error(request, "Registration failed. Please check the form for errors.")
+    else:
+        form = StaffRegistrationForm()
+
+    return render(request, 'hms/admin/register_staff.html', {'form': form})
 
 
 def user_login(request):
@@ -220,6 +239,46 @@ def student_dashboard(request):
     # Away Mode Form
     away_form = AwayModeForm()
 
+    # === QUICK STATS CALCULATIONS ===
+    # 1. Meals This Week
+    week_ago = today - timedelta(days=7)
+    meals_this_week = Meal.objects.filter(
+        student=student,
+        date__gte=week_ago,
+        date__lte=today
+    ).aggregate(
+        total=models.Count('id', filter=models.Q(breakfast=True) | models.Q(early=True) | models.Q(supper=True))
+    )['total'] or 0
+    
+    # 2. Days in Hostel (from first meal date or profile creation)
+    first_meal = Meal.objects.filter(student=student).order_by('date').first()
+    if first_meal:
+        days_in_hostel = (today - first_meal.date).days
+    else:
+        days_in_hostel = 0
+    
+    # 3. Upcoming Payments (mock data - no Payment model)
+    upcoming_payments = {
+        'count': 0,
+        'amount': 0,
+    }
+    
+    # 4. Active Requests (maintenance)
+    from hms.models import MaintenanceRequest
+    active_requests = MaintenanceRequest.objects.filter(
+        student=student,
+        status__in=['pending', 'in_progress']
+    ).count()
+    
+    # === WEATHER DATA ===
+    weather_data = {
+        'temperature': 24,  # Mock data - Celsius
+        'condition': 'Partly Cloudy',
+        'icon': 'cloud',  # Options: sun, cloud, rain, storm
+        'location': 'Campus',
+    }
+    # TODO: Integrate real weather API in production
+
     context = {
         'student': student,
         'meal_today': meal_today,
@@ -230,6 +289,12 @@ def student_dashboard(request):
         'is_away_today': is_away_today,
         'is_away_tomorrow': is_away_tomorrow,
         'away_form': away_form,
+        # Quick Stats
+        'meals_this_week': meals_this_week,
+        'days_in_hostel': days_in_hostel,
+        'upcoming_payments': upcoming_payments,
+        'active_requests': active_requests,
+        'weather_data': weather_data,
         # Pre-calculated attributes for template to avoid formatter breaking split tags
         'today_breakfast_attr': 'checked' if meal_today.breakfast else '',
         'today_early_attr': 'checked' if meal_today.early else '',
@@ -282,6 +347,32 @@ def student_profile(request):
     # Get recent meal history (Only today and future, as history disappears after 24h)
     meal_history = student.meals.filter(date__gte=date.today()).order_by('date')[:10]
     
+    # Generate QR code for student ID
+    import qrcode
+    import io
+    import base64
+    
+    qr_code_data = None
+    if student.university_id:
+        qr = qrcode.QRCode(version=1, box_size=10, border=2)
+        qr.add_data(student.university_id)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convert to base64 for embedding in template
+        buffer = io.BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+        qr_code_data = base64.b64encode(buffer.getvalue()).decode()
+    
+    # Payment summary (mock data - no Payment model exists yet)
+    payment_summary = {
+        'total_paid': 0,
+        'amount_pending': 0,
+        'next_due_date': None,
+        'status': 'no_records',  # Options: 'paid', 'pending', 'overdue', 'no_records'
+    }
+    
     # Forms
     room_form = RoomSelectionForm(instance=student)
     timetable_form = TimetableForm(instance=student)
@@ -292,6 +383,8 @@ def student_profile(request):
         'room_form': room_form,
         'timetable_form': timetable_form,
         'profile_form': profile_form,
+        'qr_code_data': qr_code_data,
+        'payment_summary': payment_summary,
     }
     return render(request, 'hms/student/profile.html', context)
 
@@ -381,7 +474,7 @@ def toggle_early_breakfast(request):
 # ==================== Admin/Kitchen ====================
 
 @login_required
-@role_required(['Admin', 'Warden', 'Finance'])
+@role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])
 def dashboard_admin(request):
     """Kitchen/Admin Dashboard"""
     # Auto-redirect for student attempting to access admin url handled by decorator (or 403)
@@ -431,6 +524,10 @@ def dashboard_admin(request):
     attachment_count = Student.objects.filter(is_on_attachment=True).count()
     graduating_count = Student.objects.filter(is_graduating=True).count()
     
+    # Staff Role Detection
+    staff_profile = getattr(request.user, 'staff_profile', None)
+    staff_role = staff_profile.role if staff_profile else None
+    
     context = {
         'today': today,
         'tomorrow': tomorrow,
@@ -448,7 +545,10 @@ def dashboard_admin(request):
         'attachment_count': attachment_count,
         'graduating_count': graduating_count,
         'today_activity': today_activity,
-        'activities': activities
+        'total_occupancy': in_hostel_count + off_campus_count,
+        'activities': activities,
+        'staff_role': staff_role,
+        'is_superadmin': request.user.is_superuser
     }
 
     # ==================== ADVANCED DASHBOARD LOGIC ====================
@@ -471,6 +571,16 @@ def dashboard_admin(request):
             models.Q(student__user__last_name__icontains=search_query) |
             models.Q(student__university_id__icontains=search_query)
         )
+
+    # 1b. Global Student Search (for "Full Info")
+    searched_students = []
+    if search_query:
+        searched_students = Student.objects.filter(
+            models.Q(user__first_name__icontains=search_query) | 
+            models.Q(user__last_name__icontains=search_query) |
+            models.Q(university_id__icontains=search_query) |
+            models.Q(phone__icontains=search_query)
+        ).select_related('user').prefetch_related('room_assignments__room')[:5]
 
     # 2. Daily Lists
     present_list = meals_query.filter(away=False)
@@ -550,12 +660,13 @@ def dashboard_admin(request):
         'unconfirmed_count': unconfirmed_count,
         'chart_data_json': json.dumps(chart_data),
         'recent_activity': recent_activity,
+        'searched_students': searched_students,
     })
 
     return render(request, 'hms/admin/dashboard.html', context)
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])
 def export_meals_csv(request):
     """Export confirmed meals to CSV"""
     
@@ -589,7 +700,91 @@ def export_meals_csv(request):
     return response
 
 @login_required
-@role_required(['Admin', 'Finance'])
+@role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])
+def export_students_csv(request):
+    """Export comprehensive student data to CSV including all details"""
+    
+    import csv
+    from datetime import date
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="SWMS_Student_Welfare_Report_{date.today()}.csv"'
+    
+    writer = csv.writer(response)
+    
+    # Comprehensive header
+    writer.writerow([
+        'Full Name', 'University ID', 'Email', 'Phone', 'Gender', 'County',
+        'Residence Type', 'Hostel', 'Room Number', 'Program of Study',
+        'Disability', 'Is Warden', 'Is On Attachment', 'Is Graduating',
+        'Active Deferments', 'Deferment Types', 'Deferment Status',
+        'Pending Maintenance Requests', 'Completed Maintenance Requests',
+        'Total Payments', 'Pending Payments', 'Completed Payments',
+        'Active Visitors Today', 'Emergency Alerts Count',
+        'Created At'
+    ])
+    
+    students = Student.objects.all().select_related('user').prefetch_related(
+        'deferment_requests', 'maintenance_requests', 'payments', 'visitors', 'emergency_alerts'
+    )
+    
+    for student in students:
+        # Deferment info
+        deferments = student.deferment_requests.all()
+        active_deferments = deferments.filter(status='approved').count()
+        deferment_types = ', '.join(set([d.get_deferment_type_display() for d in deferments]))
+        deferment_statuses = ', '.join(set([d.status for d in deferments]))
+        
+        # Maintenance info
+        maintenance = student.maintenance_requests.all()
+        pending_maintenance = maintenance.filter(status='pending').count()
+        completed_maintenance = maintenance.filter(status='completed').count()
+        
+        # Payment info
+        payments = student.payments.all()
+        total_payments = payments.count()
+        pending_payments = payments.filter(status='Pending').count()
+        completed_payments = payments.filter(status='Completed').count()
+        
+        # Visitor info (today)
+        active_visitors = student.visitors.filter(is_active=True).count()
+        
+        # Emergency alerts
+        emergency_count = student.emergency_alerts.count()
+        
+        writer.writerow([
+            student.user.get_full_name(),
+            student.university_id,
+            student.user.email,
+            student.phone,
+            student.get_gender_display() if student.gender else '-',
+            student.get_county_display() if student.county else '-',
+            student.get_residence_type_display(),
+            student.hostel or '-',
+            student.room_number or '-',
+            student.program_of_study or '-',
+            student.get_disability_display(),
+            'Yes' if student.is_warden else 'No',
+            'Yes' if student.is_on_attachment else 'No',
+            'Yes' if student.is_graduating else 'No',
+            active_deferments,
+            deferment_types or '-',
+            deferment_statuses or '-',
+            pending_maintenance,
+            completed_maintenance,
+            total_payments,
+            pending_payments,
+            completed_payments,
+            active_visitors,
+            emergency_count,
+            student.created_at.strftime('%Y-%m-%d') if student.created_at else '-'
+        ])
+        
+    return response
+
+
+@login_required
+@role_required(['Admin', 'Finance', 'MAINTENANCE_HOSTEL'])
 def manage_payments(request):
     """Admin view to manage/view all payments"""
     from django.db import models
@@ -1292,7 +1487,7 @@ def delete_maintenance_request(request, pk):
     return redirect('hms:student_maintenance_list')
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(['Admin', 'Warden', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS'])
 def manage_maintenance(request):
     """Admin view to manage maintenance tickets"""
         
@@ -1309,7 +1504,7 @@ def manage_maintenance(request):
     return render(request, 'hms/admin/maintenance_list.html', {'requests': requests})
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(['Admin', 'Warden', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS'])
 def update_maintenance_status(request, pk):
     """Admin view to update status of a ticket"""
          
@@ -1632,7 +1827,7 @@ def delete_leave_request(request, pk):
 # ========== DEFERMENT MANAGEMENT VIEWS ==========
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(['Admin', 'Warden', 'DEFERMENT'])
 def admin_deferment_all(request):
     """Admin views all deferment requests"""
     
@@ -1720,7 +1915,7 @@ def admin_deferment_resumed(request):
     return render(request, 'hms/admin/deferment_list.html', context)
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(['Admin', 'Warden', 'DEFERMENT'])
 def review_deferment(request, pk):
     """Admin approves/rejects/updates a deferment request"""
     
@@ -1779,7 +1974,7 @@ approve_leave_request = review_deferment
 # ==================== ANALYTICS DASHBOARD ====================
 
 @login_required
-@role_required(['Admin', 'Warden', 'Finance'])
+@role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])
 def analytics_dashboard(request):
     """Comprehensive analytics dashboard for admins"""
     
@@ -1967,6 +2162,7 @@ def analytics_dashboard(request):
 
 
 @login_required
+@role_required(['Admin', 'Warden', 'VISITORS'])
 def visitor_management(request):
     """View to list active visitors and check them in/out"""
     # Only staff can manage visitors
@@ -2001,6 +2197,7 @@ def visitor_management(request):
     return render(request, 'hms/admin/visitor_management.html', context)
 
 @login_required
+@role_required(['Admin', 'Warden', 'VISITORS'])
 def checkout_visitor(request, visitor_id):
     """View to check out a visitor"""
     if not request.user.is_staff and not request.user.student_profile.is_warden:
@@ -2022,6 +2219,18 @@ def checkout_visitor(request, visitor_id):
 
 @login_required
 def pay_accommodation(request):
+    try:
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        messages.error(request, "Student profile not found.")
+        return redirect('hms:dashboard')
+
+    # Get active room assignment to find the fee
+    room_assignment = RoomAssignment.objects.filter(student=student, is_active=True).first()
+    default_amount = 0
+    if room_assignment:
+        default_amount = room_assignment.room.price_per_semester
+
     if request.method == 'POST':
         phone = request.POST.get('phone')
         amount = request.POST.get('amount')
@@ -2030,13 +2239,6 @@ def pay_accommodation(request):
         if not phone or not amount:
             messages.error(request, "Please provide phone number and amount")
             return redirect('hms:pay_accommodation')
-
-        # Save pending payment
-        try:
-            student = request.user.student_profile
-        except Student.DoesNotExist:
-            messages.error(request, "Student profile not found.")
-            return redirect('hms:dashboard')
 
         payment = Payment.objects.create(
             student=student,
@@ -2047,7 +2249,6 @@ def pay_accommodation(request):
         
         # Initiate STK Push
         mpesa = MpesaClient()
-        # Ensure callback URL is accessible from internet (e.g. ngrok) for local dev
         callback_url = settings.MPESA_CALLBACK_URL
         response = mpesa.stk_push(phone, amount, "Accommodation", callback_url)
         
@@ -2063,7 +2264,10 @@ def pay_accommodation(request):
             
         return redirect('hms:payment_history')
         
-    return render(request, 'hms/student/pay_accommodation.html')
+    return render(request, 'hms/student/pay_accommodation.html', {
+        'default_amount': default_amount,
+        'room_assignment': room_assignment
+    })
 
 @login_required
 def payment_history(request):
@@ -2257,7 +2461,7 @@ def global_search(request):
 # ==================== Audit Logs ====================
 
 @login_required
-@role_required(['Admin', 'Finance'])
+@role_required(['Admin', 'Finance', 'MAINTENANCE_HOSTEL'])
 def audit_log_list(request):
     """
     Admin/Finance view for Audit Logs.
@@ -2307,7 +2511,7 @@ def audit_log_list(request):
     return render(request, 'hms/admin/audit_logs.html', context)
 
 @login_required
-@role_required(['Admin', 'Finance'])
+@role_required(['Admin', 'Finance', 'MAINTENANCE_HOSTEL'])
 def audit_log_export(request):
     """
     Export Audit Logs to CSV based on current filters.
