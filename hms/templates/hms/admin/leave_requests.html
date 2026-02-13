@@ -70,8 +70,7 @@
                                 {{ leave.student.user.first_name.0 }}{{ leave.student.user.last_name.0 }}
                             </div>
                             <div>
-                                <h3 class="font-semibold text-slate-900 dark:text-white">{{
-                                    leave.student.user.get_full_name }}</h3>
+                                <h3 class="font-semibold text-slate-900 dark:text-white">{{ leave.student.user.get_full_name }}</h3>
                                 <p class="text-sm text-slate-500 dark:text-slate-400">{{ leave.student.university_id }}
                                     • {{ leave.student.user.email }}</p>
                             </div>
@@ -81,14 +80,12 @@
                             <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                                 <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                                     Deferment Type</p>
-                                <p class="font-medium text-slate-900 dark:text-white text-sm">{{
-                                    leave.get_leave_type_display }}</p>
+                                <p class="font-medium text-slate-900 dark:text-white text-sm">{{ leave.get_leave_type_display }}</p>
                             </div>
                             <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                                 <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                                     Duration</p>
-                                <p class="font-medium text-slate-900 dark:text-white text-sm">{{
-                                    leave.start_date|date:"M d" }} - {{ leave.end_date|date:"M d" }}</p>
+                                <p class="font-medium text-slate-900 dark:text-white text-sm">{{ leave.start_date|date:"M d" }} - {{ leave.end_date|date:"M d" }}</p>
                             </div>
                             <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                                 <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Days
@@ -99,8 +96,7 @@
                             <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                                 <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                                     Destination</p>
-                                <p class="font-medium text-slate-900 dark:text-white text-sm truncate">{{
-                                    leave.destination }}</p>
+                                <p class="font-medium text-slate-900 dark:text-white text-sm truncate">{{ leave.destination }}</p>
                             </div>
                         </div>
 

@@ -252,17 +252,133 @@ class MaintenanceRequest(models.Model):
 
 class StaffProfile(models.Model):
     ROLE_CHOICES = [
-        ('DEFERMENT', 'Deferment Manager'),
-        ('MAINTENANCE_HOSTEL', 'Maintenance & Hostel Manager'),
-        ('ACTIVITIES_ROOMS', 'Activities & Rooms Manager'),
-        ('NEWS_ALERT', 'News & Announcements Manager'),
-        ('VISITORS', 'Visitor Log Manager'),
-        ('AUDIT_LOGS', 'Audit Compliance Officer'),
+        # Executive
+        ('VC', 'Vice Chancellor'),
+        ('DVC_AFP', 'DVC, Administration, Finance and Planning'),
+        ('DVC_ASA', 'DVC, Academic and Student Affairs'),
+        ('DVC_RE', 'DVC, Research and Extension'),
+        
+        # Directors (Academic Admin)
+        ('DIR_QA', 'Director, Quality Assurance'),
+        ('DIR_RM', 'Director, Resource Mobilisation'),
+        ('DIR_RPDO', 'Director, Research, Production, Development, and Outreach'),
+        ('DIR_IEC', 'Director, Innovation, Entrepreneurship and Commercialization'),
+        ('DIR_TVET', 'Director, TVET'),
+        ('DIR_BGS', 'Director, Board of Graduate Studies'),
+        ('DIR_BUS', 'Director, Board of Undergraduate Studies'),
+        
+        # Registrars
+        ('REG_AP', 'Registrar, Administration and Planning'),
+        ('REG_ASA', 'Registrar, Academic and Student Affairs'),
+        ('DEP_REG_EXAM', 'Deputy Registrar, Examinations'),
+        ('DEP_REG_AP', 'Deputy Registrar, Academic Programmes'),
+        ('DEP_REG_ADM', 'Deputy Registrar, Admissions'),
+        
+        # School of Agricultural Sciences & Agribusiness
+        ('DEAN_AGRI', 'Dean, School of Agricultural Sciences & Agribusiness'),
+        ('DEPT_ANIMAL', 'Department of Animal Sciences'),
+        ('DEPT_CROP', 'Department of Crop Sciences'),
+        
+        # School of Business and Economics
+        ('DEAN_BE', 'Dean, School of Business and Economics'),
+        ('DEPT_BME', 'Department of Business Management & Economics'),
+        ('DEPT_HTM', 'Department of Hospitality and Tourism Management'),
+        
+        # School of Education
+        ('DEAN_EDU', 'Dean, School of Education'),
+        ('COD_CIT', 'COD, Department of Curriculum Instruction and Technology'),
+        ('COD_EP_SN', 'COD, Department of Educational Psychology and Special Needs'),
+        ('COD_EF', 'COD, Department of Educational Foundations'),
+        ('COD_EAEP', 'COD, Department of Educational Administration, Economics and Planning'),
+        
+        # School of Environmental and Earth Sciences
+        ('DEAN_EES', 'Dean, School of Environmental and Earth Sciences'),
+        ('DEPT_ES', 'Department of Environmental Sciences'),
+        ('DEPT_CD', 'Department of Community Development'),
+        
+        # School of Health and Human Sciences
+        ('DEAN_HHS', 'Dean, School of Health and Human Sciences'),
+        ('DEPT_AP', 'Department of Anatomy and Physiology'),
+        ('DEPT_PH', 'Department of Public Health'),
+        ('DEPT_FND', 'Department of Food Nutrition and Dietetics'),
+        ('DEPT_NURSING', 'Department of Nursing'),
+        
+        # School of Humanities and Social Sciences
+        ('DEAN_HSS', 'Dean, School of Humanities & Social Sciences'),
+        ('DEPT_SS', 'Department of Social Sciences'),
+        ('DEPT_LLL', 'Department of Languages, Linguistics & Literature'),
+        ('DEPT_PRS', 'Department of Philosophy and Religious Studies'),
+        
+        # School of Pure and Applied Sciences
+        ('DEAN_PAS', 'Dean, School of Pure & Applied Sciences'),
+        ('DEPT_BS', 'Department of Biological Sciences'),
+        ('DEPT_CHEM', 'Department of Chemistry'),
+        ('DEPT_BB', 'Department of Biochemistry and Biotechnology'),
+        ('DEPT_PHYSICS', 'Department of Physics'),
+        ('DEPT_MCS', 'Department of Mathematics and Computer Science'),
+        
+        # Support/Misc
+        ('LAB_IN_CHARGE', 'In charge Laboratories'),
+        ('PUBREC_MGR', 'Manager, PUBReC'),
+        ('COORDINATOR_MTLC', 'Coordinator, Mombasa Teaching and Learning Centre'),
+        ('DEAN_STUDENTS', 'Dean of Students'),
+        ('SPORTS_OFFICER', 'Sports Officer'),
+        ('ACU_COORD', 'Coordinator, Aids Control Unit'),
+        ('CATERING_IN_CHARGE', 'In charge, Students Catering Unit'),
+        ('HEALTH_UNIT_HEAD', 'Head of Health Unit'),
+        ('COUNSELLING_IN_CHARGE', 'In charge, Counselling'),
+        ('ACC_IN_CHARGE', 'In charge, Accommodation (M&F)'),
+        
+        # Section Heads
+        ('ERC', 'Ethics Review Committee'),
+        ('FINANCE_OFFICER', 'Finance Officer'),
+        ('HR_MANAGER', 'Human Resource Manager'),
+        ('INTERNAL_AUDITOR', 'Internal Auditor'),
+        ('LEGAL_HEAD', 'Head, Corporate and Legal and Council Affairs'),
+        ('FARM_MANAGER', 'Farm Manager'),
+        ('RESOURCE_CENTER_IN_CHARGE', 'In charge, Resource Centre'),
+        ('LIBRARY_HEAD', 'Head of University Library'),
+        ('ICT_MANAGER', 'Manager, ICT'),
+        ('SECURITY_CHIEF', 'Chief Security Officer'),
+        ('PROCUREMENT_HEAD', 'Head, Procurement and Supplies'),
+        ('ESTATES_HEAD', 'Head, Estates and Infrastructure Planning'),
+        ('MAINTENANCE_HEAD', 'Head, Maintenance'),
+        ('TRANSPORT_HEAD', 'Head, Transport'),
+        ('REGISTRY_CLERK', 'Registry Clerk'),
+        ('KUDHEIHA', 'KUDHEIHA'),
+        ('KUSU', 'KUSU'),
+        ('UASU', 'UASU'),
+        
+        # Legacy mappings (for backward compatibility)
+        ('DEFERMENT', 'Deferment Manager (Legacy)'),
+        ('MAINTENANCE_HOSTEL', 'Maintenance & Hostel Manager (Legacy)'),
+        ('ACTIVITIES_ROOMS', 'Activities & Rooms Manager (Legacy)'),
+        ('NEWS_ALERT', 'News & Announcements Manager (Legacy)'),
+        ('VISITORS', 'Visitor Log Manager (Legacy)'),
+        ('AUDIT_LOGS', 'Audit Compliance Officer (Legacy)'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile')
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES)
     national_id = models.CharField(max_length=20, unique=True, verbose_name="Role ID / National ID")
     phone = models.CharField(max_length=15)
+
+    def get_category(self):
+        """Categorize roles for permission logic"""
+        role = self.role
+        if role in ['VC', 'DVC_AFP', 'DVC_ASA', 'DVC_RE', 'REG_AP', 'REG_ASA']:
+            return 'EXECUTIVE'
+        if role.startswith('DEAN_') or role.startswith('DIR_') or role.startswith('DEP_REG_'):
+            return 'ACADEMIC_ADMIN'
+        if role.startswith('COD_') or role.startswith('DEPT_'):
+            return 'SCHOOL_DEPT'
+        if role in ['FINANCE_OFFICER', 'HR_MANAGER', 'INTERNAL_AUDITOR', 'LEGAL_HEAD', 'PROCUREMENT_HEAD', 'AUDIT_LOGS']:
+            return 'FINANCE_ADMIN'
+        if role in ['DEAN_STUDENTS', 'SPORTS_OFFICER', 'ACU_COORD', 'CATERING_IN_CHARGE', 'HEALTH_UNIT_HEAD', 'COUNSELLING_IN_CHARGE', 'ACC_IN_CHARGE', 'ACTIVITIES_ROOMS', 'NEWS_ALERT']:
+            return 'STUDENT_SERVICES'
+        if role in ['ICT_MANAGER', 'SECURITY_CHIEF', 'ESTATES_HEAD', 'MAINTENANCE_HEAD', 'TRANSPORT_HEAD', 'LAB_IN_CHARGE', 'MAINTENANCE_HOSTEL', 'VISITORS']:
+            return 'TECHNICAL_ESTATES'
+        return 'GENERAL_STAFF'
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

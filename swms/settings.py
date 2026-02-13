@@ -135,6 +135,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'hms.context_processors.unread_messages',
+                'hms.context_processors.staff_role_info',
             ],
         },
     },

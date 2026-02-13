@@ -58,8 +58,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-gray-500">
-                            <div class="font-medium text-gray-900 dark:text-gray-300">{{ event.event_date|date:"M d, Y"
-                                }}</div>
+                            <div class="font-medium text-gray-900 dark:text-gray-300">{{ event.event_date|date:"M d, Y" }}</div>
                             <div class="text-xs">{{ event.start_time|time:"H:i" }}</div>
                         </td>
                         <td class="px-6 py-4 text-center">
@@ -67,8 +66,7 @@
                             <a href="{% url 'hms:event_attendees' event.id %}"
                                 class="inline-flex items-center gap-1 font-bold text-indigo-400 hover:text-indigo-300">
                                 {{ event.rsvp_count }}
-                                {% if event.max_participants %}<span class="text-gray-500 font-normal">/ {{
-                                    event.max_participants }}</span>{% endif %}
+                                {% if event.max_participants %}<span class="text-gray-500 font-normal">/ {{ event.max_participants }}</span>{% endif %}
                             </a>
                             {% else %}
                             <span class="text-gray-400">-</span>

@@ -31,8 +31,7 @@
                     placeholder="Amount" value="{{ default_amount|default:'0' }}">
                 {% if room_assignment %}
                 <p class="text-xs text-slate-500 mt-1">
-                    Room: {{ room_assignment.room.room_number }} ({{ room_assignment.room.block }}) - {{
-                    room_assignment.room.room_type|title }}
+                    Room: {{ room_assignment.room.room_number }} ({{ room_assignment.room.block }}) - {{ room_assignment.room.room_type|title }}
                 </p>
                 {% else %}
                 <p class="text-xs text-red-500 mt-1">No active room assignment found. Please contact administration.</p>

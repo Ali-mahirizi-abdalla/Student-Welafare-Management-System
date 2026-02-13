@@ -83,7 +83,10 @@ def register_staff(request):
     else:
         form = StaffRegistrationForm()
 
-    return render(request, 'hms/admin/register_staff.html', {'form': form})
+    return render(request, 'hms/admin/register_staff.html', {
+        'form': form,
+        'role_choices': StaffProfile.ROLE_CHOICES
+    })
 
 
 def user_login(request):
@@ -474,7 +477,7 @@ def toggle_early_breakfast(request):
 # ==================== Admin/Kitchen ====================
 
 @login_required
-@role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])
+@role_required(allowed_roles=['Admin'], allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'STUDENT_SERVICES', 'TECHNICAL_ESTATES'])
 def dashboard_admin(request):
     """Kitchen/Admin Dashboard"""
     # Auto-redirect for student attempting to access admin url handled by decorator (or 403)
@@ -527,6 +530,7 @@ def dashboard_admin(request):
     # Staff Role Detection
     staff_profile = getattr(request.user, 'staff_profile', None)
     staff_role = staff_profile.role if staff_profile else None
+    staff_category = staff_profile.get_category() if staff_profile else None
     
     context = {
         'today': today,
@@ -548,6 +552,7 @@ def dashboard_admin(request):
         'total_occupancy': in_hostel_count + off_campus_count,
         'activities': activities,
         'staff_role': staff_role,
+        'staff_category': staff_category,
         'is_superadmin': request.user.is_superuser
     }
 
@@ -784,7 +789,7 @@ def export_students_csv(request):
 
 
 @login_required
-@role_required(['Admin', 'Finance', 'MAINTENANCE_HOSTEL'])
+@role_required(allowed_categories=['EXECUTIVE', 'FINANCE_ADMIN'])
 def manage_payments(request):
     """Admin view to manage/view all payments"""
     from django.db import models
@@ -812,7 +817,7 @@ def manage_payments(request):
     return render(request, 'hms/admin/manage_payments.html', context)
 
 @login_required
-@role_required(['Admin'])
+@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'STUDENT_SERVICES'])
 def send_meal_notifications(request):
     """Send email notifications about unconfirmed students"""
     
@@ -887,7 +892,7 @@ Do not reply to this email.
     return redirect('hms:admin_dashboard')
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'STUDENT_SERVICES'])
 def manage_students(request):
     """List and filter students (admin only)"""
     
@@ -1038,7 +1043,7 @@ def announcements_list(request):
     return render(request, 'hms/student/announcements.html', context)
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'STUDENT_SERVICES'])
 def manage_announcements(request):
     """Manage announcements (admin only)"""
     
@@ -1135,7 +1140,7 @@ def create_announcement(request):
 # ==================== Activities ====================
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(allowed_categories=['STUDENT_SERVICES'])
 def activities_list(request):
     """View and manage all activities"""
     
@@ -1487,7 +1492,7 @@ def delete_maintenance_request(request, pk):
     return redirect('hms:student_maintenance_list')
 
 @login_required
-@role_required(['Admin', 'Warden', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS'])
+@role_required(allowed_categories=['TECHNICAL_ESTATES', 'STUDENT_SERVICES'])
 def manage_maintenance(request):
     """Admin view to manage maintenance tickets"""
         
@@ -1528,7 +1533,7 @@ def update_maintenance_status(request, pk):
 # ==================== ROOM MANAGEMENT ====================
 
 @login_required
-@role_required(['Admin', 'Warden'])
+@role_required(allowed_categories=['TECHNICAL_ESTATES', 'STUDENT_SERVICES'])
 def room_list(request):
     """View all rooms (admin only)"""
     
@@ -1827,7 +1832,7 @@ def delete_leave_request(request, pk):
 # ========== DEFERMENT MANAGEMENT VIEWS ==========
 
 @login_required
-@role_required(['Admin', 'Warden', 'DEFERMENT'])
+@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN'])
 def admin_deferment_all(request):
     """Admin views all deferment requests"""
     
@@ -1869,11 +1874,9 @@ def admin_deferment_under_review(request):
     return render(request, 'hms/admin/deferment_list.html', context)
 
 @login_required
+@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN'])
 def admin_deferment_approved(request):
     """Admin views approved deferment requests"""
-    if not request.user.is_staff:
-        messages.error(request, "Access denied. Admin only.")
-        return redirect('hms:student_dashboard')
     
     deferments = DefermentRequest.objects.filter(status='approved').select_related('student__user').order_by('-created_at')
     
@@ -1885,11 +1888,9 @@ def admin_deferment_approved(request):
     return render(request, 'hms/admin/deferment_list.html', context)
 
 @login_required
+@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN'])
 def admin_deferment_rejected(request):
     """Admin views rejected deferment requests"""
-    if not request.user.is_staff:
-        messages.error(request, "Access denied. Admin only.")
-        return redirect('hms:student_dashboard')
     
     deferments = DefermentRequest.objects.filter(status='rejected').select_related('student__user').order_by('-created_at')
     
@@ -1974,7 +1975,7 @@ approve_leave_request = review_deferment
 # ==================== ANALYTICS DASHBOARD ====================
 
 @login_required
-@role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])
+@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'STUDENT_SERVICES', 'TECHNICAL_ESTATES'])
 def analytics_dashboard(request):
     """Comprehensive analytics dashboard for admins"""
     
@@ -2162,13 +2163,10 @@ def analytics_dashboard(request):
 
 
 @login_required
-@role_required(['Admin', 'Warden', 'VISITORS'])
+@role_required(allowed_categories=['EXECUTIVE', 'TECHNICAL_ESTATES'])
 def visitor_management(request):
     """View to list active visitors and check them in/out"""
-    # Only staff can manage visitors
-    if not request.user.is_staff and not request.user.student_profile.is_warden:
-        messages.error(request, "You do not have permission to access visitor management.")
-        return redirect('hms:student_dashboard')
+    # Decorator handles permission
     
     # Handle Check-In Form Submission
     if request.method == 'POST':
@@ -2200,10 +2198,7 @@ def visitor_management(request):
 @role_required(['Admin', 'Warden', 'VISITORS'])
 def checkout_visitor(request, visitor_id):
     """View to check out a visitor"""
-    if not request.user.is_staff and not request.user.student_profile.is_warden:
-        messages.error(request, "Permission denied.")
-        return redirect('hms:student_dashboard')
-        
+    
     visitor = get_object_or_404(Visitor, id=visitor_id)
     
     if visitor.is_active:
@@ -2461,7 +2456,7 @@ def global_search(request):
 # ==================== Audit Logs ====================
 
 @login_required
-@role_required(['Admin', 'Finance', 'MAINTENANCE_HOSTEL'])
+@role_required(allowed_categories=['EXECUTIVE', 'FINANCE_ADMIN'])
 def audit_log_list(request):
     """
     Admin/Finance view for Audit Logs.
@@ -2603,6 +2598,7 @@ def update_student_status(request):
 # ==================== LOST AND FOUND ====================
 
 @login_required
+@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
 def lost_found_list(request):
     """List all lost and found items"""
     status_filter = request.GET.get('status', 'ALL')

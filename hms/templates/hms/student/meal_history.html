@@ -158,8 +158,7 @@
                 </li>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li>
                     <a class="px-3 py-1 border border-slate-300 rounded-md text-slate-600 hover:bg-slate-50"
-                        href="?page={{ num }}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.meal_type %}&meal_type={{ request.GET.meal_type }}{% endif %}">{{
-                        num }}</a>
+                        href="?page={{ num }}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.meal_type %}&meal_type={{ request.GET.meal_type }}{% endif %}">{{ num }}</a>
                     </li>
                     {% endif %}
                     {% endfor %}

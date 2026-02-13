@@ -172,13 +172,33 @@ class StaffRegistrationForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Confirm Password'}))
 
     # Staff fields
-    role = forms.ChoiceField(choices=StaffProfile.ROLE_CHOICES, widget=forms.Select(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
+    role = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'list': 'role_list',
+            'placeholder': 'Type or select a role...'
+        })
+    )
     national_id = forms.CharField(max_length=20, required=True, label='Role ID / National ID', widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Enter Role ID or National ID'}))
     phone = forms.CharField(max_length=15, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Phone Number'}))
 
     class Meta:
         model = StaffProfile
         fields = ['role', 'national_id', 'phone']
+
+    def clean_role(self):
+        role_label = self.cleaned_data.get('role')
+        # Check if it's already a value
+        valid_values = [v for v, l in StaffProfile.ROLE_CHOICES]
+        if role_label in valid_values:
+            return role_label
+        
+        # Check if it's a label and map to value
+        label_map = {l: v for v, l in StaffProfile.ROLE_CHOICES}
+        if role_label in label_map:
+            return label_map[role_label]
+            
+        raise forms.ValidationError(f"'{role_label}' is not a valid role. Please select from the suggestions.")
 
     def clean(self):
         cleaned_data = super().clean()

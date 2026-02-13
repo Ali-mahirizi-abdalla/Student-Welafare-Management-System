@@ -89,8 +89,7 @@
                                 <p class="font-medium text-slate-900 dark:text-white text-sm">
                                     {{ d.get_deferment_type_display }}
                                     {% if d.deferment_type == 'other' and d.other_reason_detail %}
-                                    <span class="text-slate-500 font-normal">- {{
-                                        d.other_reason_detail|truncatechars:30 }}</span>
+                                    <span class="text-slate-500 font-normal">- {{ d.other_reason_detail|truncatechars:30 }}</span>
                                     {% endif %}
                                 </p>
                             </div>

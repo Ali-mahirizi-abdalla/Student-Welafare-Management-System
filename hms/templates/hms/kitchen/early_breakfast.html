@@ -39,8 +39,7 @@
                 {% for confirmation in students %}
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-6 py-4 text-sm text-slate-500">{{ forloop.counter }}</td>
-                    <td class="px-6 py-4 text-sm font-semibold text-slate-800">{{
-                        confirmation.student.user.get_full_name }}</td>
+                    <td class="px-6 py-4 text-sm font-semibold text-slate-800">{{ confirmation.student.user.get_full_name }}</td>
                     <td class="px-6 py-4 text-sm text-slate-600">{{ confirmation.student.room_number }}</td>
                     <td class="px-6 py-4 text-sm text-slate-500">{{ confirmation.student.phone_number|default:"N/A" }}
                     </td>

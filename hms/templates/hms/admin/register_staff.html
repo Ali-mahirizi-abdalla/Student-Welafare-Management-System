@@ -105,6 +105,11 @@
                                     class="block text-sm font-medium text-slate-700 dark:text-slate-300">Assigned
                                     Role</label>
                                 {{ form.role }}
+                                <datalist id="role_list">
+                                    {% for value, label in role_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </datalist>
                                 {% if form.role.errors %}
                                 <p class="text-red-500 text-xs mt-1">{{ form.role.errors.0 }}</p>
                                 {% endif %}

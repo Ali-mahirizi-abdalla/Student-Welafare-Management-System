@@ -92,8 +92,7 @@
                 <div class="glass-card overflow-hidden">
                     <div class="p-4 bg-green-900/10 border-b border-green-900/20 flex justify-between items-center">
                         <h3 class="text-lg font-bold text-green-800 dark:text-green-300">Currently Active Visitors</h3>
-                        <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">{{
-                            active_visitors|length }} Active</span>
+                        <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">{{ active_visitors|length }} Active</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
@@ -121,10 +120,8 @@
                                         </span>
                                     </td>
                                     <td class="p-4">
-                                        <p class="text-sm text-gray-900 dark:text-white">{{
-                                            visitor.student.user.get_full_name }}</p>
-                                        <p class="text-xs text-gray-500">{{ visitor.student.room_number|default:"No
-                                            Room" }}</p>
+                                        <p class="text-sm text-gray-900 dark:text-white">{{ visitor.student.user.get_full_name }}</p>
+                                        <p class="text-xs text-gray-500">{{ visitor.student.room_number|default:"No Room" }}</p>
                                     </td>
                                     <td class="p-4 text-sm text-gray-600 dark:text-gray-300">
                                         {{ visitor.check_in_time|date:"g:i A" }}
@@ -165,8 +162,7 @@
                                     </td>
                                     <td class="p-3 text-gray-500">Visited {{ visitor.student.user.first_name }}</td>
                                     <td class="p-3 text-gray-400 text-right">
-                                        <span class="block text-xs">In: {{ visitor.check_in_time|date:"M d, H:i"
-                                            }}</span>
+                                        <span class="block text-xs">In: {{ visitor.check_in_time|date:"M d, H:i" }}</span>
                                         <span class="block text-xs">Out: {{ visitor.check_out_time|date:"H:i" }}</span>
                                     </td>
                                 </tr>

@@ -43,8 +43,7 @@
                         {{ leave_request.student.user.first_name.0 }}{{ leave_request.student.user.last_name.0 }}
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{
-                            leave_request.student.user.get_full_name }}</h3>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{ leave_request.student.user.get_full_name }}</h3>
                         <p class="text-slate-600 dark:text-slate-400">{{ leave_request.student.university_id }}</p>
                         <p class="text-sm text-slate-500 dark:text-slate-500">{{ leave_request.student.user.email }}</p>
                     </div>
@@ -52,13 +51,11 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                         <p class="text-xs text-slate-500 dark:text-slate-400 uppercase">Phone</p>
-                        <p class="font-medium text-slate-900 dark:text-white">{{
-                            leave_request.student.phone|default:"Not provided" }}</p>
+                        <p class="font-medium text-slate-900 dark:text-white">{{ leave_request.student.phone|default:"Not provided" }}</p>
                     </div>
                     <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
                         <p class="text-xs text-slate-500 dark:text-slate-400 uppercase">Room</p>
-                        <p class="font-medium text-slate-900 dark:text-white">{{
-                            leave_request.student.room_number|default:"Not assigned" }}</p>
+                        <p class="font-medium text-slate-900 dark:text-white">{{ leave_request.student.room_number|default:"Not assigned" }}</p>
                     </div>
                 </div>
             </div>
@@ -79,14 +76,12 @@
                         class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800">
                         <p class="text-xs text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">Leave
                             Type</p>
-                        <p class="font-bold text-emerald-800 dark:text-emerald-300">{{
-                            leave_request.get_leave_type_display }}</p>
+                        <p class="font-bold text-emerald-800 dark:text-emerald-300">{{ leave_request.get_leave_type_display }}</p>
                     </div>
                     <div
                         class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-800">
                         <p class="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">Start Date</p>
-                        <p class="font-bold text-blue-800 dark:text-blue-300">{{ leave_request.start_date|date:"M d, Y"
-                            }}</p>
+                        <p class="font-bold text-blue-800 dark:text-blue-300">{{ leave_request.start_date|date:"M d, Y" }}</p>
                     </div>
                     <div
                         class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-800">

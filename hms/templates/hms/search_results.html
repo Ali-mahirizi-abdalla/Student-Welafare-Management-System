@@ -62,8 +62,7 @@
                         <div>
                             <h3 class="font-semibold text-gray-900 dark:text-white">{{ student.user.get_full_name }}
                             </h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ student.university_id }} · {{
-                                student.user.email }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ student.university_id }} · {{ student.user.email }}</p>
                         </div>
                     </div>
                 </a>
@@ -91,10 +90,8 @@
                 <a href="{% url 'hms:announcements' %}"
                     class="block px-6 py-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
                     <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ announcement.title }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{
-                        announcement.content|truncatewords:30 }}</p>
-                    <span class="text-xs text-gray-400 dark:text-gray-500 mt-2 inline-block">{{
-                        announcement.created_at|timesince }} ago</span>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ announcement.content|truncatewords:30 }}</p>
+                    <span class="text-xs text-gray-400 dark:text-gray-500 mt-2 inline-block">{{ announcement.created_at|timesince }} ago</span>
                 </a>
                 {% endfor %}
             </div>
@@ -123,8 +120,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ request.location }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{
-                                request.description|truncatewords:20 }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ request.description|truncatewords:20 }}</p>
                         </div>
                         <span class="px-2 py-1 text-xs font-bold rounded-md 
                             {% if request.status == 'pending' %}bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400
@@ -160,11 +156,9 @@
                     <div class="flex justify-between items-start">
                         <div>
                             {% if user.is_staff %}
-                            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{
-                                deferment.student.user.get_full_name }}</h3>
+                            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ deferment.student.user.get_full_name }}</h3>
                             {% endif %}
-                            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{
-                                deferment.reason|truncatewords:20 }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ deferment.reason|truncatewords:20 }}</p>
                             <span class="text-xs text-gray-400 dark:text-gray-500 mt-2 inline-block">
                                 {{ deferment.start_date }} → {{ deferment.end_date }}
                             </span>
