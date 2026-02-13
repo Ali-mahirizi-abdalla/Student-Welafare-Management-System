@@ -1,112 +1,159 @@
-﻿{% extends 'hms/base.html' %}
+{% extends 'hms/base.html' %}
 
 {% block title %}{{ action }} Room{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-8">
-    <div class="bg-slate-800/90 backdrop-blur-lg rounded-2xl border border-white/10 shadow-xl p-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-purple-300">
-                {{ action }} Room
-            </h1>
-            <p class="text-gray-400 mt-2">{% if action == 'Edit' %}Update room details{% else %}Add a new room to the hostel{% endif %}</p>
+<div class="flex justify-center items-center py-10 min-h-screen">
+    <div class="w-full max-w-2xl glass-panel rounded-2xl shadow-2xl overflow-hidden border border-white/60">
+        <!-- Header: Indigo Style matched to other professional pages -->
+        <div class="bg-indigo-600/95 p-8 text-center backdrop-blur-sm border-b border-white/10">
+            <div
+                class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                    </path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white tracking-tight">{{ action }} Room</h2>
+            <p class="text-indigo-100 mt-1 opacity-90">{% if action == 'Edit' %}Update room details{% else %}Add a new
+                room to the hostel inventory{% endif %}</p>
         </div>
 
-        <form method="post" class="space-y-6">
-            {% csrf_token %}
+        <div class="p-8 bg-white/80 backdrop-blur-md">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Room Number</label>
-                    <input type="text" name="room_number" value="{{ form.room_number.value|default:'' }}" required
-                        class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all hover:bg-black/30"
-                        placeholder="e.g., A-101">
-                    {% if form.room_number.errors %}
-                    <p class="text-red-400 text-sm">{{ form.room_number.errors.0 }}</p>
+                {% if form.non_field_errors %}
+                <div class="bg-red-50 text-red-600 p-4 rounded-xl text-sm border border-red-200">
+                    {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Row 1: Room Number and Type -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">Room
+                            Number</label>
+                        {{ form.room_number }}
+                        {% if form.room_number.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ form.room_number.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">Room
+                            Type</label>
+                        {{ form.room_type }}
+                        {% if form.room_type.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ form.room_type.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Row 2: Block, Floor, Capacity -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">Block</label>
+                        {{ form.block }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">Floor</label>
+                        {{ form.floor }}
+                    </div>
+                    <div>
+                        <label
+                            class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">Capacity</label>
+                        {{ form.capacity }}
+                    </div>
+                </div>
+
+                <!-- Row 3: Monthly Price -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">Semester Price
+                        (KES)</label>
+                    <div class="relative">
+                        <span
+                            class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 font-bold">KES</span>
+                        <div class="pl-12">
+                            {{ form.price_per_semester }}
+                        </div>
+                    </div>
+                    {% if form.price_per_semester.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ form.price_per_semester.errors.0 }}</p>
                     {% endif %}
                 </div>
 
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Room Type</label>
-                    <div class="relative">
-                        <select name="room_type" required
-                            class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all hover:bg-black/30 appearance-none">
-                            <option value="single" {% if form.room_type.value == 'single' %}selected{% endif %}
-                                class="bg-gray-800">Single</option>
-                            <option value="double" {% if form.room_type.value == 'double' %}selected{% endif %}
-                                class="bg-gray-800">Double</option>
-                            <option value="triple" {% if form.room_type.value == 'triple' %}selected{% endif %}
-                                class="bg-gray-800">Triple</option>
-                            <option value="quad" {% if form.room_type.value == 'quad' %}selected{% endif %}
-                                class="bg-gray-800">Quad</option>
-                        </select>
-                        <div
-                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
+                <!-- Amenities -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">Amenities</label>
+                    {{ form.amenities }}
+                    <p class="text-[10px] text-gray-400 mt-1">Separate amenities with commas</p>
+                </div>
+
+                <!-- Availability Toggle -->
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-700">Available for Assignment</span>
+                        <p class="text-xs text-gray-500">Can students be assigned to this room?</p>
                     </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Block</label>
-                    <input type="text" name="block" value="{{ form.block.value|default:'' }}"
-                        class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all hover:bg-black/30"
-                        placeholder="e.g., A, B, C">
-                </div>
-
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Floor</label>
-                    <input type="number" name="floor" value="{{ form.floor.value|default:'' }}" min="0"
-                        class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all hover:bg-black/30"
-                        placeholder="e.g., 1, 2, 3">
-                </div>
-
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Capacity</label>
-                    <input type="number" name="capacity" value="{{ form.capacity.value|default:'1' }}" min="1" max="10"
-                        required
-                        class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all hover:bg-black/30"
-                        placeholder="Number of beds">
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-300">Monthly Price (KES)</label>
-                <input type="number" name="price_per_month" value="{{ form.price_per_month.value|default:'0' }}" min="0"
-                    step="0.01"
-                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all hover:bg-black/30"
-                    placeholder="e.g., 5000">
-            </div>
-
-            <div class="flex items-center pb-1">
-                <label
-                    class="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition duration-200">
-                    <div class="relative">
-                        <input type="checkbox" name="is_available" class="sr-only peer" {% if form.is_available.value or not room %}checked{% endif %}>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        {{ form.is_available }}
                         <div
-                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500">
+                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600">
                         </div>
-                    </div>
-                    <span class="text-gray-300 font-medium select-none">Available for Assignment</span>
-                </label>
-            </div>
+                    </label>
+                </div>
 
-            <div class="flex items-center gap-4 pt-6 border-t border-white/10">
-                <button type="submit"
-                    class="flex-1 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-bold py-3 px-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition duration-200">
-                    {{ action }} Room
-                </button>
-                <a href="{% url 'hms:room_list' %}"
-                    class="px-6 py-3 rounded-xl border border-white/20 text-gray-300 hover:bg-white/5 transition text-center min-w-[120px]">
-                    Cancel
-                </a>
-            </div>
-        </form>
+                <!-- Datalists for suggestions -->
+                <datalist id="room_numbers_list">
+                    {% for i in "x"|rjust:"500"|make_list %}
+                    <option value="{{ forloop.counter }}"></option>
+                    {% endfor %}
+                </datalist>
+                <datalist id="blocks_list">
+                    {% for i in "x"|rjust:"500"|make_list %}
+                    <option value="{{ forloop.counter }}"></option>
+                    {% endfor %}
+                    <option value="Block A"></option>
+                    <option value="Block B"></option>
+                    <option value="Block C"></option>
+                </datalist>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col md:flex-row gap-4 pt-6 border-t border-gray-100">
+                    <button type="submit"
+                        class="flex-1 bg-indigo-600 text-white font-bold py-4 px-6 rounded-2xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition duration-200 shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        {{ action }} Room
+                    </button>
+                    <a href="{% url 'hms:room_list' %}"
+                        class="px-8 py-4 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition text-center font-bold">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<style>
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Custom hidden checkbox for the toggle to work with Tailwind peer classes */
+    input[name="is_available"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+</style>
 {% endblock %}

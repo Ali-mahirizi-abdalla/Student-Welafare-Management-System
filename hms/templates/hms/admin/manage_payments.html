@@ -12,7 +12,7 @@
     </div>
 
     <!-- Search and Filter Form -->
-    <div class="glass-card mb-4 mt-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 mb-8 mt-4">
         <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="form-group mb-0">
                 <input type="text" name="q" class="form-input" placeholder="Transaction ID or Name..."
@@ -34,67 +34,55 @@
 
     <!-- Payments List -->
     {% if payments %}
-    <div class="glass-card overflow-auto p-1">
-        <table class="table-container">
-            <thead style="background-color: #334155; color: white;">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50 border-b-2 border-slate-100">
                 <tr>
-                    <th
-                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
-                        TRANSACTION ID</th>
-                    <th
-                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
-                        STUDENT</th>
-                    <th
-                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
-                        AMOUNT (KSH)</th>
-                    <th
-                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
-                        STATUS</th>
-                    <th
-                        style="padding: 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
-                        DATE</th>
+                    <th class="p-4 font-extrabold text-slate-900 uppercase tracking-widest text-[10px]">TRANSACTION ID
+                    </th>
+                    <th class="p-4 font-extrabold text-slate-900 uppercase tracking-widest text-[10px]">STUDENT</th>
+                    <th class="p-4 font-extrabold text-slate-900 uppercase tracking-widest text-[10px]">AMOUNT (KSH)
+                    </th>
+                    <th class="p-4 font-extrabold text-slate-900 uppercase tracking-widest text-[10px]">STATUS</th>
+                    <th class="p-4 font-extrabold text-slate-900 uppercase tracking-widest text-[10px]">DATE</th>
                 </tr>
             </thead>
             <tbody>
                 {% for payment in payments %}
-                <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;"
-                    onmouseover="this.style.backgroundColor='#f1f5f9'"
-                    onmouseout="this.style.backgroundColor='#ffffff'">
-                    <td style="padding: 12px; font-family: monospace; font-weight: 700; color: #1e293b;">
-                        {{ payment.transaction_id }}
+                <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                    <td class="p-4 font-mono font-bold text-slate-900">{{ payment.transaction_id }}</td>
+                    <td class="p-4">
+                        <div class="font-bold text-indigo-600 text-sm">{{ payment.student.user.get_full_name }}</div>
+                        <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{{ payment.student.university_id }}</div>
                     </td>
-                    <td style="padding: 12px;">
-                        <div style="font-weight: 700; color: #4f46e5; font-size: 0.95rem;">{{
-                            payment.student.user.get_full_name }}</div>
-                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">{{
-                            payment.student.university_id }}</div>
-                    </td>
-                    <td style="padding: 12px; color: #0f172a; font-weight: 700;">
-                        {{ payment.amount|floatformat:2 }}
-                    </td>
-                    <td style="padding: 12px;">
+                    <td class="p-4 font-bold text-slate-900">{{ payment.amount|floatformat:2 }}</td>
+                    <td class="p-4">
                         {% if payment.status == 'Completed' %}
-                        <span class="badge badge-success">Completed</span>
+                        <span
+                            class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg text-[10px] uppercase font-bold tracking-widest">Completed</span>
                         {% elif payment.status == 'Pending' %}
-                        <span class="badge badge-warning">Pending</span>
+                        <span
+                            class="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-100 rounded-lg text-[10px] uppercase font-bold tracking-widest">Pending</span>
                         {% else %}
-                        <span class="badge badge-danger">{{ payment.status }}</span>
+                        <span
+                            class="px-3 py-1 bg-rose-50 text-rose-700 border border-rose-100 rounded-lg text-[10px] uppercase font-bold tracking-widest">{{ payment.status }}</span>
                         {% endif %}
                     </td>
-                    <td style="padding: 12px; color: #64748b; font-size: 0.85rem;">
-                        {{ payment.created_at|date:"M d, Y H:i" }}
-                    </td>
+                    <td class="p-4 text-slate-500 font-medium text-xs">{{ payment.created_at|date:"M d, Y H:i" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     {% else %}
-    <div class="glass-card flex-center py-5 text-center">
-        <div>
-            <i class="fas fa-credit-card fa-3x text-muted opacity-30 mb-3"></i>
-            <h3 class="text-secondary">No payment records found</h3>
-            <p class="text-muted">Try adjusting your filters or search query.</p>
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl p-12 text-center">
+        <div class="max-w-md mx-auto">
+            <div
+                class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                <i class="fas fa-credit-card text-2xl text-slate-300"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">No payment records found</h3>
+            <p class="text-slate-500">Try adjusting your filters or search query.</p>
         </div>
     </div>
     {% endif %}

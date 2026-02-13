@@ -23,19 +23,19 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div class="text-4xl font-bold text-slate-800 mb-1">{{ total_students }}</div>
-            <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">Total Students</div>
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+            <div class="text-xl font-bold text-slate-800 mb-0.5">{{ total_students }}</div>
+            <div class="text-[10px] font-medium text-slate-500 uppercase tracking-wide">Total Students</div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div class="text-4xl font-bold text-amber-600 mb-1">{{ students_away }}</div>
-            <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">Students Away</div>
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+            <div class="text-xl font-bold text-amber-600 mb-0.5">{{ students_away }}</div>
+            <div class="text-[10px] font-medium text-slate-500 uppercase tracking-wide">Students Away</div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div class="text-4xl font-bold text-blue-600 mb-1">{{ total_students|add:"-"|add:students_away }}</div>
-            <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">Students Present</div>
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+            <div class="text-xl font-bold text-blue-600 mb-0.5">{{ total_students|add:"-"|add:students_away }}</div>
+            <div class="text-[10px] font-medium text-slate-500 uppercase tracking-wide">Students Present</div>
         </div>
     </div>
 </div>
@@ -48,31 +48,31 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="todayMeals">
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition">
-        <div class="text-4xl mb-2">🌅</div>
-        <div class="text-3xl font-bold text-slate-800 mb-1" id="today-breakfast">{{ today_breakfast }}</div>
-        <div class="text-sm font-bold text-slate-600 uppercase tracking-wide">Breakfast</div>
-        <div class="text-xs text-slate-400 mt-1">8:00 AM - 9:00 AM</div>
+    <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition">
+        <div class="text-2xl mb-1">🌅</div>
+        <div class="text-xl font-bold text-slate-800 mb-0.5" id="today-breakfast">{{ today_breakfast }}</div>
+        <div class="text-[10px] font-bold text-slate-600 uppercase tracking-wide">Breakfast</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">8:00 - 9:00 AM</div>
         {% if today_early_breakfast > 0 %}
         <div
-            class="mt-3 bg-amber-50 text-amber-700 text-xs font-bold py-1 px-2 rounded border border-amber-200 inline-block">
-            ⏰ {{ today_early_breakfast }} need early breakfast
+            class="mt-2 bg-amber-50 text-amber-700 text-[10px] font-bold py-0.5 px-2 rounded border border-amber-200 inline-block">
+            ⏰ {{ today_early_breakfast }} early
         </div>
         {% endif %}
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition">
-        <div class="text-4xl mb-2">☀️</div>
-        <div class="text-3xl font-bold text-slate-800 mb-1" id="today-lunch">{{ today_lunch }}</div>
-        <div class="text-sm font-bold text-slate-600 uppercase tracking-wide">Lunch</div>
-        <div class="text-xs text-slate-400 mt-1">12:00 PM - 2:00 PM</div>
+    <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition">
+        <div class="text-2xl mb-1">☀️</div>
+        <div class="text-xl font-bold text-slate-800 mb-0.5" id="today-lunch">{{ today_lunch }}</div>
+        <div class="text-[10px] font-bold text-slate-600 uppercase tracking-wide">Lunch</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">12:00 - 2:00 PM</div>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition">
-        <div class="text-4xl mb-2">🌙</div>
-        <div class="text-3xl font-bold text-slate-800 mb-1" id="today-supper">{{ today_supper }}</div>
-        <div class="text-sm font-bold text-slate-600 uppercase tracking-wide">Supper</div>
-        <div class="text-xs text-slate-400 mt-1">6:00 PM - 8:00 PM</div>
+    <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition">
+        <div class="text-2xl mb-1">🌙</div>
+        <div class="text-xl font-bold text-slate-800 mb-0.5" id="today-supper">{{ today_supper }}</div>
+        <div class="text-[10px] font-bold text-slate-600 uppercase tracking-wide">Supper</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">6:00 - 8:00 PM</div>
     </div>
 </div>
 
@@ -85,33 +85,33 @@
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="tomorrowMeals">
     <div
-        class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center opacity-75 hover:opacity-100 transition">
-        <div class="text-4xl mb-2">🌅</div>
-        <div class="text-3xl font-bold text-slate-800 mb-1" id="tomorrow-breakfast">{{ tomorrow_breakfast }}</div>
-        <div class="text-sm font-bold text-slate-600 uppercase tracking-wide">Breakfast</div>
-        <div class="text-xs text-slate-400 mt-1">8:00 AM - 9:00 AM</div>
+        class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 text-center opacity-75 hover:opacity-100 transition">
+        <div class="text-2xl mb-1">🌅</div>
+        <div class="text-xl font-bold text-slate-800 mb-0.5" id="tomorrow-breakfast">{{ tomorrow_breakfast }}</div>
+        <div class="text-[10px] font-bold text-slate-600 uppercase tracking-wide">Breakfast</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">8:00 - 9:00 AM</div>
         {% if tomorrow_early_breakfast > 0 %}
         <div
-            class="mt-3 bg-amber-50 text-amber-700 text-xs font-bold py-1 px-2 rounded border border-amber-200 inline-block">
-            ⏰ {{ tomorrow_early_breakfast }} need early breakfast
+            class="mt-2 bg-amber-50 text-amber-700 text-[10px] font-bold py-0.5 px-2 rounded border border-amber-200 inline-block">
+            ⏰ {{ tomorrow_early_breakfast }} early
         </div>
         {% endif %}
     </div>
 
     <div
-        class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center opacity-75 hover:opacity-100 transition">
-        <div class="text-4xl mb-2">☀️</div>
-        <div class="text-3xl font-bold text-slate-800 mb-1" id="tomorrow-lunch">{{ tomorrow_lunch }}</div>
-        <div class="text-sm font-bold text-slate-600 uppercase tracking-wide">Lunch</div>
-        <div class="text-xs text-slate-400 mt-1">12:00 PM - 2:00 PM</div>
+        class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 text-center opacity-75 hover:opacity-100 transition">
+        <div class="text-2xl mb-1">☀️</div>
+        <div class="text-xl font-bold text-slate-800 mb-0.5" id="tomorrow-lunch">{{ tomorrow_lunch }}</div>
+        <div class="text-[10px] font-bold text-slate-600 uppercase tracking-wide">Lunch</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">12:00 - 2:00 PM</div>
     </div>
 
     <div
-        class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center opacity-75 hover:opacity-100 transition">
-        <div class="text-4xl mb-2">🌙</div>
-        <div class="text-3xl font-bold text-slate-800 mb-1" id="tomorrow-supper">{{ tomorrow_supper }}</div>
-        <div class="text-sm font-bold text-slate-600 uppercase tracking-wide">Supper</div>
-        <div class="text-xs text-slate-400 mt-1">6:00 PM - 8:00 PM</div>
+        class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 text-center opacity-75 hover:opacity-100 transition">
+        <div class="text-2xl mb-1">🌙</div>
+        <div class="text-xl font-bold text-slate-800 mb-0.5" id="tomorrow-supper">{{ tomorrow_supper }}</div>
+        <div class="text-[10px] font-bold text-slate-600 uppercase tracking-wide">Supper</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">6:00 - 8:00 PM</div>
     </div>
 </div>
 
@@ -183,7 +183,7 @@
                         {% endif %}
                     </td>
                 </tr>
-                {{ empty }}
+                {% empty %}
                 <tr>
                     <td colspan="5" class="px-6 py-8 text-center text-slate-500 italic">
                         No meals confirmed for today yet.

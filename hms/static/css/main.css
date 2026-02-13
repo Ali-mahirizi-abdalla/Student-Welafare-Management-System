@@ -22,18 +22,18 @@
     /* Cyan */
 
     /* Backgrounds - Professional Light Mode Palette */
-    --bg-dark: #111827;
-    /* Gray 900 */
-    --bg-darker: #1f2937;
-    /* Gray 800 */
-    --bg-card: rgba(31, 41, 55, 0.8);
-    /* Gray-based Dark Cards */
-    --bg-app-light: #f8fafc;
-    /* Slate 50 - Soft Professional White */
-    --bg-gradient-top: linear-gradient(135deg, #374151 0%, #4b5563 100%);
-    /* Gray Gradient */
-    --bg-gradient-header: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-    --bg-gradient-body: linear-gradient(135deg, #111827 0%, #1f2937 50%, #374151 100%);
+    --bg-dark: #f8fafc;
+    /* Slate 50 */
+    --bg-darker: #f1f5f9;
+    /* Slate 100 */
+    --bg-card: #ffffff;
+    /* Pure White Cards */
+    --bg-app-light: #ffffff;
+    /* Pure White Background */
+    --bg-gradient-top: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    /* Very Light Gradient */
+    --bg-gradient-header: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+    --bg-gradient-body: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
 
     /* Dark Mode Defaults */
     --dm-bg: #111827;
@@ -41,29 +41,28 @@
     --dm-border: rgba(255, 255, 255, 0.08);
 
     /* Text - High Contrast for Readability */
-    --text-primary: #f1f5f9;
-    /* Light text for dark background */
-    --text-secondary: #94a3b8;
-    /* Medium Light */
+    --text-primary: #0f172a;
+    /* Slate 900 for maximum visibility */
+    --text-secondary: #334155;
+    /* Slate 700 */
     --text-muted: #64748b;
-    /* Muted text */
+    /* Slate 500 */
     --text-white: #ffffff;
-    /* White */
-    --text-dark: #0f172a;
-    /* Slate 900 - Darkest for headings */
+    --text-dark: #020617;
+    /* Slate 950 - Absolute black-blue */
     --text-body: #1e293b;
-    /* Slate 800 - Body text */
-    --text-label: #334155;
-    /* Slate 700 - Labels */
-    --text-description: #475569;
-    /* Slate 600 - Descriptions */
+    /* Slate 800 - Standard body */
+    --text-label: #475569;
+    /* Slate 600 - Labels */
+    --text-description: #64748b;
+    /* Slate 500 - Descriptions */
 
     /* Card Styling */
-    --glass-bg: rgba(30, 41, 59, 0.7);
-    --glass-bg-hover: rgba(30, 41, 59, 0.9);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-    --glass-blur: blur(10px);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-bg-hover: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(0, 0, 0, 0.05);
+    --glass-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --glass-blur: blur(12px);
 
     /* Glow Effects */
     --glow-primary: 0 0 20px rgba(99, 102, 241, 0.3);
@@ -93,9 +92,9 @@
 
     /* Overrides */
     --overlay-opacity: 0.5;
-    --input-bg: rgba(17, 24, 39, 0.7);
-    --input-text: #ffffff;
-    --navbar-bg: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    --input-bg: #ffffff;
+    --input-text: #1f2937;
+    --navbar-bg: #ffffff;
 }
 
 * {
@@ -116,20 +115,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-[data-theme="dark"] body {
-    background: var(--dm-bg);
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] {
-    --bg-gradient-body: linear-gradient(135deg, #111827 0%, #1f2937 50%, #374151 100%);
-    --bg-card: var(--dm-card);
-    --text-primary: #f1f5f9;
-    --text-secondary: #9ca3af;
-    --glass-bg: rgba(31, 41, 55, 0.8);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-bg-hover: rgba(31, 41, 55, 0.9);
-}
 
 /* ==================== Modern Chat Themes ==================== */
 
@@ -252,11 +237,6 @@ body {
     border: 1px solid var(--glass-border);
 }
 
-[data-theme="dark"] .bubble-received {
-    background: #002855;
-    color: white;
-    border-color: rgba(255, 255, 255, 0.05);
-}
 
 /* ==================== Glowing Border Effect ==================== */
 .container {
@@ -349,10 +329,6 @@ body {
     overflow: hidden;
 }
 
-[data-theme="dark"] .glass-card {
-    background: var(--dm-card);
-    border-color: var(--glass-border);
-}
 
 .glass-card:hover {
     transform: translateY(-5px);
@@ -376,9 +352,6 @@ body {
     margin: 0;
 }
 
-[data-theme="dark"] .card-title {
-    color: #f1f5f9;
-}
 
 /* ==================== Typography ==================== */
 h1,
@@ -394,14 +367,6 @@ h6 {
     color: #111827;
 }
 
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6 {
-    color: #f1f5f9;
-}
 
 h1 {
     font-size: clamp(1.8rem, 5vw, 2.5rem);
@@ -1699,4 +1664,63 @@ tr:hover {
 /* Button Pulse on Hover */
 .btn-pulse:hover {
     animation: pulse 1.5s infinite;
+}
+
+/* ==================== Dark Mode Overrides ==================== */
+[data-theme="dark"] {
+    --bg-dark: #111827;
+    /* Slate 900 */
+    --bg-darker: #0f172a;
+    /* Slate 950 */
+    --bg-card: #1f2937;
+    /* Slate 800 */
+    --bg-app-light: #0f172a;
+    --bg-gradient-top: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+    --bg-gradient-body: linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-body: #f1f5f9;
+    --text-label: #cbd5e1;
+    --text-description: #94a3b8;
+
+    --glass-bg: rgba(31, 41, 55, 0.7);
+    --glass-bg-hover: rgba(31, 41, 55, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --input-bg: #1f2937;
+    --input-text: #f8fafc;
+    --navbar-bg: #111827;
+}
+
+[data-theme="dark"] body {
+    background: var(--bg-app-light);
+    color: var(--text-body);
+}
+
+[data-theme="dark"] .glass-card {
+    background: var(--bg-card);
+    border-color: var(--glass-border);
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] .card-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .navbar {
+    background: var(--navbar-bg);
 }

@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ==================== Theme Management ====================
 function initializeTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeColors(savedTheme);
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.remove('dark');
+    updateThemeColors('light');
 }
 
 function initializeThemeToggle() {
@@ -83,12 +83,10 @@ function toggleTheme() {
 }
 
 function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    updateThemeColors(theme);
-
-    // Dispatch custom event for other components
-    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    updateThemeColors('light');
 }
 
 function updateThemeColors(theme) {

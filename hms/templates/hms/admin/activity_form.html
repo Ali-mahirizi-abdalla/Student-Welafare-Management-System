@@ -1,94 +1,99 @@
 {% extends 'hms/base.html' %}
+{# EDITED BY AGENT - PLEASE RELOAD if your editor asks #}
 
 {% block title %}{% if edit_mode %}Edit{% else %}Create{% endif %} Activity{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-8">
-    <div
-        class="bg-gradient-to-br from-slate-700 via-slate-600 to-slate-700 rounded-2xl border border-emerald-400/30 shadow-xl p-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-300">
-                {% if edit_mode %}Edit{% else %}Create{% endif %} Activity
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl shadow-slate-200/50 p-10">
+        <!-- Header -->
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">
+                {% if edit_mode %}Edit{% else %}Create{% endif %} <span
+                    class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500">Activity</span>
             </h1>
-            <p class="text-gray-200 mt-2">{{ edit_mode|yesno:"Update activity details,Schedule a new weekly activity" }}
-            </p>
+            <p class="text-slate-500 mt-2 font-medium">{{ edit_mode|yesno:"Update activity details for the weekly schedule,Schedule a new weekly recurring activity" }}</p>
         </div>
 
-        <form method="post" class="space-y-6">
+        <form method="post" class="space-y-8">
             {% csrf_token %}
 
+            <!-- Activity Name -->
             <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-300">Activity Name</label>
+                <label class="block text-sm font-bold text-slate-700 ml-1">Activity Name</label>
                 <input type="text" name="display_name" value="{{ activity.display_name|default:'' }}" required
-                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all hover:bg-black/30"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white transition-all duration-200"
                     placeholder="e.g., Morning Yoga, Study Group">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Day of Week -->
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Day of Week</label>
-                    <div class="relative">
+                    <label class="block text-sm font-bold text-slate-700 ml-1">Day of Week</label>
+                    <div class="relative group">
                         <select name="weekday" required
-                            class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all hover:bg-black/30 appearance-none">
-                            <option value="0" {% if activity.weekday == 0 %}selected{% endif %} class="bg-gray-800">Monday
-                            </option>
-                            <option value="1" {% if activity.weekday == 1 %}selected{% endif %} class="bg-gray-800">
-                                Tuesday</option>
-                            <option value="2" {% if activity.weekday == 2 %}selected{% endif %} class="bg-gray-800">
-                                Wednesday</option>
-                            <option value="3" {% if activity.weekday == 3 %}selected{% endif %} class="bg-gray-800">
-                                Thursday</option>
-                            <option value="4" {% if activity.weekday == 4 %}selected{% endif %} class="bg-gray-800">Friday
-                            </option>
-                            <option value="5" {% if activity.weekday == 5 %}selected{% endif %} class="bg-gray-800">
-                                Saturday</option>
-                            <option value="6" {% if activity.weekday == 6 %}selected{% endif %} class="bg-gray-800">Sunday
-                            </option>
+                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white transition-all duration-200 appearance-none cursor-pointer">
+                            <option value="0" {% if activity.weekday == 0 %}selected{% endif %}>Monday</option>
+                            <option value="1" {% if activity.weekday == 1 %}selected{% endif %}>Tuesday</option>
+                            <option value="2" {% if activity.weekday == 2 %}selected{% endif %}>Wednesday</option>
+                            <option value="3" {% if activity.weekday == 3 %}selected{% endif %}>Thursday</option>
+                            <option value="4" {% if activity.weekday == 4 %}selected{% endif %}>Friday</option>
+                            <option value="5" {% if activity.weekday == 5 %}selected{% endif %}>Saturday</option>
+                            <option value="6" {% if activity.weekday == 6 %}selected{% endif %}>Sunday</option>
                         </select>
                         <div
-                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
                     </div>
                 </div>
 
+                <!-- Time -->
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Time</label>
-                    <input type="time" name="time" value="{{ activity.time|time:'H:i'|default:'' }}"
-                        class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all hover:bg-black/30">
+                    <label class="block text-sm font-bold text-slate-700 ml-1">Time</label>
+                    <div class="relative">
+                        <input type="time" name="time" value="{{ activity.time|time:'H:i'|default:'' }}"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white transition-all duration-200">
+                    </div>
                 </div>
             </div>
 
+            <!-- Description -->
             <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-300">Description</label>
+                <label class="block text-sm font-bold text-slate-700 ml-1">Description</label>
                 <textarea name="description" rows="4"
-                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all hover:bg-black/30"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white transition-all duration-200 resize-none"
                     placeholder="Provide details about this activity...">{{ activity.description|default:'' }}</textarea>
             </div>
 
-            <div class="flex items-center pb-1">
-                <label
-                    class="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition duration-200">
+            <!-- Active Toggle -->
+            <div class="flex items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <label class="flex items-center space-x-4 cursor-pointer w-full">
                     <div class="relative">
                         <input type="checkbox" name="active" class="sr-only peer" {% if activity.active or not edit_mode %}checked{% endif %}>
                         <div
-                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500">
+                            class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-[20px] after:w-[20px] after:transition-all peer-checked:bg-emerald-500">
                         </div>
                     </div>
-                    <span class="text-gray-300 font-medium select-none">Active</span>
+                    <div class="flex flex-col">
+                        <span class="text-slate-900 font-bold tracking-tight">Active Status</span>
+                        <span class="text-xs text-slate-500 font-medium italic">Make this activity visible on the
+                            schedule</span>
+                    </div>
                 </label>
             </div>
 
-            <div class="flex items-center gap-4 pt-6 border-t border-white/10">
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-slate-100">
                 <button type="submit"
-                    class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold py-3 px-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition duration-200">
+                    class="w-full sm:flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black py-4 px-8 rounded-2xl shadow-xl shadow-emerald-100 transform hover:-translate-y-1 transition-all duration-200">
                     {% if edit_mode %}Update{% else %}Create{% endif %} Activity
                 </button>
                 <a href="{% url 'hms:activities' %}"
-                    class="px-6 py-3 rounded-xl border border-white/20 text-gray-300 hover:bg-white/5 transition text-center min-w-[120px]">
+                    class="w-full sm:w-auto px-8 py-4 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all font-bold text-center">
                     Cancel
                 </a>
             </div>
@@ -96,4 +101,3 @@
     </div>
 </div>
 {% endblock %}
-

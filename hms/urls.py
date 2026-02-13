@@ -28,7 +28,9 @@ urlpatterns = [
     path('manage/dashboard/', views.dashboard_admin, name='admin_dashboard'),
     path('manage/payments/', views.manage_payments, name='manage_payments'),
     path('manage/export-csv/', views.export_meals_csv, name='export_meals_csv'),
+    path('manage/export-students-csv/', views.export_students_csv, name='export_students_csv'),
     path('manage/send-notifications/', views.send_meal_notifications, name='send_notifications'),
+    path('manage/staff/register/', views.register_staff, name='register_staff'),
     
     # Student Management
     path('manage/students/', views.manage_students, name='manage_students'),

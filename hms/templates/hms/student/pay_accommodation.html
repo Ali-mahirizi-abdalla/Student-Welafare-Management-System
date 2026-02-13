@@ -24,10 +24,18 @@
             </div>
 
             <div class="space-y-2">
-                <label class="block text-sm font-bold text-slate-700 dark:text-gray-200">Amount (KES)</label>
+                <label class="block text-sm font-bold text-slate-700 dark:text-gray-200">Amount (KES) - Semester
+                    Fee</label>
                 <input type="number" name="amount" required min="1"
                     class="w-full bg-slate-50 dark:bg-black/40 border border-slate-300 dark:border-white/20 rounded-xl px-4 py-3 text-slate-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent font-bold"
-                    placeholder="Amount" value="10"> <!-- Default small amount for testing -->
+                    placeholder="Amount" value="{{ default_amount|default:'0' }}">
+                {% if room_assignment %}
+                <p class="text-xs text-slate-500 mt-1">
+                    Room: {{ room_assignment.room.room_number }} ({{ room_assignment.room.block }}) - {{ room_assignment.room.room_type|title }}
+                </p>
+                {% else %}
+                <p class="text-xs text-red-500 mt-1">No active room assignment found. Please contact administration.</p>
+                {% endif %}
             </div>
 
             <button type="submit"
