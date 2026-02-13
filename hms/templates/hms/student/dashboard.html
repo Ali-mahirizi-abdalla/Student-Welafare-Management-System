@@ -144,16 +144,14 @@
                     </svg>
                     {% endif %}
                 </div>
-                <span class="text-[10px] font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">{{
-                    weather_data.location }}</span>
+                <span class="text-[10px] font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">{{ weather_data.location }}</span>
             </div>
             <div class="flex items-baseline gap-1">
                 <div class="text-xl font-bold text-purple-700 dark:text-purple-300">{{ weather_data.temperature }}°
                 </div>
                 <div class="text-[10px] text-purple-600 dark:text-purple-400">C</div>
             </div>
-            <div class="text-[10px] text-purple-600 dark:text-purple-400 mt-0.5 font-medium">{{ weather_data.condition
-                }}</div>
+            <div class="text-[10px] text-purple-600 dark:text-purple-400 mt-0.5 font-medium">{{ weather_data.condition }}</div>
         </div>
     </div>
 
@@ -175,8 +173,7 @@
                 <div class="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20">
                     <div class="flex justify-between items-start">
                         <h4 class="font-bold">{{ announcement.title }}</h4>
-                        <span class="text-xs bg-white/20 px-2 py-1 rounded">{{ announcement.created_at|date:"M d"
-                            }}</span>
+                        <span class="text-xs bg-white/20 px-2 py-1 rounded">{{ announcement.created_at|date:"M d" }}</span>
                     </div>
                     <p class="text-white/90 mt-1 text-sm">{{ announcement.content }}</p>
                 </div>
@@ -227,8 +224,7 @@
                                     <p class="text-[10px] text-gray-500 dark:text-gray-400">7:00 - 9:00 AM</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" name="breakfast" class="sr-only peer" {{ today_breakfast_attr
-                                        }} {{ today_disabled_attr }}>
+                                    <input type="checkbox" name="breakfast" class="sr-only peer" {{ today_breakfast_attr }} {{ today_disabled_attr }}>
                                     <div
                                         class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
                                     </div>
@@ -237,8 +233,7 @@
                             <!-- Early -->
                             <div class="flex items-center justify-between px-2 -mt-2">
                                 <span class="text-[10px] text-gray-400">Early (Before 7am)</span>
-                                <input type="checkbox" name="early" class="rounded text-indigo-600" {{ today_early_attr
-                                    }} {{ today_disabled_attr }}>
+                                <input type="checkbox" name="early" class="rounded text-indigo-600" {{ today_early_attr }} {{ today_disabled_attr }}>
                             </div>
                             <!-- Supper -->
                             <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-slate-700/50 rounded">
@@ -247,8 +242,7 @@
                                     <p class="text-[10px] text-gray-500 dark:text-gray-400">6:00 - 8:00 PM</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" name="supper" class="sr-only peer" {{ today_supper_attr }} {{
-                                        today_disabled_attr }}>
+                                    <input type="checkbox" name="supper" class="sr-only peer" {{ today_supper_attr }} {{ today_disabled_attr }}>
                                     <div
                                         class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
                                     </div>
@@ -282,8 +276,7 @@
                                     <h3 class="font-medium text-gray-900 dark:text-white text-sm">Breakfast</h3>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" name="breakfast" class="sr-only peer" {{
-                                        tomorrow_breakfast_attr }} {{ tomorrow_disabled_attr }}>
+                                    <input type="checkbox" name="breakfast" class="sr-only peer" {{ tomorrow_breakfast_attr }} {{ tomorrow_disabled_attr }}>
                                     <div
                                         class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
                                     </div>
@@ -292,8 +285,7 @@
                             <!-- Early -->
                             <div class="flex items-center justify-between px-2 -mt-2">
                                 <span class="text-[10px] text-gray-400">Early (Before 7am)</span>
-                                <input type="checkbox" name="early" class="rounded text-indigo-600" {{
-                                    tomorrow_early_attr }} {{ tomorrow_disabled_attr }}>
+                                <input type="checkbox" name="early" class="rounded text-indigo-600" {{ tomorrow_early_attr }} {{ tomorrow_disabled_attr }}>
                             </div>
                             <!-- Supper -->
                             <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-slate-700/50 rounded">
@@ -471,7 +463,7 @@
                             <p class="text-xs text-slate-500">{{ activity.time|date:"g:i A" }}</p>
                         </div>
                     </div>
-                    {{ empty }}
+                    {% empty %}
                     <p class="text-sm text-slate-500 italic">No activities scheduled.</p>
                     {% endfor %}
                 </div>

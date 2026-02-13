@@ -233,11 +233,10 @@
                     </span>
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-slate-900  text-sm truncate">{{ m.title }}</p>
-                        <p class="text-xs text-slate-500 ">{{ m.student.user.first_name }} • {{ m.created_at|date:"M d"
-                            }}</p>
+                        <p class="text-xs text-slate-500 ">{{ m.student.user.first_name }} • {{ m.created_at|date:"M d" }}</p>
                     </div>
                 </div>
-                {{ empty }}
+                {% empty %}
                 <p class="text-sm text-slate-500  text-center py-4">No recent maintenance</p>
                 {% endfor %}
             </div>
@@ -260,11 +259,10 @@
                     </span>
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-slate-900  text-sm truncate">{{ l.student.user.get_full_name }}</p>
-                        <p class="text-xs text-slate-500 ">{{ l.get_leave_type_display }} • {{ l.start_date|date:"M d"
-                            }}-{{ l.end_date|date:"M d" }}</p>
+                        <p class="text-xs text-slate-500 ">{{ l.get_leave_type_display }} • {{ l.start_date|date:"M d" }}-{{ l.end_date|date:"M d" }}</p>
                     </div>
                 </div>
-                {{ empty }}
+                {% empty %}
                 <p class="text-sm text-slate-500  text-center py-4">No recent deferment requests</p>
                 {% endfor %}
             </div>
@@ -283,10 +281,9 @@
                 {% for a in recent_announcements %}
                 <div class="p-3 bg-slate-50  rounded-lg">
                     <p class="font-medium text-slate-900  text-sm truncate">{{ a.title }}</p>
-                    <p class="text-xs text-slate-500  mt-1">{{ a.created_at|date:"M d, Y" }} • {{ a.get_priority_display
-                        }}</p>
+                    <p class="text-xs text-slate-500  mt-1">{{ a.created_at|date:"M d, Y" }} • {{ a.get_priority_display }}</p>
                 </div>
-                {{ empty }}
+                {% empty %}
                 <p class="text-sm text-slate-500  text-center py-4">No recent announcements</p>
                 {% endfor %}
             </div>
@@ -296,8 +293,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const chartData = {{ chart_data_json| safe
-    }};
+        const chartData = {{ chart_data_json| safe }};
     const isDark = document.documentElement.classList.contains('dark');
     const gridColor = isDark ? '#1e293b' : '#f1f5f9';
     const textColor = isDark ? '#94a3b8' : '#64748b';

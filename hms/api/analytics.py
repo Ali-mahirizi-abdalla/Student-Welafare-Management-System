@@ -63,7 +63,7 @@ class ActivityAnalyticsView(APIView):
 
         # Fetch datasets
         weekly_registrations = get_daily_counts(Student.objects, 'user__date_joined', data_points)
-        weekly_payments = get_daily_counts(Payment.objects.filter(status='completed'), 'created_at', data_points)
+        weekly_payments = get_daily_counts(Payment.objects.filter(status='Completed'), 'created_at', data_points)
         weekly_maintenance = get_daily_counts(MaintenanceRequest.objects, 'created_at', data_points)
         weekly_visitors = get_daily_counts(Visitor.objects, 'check_in_time', data_points)
         weekly_deferments = get_daily_counts(DefermentRequest.objects, 'created_at', data_points)
@@ -77,7 +77,7 @@ class ActivityAnalyticsView(APIView):
         # Helper for previous range total
         def get_total_for_range(date_list):
             reg = Student.objects.filter(user__date_joined__date__in=date_list).count()
-            pay = Payment.objects.filter(status='completed', created_at__date__in=date_list).count()
+            pay = Payment.objects.filter(status='Completed', created_at__date__in=date_list).count()
             main = MaintenanceRequest.objects.filter(created_at__date__in=date_list).count()
             vis = Visitor.objects.filter(check_in_time__date__in=date_list).count()
             def_req = DefermentRequest.objects.filter(created_at__date__in=date_list).count()

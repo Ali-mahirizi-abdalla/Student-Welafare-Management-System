@@ -1,17 +1,17 @@
 <aside
-    class="hidden md:flex flex-col w-64 p-6 sticky top-20 h-[calc(100vh-5rem)] z-40 transition-all duration-300 backdrop-blur-xl border-r border-slate-200 bg-white shadow-xl">
+    class="hidden md:flex flex-col w-64 p-6 sticky top-20 h-[calc(100vh-5rem)] z-40 transition-all duration-300 backdrop-blur-xl border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl text-slate-800 dark:text-white">
 
     <div class="mb-8">
         {% if user.is_staff or user.is_superuser %}
-        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
             {% if user.is_superuser %}System Admin{% else %}{{ staff_category|default:"Staff" }}{% endif %}
         </h2>
-        <p class="text-xs text-slate-500 uppercase tracking-wide mt-1">{% if user.is_superuser %}Full Control{% else %}Management{% endif %}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-1">{% if user.is_superuser %}Full Control{% else %}Management{% endif %}</p>
         {% else %}
-        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
             Student Panel
         </h2>
-        <p class="text-xs text-slate-500 uppercase tracking-wide mt-1">Personal Dashboard</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-1">Personal Dashboard</p>
         {% endif %}
     </div>
 
@@ -21,7 +21,7 @@
 
         <!-- Dashboard: Everyone staff -->
         <a href="{% url 'hms:admin_dashboard' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'admin_dashboard' %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'admin_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -34,7 +34,7 @@
         <!-- Students: EXECUTIVE, ACADEMIC_ADMIN, STUDENT_SERVICES -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' %}
         <a href="{% url 'hms:manage_students' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/students' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'manage/students' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -48,7 +48,7 @@
         <!-- Deferment: EXECUTIVE, ACADEMIC_ADMIN -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' %}
         <a href="{% url 'hms:manage_leave_requests' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/deferment' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'manage/deferment' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -61,7 +61,7 @@
         <!-- Maintenance: EXECUTIVE, TECHNICAL_ESTATES, STUDENT_SERVICES -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' or staff_category_raw == 'STUDENT_SERVICES' %}
         <a href="{% url 'hms:manage_maintenance' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/maintenance' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'manage/maintenance' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -77,7 +77,7 @@
         <!-- Rooms: EXECUTIVE, TECHNICAL_ESTATES, STUDENT_SERVICES -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' or staff_category_raw == 'STUDENT_SERVICES' %}
         <a href="{% url 'hms:room_list' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/rooms' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'manage/rooms' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,7 +91,7 @@
         <!-- Activities: EXECUTIVE, STUDENT_SERVICES -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'STUDENT_SERVICES' %}
         <a href="{% url 'hms:activities' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/activities' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'manage/activities' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -104,7 +104,7 @@
         <!-- Visitors: EXECUTIVE, TECHNICAL_ESTATES -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' %}
         <a href="{% url 'hms:visitor_management' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/visitors' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'manage/visitors' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -118,7 +118,7 @@
         <!-- News Alerts: EXECUTIVE, ACADEMIC_ADMIN, STUDENT_SERVICES -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' %}
         <a href="{% url 'hms:manage_announcements' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'announcements' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'announcements' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -132,7 +132,7 @@
         <!-- Payments: EXECUTIVE, FINANCE_ADMIN -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'FINANCE_ADMIN' %}
         <a href="{% url 'hms:manage_payments' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'manage/payments' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'manage/payments' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -146,7 +146,7 @@
         <!-- Audit Logs: EXECUTIVE, FINANCE_ADMIN -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'FINANCE_ADMIN' %}
         <a href="{% url 'hms:audit_logs' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'audit-logs' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'audit-logs' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -160,7 +160,7 @@
         {% else %}
         <!-- STUDENT LINKS -->
         <a href="{% url 'hms:student_dashboard' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'student_dashboard' %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'student_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -170,7 +170,7 @@
             Dashboard
         </a>
         <a href="{% url 'hms:student_leave_list' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'leave' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'leave' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -179,7 +179,7 @@
             Deferment
         </a>
         <a href="{% url 'hms:student_maintenance_list' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'maintenance' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'maintenance' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -191,7 +191,7 @@
             Maintenance
         </a>
         <a href="{% url 'hms:payment_history' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'payment' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'payment' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -201,7 +201,7 @@
             Payments
         </a>
         <a href="{% url 'hms:chat' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if 'chat' in request.path %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if 'chat' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -214,7 +214,7 @@
             {% endif %}
         </a>
         <a href="{% url 'hms:student_profile' %}"
-            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'student_profile' %}bg-indigo-50 border border-indigo-100 shadow-lg text-indigo-600{% else %}hover:bg-slate-100 text-slate-600 hover:text-indigo-600{% endif %} rounded-xl transition group">
+            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'student_profile' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -226,7 +226,7 @@
     </nav>
 
     <!-- Footer/Logout -->
-    <div class="mt-auto pt-6 border-t border-slate-200">
+    <div class="mt-auto pt-6 border-t border-slate-200 dark:border-slate-800">
         <!-- Developer Credit -->
         <div class="mb-4 text-center">
             <p class="text-[10px] text-slate-400 uppercase tracking-widest">Developed by</p>
@@ -236,7 +236,7 @@
         <form action="{% url 'hms:logout' %}" method="post">
             {% csrf_token %}
             <button type="submit"
-                class="w-full flex items-center gap-3 px-4 py-2 text-slate-600 hover:text-red-500 hover:bg-slate-100 rounded-lg transition group">
+                class="w-full flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition group">
                 <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

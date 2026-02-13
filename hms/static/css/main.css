@@ -1665,3 +1665,62 @@ tr:hover {
 .btn-pulse:hover {
     animation: pulse 1.5s infinite;
 }
+
+/* ==================== Dark Mode Overrides ==================== */
+[data-theme="dark"] {
+    --bg-dark: #111827;
+    /* Slate 900 */
+    --bg-darker: #0f172a;
+    /* Slate 950 */
+    --bg-card: #1f2937;
+    /* Slate 800 */
+    --bg-app-light: #0f172a;
+    --bg-gradient-top: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+    --bg-gradient-body: linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-body: #f1f5f9;
+    --text-label: #cbd5e1;
+    --text-description: #94a3b8;
+
+    --glass-bg: rgba(31, 41, 55, 0.7);
+    --glass-bg-hover: rgba(31, 41, 55, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --input-bg: #1f2937;
+    --input-text: #f8fafc;
+    --navbar-bg: #111827;
+}
+
+[data-theme="dark"] body {
+    background: var(--bg-app-light);
+    color: var(--text-body);
+}
+
+[data-theme="dark"] .glass-card {
+    background: var(--bg-card);
+    border-color: var(--glass-border);
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] .card-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .navbar {
+    background: var(--navbar-bg);
+}
