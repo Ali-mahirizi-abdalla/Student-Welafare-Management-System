@@ -91,9 +91,6 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Scalability & Storage
-    'storages',  # AWS S3
-    'cloudinary',
-    'cloudinary_storage',
 ]
 
 SITE_ID = 1
@@ -127,7 +124,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
+        'APP_DIRS': False,  # Set to False when using explicit loaders
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -136,6 +133,16 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'hms.context_processors.unread_messages',
                 'hms.context_processors.staff_role_info',
+            ],
+            # Explicitly disable template caching in DEBUG mode
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ] if DEBUG else [
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                ]),
             ],
         },
     },
@@ -325,6 +332,8 @@ USE_CLOUDINARY = os.getenv('USE_CLOUDINARY') == 'True'
 
 if USE_S3:
     # AWS S3 Settings
+    if 'storages' not in INSTALLED_APPS:
+        INSTALLED_APPS += ['storages']
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
@@ -337,6 +346,10 @@ if USE_S3:
     
 elif USE_CLOUDINARY:
     # Cloudinary Settings
+    if 'cloudinary' not in INSTALLED_APPS:
+        INSTALLED_APPS += ['cloudinary']
+    if 'cloudinary_storage' not in INSTALLED_APPS:
+        INSTALLED_APPS += ['cloudinary_storage']
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
         'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
@@ -359,7 +372,6 @@ DBBACKUP_CONNECTORS = {
         'CONNECTOR': 'dbbackup.db.mysql.MysqlDumpConnector',
     }
 }
-
 
 
 

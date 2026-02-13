@@ -9,7 +9,7 @@
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="{% static 'manifest.json' %}">
-    <meta name="theme-color" content="#001f3f">
+    <meta name="theme-color" content="#f8fafc">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CampusCare">
@@ -20,18 +20,10 @@
     <link href="{% static 'css/main.css' %}?v=2.2" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
-        // Check for saved theme preference or use system preference
-        const savedTheme = localStorage.getItem('theme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const theme = savedTheme || systemTheme;
-        document.documentElement.setAttribute('data-theme', theme);
-
-        // Tailwind Dark Mode Support via class
-        if (theme === 'dark' || theme === 'midnight') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        // Force light mode
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
     </script>
     <style>
         /* Custom Scrollbar for sidebar */
@@ -65,8 +57,8 @@
 <body class="flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white font-sans antialiased">
 
     <!-- Top Navbar -->
-    <nav class="h-20 flex-shrink-0 z-50 border-b border-white/10 shadow-lg relative"
-        style="background: linear-gradient(90deg, #001f3f 0%, #003366 100%);">
+    <nav
+        class="h-20 flex-shrink-0 z-50 border-b border-white/10 dark:border-white/5 shadow-lg relative bg-white dark:bg-slate-900 transition-colors duration-300">
         <div class="h-full px-4 md:px-6 flex items-center justify-between">
 
             <!-- Left: Mobile Toggle & Brand -->
@@ -82,8 +74,10 @@
                     <img src="{% static 'img/campus_care_logo.png' %}" alt="CampusCare Logo"
                         class="w-10 h-10 object-contain drop-shadow-lg">
                     <div class="hidden sm:block">
-                        <h1 class="text-xl font-bold text-white tracking-tight leading-none">CampusCare</h1>
-                        <p class="text-[10px] text-white uppercase tracking-widest font-semibold">Student Welfare
+                        <h1 class="text-xl font-bold text-slate-800 dark:text-white tracking-tight leading-none">
+                            CampusCare</h1>
+                        <p class="text-[10px] text-slate-500 dark:text-white uppercase tracking-widest font-semibold">
+                            Student Welfare
                             Management System
                         </p>
                     </div>
@@ -101,7 +95,7 @@
                         </svg>
                     </div>
                     <input type="text" name="q"
-                        class="block w-full pl-11 pr-4 py-2.5 border border-white/10 rounded-full leading-5 bg-[#002855] text-white placeholder-indigo-300 focus:outline-none focus:bg-[#003366] focus:border-indigo-400 focus:placeholder-white focus:ring-1 focus:ring-indigo-400 sm:text-sm transition-all shadow-inner"
+                        class="block w-full pl-11 pr-4 py-2.5 border border-slate-200 dark:border-white/10 rounded-full leading-5 bg-slate-100 dark:bg-[#002855] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-indigo-300 focus:outline-none focus:bg-white dark:focus:bg-[#003366] focus:border-indigo-400 focus:placeholder-slate-500 dark:focus:placeholder-white focus:ring-1 focus:ring-indigo-400 sm:text-sm transition-all shadow-inner"
                         placeholder="Search students, news alerts, maintenance...">
                 </form>
             </div>
@@ -109,32 +103,14 @@
             <!-- Right: Global Actions -->
             <div class="flex items-center gap-3 md:gap-5">
 
-                <!-- Theme Toggle -->
-                <button id="themeToggle"
-                    class="p-2 text-white hover:bg-white/10 rounded-full transition-all relative group"
-                    title="Toggle Theme">
-                    <div
-                        class="absolute inset-0 bg-white/5 rounded-full scale-0 group-hover:scale-100 transition-transform">
-                    </div>
-                    <svg class="w-6 h-6 icon-sun hidden relative z-10" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                        </path>
-                    </svg>
-                    <svg class="w-6 h-6 icon-moon relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                        </path>
-                    </svg>
-                </button>
+                <!-- Theme Toggle Removed for Clear Light UI -->
 
                 <!-- Notifications with Dropdown -->
                 <div class="relative" x-data="{ open: false }">
                     <button id="notification-bell" onclick="toggleNotificationDropdown()"
-                        class="p-2 text-white hover:bg-white/10 rounded-full transition-all relative group">
+                        class="p-2 text-slate-600 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition-all relative group">
                         <div
-                            class="absolute inset-0 bg-white/5 rounded-full scale-0 group-hover:scale-100 transition-transform">
+                            class="absolute inset-0 bg-black/5 dark:bg-white/5 rounded-full scale-0 group-hover:scale-100 transition-transform">
                         </div>
                         <svg class="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -142,7 +118,7 @@
                             </path>
                         </svg>
                         <span id="notification-dot"
-                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[#003366] animate-pulse"></span>
+                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-[#003366] animate-pulse"></span>
                     </button>
 
                     <!-- Notification Dropdown -->
@@ -170,12 +146,12 @@
 
                 <!-- Profile -->
                 {% if user.is_authenticated %}
-                <div class="h-8 w-[1px] bg-white/20 mx-1"></div>
+                <div class="h-8 w-[1px] bg-slate-200 dark:bg-white/20 mx-1"></div>
                 <a href="{% url 'hms:student_profile' %}"
-                    class="flex items-center gap-3 pl-1 hover:bg-white/10 rounded-full p-1 pr-4 transition-all group border border-transparent hover:border-white/10">
+                    class="flex items-center gap-3 pl-1 hover:bg-slate-100 dark:hover:bg-white/10 rounded-full p-1 pr-4 transition-all group border border-transparent hover:border-slate-200 dark:hover:border-white/10">
                     {% if user.student_profile.profile_image %}
                     <img src="{{ user.student_profile.profile_image.url }}"
-                        class="w-9 h-9 rounded-full object-cover border-2 border-indigo-400 group-hover:border-white transition-colors">
+                        class="w-9 h-9 rounded-full object-cover border-2 border-indigo-400 group-hover:border-indigo-600 dark:group-hover:border-white transition-colors">
                     {% else %}
                     <div
                         class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs border-2 border-white/20 shadow-md">
@@ -184,16 +160,16 @@
                     {% endif %}
                     <div class="hidden md:block text-left">
                         <p
-                            class="text-sm font-bold text-white group-hover:text-teal-300 transition-colors leading-tight">
+                            class="text-sm font-bold text-slate-700 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-teal-300 transition-colors leading-tight">
                             {{ user.first_name }}</p>
-                        <p class="text-[10px] text-white uppercase tracking-widest">
+                        <p class="text-[10px] text-slate-500 dark:text-white uppercase tracking-widest">
                             {% if user.is_staff %}Admin{% endif %}
                         </p>
                     </div>
                 </a>
                 {% else %}
                 <a href="{% url 'hms:login' %}"
-                    class="text-sm font-bold text-white hover:text-teal-300 transition">Login</a>
+                    class="text-sm font-bold text-slate-700 dark:text-white hover:text-indigo-600 dark:hover:text-teal-300 transition">Login</a>
                 {% endif %}
             </div>
         </div>
@@ -288,34 +264,7 @@
             });
         }
 
-        // Theme Logic
-        // Theme Logic
-        const updateIcons = (theme) => {
-            const iconSun = document.querySelector('.icon-sun');
-            const iconMoon = document.querySelector('.icon-moon');
-            if (theme === 'dark') {
-                if (iconMoon) iconMoon.classList.add('hidden');
-                if (iconSun) iconSun.classList.remove('hidden');
-            } else {
-                if (iconSun) iconSun.classList.add('hidden');
-                if (iconMoon) iconMoon.classList.remove('hidden');
-            }
-        };
-
-        const currentTheme = html.getAttribute('data-theme');
-        updateIcons(currentTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const current = html.getAttribute('data-theme');
-            const newTheme = current === 'dark' ? 'light' : 'dark';
-
-            html.setAttribute('data-theme', newTheme);
-            if (newTheme === 'dark') html.classList.add('dark');
-            else html.classList.remove('dark');
-
-            localStorage.setItem('theme', newTheme);
-            updateIcons(newTheme);
-        });
+        // Theme Logic Disabled
 
         // Auto dismiss messages
         setTimeout(() => {

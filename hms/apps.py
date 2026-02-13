@@ -8,5 +8,4 @@ class HmsConfig(AppConfig):
 
     def ready(self):
         # Import your signals when the app is ready
-        # Import your signals when the app is ready
         import hms.signals

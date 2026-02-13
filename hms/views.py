@@ -1172,7 +1172,7 @@ def create_activity(request):
         messages.success(request, f"Activity '{display_name}' created successfully!")
         return redirect('hms:activities')
     
-    return render(request, 'hms/admin/activity_form.html', {'edit_mode': False})
+    return render(request, 'hms/admin/activity_form_v2.html', {'edit_mode': False})
 
 @login_required
 @role_required(['Admin', 'Warden'])
@@ -1192,7 +1192,7 @@ def edit_activity(request, pk):
         messages.success(request, f"Activity '{activity.display_name}' updated successfully!")
         return redirect('hms:activities')
     
-    return render(request, 'hms/admin/activity_form.html', {'activity': activity, 'edit_mode': True})
+    return render(request, 'hms/admin/activity_form_v2.html', {'activity': activity, 'edit_mode': True})
 
 @login_required
 @require_POST

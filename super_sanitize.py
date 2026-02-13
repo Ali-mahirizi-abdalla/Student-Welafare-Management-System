@@ -7,27 +7,21 @@ def normalize_tag(match):
     tag = match.group(0)
     # Join multiline tags
     tag = ' '.join(tag.split())
-    # Ensure spaces around operators
-    if tag.startswith('{% if') or tag.startswith('{% elif'):
+    # Ensure spaces around operators (but not inside variables or logic incorrectly)
+    # We target common comparison operators in if tags
+    if tag.startswith('{% if'):
         # Add spaces around ==
         tag = re.sub(r'([^ ])==', r'\1 ==', tag)
         tag = re.sub(r'==([^ ])', r'== \1', tag)
         # Add spaces around !=
         tag = re.sub(r'([^ ])!=', r'\1 !=', tag)
         tag = re.sub(r'!=([^ ])', r'!= \1', tag)
-        # Add spaces around <= and >=
-        tag = re.sub(r'([^ ])>=', r'\1 >=', tag)
-        tag = re.sub(r'>=([^ ])', r'>= \1', tag)
-        tag = re.sub(r'([^ ])<=', r'\1 <=', tag)
-        tag = re.sub(r'<=([^ ])', r'<= \1', tag)
-        # Cleanup double spaces
+        # Cleanup double spaces (except for original indentation if we were doing that, but we are inside the tag)
         tag = ' '.join(tag.split())
     return tag
 
 def sanitize_file(file_path):
     try:
-        if not os.path.isfile(file_path):
-            return
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
             
@@ -50,4 +44,4 @@ if __name__ == "__main__":
         for file in files:
             if file.endswith('.html'):
                 sanitize_file(os.path.join(root, file))
-    print("Template Sanitization and Normalization Complete.")
+    print("Super Sanitization Complete.")

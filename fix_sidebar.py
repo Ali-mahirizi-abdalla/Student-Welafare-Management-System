@@ -1,31 +1,42 @@
-
+import re
 import os
 
-file_path = r'c:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System\hms\templates\hms\includes\sidebar.html'
+path = r'c:\Users\jamal\Downloads\Student-Welfare-Management-System\Student-Welfare-Management-System\hms\templates\hms\includes\sidebar.html'
 
-with open(file_path, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
+with open(path, 'r', encoding='utf-8') as f:
+    content = f.read()
 
-new_lines = []
-skip_next = False
-
-for i in range(len(lines)):
-    if skip_next:
-        skip_next = False
-        continue
+def fix_tags(text):
+    # Fix {% ... %} split across lines
+    # This regex looks for {% followed by any characters (non-greedy) until %}
+    # If there's a newline in between, it replaces it with a space.
+    def replace_tag(match):
+        return match.group(0).replace('\r\n', ' ').replace('\n', ' ')
     
-    current_line = lines[i].rstrip()
-    if current_line.endswith('or') or current_line.endswith('else'):
-        if i + 1 < len(lines):
-            next_line = lines[i+1].lstrip()
-            new_lines.append(current_line + ' ' + next_line)
-            skip_next = True
-        else:
-            new_lines.append(current_line + '\n')
-    else:
-        new_lines.append(lines[i])
+    # We want to match {% ... %} but only if there is a newline inside.
+    # [^%] for {% tags
+    fixed = re.sub(r'\{%.*?%\}', replace_tag, text, flags=re.DOTALL)
+    fixed = re.sub(r'\{\{.*?\}\}', replace_tag, fixed, flags=re.DOTALL)
+    
+    # Also clean up multiple spaces introduced
+    fixed = re.sub(r'([ ]{2,})', ' ', fixed) # This might mess with indentation if not careful.
+    # Better: only clean spaces INSIDE tags.
+    
+    def clean_inside(match):
+        tag = match.group(0)
+        # remove multiple spaces inside tags
+        return re.sub(r'\s+', ' ', tag)
 
-with open(file_path, 'w', encoding='utf-8') as f:
-    f.writelines(new_lines)
+    fixed = re.sub(r'\{%.*?%\}', clean_inside, text, flags=re.DOTALL)
+    fixed = re.sub(r'\{\{.*?\}\}', clean_inside, fixed, flags=re.DOTALL)
+    
+    return fixed
 
-print(f"Successfully processed {file_path}")
+fixed = fix_tags(content)
+
+if fixed != content:
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(fixed)
+    print("Fixed split tags in sidebar.html")
+else:
+    print("No split tags fixed.")
