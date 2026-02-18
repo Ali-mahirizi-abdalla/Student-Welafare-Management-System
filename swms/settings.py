@@ -17,10 +17,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', '.ngrok-free.dev']
+ALLOWED_HOSTS = ['campus-care.co.ke', 'www.campus-care.co.ke', '38.247.148.232', 'localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', '.ngrok-free.dev']
 
 # CSRF protection
 CSRF_TRUSTED_ORIGINS = [
+    'https://campus-care.co.ke',
+    'https://www.campus-care.co.ke',
     'https://*.ngrok-free.app',
     'https://*.ngrok.io',
     'https://*.ngrok-free.dev',
