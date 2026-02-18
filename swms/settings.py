@@ -67,6 +67,7 @@ if not DEBUG:
 # INSTALLED APPS
 # ============================================
 INSTALLED_APPS = [
+    'subscription',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,6 +77,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'hms',  # Your app
+
 
     # Allauth
     'allauth',
@@ -112,6 +114,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'subscription.middleware.SubscriptionMiddleware',
+
 ]
 
 # ============================================

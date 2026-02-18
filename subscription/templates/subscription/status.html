@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Status - Campus Care</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .expired {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .details {
+            text-align: left;
+            margin: 1.5rem 0;
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Subscription Status</h1>
+
+        {% if is_active %}
+        <div class="status-badge active">Active</div>
+        <p>Your system is fully unlocked.</p>
+        {% else %}
+        <div class="status-badge expired">{% if subscription %}Expired{% else %}No Subscription{% endif %}</div>
+        <p>Access is currently restricted.</p>
+        {% endif %}
+
+        {% if subscription %}
+        <div class="details">
+            <p><strong>Plan:</strong> {{ subscription.get_plan_display }}</p>
+            <p><strong>Start Date:</strong> {{ subscription.start_date }}</p>
+            <p><strong>End Date:</strong> {{ subscription.end_date }}</p>
+            <p><strong>Transaction ID:</strong> {{ subscription.transaction_id }}</p>
+        </div>
+        {% endif %}
+
+        {% if is_active %}
+        <a href="/" class="btn">Go to Dashboard</a>
+        {% else %}
+        <a href="{% url 'subscription:index' %}" class="btn">Renew Subscription</a>
+        {% endif %}
+    </div>
+</body>
+
+</html>

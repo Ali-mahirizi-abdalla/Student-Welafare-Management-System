@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Required - Campus Care</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 1.5rem 0;
+        }
+
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .alert {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="alert">
+            <strong>System Locked</strong><br>
+            Subscription has expired.
+        </div>
+        <h1>Renewal Required</h1>
+        <p>Your Campus Care system subscription has ended. Please renew to continue accessing the dashboard.</p>
+
+        <div class="price-tag">
+            KES 3,000<span style="font-size: 1rem; color: #6b7280; font-weight: normal;">/month</span>
+        </div>
+
+        <form action="{% url 'subscription:payment' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn">Pay Now via MPESA</button>
+        </form>
+    </div>
+</body>
+
+</html>

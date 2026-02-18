@@ -7,6 +7,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', include('hms.urls', namespace='hms')),
+    path('subscription/', include('subscription.urls', namespace='subscription')),
+
 ]
 
 if settings.DEBUG:
