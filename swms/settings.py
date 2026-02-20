@@ -70,6 +70,8 @@ if not DEBUG:
 # Proxy & CSRF Fix for Cloudflare/Nginx
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
+CSRF_USE_SESSIONS = True  # More reliable for mobile browsers
+CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 
