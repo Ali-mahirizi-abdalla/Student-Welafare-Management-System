@@ -592,7 +592,6 @@ class DefermentRequestForm(forms.ModelForm):
             'rows': 3,
             'placeholder': 'Please provide details for "Others"...',
             'id': 'id_other_reason_detail',
-            'style': 'display:none;'  # Hidden by default, shown via JavaScript
         })
     )
     contact_during_deferment = forms.CharField(
@@ -611,7 +610,7 @@ class DefermentRequestForm(forms.ModelForm):
 
     class Meta:
         model = LeaveRequest  # Uses the alias
-        fields = ['deferment_type', 'start_date', 'end_date', 'reason']
+        fields = ['deferment_type', 'other_reason_detail', 'contact_during_deferment', 'start_date', 'end_date', 'reason', 'supporting_documents']
         widgets = {
             'deferment_type': forms.Select(attrs={
                 'class': 'w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all',

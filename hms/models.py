@@ -406,6 +406,7 @@ class DefermentRequest(models.Model):
         ('bereavement', 'Bereavement'),
         ('suspension_expulsion', 'Suspension/Expulsion'),
         ('natural_calamity', 'Natural Calamity'),
+        ('other', 'Others'),
     ]
 
     STATUS_CHOICES = [
@@ -418,6 +419,9 @@ class DefermentRequest(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     deferment_type = models.CharField(max_length=30, choices=DEFERMENT_TYPES, help_text="Select the reason for deferment")
+    other_reason_detail = models.TextField(blank=True, null=True, help_text="Specific details for 'Others' reason")
+    contact_during_deferment = models.CharField(max_length=15, blank=True, null=True, help_text="Contact number during deferment")
+    supporting_documents = models.FileField(upload_to='deferment_docs/', blank=True, null=True, help_text="Supporting documents (Medical reports, letters, etc.)")
     reason = models.TextField(help_text="Detailed explanation")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     admin_response = models.TextField(blank=True, help_text="Response from admin")
@@ -426,6 +430,12 @@ class DefermentRequest(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    @property
+    def duration_days(self):
+        if self.start_date and self.end_date:
+            return (self.end_date - self.start_date).days
+        return 0
 
     def __str__(self):
         return f"{self.student} - {self.get_deferment_type_display()}"
