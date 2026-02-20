@@ -116,7 +116,7 @@ def user_login(request):
             else:
                 return redirect('hms:student_dashboard')
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid email or password.')
     else:
         form = AuthenticationForm()
     
@@ -1337,17 +1337,7 @@ def chat_view(request, recipient_id=None):
         if recipient_id:
              other_user = get_object_or_404(User, id=recipient_id)
         else:
-             # Auto-select: Try to find student with unread messages first
-             unread_student = next((s for s in students if getattr(s, 'unread_count', 0) > 0), None)
-             
-             if unread_student:
-                 return redirect('hms:chat_with', recipient_id=unread_student.user.id)
-             # Fallback: Select the first student in the list
-             elif students:
-                 return redirect('hms:chat_with', recipient_id=students[0].user.id)
-
-             else:
-                 other_user = None
+             other_user = None
     else:
         # Student view: Chat with Admin 
         admin_user = User.objects.filter(is_staff=True).first()

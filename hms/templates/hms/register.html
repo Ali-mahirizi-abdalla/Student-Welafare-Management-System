@@ -65,7 +65,8 @@
                         <input type="text"
                             class="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition uppercase"
                             id="university_id" name="university_id" value="{{ form.university_id.value|default:'' }}"
-                            placeholder="e.g., SD06/PU/30104/25" style="text-transform: uppercase;" required>
+                            placeholder="e.g., SD06/PU/30104/25 (Flexible format)" style="text-transform: uppercase;"
+                            required>
                         {% if form.university_id.errors %}
                         <div class="text-red-500 text-xs mt-1">{{ form.university_id.errors|join:", " }}</div>
                         {% endif %}
@@ -298,7 +299,8 @@
                 <div class="mb-6">
                     <div class="flex items-center">
                         {{ form.terms }}
-                        <label class="ml-2 text-sm text-slate-600 dark:text-slate-400" for="{{ form.terms.id_for_label }}">
+                        <label class="ml-2 text-sm text-slate-600 dark:text-slate-400"
+                            for="{{ form.terms.id_for_label }}">
                             I agree to the <a href="{% url 'hms:terms' %}" target="_blank"
                                 class="text-blue-600 hover:text-blue-800 underline">Terms and Conditions</a>
                         </label>

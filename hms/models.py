@@ -42,7 +42,7 @@ class AuditLog(models.Model):
 class Student(models.Model):
     """Extended profile for students"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
-    university_id = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    university_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     phone = models.CharField(max_length=15, blank=True)
     profile_image = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     timetable = models.FileField(upload_to='timetables/', blank=True, null=True)

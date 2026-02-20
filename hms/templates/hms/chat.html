@@ -4,7 +4,8 @@
 {% block title %}Chat - Student Welfare Management System{% endblock %}
 
 {% block content %}
-<div class="flex h-[calc(100vh-6rem)] -mt-6 -mx-4 overflow-hidden bg-slate-50 dark:bg-[#001229]">
+<div
+    class="flex h-[calc(100vh-5rem)] md:h-[calc(100vh-6rem)] -mt-4 md:-mt-6 -mx-2 md:-mx-4 overflow-hidden bg-slate-50 dark:bg-[#001229]">
     {% if user.is_staff %}
     <!-- Sidebar Navigation (Admin) -->
     {% include 'hms/includes/admin_sidebar.html' %}
@@ -15,7 +16,7 @@
         <!-- Contact Sidebar (Staff view) -->
         {% if user.is_staff %}
         <div
-            class="w-80 flex-shrink-0 bg-white dark:bg-[#001a35] border-r border-slate-200 dark:border-white/10 flex flex-col shadow-sm">
+            class="w-full md:w-80 flex-shrink-0 bg-white dark:bg-[#001a35] border-r border-slate-200 dark:border-white/10 flex flex-col shadow-sm {% if other_user %}hidden md:flex{% endif %}">
             <div class="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
                 <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Conversations</h2>
                 <!-- Contact Search -->
@@ -55,15 +56,18 @@
                         <div class="flex justify-between items-baseline mb-1">
                             <h3 class="font-bold text-slate-900 dark:text-white truncate">
                                 {{ student.user.get_full_name|default:student.user.username }}
-                                <span class="text-[10px] font-normal text-slate-400 ml-1">({{ student.university_id }})</span>
+                                <span class="text-[10px] font-normal text-slate-400 ml-1">({{ student.university_id
+                                    }})</span>
                             </h3>
                             {% if student.latest_msg_time %}
-                            <span class="text-[10px] text-slate-400 ml-2 whitespace-nowrap">{{ student.latest_msg_time|date:"H:i" }}</span>
+                            <span class="text-[10px] text-slate-400 ml-2 whitespace-nowrap">{{
+                                student.latest_msg_time|date:"H:i" }}</span>
                             {% endif %}
                         </div>
                         <p class="text-xs text-slate-500 dark:text-slate-400 truncate font-medium">
                             {% if student.unread_count > 0 %}
-                            <span class="text-indigo-600 dark:text-indigo-400 font-bold">New: {{ student.latest_msg_content|truncatechars:30 }}</span>
+                            <span class="text-indigo-600 dark:text-indigo-400 font-bold">New: {{
+                                student.latest_msg_content|truncatechars:30 }}</span>
                             {% elif student.latest_msg_content %}
                             {{ student.latest_msg_content|truncatechars:35 }}
                             {% else %}
@@ -84,13 +88,23 @@
 
         <!-- Chat Workspace -->
         <div id="chat-workspace"
-            class="chat-container flex-grow flex flex-col bg-white dark:bg-[#001229] overflow-hidden"
+            class="chat-container flex-grow flex flex-col bg-white dark:bg-[#001229] overflow-hidden {% if not other_user %}hidden md:flex{% endif %}"
             data-chat-theme="indigo">
             {% if other_user %}
             <!-- Chat Header -->
             <div
                 class="h-20 px-6 border-b border-slate-100 dark:border-white/10 flex items-center justify-between shadow-sm sticky top-0 bg-white/80 dark:bg-[#001229]/80 backdrop-blur-md z-10">
                 <div class="flex items-center">
+                    {% if user.is_staff %}
+                    <a href="{% url 'hms:chat' %}"
+                        class="md:hidden p-2 mr-2 text-slate-400 hover:text-indigo-500 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                            </path>
+                        </svg>
+                    </a>
+                    {% endif %}
+
                     {% if user.is_staff and other_user.student %}
                     <a href="{% url 'hms:student_details' other_user.id %}"
                         class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-sm mr-3 hover:scale-110 hover:shadow-md transition-all duration-200 group"

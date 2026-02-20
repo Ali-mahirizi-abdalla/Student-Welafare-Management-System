@@ -26,7 +26,7 @@ class StudentRegistrationForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
 
     # Student fields
-    university_id = forms.CharField(max_length=20, required=True, label='Reg Number', widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 uppercase', 'placeholder': 'e.g., SD06/PU/30104/25', 'style': 'text-transform: uppercase;'}))
+    university_id = forms.CharField(max_length=50, required=True, label='Reg Number', widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 uppercase', 'placeholder': 'e.g., SD06/PU/30104/25', 'style': 'text-transform: uppercase;'}))
     
     residence_type = forms.ChoiceField(
         choices=Student.RESIDENCE_TYPE_CHOICES, 
@@ -271,7 +271,7 @@ class ProfileEditForm(forms.Form):
         })
     )
     university_id = forms.CharField(
-        max_length=20,
+        max_length=50,
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 uppercase',
