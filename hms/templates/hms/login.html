@@ -11,26 +11,37 @@
         background-attachment: fixed !important;
     }
 
+    /* Dark mode background override */
+    .dark body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    }
+
     /* Enhance login card visibility */
     .login-card {
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .dark .login-card {
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45) !important;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="flex justify-center items-center py-12">
-    <div class="login-card w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
-        <div class="bg-white p-8 text-center border-b border-slate-100">
+    <div
+        class="login-card w-full max-w-md bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+        <div class="bg-white dark:bg-slate-800 p-8 text-center border-b border-slate-100 dark:border-slate-700/50">
             <div class="flex flex-col items-center justify-center mb-4">
                 <img src="{% static 'img/campus_care_logo.png' %}" alt="CampusCare Logo"
                     class="w-24 h-24 mb-3 object-contain drop-shadow-sm">
-                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+                <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                     CampusCare</h1>
             </div>
-            <h2 class="text-xl font-bold text-slate-800">Welcome Back</h2>
-            <p class="text-slate-500 mt-1">Please login to your account</p>
-            <p class="text-[10px] text-indigo-600 mt-2 uppercase tracking-widest font-bold">Student Welfare
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-200">Welcome Back</h2>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Please login to your account</p>
+            <p class="text-[10px] text-indigo-600 dark:text-indigo-400 mt-2 uppercase tracking-widest font-bold">Student
+                Welfare
                 Management System</p>
         </div>
 
@@ -39,7 +50,8 @@
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
-                <div class="bg-red-50 text-red-600 p-3 rounded text-sm mb-4">
+                <div
+                    class="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded text-sm mb-4 border border-red-100 dark:border-red-900/30">
                     {% for error in form.non_field_errors %}
                     <p>{{ error }}</p>
                     {% endfor %}
@@ -48,27 +60,30 @@
 
                 <!-- Role Selection -->
                 <div>
-                    <label for="id_role" class="block text-sm font-medium text-slate-700 mb-1">Login As</label>
+                    <label for="id_role" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Login
+                        As</label>
                     <select name="role" id="id_role"
-                        class="w-full px-4 py-2 bg-white border border-slate-300 rounded text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        class="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                         <option value="student">Student</option>
                         <option value="admin">Admin / Staff</option>
                     </select>
                 </div>
 
                 <div>
-                    <label for="id_username" class="block text-sm font-medium text-slate-700 mb-1">Email Address /
+                    <label for="id_username"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email Address /
                         Username</label>
                     <input type="text" name="username" id="id_username" required
-                        class="w-full px-4 py-2 bg-white border border-slate-300 rounded text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder-slate-400"
+                        class="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder-slate-400 dark:placeholder-slate-600"
                         placeholder="e.g., student@example.com">
                 </div>
 
                 <div>
-                    <label for="id_password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <label for="id_password"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
                     <div class="relative">
                         <input type="password" name="password" id="id_password" required
-                            class="w-full pl-4 pr-10 py-2 bg-white border border-slate-300 rounded text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder-slate-400"
+                            class="w-full pl-4 pr-10 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder-slate-400 dark:placeholder-slate-600"
                             placeholder="••••••••">
                         <button type="button" onclick="togglePassword('id_password')"
                             class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none">
@@ -83,25 +98,26 @@
                 </div>
 
                 <div class="flex items-center justify-between text-sm">
-                    <label class="flex items-center text-slate-600 cursor-pointer">
+                    <label class="flex items-center text-slate-600 dark:text-slate-400 cursor-pointer">
                         <input type="checkbox"
-                            class="h-4 w-4 text-blue-600 bg-white border-slate-300 rounded focus:ring-blue-500 mr-2">
+                            class="h-4 w-4 text-blue-600 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded focus:ring-blue-500 mr-2">
                         Remember me
                     </label>
                     <a href="{% url 'hms:password_reset' %}"
-                        class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Forgot Password?</a>
+                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors">Forgot
+                        Password?</a>
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition duration-200 shadow-sm">
+                    class="w-full bg-blue-600 dark:bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-700 dark:hover:bg-blue-400 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition duration-200 shadow-sm">
                     Sign In
                 </button>
             </form>
 
-            <div class="mt-6 text-center text-sm text-slate-600">
+            <div class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
                 Don't have an account?
                 <a href="{% url 'hms:register' %}"
-                    class="text-blue-600 hover:text-blue-800 font-bold transition-colors">Register
+                    class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold transition-colors">Register
                     here</a>
             </div>
         </div>
