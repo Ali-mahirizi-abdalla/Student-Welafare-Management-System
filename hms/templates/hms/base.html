@@ -330,27 +330,50 @@
 
     <script>
         const mobileBtn = document.getElementById('mobile-menu-btn');
-        const sidebar = document.querySelector('aside');
+        const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        const themeToggle = document.getElementById('themeToggle');
-        const html = document.documentElement;
+        const sidebarNav = document.getElementById('sidebar-nav');
 
-        // Mobile Sidebar Logic
-        if (mobileBtn && sidebar) {
-            mobileBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('hidden');
-                sidebar.classList.toggle('absolute'); // Mobile override
-                sidebar.classList.toggle('fixed');
-                sidebar.classList.toggle('shadow-2xl');
-                if (overlay) overlay.classList.toggle('hidden');
+        function toggleSidebar() {
+            if (!sidebar) return;
+            const isHidden = sidebar.classList.contains('-translate-x-full');
+            
+            if (isHidden) {
+                // Open
+                sidebar.classList.remove('-translate-x-full');
+                if (overlay) overlay.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            } else {
+                // Close
+                sidebar.classList.add('-translate-x-full');
+                if (overlay) overlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        // Mobile Top Nav Button
+        if (mobileBtn) {
+            mobileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleSidebar();
             });
         }
 
         if (overlay) {
-            overlay.addEventListener('click', () => {
-                sidebar.classList.add('hidden');
-                sidebar.classList.remove('absolute', 'fixed', 'shadow-2xl');
-                overlay.classList.add('hidden');
+            overlay.addEventListener('click', toggleSidebar);
+        }
+
+        // Keyboard Scrolling for Sidebar
+        if (sidebarNav) {
+            sidebarNav.addEventListener('keydown', (e) => {
+                const scrollAmount = 40;
+                if (e.key === 'ArrowDown') {
+                    sidebarNav.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+                    e.preventDefault();
+                } else if (e.key === 'ArrowUp') {
+                    sidebarNav.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
+                    e.preventDefault();
+                }
             });
         }
 
