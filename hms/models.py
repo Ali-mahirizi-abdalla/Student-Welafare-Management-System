@@ -190,6 +190,13 @@ class MaintenanceRequest(models.Model):
 
 class StaffProfile(models.Model):
     ROLE_CHOICES = [
+        # New Standardized Roles
+        ('Super Admin', 'Super Admin'),
+        ('Welfare Officer', 'Welfare Officer'),
+        ('Hostel Manager', 'Hostel Manager'),
+        ('Kitchen Manager', 'Kitchen Manager'),
+        ('Security', 'Security'),
+
         # Executive
         ('VC', 'Vice Chancellor'),
         ('DVC_AFP', 'DVC, Administration, Finance and Planning'),

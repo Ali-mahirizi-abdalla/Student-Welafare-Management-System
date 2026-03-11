@@ -10,10 +10,14 @@ from django.utils import timezone
 from django.db.models import Q
 from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document, MaintenanceRequest,
                      Message, AuditLog,
-                     LeaveRequest, DefermentRequest, Visitor,
+                     LeaveRequest, DefermentRequest, Visitor, EmergencyAlert,
                      Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
                      AdminSubscription, RegistrationPayment, TutoringPost)
-from .decorators import role_required, admin_only
+from .decorators import (
+    role_required, staff_only, admin_only,
+    super_admin_required, welfare_officer_required,
+    hostel_manager_required, kitchen_manager_required, security_required
+)
 from .utils.telegram import send_telegram_message
 
 # ==================== Authentication ====================
@@ -210,9 +214,22 @@ def register_staff(request):
 def user_login(request):
     """Login view for all users with role selection"""
     if request.user.is_authenticated:
-        if request.user.is_staff:
+        user = request.user
+        user_groups = user.groups.values_list('name', flat=True)
+        if 'Super Admin' in user_groups or user.is_superuser:
+            return redirect('hms:super_admin_dashboard')
+        elif 'Welfare Officer' in user_groups:
+            return redirect('hms:welfare_officer_dashboard')
+        elif 'Hostel Manager' in user_groups:
+            return redirect('hms:hostel_manager_dashboard')
+        elif 'Kitchen Manager' in user_groups:
+            return redirect('hms:kitchen_manager_dashboard')
+        elif 'Security' in user_groups:
+            return redirect('hms:security_dashboard')
+        elif hasattr(user, 'student_profile'):
+            return redirect('hms:student_dashboard')
+        else:
             return redirect('hms:admin_dashboard')
-        return redirect('hms:student_dashboard')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -221,10 +238,25 @@ def user_login(request):
             login(request, user)
             messages.success(request, f'Welcome back, {user.first_name}!')
             
-            # Auto-redirect based on user type
-            if user.is_staff:
-                return redirect('hms:admin_dashboard')
+            # Auto-redirect based on RBAC Group
+            user_groups = user.groups.values_list('name', flat=True)
+            
+            if 'Super Admin' in user_groups or user.is_superuser:
+                return redirect('hms:super_admin_dashboard')
+            elif 'Welfare Officer' in user_groups:
+                return redirect('hms:welfare_officer_dashboard')
+            elif 'Hostel Manager' in user_groups:
+                return redirect('hms:hostel_manager_dashboard')
+            elif 'Kitchen Manager' in user_groups:
+                return redirect('hms:kitchen_manager_dashboard')
+            elif 'Security' in user_groups:
+                return redirect('hms:security_dashboard')
+            elif hasattr(user, 'student_profile'):
+                return redirect('hms:student_dashboard')
             else:
+                # Fallback for staff with undefined group or legacy admin
+                if user.is_staff:
+                    return redirect('hms:admin_dashboard')
                 return redirect('hms:student_dashboard')
         else:
             messages.error(request, 'Invalid email or password.')
@@ -590,7 +622,7 @@ def toggle_early_breakfast(request):
 # ==================== Admin/Kitchen ====================
 
 @login_required
-@role_required(allowed_roles=['Admin'], allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'STUDENT_SERVICES', 'TECHNICAL_ESTATES'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer', 'Hostel Manager', 'Kitchen Manager', 'Security'])
 def dashboard_admin(request):
     """Kitchen/Admin Dashboard"""
     # Auto-redirect for student attempting to access admin url handled by decorator (or 403)
@@ -903,7 +935,7 @@ def export_students_csv(request):
 
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'FINANCE_ADMIN'])
+@role_required(allowed_roles=['Super Admin'])
 def manage_payments(request):
     """Admin view to manage/view all payments"""
     from django.db import models
@@ -931,7 +963,7 @@ def manage_payments(request):
     return render(request, 'hms/admin/manage_payments.html', context)
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer'])
 def send_meal_notifications(request):
     """Send email notifications about unconfirmed students"""
     
@@ -952,25 +984,25 @@ def send_meal_notifications(request):
     unconfirmed_students = all_students.exclude(id__in=confirmed_student_ids)
     
     if not unconfirmed_students.exists():
-        messages.success(request, '✅ All students have confirmed their meals for tomorrow!')
+        messages.success(request, 'âœ… All students have confirmed their meals for tomorrow!')
         return redirect('hms:admin_dashboard')
     
     # Prepare email content
     unconfirmed_count = unconfirmed_students.count()
     student_list = '\n'.join([
-        f"  • {student.user.get_full_name()} ({student.university_id}) - {student.user.email}"
+        f"  â€¢ {student.user.get_full_name()} ({student.university_id}) - {student.user.email}"
         for student in unconfirmed_students
     ])
     
-    subject = f'⚠️ Meal Confirmation Alert - {unconfirmed_count} Students Unconfirmed for {tomorrow.strftime("%B %d, %Y")}'
+    subject = f'âš ï¸ Meal Confirmation Alert - {unconfirmed_count} Students Unconfirmed for {tomorrow.strftime("%B %d, %Y")}'
     
     message = f"""
 Hello Admin,
 
 This is an automated notification from the Student Welfare Management System.
 
-📅 Date: {tomorrow.strftime("%A, %B %d, %Y")}
-⚠️ Unconfirmed Students: {unconfirmed_count} out of {all_students.count()}
+ðŸ“… Date: {tomorrow.strftime("%A, %B %d, %Y")}
+âš ï¸ Unconfirmed Students: {unconfirmed_count} out of {all_students.count()}
 
 The following students have NOT confirmed their meals for tomorrow:
 
@@ -979,7 +1011,7 @@ The following students have NOT confirmed their meals for tomorrow:
 Please remind these students to confirm their meal preferences before the deadline.
 
 ---
-🔗 Access the admin dashboard: {request.build_absolute_uri('/kitchen/dashboard/')}
+ðŸ”— Access the admin dashboard: {request.build_absolute_uri('/kitchen/dashboard/')}
 
 This is an automated message from Student Welfare Management System.
 Do not reply to this email.
@@ -996,17 +1028,17 @@ Do not reply to this email.
         
         messages.success(
             request, 
-            f'✅ Email notification sent successfully to {settings.ADMIN_EMAIL}! '
+            f'âœ… Email notification sent successfully to {settings.ADMIN_EMAIL}! '
             f'{unconfirmed_count} unconfirmed students for {tomorrow.strftime("%B %d")}'
         )
         
     except Exception as e:
-        messages.error(request, f'❌ Failed to send email: {str(e)}')
+        messages.error(request, f'âŒ Failed to send email: {str(e)}')
     
     return redirect('hms:admin_dashboard')
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer'])
 def manage_students(request):
     """List and filter students (admin only)"""
     
@@ -1158,7 +1190,7 @@ def announcements_list(request):
     return render(request, 'hms/student/announcements.html', context)
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer'])
 def manage_announcements(request):
     """Manage announcements (admin only)"""
     
@@ -1255,7 +1287,7 @@ def create_announcement(request):
 # ==================== Activities ====================
 
 @login_required
-@role_required(allowed_categories=['STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Kitchen Manager'])
 def activities_list(request):
     """View and manage all activities"""
     
@@ -1266,7 +1298,7 @@ def activities_list(request):
     return render(request, 'hms/admin/activities.html', context)
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Kitchen Manager'])
 def create_activity(request):
     """Create a new activity"""
     
@@ -1290,9 +1322,8 @@ def create_activity(request):
     return render(request, 'hms/admin/activity_form_v2.html', {'edit_mode': False})
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Kitchen Manager'])
 def edit_activity(request, pk):
-    """Edit an existing activity"""
     
     activity = get_object_or_404(Activity, pk=pk)
     
@@ -1311,9 +1342,8 @@ def edit_activity(request, pk):
 
 @login_required
 @require_POST
-@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Kitchen Manager'])
 def delete_activity(request, pk):
-    """Delete an activity"""
     
     activity = get_object_or_404(Activity, pk=pk)
     activity_name = activity.display_name
@@ -1322,9 +1352,8 @@ def delete_activity(request, pk):
     return redirect('hms:activities')
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Kitchen Manager'])
 def toggle_activity_status(request, pk):
-    """Toggle activity active status"""
     
     if request.method != 'POST':
         messages.error(request, "Invalid request method.")
@@ -1597,7 +1626,7 @@ def delete_maintenance_request(request, pk):
     return redirect('hms:student_maintenance_list')
 
 @login_required
-@role_required(allowed_categories=['TECHNICAL_ESTATES', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Hostel Manager'])
 def manage_maintenance(request):
     """Admin view to manage maintenance tickets"""
         
@@ -1638,7 +1667,7 @@ def update_maintenance_status(request, pk):
 # ==================== ROOM MANAGEMENT ====================
 
 @login_required
-@role_required(allowed_categories=['TECHNICAL_ESTATES', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Hostel Manager'])
 def room_list(request):
     """View all rooms (admin only)"""
     
@@ -1937,7 +1966,7 @@ def delete_leave_request(request, pk):
 # ========== DEFERMENT MANAGEMENT VIEWS ==========
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer'])
 def admin_deferment_all(request):
     """Admin views all deferment requests"""
     
@@ -1979,7 +2008,7 @@ def admin_deferment_under_review(request):
     return render(request, 'hms/admin/deferment_list.html', context)
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer'])
 def admin_deferment_approved(request):
     """Admin views approved deferment requests"""
     
@@ -1993,7 +2022,7 @@ def admin_deferment_approved(request):
     return render(request, 'hms/admin/deferment_list.html', context)
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer'])
 def admin_deferment_rejected(request):
     """Admin views rejected deferment requests"""
     
@@ -2080,7 +2109,7 @@ approve_leave_request = review_deferment
 # ==================== ANALYTICS DASHBOARD ====================
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'STUDENT_SERVICES', 'TECHNICAL_ESTATES'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer', 'Hostel Manager', 'Kitchen Manager', 'Security'])
 def analytics_dashboard(request):
     """Comprehensive analytics dashboard for admins"""
     
@@ -2270,7 +2299,7 @@ def analytics_dashboard(request):
 
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE'])
+@role_required(allowed_roles=['Super Admin', 'Security'])
 def emergency_broadcast(request):
     """View for sending emergency broadcasts via Telegram"""
     if request.method == 'POST':
@@ -2281,7 +2310,7 @@ def emergency_broadcast(request):
             messages.error(request, "Message cannot be empty.")
             return redirect('hms:emergency_broadcast')
 
-        formatted_message = f"🚨 *{alert_level} ALERT* 🚨\n\n{message}"
+        formatted_message = f"ðŸš¨ *{alert_level} ALERT* ðŸš¨\n\n{message}"
         success, response_msg = send_telegram_message(formatted_message)
         
         if success:
@@ -2295,7 +2324,7 @@ def emergency_broadcast(request):
 
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'TECHNICAL_ESTATES'])
+@role_required(allowed_roles=['Super Admin', 'Security'])
 def visitor_management(request):
     """View to list active visitors and check them in/out"""
     # Decorator handles permission
@@ -2588,7 +2617,7 @@ def global_search(request):
 # ==================== Audit Logs ====================
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'FINANCE_ADMIN'])
+@role_required(allowed_roles=['Super Admin'])
 def audit_log_list(request):
     """
     Admin/Finance view for Audit Logs.
@@ -2730,7 +2759,7 @@ def update_student_status(request):
 # ==================== LOST AND FOUND ====================
 
 @login_required
-@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
+@role_required(allowed_roles=['Super Admin', 'Welfare Officer', 'Security'])
 def lost_found_list(request):
     """List all lost and found items"""
     status_filter = request.GET.get('status', 'ALL')
@@ -2941,3 +2970,99 @@ def delete_tutoring_post(request, post_id):
     post.delete()
     messages.success(request, "Post removed successfully.")
     return redirect('hms:tutoring_hub')
+
+
+# ==================== RBAC DASHBOARDS ====================
+
+@login_required
+@super_admin_required
+def super_admin_dashboard(request):
+    """Full system analytics and management for Super Admin"""
+    today = date.today()
+    context = {
+        'total_students': Student.objects.count(),
+        'total_staff': StaffProfile.objects.count(),
+        'pending_deferments': DefermentRequest.objects.filter(status='pending').count(),
+        'pending_maintenance': MaintenanceRequest.objects.filter(status='pending').count(),
+        'active_announcements': Announcement.objects.filter(is_active=True).count(),
+        'total_rooms': Room.objects.count(),
+        'occupied_rooms': Room.objects.filter(is_available=False).count(),
+        'today_visitors': Visitor.objects.filter(checkin_time__date=today).count(),
+        'recent_logs': AuditLog.objects.order_by('-created_at')[:10],
+        'recent_students': Student.objects.select_related('user').order_by('-created_at')[:5],
+        'recent_payments': Payment.objects.filter(status='Completed').order_by('-created_at')[:5],
+    }
+    return render(request, 'hms/rbac/super_admin_dashboard.html', context)
+
+
+@login_required
+@welfare_officer_required
+def welfare_officer_dashboard(request):
+    """Welfare and Deferment management dashboard"""
+    context = {
+        'pending_deferments': DefermentRequest.objects.filter(status='pending').select_related('student__user').order_by('-created_at'),
+        'under_review_deferments': DefermentRequest.objects.filter(status='under_review').select_related('student__user').count(),
+        'approved_deferments': DefermentRequest.objects.filter(status='approved').count(),
+        'total_students': Student.objects.count(),
+        'recent_announcements': Announcement.objects.filter(is_active=True).order_by('-created_at')[:5],
+        'recent_students': Student.objects.select_related('user').order_by('-created_at')[:5],
+    }
+    return render(request, 'hms/rbac/welfare_officer_dashboard.html', context)
+
+
+@login_required
+@hostel_manager_required
+def hostel_manager_dashboard(request):
+    """Hostel and Room management dashboard"""
+    context = {
+        'total_rooms': Room.objects.count(),
+        'available_rooms': Room.objects.filter(is_available=True).count(),
+        'occupied_rooms': Room.objects.filter(is_available=False).count(),
+        'pending_room_changes': RoomChangeRequest.objects.filter(status='pending').count(),
+        'recent_assignments': RoomAssignment.objects.select_related('student__user', 'room').order_by('-assigned_date')[:10],
+        'pending_maintenance': MaintenanceRequest.objects.filter(status='pending').select_related('student__user').order_by('-created_at')[:5],
+        'total_assigned': RoomAssignment.objects.filter(is_current=True).count(),
+    }
+    return render(request, 'hms/rbac/hostel_manager_dashboard.html', context)
+
+
+@login_required
+@kitchen_manager_required
+def kitchen_manager_dashboard(request):
+    """Kitchen and Meal management dashboard"""
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+    context = {
+        'today': today,
+        'breakfast_count': Meal.objects.filter(date=today, breakfast=True).count(),
+        'supper_count': Meal.objects.filter(date=today, supper=True).count(),
+        'early_count': Meal.objects.filter(date=today, early=True).count(),
+        'away_count': Meal.objects.filter(date=today, away=True).count(),
+        'tomorrow_breakfast': Meal.objects.filter(date=tomorrow, breakfast=True).count(),
+        'tomorrow_supper': Meal.objects.filter(date=tomorrow, supper=True).count(),
+        'today_menu': Activity.objects.filter(active=True, weekday=today.weekday()).first(),
+        'activities': Activity.objects.filter(active=True),
+        'total_students': Student.objects.count(),
+    }
+    return render(request, 'hms/rbac/kitchen_manager_dashboard.html', context)
+
+
+@login_required
+@security_required
+def security_dashboard(request):
+    """Visitor log and security management dashboard"""
+    today = date.today()
+    context = {
+        'active_visitors': Visitor.objects.filter(checkout_time__isnull=True).select_related('student__user').order_by('-checkin_time'),
+        'today_visitors_count': Visitor.objects.filter(checkin_time__date=today).count(),
+        'checked_out_today': Visitor.objects.filter(checkout_time__date=today).count(),
+        'recent_visitors': Visitor.objects.select_related('student__user').order_by('-checkin_time')[:10],
+        'recent_alerts': EmergencyAlert.objects.order_by('-created_at')[:5],
+    }
+    return render(request, 'hms/rbac/security_dashboard.html', context)
+
+
+def access_denied(request, exception=None):
+    """Custom 403 Access Denied page"""
+    return render(request, 'hms/403.html', status=403)
+

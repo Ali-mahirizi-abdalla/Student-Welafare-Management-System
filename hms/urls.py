@@ -24,7 +24,14 @@ urlpatterns = [
     path('student/early-breakfast/', views.toggle_early_breakfast, name='toggle_early_breakfast'),
     path('student/update-status/', views.update_student_status, name='update_student_status'),
     
-    # Admin Dashboard
+    # RBAC Dashboards
+    path('super-admin/dashboard/', views.super_admin_dashboard, name='super_admin_dashboard'),
+    path('welfare/dashboard/', views.welfare_officer_dashboard, name='welfare_officer_dashboard'),
+    path('hostel/dashboard/', views.hostel_manager_dashboard, name='hostel_manager_dashboard'),
+    path('kitchen/dashboard/', views.kitchen_manager_dashboard, name='kitchen_manager_dashboard'),
+    path('security/dashboard/', views.security_dashboard, name='security_dashboard'),
+    
+    # Admin Dashboard (Legacy/Generic)
     path('manage/dashboard/', views.dashboard_admin, name='admin_dashboard'),
     path('manage/payments/', views.manage_payments, name='manage_payments'),
     path('manage/export-csv/', views.export_meals_csv, name='export_meals_csv'),

@@ -1,0 +1,86 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Welfare Officer Dashboard - CampusCare{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">🫂 Welfare Officer Dashboard</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Student welfare and deferment management</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Pending Deferments</p>
+      <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ pending_deferments.count }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Under Review</p>
+      <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">{{ under_review_deferments }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Approved</p>
+      <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">{{ approved_deferments }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Total Students</p>
+      <p class="text-3xl font-bold text-purple-600 dark:text-purple-400 mt-1">{{ total_students }}</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+    <a href="{% url 'hms:admin_deferment_pending' %}" class="bg-amber-500 hover:bg-amber-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Pending Deferments</a>
+    <a href="{% url 'hms:admin_deferment_all' %}" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">All Deferments</a>
+    <a href="{% url 'hms:manage_students' %}" class="bg-purple-600 hover:bg-purple-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">View Students</a>
+    <a href="{% url 'hms:manage_announcements' %}" class="bg-green-600 hover:bg-green-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Announcements</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Pending Deferment Requests -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">⏳ Pending Deferment Requests</h2>
+      <div class="space-y-3">
+        {% for def in pending_deferments %}
+        <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div>
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ def.student.user.get_full_name }}</p>
+            <p class="text-xs text-gray-400">{{ def.reason|truncatechars:60 }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Submitted {{ def.created_at|timesince }} ago</p>
+          </div>
+          <a href="{% url 'hms:review_deferment' def.pk %}" class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors flex-shrink-0 ml-3">Review</a>
+        </div>
+        {% empty %}
+        <div class="text-center py-8">
+          <p class="text-4xl mb-2">✅</p>
+          <p class="text-gray-400 text-sm">No pending deferment requests.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Recent Students -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🎓 Recently Added Students</h2>
+      <div class="space-y-3">
+        {% for student in recent_students %}
+        <div class="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div class="w-9 h-9 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-sm font-bold text-purple-700 dark:text-purple-300">{{ student.user.first_name|first|upper }}</div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ student.user.get_full_name }}</p>
+            <p class="text-xs text-gray-400">{{ student.university_id }} · {{ student.course }}</p>
+          </div>
+          <a href="{% url 'hms:student_details' student.user.id %}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">View</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-400 text-sm text-center py-4">No students found.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

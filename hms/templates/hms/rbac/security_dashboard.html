@@ -1,0 +1,117 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Security Dashboard - CampusCare{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">🔒 Security Dashboard</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Visitor management and campus security</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Active Visitors</p>
+          <p class="text-3xl font-bold text-red-600 dark:text-red-400 mt-1">{{ active_visitors.count }}</p>
+        </div>
+        <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-xl flex items-center justify-center text-2xl">🚨</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Today's Visitors</p>
+          <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">{{ today_visitors_count }}</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center text-2xl">👤</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Checked Out Today</p>
+          <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">{{ checked_out_today }}</p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center text-2xl">✅</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 gap-3 mb-8">
+    <a href="{% url 'hms:visitor_management' %}" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">🚪 Manage Visitors</a>
+    <a href="{% url 'hms:lost_found_list' %}" class="bg-amber-500 hover:bg-amber-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">📦 Lost & Found</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Active Visitors (Currently on Campus) -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🚨 Currently Active Visitors</h2>
+      <div class="space-y-3">
+        {% for visitor in active_visitors %}
+        <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div>
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ visitor.visitor_name }}</p>
+            <p class="text-xs text-gray-400">Visiting: {{ visitor.student.user.get_full_name }}</p>
+            <p class="text-xs text-gray-400">In since {{ visitor.checkin_time|timesince }} ago</p>
+          </div>
+          <a href="{% url 'hms:checkout_visitor' visitor.id %}" class="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-200 transition-colors flex-shrink-0 ml-3">Check Out</a>
+        </div>
+        {% empty %}
+        <div class="text-center py-8">
+          <p class="text-4xl mb-2">✅</p>
+          <p class="text-gray-400 text-sm">No active visitors on campus.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Recent Visitor Log -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📋 Recent Visitor Log</h2>
+      <div class="space-y-3">
+        {% for visitor in recent_visitors %}
+        <div class="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0
+            {% if visitor.checkout_time %}bg-green-100 dark:bg-green-900 text-green-700{% else %}bg-red-100 dark:bg-red-900 text-red-700{% endif %}">
+            {{ visitor.visitor_name|first|upper }}
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ visitor.visitor_name }}</p>
+            <p class="text-xs text-gray-400">{{ visitor.checkin_time|date:"d M Y, H:i" }}</p>
+          </div>
+          <span class="text-xs px-2 py-1 rounded-full {% if visitor.checkout_time %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+            {% if visitor.checkout_time %}Out{% else %}In{% endif %}
+          </span>
+        </div>
+        {% empty %}
+        <p class="text-gray-400 text-sm text-center py-4">No visitors today.</p>
+        {% endfor %}
+      </div>
+      <a href="{% url 'hms:visitor_management' %}" class="block text-center text-blue-600 dark:text-blue-400 text-sm font-medium mt-4 hover:underline">View Full Log →</a>
+    </div>
+  </div>
+
+  <!-- Emergency Alerts -->
+  {% if recent_alerts %}
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mt-6">
+    <h2 class="text-lg font-bold text-red-600 dark:text-red-400 mb-4">🚨 Recent Emergency Alerts</h2>
+    <div class="space-y-3">
+      {% for alert in recent_alerts %}
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+        <p class="font-semibold text-red-800 dark:text-red-300">{{ alert.title }}</p>
+        <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ alert.message|truncatechars:100 }}</p>
+        <p class="text-xs text-red-400 mt-1">{{ alert.created_at|timesince }} ago</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

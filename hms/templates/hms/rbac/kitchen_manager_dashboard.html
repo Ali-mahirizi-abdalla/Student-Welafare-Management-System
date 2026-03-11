@@ -1,0 +1,94 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Kitchen Manager Dashboard - CampusCare{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">🍽️ Kitchen Manager Dashboard</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Meal planning and dining management for {{ today }}</p>
+  </div>
+
+  <!-- Today's Meal Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Breakfast (Today)</p>
+          <p class="text-3xl font-bold text-orange-600 dark:text-orange-400 mt-1">{{ breakfast_count }}</p>
+        </div>
+        <div class="text-3xl">🌅</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Early Breakfast</p>
+          <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">{{ early_count }}</p>
+        </div>
+        <div class="text-3xl">⏰</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Supper (Today)</p>
+          <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">{{ supper_count }}</p>
+        </div>
+        <div class="text-3xl">🌙</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Away Today</p>
+          <p class="text-3xl font-bold text-gray-600 dark:text-gray-400 mt-1">{{ away_count }}</p>
+        </div>
+        <div class="text-3xl">✈️</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tomorrow preview -->
+  <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white mb-8 shadow-md">
+    <h2 class="text-lg font-bold mb-3">📅 Tomorrow's Forecast</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p class="text-indigo-200 text-sm">Breakfast</p>
+        <p class="text-4xl font-bold">{{ tomorrow_breakfast }}</p>
+      </div>
+      <div>
+        <p class="text-indigo-200 text-sm">Supper</p>
+        <p class="text-4xl font-bold">{{ tomorrow_supper }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+    <a href="{% url 'hms:admin_dashboard' %}" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Full Meal List</a>
+    <a href="{% url 'hms:activities' %}" class="bg-green-600 hover:bg-green-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Manage Menu</a>
+    <a href="{% url 'hms:export_meals_csv' %}" class="bg-gray-700 hover:bg-gray-800 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Export CSV</a>
+  </div>
+
+  <!-- Today's Menu -->
+  {% if today_menu %}
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+    <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🍴 Today's Menu Activity</h2>
+    <div class="bg-green-50 dark:bg-green-900 rounded-xl p-4">
+      <p class="font-semibold text-green-800 dark:text-green-200">{{ today_menu.name }}</p>
+      <p class="text-green-600 dark:text-green-400 text-sm mt-1">{{ today_menu.description|default:"No description set" }}</p>
+    </div>
+  </div>
+  {% else %}
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 text-center">
+    <p class="text-5xl mb-3">🍽️</p>
+    <p class="text-gray-500 dark:text-gray-400">No menu activity defined for today.</p>
+    <a href="{% url 'hms:create_activity' %}" class="inline-block mt-3 text-blue-600 dark:text-blue-400 font-medium hover:underline">Add Today's Menu →</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Super Admin Dashboard - CampusCare{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">⚙️ Super Admin Dashboard</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Full system overview and management controls</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Total Students</p>
+          <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">{{ total_students }}</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center text-2xl">🎓</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Total Staff</p>
+          <p class="text-3xl font-bold text-purple-600 dark:text-purple-400 mt-1">{{ total_staff }}</p>
+        </div>
+        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center text-2xl">👥</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Pending Deferments</p>
+          <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ pending_deferments }}</p>
+        </div>
+        <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900 rounded-xl flex items-center justify-center text-2xl">📋</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Pending Maintenance</p>
+          <p class="text-3xl font-bold text-red-600 dark:text-red-400 mt-1">{{ pending_maintenance }}</p>
+        </div>
+        <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-xl flex items-center justify-center text-2xl">🔧</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Active Announcements</p>
+          <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">{{ active_announcements }}</p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center text-2xl">📢</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Occupied Rooms</p>
+          <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">{{ occupied_rooms }}/{{ total_rooms }}</p>
+        </div>
+        <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center text-2xl">🏠</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Today's Visitors</p>
+          <p class="text-3xl font-bold text-teal-600 dark:text-teal-400 mt-1">{{ today_visitors }}</p>
+        </div>
+        <div class="w-12 h-12 bg-teal-100 dark:bg-teal-900 rounded-xl flex items-center justify-center text-2xl">🚪</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+    <a href="{% url 'hms:manage_students' %}" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Manage Students</a>
+    <a href="{% url 'hms:admin_deferment_all' %}" class="bg-amber-500 hover:bg-amber-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Deferments</a>
+    <a href="{% url 'hms:manage_maintenance' %}" class="bg-red-500 hover:bg-red-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Maintenance</a>
+    <a href="{% url 'hms:audit_logs' %}" class="bg-gray-700 hover:bg-gray-800 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Audit Logs</a>
+    <a href="{% url 'hms:room_list' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Rooms</a>
+    <a href="{% url 'hms:visitor_management' %}" class="bg-teal-600 hover:bg-teal-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Visitors</a>
+    <a href="{% url 'hms:analytics_dashboard' %}" class="bg-purple-600 hover:bg-purple-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Analytics</a>
+    <a href="{% url 'hms:register_staff' %}" class="bg-green-600 hover:bg-green-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Add Staff</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Audit Logs -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🔍 Recent Audit Logs</h2>
+      <div class="space-y-3">
+        {% for log in recent_logs %}
+        <div class="flex items-start gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300 flex-shrink-0">{{ log.user.first_name|first|upper }}{{ log.user.last_name|first|upper }}</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-gray-800 dark:text-gray-200 truncate">{{ log.action }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">{{ log.created_at|timesince }} ago</p>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-400 text-sm text-center py-4">No recent logs.</p>
+        {% endfor %}
+      </div>
+      <a href="{% url 'hms:audit_logs' %}" class="block text-center text-blue-600 dark:text-blue-400 text-sm font-medium mt-4 hover:underline">View All Logs →</a>
+    </div>
+
+    <!-- Recent Students -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🎓 Recently Registered Students</h2>
+      <div class="space-y-3">
+        {% for student in recent_students %}
+        <div class="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-xs font-bold text-blue-700 dark:text-blue-300">{{ student.user.first_name|first|upper }}</div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ student.user.get_full_name }}</p>
+            <p class="text-xs text-gray-400">{{ student.university_id }}</p>
+          </div>
+          <a href="{% url 'hms:student_details' student.user.id %}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">View</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-400 text-sm text-center py-4">No students found.</p>
+        {% endfor %}
+      </div>
+      <a href="{% url 'hms:manage_students' %}" class="block text-center text-blue-600 dark:text-blue-400 text-sm font-medium mt-4 hover:underline">Manage All Students →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

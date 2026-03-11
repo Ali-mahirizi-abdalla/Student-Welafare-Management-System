@@ -1,0 +1,100 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Hostel Manager Dashboard - CampusCare{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">🏠 Hostel Manager Dashboard</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Accommodation and room management</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Total Rooms</p>
+      <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">{{ total_rooms }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Available Rooms</p>
+      <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">{{ available_rooms }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Occupied Rooms</p>
+      <p class="text-3xl font-bold text-red-600 dark:text-red-400 mt-1">{{ occupied_rooms }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Room Change Requests</p>
+      <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ pending_room_changes }}</p>
+    </div>
+  </div>
+
+  <!-- Occupancy Bar -->
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-8">
+    <h2 class="text-base font-semibold text-gray-800 dark:text-white mb-3">Occupancy Rate</h2>
+    {% if total_rooms > 0 %}
+    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-4 rounded-full transition-all"
+           style="width: {{ occupied_rooms|default:0 }}%"></div>
+    </div>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">{{ occupied_rooms }} of {{ total_rooms }} rooms occupied · {{ total_assigned }} students assigned</p>
+    {% else %}
+    <p class="text-gray-400 text-sm">No rooms configured yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+    <a href="{% url 'hms:room_list' %}" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Manage Rooms</a>
+    <a href="{% url 'hms:room_assignments' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Assignments</a>
+    <a href="{% url 'hms:room_change_requests' %}" class="bg-amber-500 hover:bg-amber-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Change Requests</a>
+    <a href="{% url 'hms:manage_maintenance' %}" class="bg-red-500 hover:bg-red-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105">Maintenance</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Assignments -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🛏️ Recent Room Assignments</h2>
+      <div class="space-y-3">
+        {% for assignment in recent_assignments %}
+        <div class="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div class="w-9 h-9 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-sm font-bold text-blue-700 dark:text-blue-300">{{ assignment.student.user.first_name|first|upper }}</div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ assignment.student.user.get_full_name }}</p>
+            <p class="text-xs text-gray-400">Room {{ assignment.room.room_number }} · {{ assignment.assigned_date }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-400 text-sm text-center py-4">No recent assignments.</p>
+        {% endfor %}
+      </div>
+      <a href="{% url 'hms:room_assignments' %}" class="block text-center text-blue-600 dark:text-blue-400 text-sm font-medium mt-4 hover:underline">View All Assignments →</a>
+    </div>
+
+    <!-- Pending Maintenance -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🔧 Pending Maintenance</h2>
+      <div class="space-y-3">
+        {% for req in pending_maintenance %}
+        <div class="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 mt-1.5"></div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ req.title }}</p>
+            <p class="text-xs text-gray-400">{{ req.student.user.get_full_name }} · {{ req.created_at|timesince }} ago</p>
+          </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-8">
+          <p class="text-4xl mb-2">✅</p>
+          <p class="text-gray-400 text-sm">No pending maintenance requests.</p>
+        </div>
+        {% endfor %}
+      </div>
+      <a href="{% url 'hms:manage_maintenance' %}" class="block text-center text-blue-600 dark:text-blue-400 text-sm font-medium mt-4 hover:underline">View All →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
