@@ -1,3 +1,4 @@
+from django.conf import settings
 from .models import Message, Notification
 
 def unread_notifications(request):
@@ -28,3 +29,13 @@ def staff_role_info(request):
                 'staff_role': staff_profile.get_role_display()
             }
     return {'staff_category': None, 'staff_category_raw': None, 'staff_role': None}
+
+def telegram_info(request):
+    """Makes Telegram Chat ID / Username available to all templates."""
+    chat_id = getattr(settings, 'TELEGRAM_CHAT_ID', '')
+    # Clean @ if present for the join link
+    clean_handle = chat_id.lstrip('@')
+    return {
+        'TELEGRAM_CHAT_ID': chat_id,
+        'TELEGRAM_JOIN_LINK': f"https://t.me/{clean_handle}" if clean_handle else None
+    }

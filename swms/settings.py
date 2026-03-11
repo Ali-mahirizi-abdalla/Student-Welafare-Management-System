@@ -151,6 +151,7 @@ TEMPLATES = [
                 'hms.context_processors.unread_messages',
                 'hms.context_processors.staff_role_info',
                 'hms.context_processors.unread_notifications',
+                'hms.context_processors.telegram_info',
             ],
             # Explicitly disable template caching in DEBUG mode
             'loaders': [
@@ -390,6 +391,12 @@ DBBACKUP_CONNECTORS = {
         'CONNECTOR': 'dbbackup.db.mysql.MysqlDumpConnector',
     }
 }
+
+# ============================================
+# TELEGRAM BROADCAST CONFIGURATION
+# ============================================
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 
 
 
