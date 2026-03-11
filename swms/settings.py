@@ -39,26 +39,22 @@ CSRF_TRUSTED_ORIGINS = [
 # CSRF Cookie Settings
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_DOMAIN = None  # Allow cookies on localhost/127.0.0.1
+CSRF_COOKIE_DOMAIN = None
+CSRF_USE_SESSIONS = True  # Consistent session-based CSRF
+
 if DEBUG:
     CSRF_COOKIE_SECURE = False
-    CSRF_USE_SESSIONS = False
-    CSRF_TRUSTED_ORIGINS += ['http://127.0.0.1:8000', 'http://localhost:8000']
-    
-    # Auto-add local IP to trusted origins for LAN testing
-    import socket
-    try:
-        hostname = socket.gethostname()
-        local_ip = socket.gethostbyname(hostname)
-        CSRF_TRUSTED_ORIGINS.append(f'http://{local_ip}:8000')
-    except Exception:
-        pass
+    CSRF_TRUSTED_ORIGINS += [
+        'http://127.0.0.1:8000', 
+        'http://localhost:8000',
+        'http://38.247.148.232:8000',
+        'https://38.247.148.232:8000',
+    ]
 else:
     CSRF_COOKIE_SECURE = True
 
 # Production security
 if not DEBUG:
-    CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
@@ -70,9 +66,6 @@ if not DEBUG:
 # Proxy & CSRF Fix for Cloudflare/Nginx
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
-CSRF_USE_SESSIONS = True  # More reliable for mobile browsers
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 # ============================================
