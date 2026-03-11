@@ -1,7 +1,51 @@
 from django.shortcuts import redirect
 from django.urls import reverse, NoReverseMatch
+from django.core.cache import cache
 from django.utils import timezone
+import threading
 from .models import AdminSubscription
+
+# Thread-local storage to pass request info to signals
+_thread_locals = threading.local()
+
+def get_current_request():
+    return getattr(_thread_locals, 'request', None)
+
+class AuditMiddleware:
+    """
+    Middleware to capture request details (User, IP) for Audit Logging.
+    Stores request in thread-local storage for access in signals.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        _thread_locals.request = request
+        response = self.get_response(request)
+        
+        # Cleanup
+        if hasattr(_thread_locals, 'request'):
+            del _thread_locals.request
+            
+        return response
+
+class PresenceMiddleware:
+    """
+    Middleware to track user 'online' status using Django Cache.
+    A user is considered online if they've made a request within the last 5 minutes.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.user.is_authenticated:
+            # Mark user as active by storing a timestamp in cache
+            # Key: 'seen_[user_id]', Value: 'online', Expiry: 300 seconds (5 min)
+            cache_key = f'seen_{request.user.id}'
+            cache.set(cache_key, 'online', 300)
+            
+        response = self.get_response(request)
+        return response
 
 class SubscriptionLockMiddleware:
     """
@@ -36,13 +80,11 @@ class SubscriptionLockMiddleware:
         if request.path in whitelisted_urls:
             return self.get_response(request)
 
-        # Check subscription status (Cache would be better, but direct DB check for reliability during implementation)
-        # We assume the first Active subscription is the valid one
+        # Check subscription status
         active_sub = AdminSubscription.objects.filter(status='Active', expiry_date__gt=timezone.now()).exists()
 
         if not active_sub:
             # If the user is staff, redirect to payment page
-            # Otherwise redirect to system-locked page
             if request.user.is_authenticated and request.user.is_staff:
                 try:
                     pay_url = reverse('hms:admin_subscription_pay')
