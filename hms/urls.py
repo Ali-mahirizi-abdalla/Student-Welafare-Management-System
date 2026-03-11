@@ -102,6 +102,7 @@ urlpatterns = [
 
     # Analytics Dashboard
     path('manage/analytics/', views.analytics_dashboard, name='analytics_dashboard'),
+    path('manage/emergency-broadcast/', views.emergency_broadcast, name='emergency_broadcast'),
     path('manage/audit-logs/', views.audit_log_list, name='audit_logs'),
     path('manage/audit-logs/export/', views.audit_log_export, name='audit_log_export'),
 

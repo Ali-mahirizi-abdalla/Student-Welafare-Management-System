@@ -14,6 +14,7 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document
                      Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
                      AdminSubscription, RegistrationPayment)
 from .decorators import role_required, admin_only
+from .utils.telegram import send_telegram_message
 
 # ==================== Authentication ====================
 from .forms import (
@@ -2264,6 +2265,31 @@ def analytics_dashboard(request):
     }
     
     return render(request, 'hms/admin/analytics_dashboard.html', context)
+
+
+@login_required
+@role_required(allowed_categories=['EXECUTIVE'])
+def emergency_broadcast(request):
+    """View for sending emergency broadcasts via Telegram"""
+    if request.method == 'POST':
+        message = request.POST.get('message', '').strip()
+        alert_level = request.POST.get('alert_level', 'INFO')
+        
+        if not message:
+            messages.error(request, "Message cannot be empty.")
+            return redirect('hms:emergency_broadcast')
+
+        formatted_message = f"🚨 *{alert_level} ALERT* 🚨\n\n{message}"
+        success, response_msg = send_telegram_message(formatted_message)
+        
+        if success:
+            messages.success(request, response_msg)
+        else:
+            messages.error(request, f"Failed to send broadcast: {response_msg}")
+        
+        return redirect('hms:emergency_broadcast')
+
+    return render(request, 'hms/admin/emergency_broadcast.html')
 
 
 @login_required

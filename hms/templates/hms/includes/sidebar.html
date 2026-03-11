@@ -157,6 +157,20 @@
         </a>
         {% endif %}
 
+        <!-- Emergency Broadcast: EXECUTIVE only -->
+        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' %}
+        <a href="{% url 'hms:emergency_broadcast' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if 'emergency-broadcast' in request.path %}bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800 shadow-lg text-red-600 dark:text-red-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400{% endif %} rounded-xl transition group">
+            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z">
+                </path>
+            </svg>
+            Emergency Alert
+        </a>
+        {% endif %}
+
         {% else %}
         <!-- STUDENT LINKS -->
         <a href="{% url 'hms:student_dashboard' %}"
