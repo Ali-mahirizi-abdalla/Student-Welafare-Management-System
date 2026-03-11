@@ -1263,7 +1263,7 @@ def activities_list(request):
     return render(request, 'hms/admin/activities.html', context)
 
 @login_required
-@role_required(allowed_categories=[\'EXECUTIVE\', \'STUDENT_SERVICES\'])
+@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
 def create_activity(request):
     """Create a new activity"""
     
@@ -1287,7 +1287,7 @@ def create_activity(request):
     return render(request, 'hms/admin/activity_form_v2.html', {'edit_mode': False})
 
 @login_required
-@role_required(allowed_categories=[\'EXECUTIVE\', \'STUDENT_SERVICES\'])
+@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
 def edit_activity(request, pk):
     """Edit an existing activity"""
     
@@ -1308,7 +1308,7 @@ def edit_activity(request, pk):
 
 @login_required
 @require_POST
-@role_required(allowed_categories=[\'EXECUTIVE\', \'STUDENT_SERVICES\'])
+@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
 def delete_activity(request, pk):
     """Delete an activity"""
     
@@ -1319,7 +1319,7 @@ def delete_activity(request, pk):
     return redirect('hms:activities')
 
 @login_required
-@role_required(allowed_categories=[\'EXECUTIVE\', \'STUDENT_SERVICES\'])
+@role_required(allowed_categories=['EXECUTIVE', 'STUDENT_SERVICES'])
 def toggle_activity_status(request, pk):
     """Toggle activity active status"""
     
