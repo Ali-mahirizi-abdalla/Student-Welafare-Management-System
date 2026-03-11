@@ -1,0 +1,171 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Appointment Detail - Campus Care{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-100 dark:bg-slate-950 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Main Content Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden glassmorphism">
+            <!-- Header Section -->
+            <div class="px-8 py-6 bg-primary-600 flex flex-col md:flex-row md:items-center justify-between text-white gap-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-4xl backdrop-blur-md">
+                        {% if appointment.service_type == 'general' %}🩺{% elif appointment.service_type == 'counseling' %}🧠{% elif appointment.service_type == 'emergency' %}🚑{% else %}🦷{% endif %}
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black">{{ appointment.get_service_type_display }}</h1>
+                        <p class="text-white/80 font-medium">Ref: #HC-{{ appointment.pk|stringformat:"04d" }}</p>
+                    </div>
+                </div>
+                <div class="px-6 py-2 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 text-center">
+                    <p class="text-xs uppercase font-black tracking-widest text-white/70">Current Status</p>
+                    <p class="text-lg font-black uppercase text-white">{{ appointment.get_status_display }}</p>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Basic Information Section -->
+                    <div class="space-y-8">
+                        <div>
+                            <h2 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">Patient Information</h2>
+                            <div class="space-y-4">
+                                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center space-x-4">
+                                    <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-600 rounded-xl flex items-center justify-center font-bold">
+                                        {{ appointment.student.user.first_name|first }}{{ appointment.student.user.last_name|first }}
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ appointment.student.user.get_full_name }}</p>
+                                        <p class="text-xs text-slate-500 font-medium">{{ appointment.student.university_id }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">Visit Details</h2>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                        <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Date</p>
+                                        <p class="font-extrabold text-slate-900 dark:text-white">{{ appointment.preferred_date }}</p>
+                                    </div>
+                                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                        <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Time</p>
+                                        <p class="font-extrabold text-slate-900 dark:text-white">{{ appointment.preferred_slot }}</p>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Reason for visit</p>
+                                    <p class="text-slate-700 dark:text-slate-300">{{ appointment.reason }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clinical Updates Section (Staff Only or if populated) -->
+                    <div class="space-y-8">
+                        <div>
+                            <h2 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">Clinical Updates</h2>
+                            {% if is_health_staff %}
+                            <form method="POST" class="space-y-6">
+                                {% csrf_token %}
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="{{ form.status.id_for_label }}" class="block text-xs font-black uppercase text-slate-400 mb-2">Update Status</label>
+                                        {{ form.status }}
+                                    </div>
+                                    <div>
+                                        <label for="{{ form.assigned_staff.id_for_label }}" class="block text-xs font-black uppercase text-slate-400 mb-2">Assign Clinical Staff</label>
+                                        {{ form.assigned_staff }}
+                                    </div>
+                                    <div>
+                                        <label for="{{ form.vitals.id_for_label }}" class="block text-xs font-black uppercase text-slate-400 mb-2">Vitals (BP, Temp, etc.)</label>
+                                        {{ form.vitals }}
+                                    </div>
+                                    <div>
+                                        <label for="{{ form.clinical_notes.id_for_label }}" class="block text-xs font-black uppercase text-slate-400 mb-2">Clinical Notes (Private)</label>
+                                        {{ form.clinical_notes }}
+                                    </div>
+                                    <div>
+                                        <label for="{{ form.prescription.id_for_label }}" class="block text-xs font-black uppercase text-slate-400 mb-2">Prescription / Follow-up</label>
+                                        {{ form.prescription }}
+                                    </div>
+                                </div>
+
+                                <div class="pt-6">
+                                    <button type="submit" class="w-full py-4 px-6 bg-slate-900 dark:bg-white text-white dark:text-black font-black uppercase tracking-widest text-sm rounded-2xl transition-all transform hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]">
+                                        💾 Save Clinical Details
+                                    </button>
+                                </div>
+                            </form>
+                            {% else %}
+                            <!-- Student View of Updates -->
+                            <div class="space-y-4">
+                                {% if appointment.vitals %}
+                                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-2xl border border-indigo-100 dark:border-indigo-900/30">
+                                    <p class="text-xs font-black text-indigo-900 dark:text-indigo-400 uppercase mb-1">Clinical Observations</p>
+                                    <p class="text-slate-700 dark:text-slate-300 italic">{{ appointment.vitals }}</p>
+                                </div>
+                                {% endif %}
+
+                                {% if appointment.prescription %}
+                                <div class="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+                                    <p class="text-xs font-black text-emerald-900 dark:text-emerald-400 uppercase mb-1">Prescription & Follow-up</p>
+                                    <div class="text-slate-800 dark:text-slate-200 font-bold whitespace-pre-wrap">{{ appointment.prescription }}</div>
+                                </div>
+                                {% else %}
+                                <div class="bg-slate-50 dark:bg-slate-800/30 p-8 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 text-center">
+                                    <p class="text-slate-400 italic">No clinical updates yet. Documentation will appear here after your session.</p>
+                                </div>
+                                {% endif %}
+
+                                <div class="mt-8 p-6 bg-slate-900 rounded-3xl text-white">
+                                    <p class="text-sm font-bold flex items-center">
+                                        <span class="text-yellow-400 mr-2">🔔</span> Note to student:
+                                    </p>
+                                    <p class="text-xs text-slate-400 mt-2">All medical records are strictly confidential and only visible to you and authorized health staff.</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                <a href="{% if is_health_staff %}{% url 'hms:manage_health' %}{% else %}{% url 'hms:student_health_appointments' %}{% endif %}" class="flex items-center text-sm font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Hub
+                </a>
+                <p class="text-xs text-slate-400">Last updated: {{ appointment.updated_at|date:"M d, Y H:i" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input, select, textarea {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: rgb(248 250 252); /* bg-slate-50 */
+        border: none;
+        border-radius: 1rem; /* rounded-2xl */
+        outline: none;
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+    }
+    .dark input, .dark select, .dark textarea {
+        background-color: rgb(30 41 59); /* bg-slate-800 */
+    }
+    input:focus, select:focus, textarea:focus {
+        box-shadow: 0 0 0 2px rgb(79 70 229); /* focus:ring-primary-500 roughly */
+    }
+</style>
+{% endblock %}

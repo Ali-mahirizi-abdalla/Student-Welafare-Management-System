@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 from .models import (Student, AwayPeriod, Document, Meal, MaintenanceRequest, 
                      LeaveRequest, Activity, Visitor,
-                     Message, Announcement, Room, RoomAssignment, RoomChangeRequest, LostItem, StaffProfile)
+                     Message, Announcement, Room, RoomAssignment, RoomChangeRequest, LostItem, StaffProfile, HealthAppointment)
 
 class VisitorForm(forms.ModelForm):
     class Meta:
@@ -843,4 +843,41 @@ class LostItemForm(forms.ModelForm):
             'status': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg'}),
             'contact_phone': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg', 'placeholder': 'Contact phone'}),
             'image': forms.FileInput(attrs={'class': 'w-full py-2 border rounded-lg'}),
+        }
+
+class HealthAppointmentForm(forms.ModelForm):
+    """Form for students to book health appointments"""
+    class Meta:
+        model = HealthAppointment
+        fields = ['service_type', 'preferred_date', 'preferred_slot', 'reason']
+        widgets = {
+            'service_type': forms.Select(attrs={
+                'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            }),
+            'preferred_date': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            }),
+            'preferred_slot': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            }),
+            'reason': forms.Textarea(attrs={
+                'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+                'rows': 3,
+                'placeholder': 'Tell us a bit about how you are feeling (e.g., headache, fever, need counseling...)'
+            }),
+        }
+
+class HealthStaffUpdateForm(forms.ModelForm):
+    """Form for nurses/doctors to update appointment details"""
+    class Meta:
+        model = HealthAppointment
+        fields = ['status', 'assigned_staff', 'vitals', 'clinical_notes', 'prescription']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white'}),
+            'assigned_staff': forms.Select(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white'}),
+            'vitals': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white', 'rows': 2, 'placeholder': 'BP: 120/80, Temp: 37C...'}),
+            'clinical_notes': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white', 'rows': 3}),
+            'prescription': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white', 'rows': 3}),
         }

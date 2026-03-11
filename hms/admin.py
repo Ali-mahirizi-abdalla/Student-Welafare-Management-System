@@ -2,7 +2,58 @@ from django.contrib import admin
 from .models import (Student, Meal, Activity, AwayPeriod, Announcement, 
                      MaintenanceRequest, LeaveRequest, AuditLog, 
                      Room, RoomAssignment, RoomChangeRequest, Payment, 
-                     Notification, LoginActivity, Visitor)
+                     Notification, LoginActivity, Visitor, HealthAppointment,
+                     StaffProfile, LostItem, TutoringPost, Document,
+                     AdminSubscription, RegistrationPayment, EmergencyAlert, Message)
+
+@admin.register(HealthAppointment)
+class HealthAppointmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'service_type', 'preferred_date', 'status', 'assigned_staff')
+    list_filter = ('service_type', 'status', 'preferred_date')
+    search_fields = ('student__user__username', 'reason', 'clinical_notes')
+
+@admin.register(StaffProfile)
+class StaffProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'role', 'national_id', 'phone')
+    list_filter = ('role',)
+    search_fields = ('user__username', 'national_id', 'phone')
+
+@admin.register(LostItem)
+class LostItemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status', 'reported_by', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('name', 'description')
+
+@admin.register(TutoringPost)
+class TutoringPostAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'student', 'post_type', 'created_at')
+    list_filter = ('post_type', 'created_at')
+    search_fields = ('subject', 'description', 'student__user__username')
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ('title', 'uploaded_at')
+    search_fields = ('title', 'description')
+
+@admin.register(AdminSubscription)
+class AdminSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('status', 'amount', 'expiry_date', 'transaction_id')
+    list_filter = ('status', 'expiry_date')
+
+@admin.register(RegistrationPayment)
+class RegistrationPaymentAdmin(admin.ModelAdmin):
+    list_display = ('phone_number', 'amount', 'transaction_id', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+
+@admin.register(EmergencyAlert)
+class EmergencyAlertAdmin(admin.ModelAdmin):
+    list_display = ('student', 'location', 'is_resolved', 'created_at')
+    list_filter = ('is_resolved', 'created_at')
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'recipient', 'timestamp', 'is_read')
+    list_filter = ('is_read', 'timestamp')
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):

@@ -261,6 +261,12 @@ class StaffProfile(models.Model):
         ('DEPT_BB', 'Department of Biochemistry and Biotechnology'),
         ('DEPT_PHYSICS', 'Department of Physics'),
         ('DEPT_MCS', 'Department of Mathematics and Computer Science'),
+
+        # Health Services
+        ('CAMPUS_NURSE', 'Campus Nurse'),
+        ('CAMPUS_DOCTOR', 'Campus Doctor'),
+        ('CAMPUS_COUNSELOR', 'Campus Counselor'),
+        ('HEALTH_ADMIN', 'Health Admin'),
         
         # Support/Misc
         ('LAB_IN_CHARGE', 'In charge Laboratories'),
@@ -322,6 +328,8 @@ class StaffProfile(models.Model):
             return 'STUDENT_SERVICES'
         if role in ['ICT_MANAGER', 'SECURITY_CHIEF', 'ESTATES_HEAD', 'MAINTENANCE_HEAD', 'TRANSPORT_HEAD', 'LAB_IN_CHARGE', 'MAINTENANCE_HOSTEL', 'VISITORS']:
             return 'TECHNICAL_ESTATES'
+        if role in ['CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'HEALTH_ADMIN', 'HEALTH_UNIT_HEAD', 'COUNSELLING_IN_CHARGE']:
+            return 'HEALTH_SERVICES'
         return 'GENERAL_STAFF'
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -689,3 +697,45 @@ class TutoringPost(models.Model):
 
     def __str__(self):
         return f"{self.get_post_type_display()}: {self.subject} by {self.student.user.first_name}"
+
+class HealthAppointment(models.Model):
+    SERVICE_TYPE_CHOICES = [
+        ('general', 'General Health'),
+        ('counseling', 'Mental Wellness (Counseling)'),
+        ('emergency', 'Emergency Triage'),
+        ('dental', 'Dental'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+        ('no_show', 'No Show'),
+    ]
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='health_appointments')
+    service_type = models.CharField(max_length=20, choices=SERVICE_TYPE_CHOICES, default='general')
+    reason = models.TextField(help_text="Briefly describe why you are booking")
+    preferred_date = models.DateField()
+    preferred_slot = models.TimeField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    # Staff assignment
+    assigned_staff = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
+                                      related_name='assigned_health_appointments',
+                                      help_text="Doctor or Counselor assigned to this case")
+    
+    # Clinical Data (Confidential)
+    vitals = models.TextField(blank=True, null=True, help_text="Recorded by Nurse (BP, Temp, Weight, etc.)")
+    clinical_notes = models.TextField(blank=True, null=True, help_text="Notes from the session (Private)")
+    prescription = models.TextField(blank=True, null=True, help_text="Medication or follow-up instructions")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-preferred_date', '-preferred_slot']
+
+    def __str__(self):
+        return f"{self.get_service_type_display()} - {self.student.user.get_full_name()} ({self.preferred_date})"

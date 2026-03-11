@@ -392,6 +392,32 @@
             </div>
             {% endif %}
 
+            <!-- Health Appointment Widget -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 overflow-hidden relative group">
+                <div class="relative z-10">
+                    <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-2 flex items-center gap-2">
+                        <span class="text-xl">🩺</span>
+                        Health & Wellness
+                    </h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 font-medium italic">"Feeling Under the Weather? Book a Clinic Visit in 10 Seconds."</p>
+                    
+                    <div class="space-y-3">
+                        <a href="{% url 'hms:book_health_appointment' %}" class="flex items-center justify-center gap-2 w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-bold transition-all shadow-md transform hover:scale-[1.02] active:scale-[0.98]">
+                            ⚡ Book My Time Slot
+                        </a>
+                        <a href="{% url 'hms:student_health_appointments' %}" class="flex items-center justify-center gap-2 w-full py-2 text-primary-600 dark:text-primary-400 text-xs font-bold hover:underline">
+                            View My Appointments
+                        </a>
+                    </div>
+                </div>
+                <!-- Decoration -->
+                <div class="absolute -bottom-2 -right-2 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+
             <!-- Away Mode -->
             <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">Going Away?</h3>

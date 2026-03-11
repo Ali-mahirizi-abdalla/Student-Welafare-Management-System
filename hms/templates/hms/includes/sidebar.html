@@ -137,6 +137,20 @@
         </a>
         {% endif %}
 
+        <!-- Health Management: EXECUTIVE, HEALTH_SERVICES -->
+        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'HEALTH_SERVICES' %}
+        <a href="{% url 'hms:manage_health' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if 'health/manage' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
+            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                </path>
+            </svg>
+            Health Management
+        </a>
+        {% endif %}
+
         <!-- Payments: EXECUTIVE, FINANCE_ADMIN -->
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'FINANCE_ADMIN' %}
         <a href="{% url 'hms:manage_payments' %}"
@@ -234,6 +248,16 @@
             {% if unread_messages > 0 %}
             <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{{ unread_messages }}</span>
             {% endif %}
+        </a>
+        <a href="{% url 'hms:student_health_appointments' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if 'health' in request.path and not user.is_staff %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
+            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                </path>
+            </svg>
+            Health Service
         </a>
         <a href="{% url 'hms:student_profile' %}"
             class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'student_profile' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">

@@ -12,7 +12,7 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document
                      Message, AuditLog,
                      LeaveRequest, DefermentRequest, Visitor, EmergencyAlert,
                      Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
-                     AdminSubscription, RegistrationPayment, TutoringPost)
+                     AdminSubscription, RegistrationPayment, TutoringPost, HealthAppointment)
 from .decorators import (
     role_required, staff_only, admin_only,
     super_admin_required, welfare_officer_required,
@@ -25,7 +25,8 @@ from .forms import (
     StudentRegistrationForm, StaffRegistrationForm, ProfileEditForm, AwayModeForm, ActivityForm, DocumentForm, 
     TimetableForm, RoomSelectionForm, MessageForm, MaintenanceRequestForm,
     MaintenanceStatusForm, RoomForm, RoomAssignmentForm, RoomChangeRequestForm,
-    LeaveRequestForm, DefermentRequestForm, LeaveApprovalForm, VisitorForm, AnnouncementForm, LostItemForm
+    LeaveRequestForm, DefermentRequestForm, LeaveApprovalForm, VisitorForm, AnnouncementForm, LostItemForm,
+    HealthAppointmentForm, HealthStaffUpdateForm
 )
 from datetime import date, datetime, time, timedelta
 from django.db import transaction, models
@@ -228,6 +229,8 @@ def user_login(request):
             return redirect('hms:security_dashboard')
         elif hasattr(user, 'student_profile'):
             return redirect('hms:student_dashboard')
+        elif hasattr(user, 'staff_profile') and user.staff_profile.get_category() == 'HEALTH_SERVICES':
+            return redirect('hms:manage_health')
         else:
             return redirect('hms:admin_dashboard')
 
@@ -253,6 +256,8 @@ def user_login(request):
                 return redirect('hms:security_dashboard')
             elif hasattr(user, 'student_profile'):
                 return redirect('hms:student_dashboard')
+            elif hasattr(user, 'staff_profile') and user.staff_profile.get_category() == 'HEALTH_SERVICES':
+                return redirect('hms:manage_health')
             else:
                 # Fallback for staff with undefined group or legacy admin
                 if user.is_staff:
@@ -3066,3 +3071,125 @@ def access_denied(request, exception=None):
     """Custom 403 Access Denied page"""
     return render(request, 'hms/403.html', status=403)
 
+# ==================== Health Services ====================
+
+@login_required
+def book_health_appointment(request):
+    """View for students to book health appointments"""
+    try:
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        messages.error(request, "Student profile required to book appointments.")
+        return redirect('hms:student_dashboard')
+
+    if request.method == 'POST':
+        form = HealthAppointmentForm(request.POST)
+        if form.is_valid():
+            appointment = form.save(commit=False)
+            appointment.student = student
+            appointment.save()
+            
+            # Create notification for Health Admin
+            # Find a health admin or use a generic broadcast
+            health_admins = User.objects.filter(staff_profile__role='HEALTH_ADMIN')
+            for admin in health_admins:
+                Notification.objects.create(
+                    user=admin,
+                    notification_type='system',
+                    title='New Health Appointment',
+                    message=f'New {appointment.get_service_type_display()} appointment requested by {student.user.get_full_name()}.',
+                    link=reverse('hms:manage_health')
+                )
+            
+            messages.success(request, "Appointment requested successfully! Our team will review it shortly.")
+            return redirect('hms:student_health_appointments')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = HealthAppointmentForm()
+
+    return render(request, 'hms/health/book_appointment.html', {'form': form})
+
+@login_required
+def health_appointment_list(request):
+    """List appointments for students or staff"""
+    is_staff = hasattr(request.user, 'staff_profile') and request.user.staff_profile.get_category() == 'HEALTH_SERVICES'
+    
+    if is_staff:
+        appointments = HealthAppointment.objects.all()
+    else:
+        try:
+            student = request.user.student_profile
+            appointments = HealthAppointment.objects.filter(student=student)
+        except Student.DoesNotExist:
+            appointments = []
+
+    return render(request, 'hms/health/appointment_list.html', {
+        'appointments': appointments,
+        'is_staff': is_staff
+    })
+
+@login_required
+def health_appointment_detail(request, pk):
+    """View and update health appointment details"""
+    appointment = get_object_or_404(HealthAppointment, pk=pk)
+    is_health_staff = hasattr(request.user, 'staff_profile') and request.user.staff_profile.get_category() == 'HEALTH_SERVICES'
+    
+    # Permission check: Own appointment or Health Staff
+    if not is_health_staff and appointment.student.user != request.user:
+        messages.error(request, "Access Denied.")
+        return redirect('hms:home')
+
+    if request.method == 'POST' and is_health_staff:
+        form = HealthStaffUpdateForm(request.POST, instance=appointment)
+        if form.is_valid():
+            appointment = form.save()
+            # Notify student of update
+            Notification.objects.create(
+                user=appointment.student.user,
+                notification_type='system',
+                title=f'Appointment Updated: {appointment.get_status_display()}',
+                message=f'Your {appointment.get_service_type_display()} appointment has been updated to {appointment.status}.',
+                link=reverse('hms:student_health_appointments')
+            )
+            messages.success(request, "Appointment details updated.")
+            return redirect('hms:manage_health')
+    
+    form = HealthStaffUpdateForm(instance=appointment) if is_health_staff else None
+
+    return render(request, 'hms/health/appointment_detail.html', {
+        'appointment': appointment,
+        'form': form,
+        'is_health_staff': is_health_staff
+    })
+
+@login_required
+@role_required(allowed_roles=['HEALTH_ADMIN', 'CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'Super Admin'])
+def manage_health(request):
+    """Dashboard for health staff"""
+    staff_profile = getattr(request.user, 'staff_profile', None)
+    staff_role = staff_profile.role if staff_profile else None
+    
+    # Filter appointments based on role if needed, or show all for admin
+    if staff_role in ['CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR']:
+        assigned_appointments = HealthAppointment.objects.filter(assigned_staff=request.user)
+        pending_appointments = HealthAppointment.objects.filter(status='pending', service_type='general' if staff_role == 'CAMPUS_DOCTOR' else 'counseling')
+    else:
+        assigned_appointments = HealthAppointment.objects.none()
+        pending_appointments = HealthAppointment.objects.filter(status='pending')
+
+    all_appointments = HealthAppointment.objects.all()
+    
+    stats = {
+        'pending': all_appointments.filter(status='pending').count(),
+        'today': all_appointments.filter(preferred_date=date.today()).count(),
+        'completed': all_appointments.filter(status='completed').count(),
+    }
+
+    return render(request, 'hms/health/manage_health.html', {
+        'pending_appointments': pending_appointments,
+        'assigned_appointments': assigned_appointments,
+        'all_appointments': all_appointments[:50], # Recent 50
+        'stats': stats,
+        'staff_role': staff_role
+    })
