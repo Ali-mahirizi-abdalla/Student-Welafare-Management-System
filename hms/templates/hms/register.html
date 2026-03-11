@@ -98,14 +98,15 @@
                 <div class="flex gap-6">
                     {% for radio in form.residence_type %}
                     <label class="inline-flex items-center cursor-pointer group">
-                        <input type="radio" name="{{ radio.name }}" value="{{ radio.data.value }}" {% if radio.data.selected %}checked{% endif %} class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500" onchange="toggleHostelFields()">
+                        <input type="radio" name="{{ radio.name }}" value="{{ radio.data.value }}" {% if radio.data.selected %}checked{% endif %} class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500" onchange="toggleHostelFields(this.value)">
                         <span class="ml-2 text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary-600 transition">{{ radio.choice_label }}</span>
                     </label>
                     {% endfor %}
                 </div>
             </div>
 
-            <div id="hostel-fields" class="grid grid-cols-1 md:grid-cols-2 gap-5 transition-all duration-300">
+            <!-- Hostel-only fields: hidden by default, shown via JS when 'hostel' radio is selected -->
+            <div id="hostel-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                     <label for="id_hostel" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Hostel Name</label>
                     {{ form.hostel }}
@@ -249,22 +250,18 @@
         }
     }
 
-    function toggleHostelFields() {
+    function toggleHostelFields(value) {
         const hostelFields = document.getElementById('hostel-fields');
-        const residenceRadios = document.getElementsByName('residence_type');
-        let selected = 'hostel';
-        for (const radio of residenceRadios) {
-            if (radio.checked) {
-                selected = radio.value;
-                break;
-            }
+        if (!hostelFields) return;
+        // Get value from argument or by checking which radio is checked
+        if (!value) {
+            const checked = document.querySelector('input[name="residence_type"]:checked');
+            value = checked ? checked.value : 'hostel';
         }
-        if (hostelFields) {
-            if (selected === 'hostel') {
-                hostelFields.classList.remove('hidden');
-            } else {
-                hostelFields.classList.add('hidden');
-            }
+        if (value === 'hostel') {
+            hostelFields.classList.remove('hidden');
+        } else {
+            hostelFields.classList.add('hidden');
         }
     }
 
@@ -295,6 +292,7 @@
             disabilitySelect.addEventListener('change', toggleDisabilityDetails);
         }
 
+        // Set initial visibility based on which radio is pre-selected
         toggleHostelFields();
         toggleDisabilityDetails();
     });
