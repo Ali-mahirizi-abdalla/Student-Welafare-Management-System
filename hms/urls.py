@@ -161,4 +161,10 @@ urlpatterns = [
     path('student/payment-history/', views.payment_history, name='payment_history'),
     path('payment/callback/', views.mpesa_callback, name='mpesa_callback'),
     path('payment/check/<int:payment_id>/', views.check_payment_status, name='check_payment_status'),
+    
+    # Registration & Subscription Flow
+    path('registration/check-status/<str:checkout_id>/', views.check_registration_status, name='check_registration_status'),
+    path('manage/subscription/', views.admin_subscription_pay, name='admin_subscription_pay'),
+    path('manage/subscriptions/', views.manage_subscriptions, name='manage_subscriptions'),
+    path('system-locked/', views.system_locked, name='system_locked'),
 ]

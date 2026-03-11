@@ -619,6 +619,57 @@ class Payment(models.Model):
         return f"Payment {self.transaction_id or 'Pending'} - {self.student}"
 
 
+class AdminSubscription(models.Model):
+    """System-wide subscription paid by the admin to keep the system active"""
+    STATUS_CHOICES = [
+        ('Active', 'Active'), ('Expired', 'Expired'), ('Pending', 'Pending')
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    last_payment_date = models.DateTimeField(null=True, blank=True)
+    expiry_date = models.DateTimeField(null=True, blank=True)
+    transaction_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    checkout_request_id = models.CharField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=3000.00)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def is_active(self):
+        if self.status != 'Active':
+            return False
+        if self.expiry_date and self.expiry_date < timezone.now():
+            return False
+        return True
+
+    class Meta:
+        verbose_name = "Admin Subscription"
+        verbose_name_plural = "Admin Subscriptions"
+
+    def __str__(self):
+        return f"Subscription {self.status} - Expires {self.expiry_date}"
+
+class RegistrationPayment(models.Model):
+    """One-time registration fee paid by students before account creation"""
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'), ('Completed', 'Completed'), ('Failed', 'Failed')
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    phone_number = models.CharField(max_length=15)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=30.00)
+    transaction_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    checkout_request_id = models.CharField(max_length=100, unique=True)
+    # Since account isn't created yet, we map to session data or temporary identifier
+    temp_user_data = models.JSONField(null=True, blank=True, help_text="Stored registration form data")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Registration Payment"
+        verbose_name_plural = "Registration Payments"
+
+    def __str__(self):
+        return f"Reg Payment {self.status} - {self.phone_number}"
+
 class LostItem(models.Model):
     """Model for Lost and Found items"""
     STATUS_CHOICES = [

@@ -1,0 +1,80 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900 dark:text-white">System Subscription</h1>
+            <p class="text-slate-500">Manage your monthly service payments to keep Campus Care active.</p>
+        </div>
+        {% if subscription and subscription.is_active %}
+        <span class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold flex items-center">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>
+            ACTIVE
+        </span>
+        {% else %}
+        <span class="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-semibold flex items-center">
+            <span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+            EXPIRED
+        </span>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-sm font-medium text-slate-500 mb-1">Monthly Fee</p>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">KES 3,000/-</h3>
+            <p class="text-xs text-slate-400">Regular billing</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-sm font-medium text-slate-500 mb-1">Expiry Date</p>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
+                {% if subscription %}{{ subscription.expiry_date|date:"M d, Y" }}{% else %}N/A{% endif %}
+            </h3>
+            <p class="text-xs text-slate-400">Next payment due</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-sm font-medium text-slate-500 mb-1">Last Payment</p>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
+                {% if subscription %}{{ subscription.last_payment_date|date:"M d, Y" }}{% else %}None{% endif %}
+            </h3>
+            <p class="text-xs text-slate-400">Transaction record</p>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="p-8">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Make Payment</h2>
+            <form method="POST" class="max-w-md">
+                {% csrf_token %}
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">M-Pesa Phone Number</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">+254</span>
+                        <input type="text" name="phone" placeholder="712345678" required
+                               class="w-full pl-14 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary-500 outline-none transition">
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">Enter the Safaricom number to receive the STK Push.</p>
+                </div>
+                <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-2xl transition shadow-lg shadow-primary-500/25">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Pay KES 3,000 Now
+                </button>
+            </form>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800/50 p-6 border-t border-slate-200 dark:border-slate-800">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-primary-500 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                    Once payment is completed, the system will automatically unlock for all students and staff members in real-time.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

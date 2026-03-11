@@ -26,7 +26,7 @@ class MpesaClient:
             print(f"Mpesa Token Error: {e}")
             return "dummy_token" 
 
-    def stk_push(self, phone_number, amount, reference, callback_url):
+    def stk_push(self, phone_number, amount, reference, callback_url, description="Accommodation"):
         token = self.get_token()
         if token == "dummy_token":
              # Simulate success for demo
@@ -62,7 +62,7 @@ class MpesaClient:
             "PhoneNumber": phone_number,
             "CallBackURL": callback_url,
             "AccountReference": reference,
-            "TransactionDesc": "Accommodation"
+            "TransactionDesc": description
         }
         
         url = f"{self.base_url}/mpesa/stkpush/v1/processrequest"

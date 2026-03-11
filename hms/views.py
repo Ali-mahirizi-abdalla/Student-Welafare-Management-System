@@ -11,7 +11,8 @@ from django.db.models import Q
 from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document, MaintenanceRequest,
                      Message, AuditLog,
                      LeaveRequest, DefermentRequest, Visitor,
-                     Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile)
+                     Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
+                     AdminSubscription, RegistrationPayment)
 from .decorators import role_required, admin_only
 
 # ==================== Authentication ====================
@@ -35,26 +36,128 @@ from .mpesa import MpesaClient
 
 def register_student(request):
     """
-    Handle student registration logic.
-    Creates a user and a student profile within a transaction.
+    Handle student registration logic with mandatory KES 30 payment.
+    Data is stored in RegistrationPayment until payment is confirmed.
     """
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             try:
-                with transaction.atomic():
-                    student = form.save()
-                login(request, student.user, backend='django.contrib.auth.backends.ModelBackend')
-                messages.success(request, 'Registration successful!')
-                return redirect('hms:student_dashboard')
+                # Get phone number for M-Pesa (already validated in form)
+                phone = form.cleaned_data.get('phone')
+                
+                # Initiate M-Pesa STK Push
+                client = MpesaClient()
+                callback_url = request.build_absolute_uri(reverse('hms:mpesa_callback'))
+                response = client.stk_push(
+                    phone_number=phone,
+                    amount=30,
+                    reference='registration',
+                    callback_url=callback_url,
+                    description="Student Registration"
+                )
+                
+                if response.get('ResponseCode') == '0':
+                    # Create RegistrationPayment record to track status
+                    reg_payment = RegistrationPayment.objects.create(
+                        phone_number=phone,
+                        amount=30,
+                        checkout_request_id=response.get('CheckoutRequestID'),
+                        # Save serialized form data for later user creation
+                        temp_user_data=request.POST.dict() 
+                    )
+                    return render(request, 'hms/registration_wait.html', {
+                        'checkout_id': reg_payment.checkout_request_id
+                    })
+                else:
+                    messages.error(request, f"M-Pesa Error: {response.get('ResponseDescription')}")
             except Exception as e:
-                messages.error(request, f"Registration failed: {str(e)}")
+                messages.error(request, f"Registration initiate failed: {str(e)}")
         else:
             for field, errors in form.errors.items():
                 messages.error(request, f"{field}: {', '.join(errors)}")
     else:
         form = StudentRegistrationForm()
     return render(request, 'hms/register.html', {'form': form})
+
+def check_registration_status(request, checkout_id):
+    """AJAX view to poll registration payment status"""
+    payment = get_object_or_404(RegistrationPayment, checkout_request_id=checkout_id)
+    if payment.status == 'Completed':
+        # Create the user here once payment is confirmed
+        if payment.temp_user_data:
+            from .forms import StudentRegistrationForm
+            # We recreate the form with the stored data
+            form = StudentRegistrationForm(payment.temp_user_data)
+            if form.is_valid():
+                try:
+                    with transaction.atomic():
+                        student = form.save()
+                        payment.temp_user_data = None # Clear data after use
+                        payment.save()
+                    login(request, student.user, backend='django.contrib.auth.backends.ModelBackend')
+                    return JsonResponse({'status': 'Success', 'redirect_url': reverse('hms:student_dashboard')})
+                except Exception as e:
+                    return JsonResponse({'status': 'Error', 'message': str(e)})
+            else:
+                return JsonResponse({'status': 'Error', 'message': 'Invalid form data in session'})
+        else:
+            # User already created?
+            return JsonResponse({'status': 'Success', 'redirect_url': reverse('hms:student_dashboard')})
+    elif payment.status == 'Failed':
+        return JsonResponse({'status': 'Failed', 'message': 'Payment failed. Please try again.'})
+    
+    return JsonResponse({'status': 'Pending'})
+
+@csrf_exempt
+def mpesa_callback(request):
+    """Handle STK Push callbacks from Safaricom"""
+    try:
+        data = json.loads(request.body)
+        stk_callback = data.get('Body', {}).get('stkCallback', {})
+        result_code = stk_callback.get('ResultCode')
+        checkout_id = stk_callback.get('CheckoutRequestID')
+        
+        if result_code == 0:
+            # Payment Success
+            # Use metadata to get the transaction ID
+            metadata = stk_callback.get('CallbackMetadata', {}).get('Item', [])
+            transaction_id = next((item['Value'] for item in metadata if item['Name'] == 'MpesaReceiptNumber'), None)
+            
+            # Update RegistrationPayment
+            reg_payment = RegistrationPayment.objects.filter(checkout_request_id=checkout_id).first()
+            if reg_payment:
+                reg_payment.status = 'Completed'
+                reg_payment.transaction_id = transaction_id
+                reg_payment.save()
+            
+            # Update AdminSubscription
+            admin_sub = AdminSubscription.objects.filter(checkout_request_id=checkout_id).first()
+            if admin_sub:
+                admin_sub.status = 'Active'
+                admin_sub.transaction_id = transaction_id
+                admin_sub.last_payment_date = timezone.now()
+                admin_sub.expiry_date = timezone.now() + timedelta(days=30)
+                admin_sub.save()
+                # Clear system lock cache if implemented
+                from django.core.cache import cache
+                cache.delete('system_subscription_active')
+        else:
+            # Payment Failed
+            reg_payment = RegistrationPayment.objects.filter(checkout_request_id=checkout_id).first()
+            if reg_payment:
+                reg_payment.status = 'Failed'
+                reg_payment.save()
+                
+            admin_sub = AdminSubscription.objects.filter(checkout_request_id=checkout_id).first()
+            if admin_sub:
+                admin_sub.status = 'Failed'
+                admin_sub.save()
+                
+    except Exception as e:
+        print(f"Callback processing error: {e}")
+        
+    return HttpResponse("OK")
 
 
 @login_required
@@ -2623,6 +2726,79 @@ def report_lost_item(request):
         form = LostItemForm()
         
     return render(request, 'hms/lost_found/form.html', {'form': form})
+
+# ==================== SUBSCRIPTION & LOCK ====================
+
+@login_required
+@admin_only
+def admin_subscription_pay(request):
+    """Admin page to initiate KES 3,000 subscription payment"""
+    # Get current subscription status
+    subscription = AdminSubscription.objects.last()
+    
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+        if not phone:
+            messages.error(request, "Phone number is required.")
+        else:
+            try:
+                client = MpesaClient()
+                callback_url = request.build_absolute_uri(reverse('hms:mpesa_callback'))
+                response = client.stk_push(
+                    phone_number=phone,
+                    amount=3000,
+                    reference='subscription',
+                    callback_url=callback_url,
+                    description="Admin Subscription"
+                )
+                
+                if response.get('ResponseCode') == '0':
+                    AdminSubscription.objects.create(
+                        phone_number=phone,
+                        amount=3000,
+                        checkout_request_id=response.get('CheckoutRequestID'),
+                        status='Pending'
+                    )
+                    messages.success(request, "STK Push sent! Please check your phone to complete payment.")
+                else:
+                    messages.error(request, f"M-Pesa Error: {response.get('ResponseDescription')}")
+            except Exception as e:
+                messages.error(request, f"Payment failed: {str(e)}")
+                
+    return render(request, 'hms/admin/subscription_pay.html', {
+        'subscription': subscription
+    })
+
+def system_locked(request):
+    """View to display the system-wide lock notice"""
+    return render(request, 'hms/system_locked.html')
+
+@login_required
+@admin_only
+def manage_subscriptions(request):
+    """Admin view to monitor all payments (registration and system)"""
+    reg_payments = RegistrationPayment.objects.all().order_by('-created_at')
+    admin_subs = AdminSubscription.objects.all().order_by('-created_at')
+    
+    # Filter by search query
+    query = request.GET.get('q', '').strip()
+    if query:
+        reg_payments = reg_payments.filter(
+            Q(phone_number__icontains=query) |
+            Q(transaction_id__icontains=query)
+        )
+        
+    # Stats
+    total_revenue = sum(p.amount for p in reg_payments if p.status == 'Completed') + \
+                    sum(s.amount for s in admin_subs if s.status == 'Active')
+    
+    context = {
+        'reg_payments': reg_payments,
+        'admin_subs': admin_subs,
+        'total_revenue': total_revenue,
+        'query': query,
+    }
+    return render(request, 'hms/admin/manage_subscriptions.html', context)
 
 @login_required
 def resolve_item(request, item_id):
