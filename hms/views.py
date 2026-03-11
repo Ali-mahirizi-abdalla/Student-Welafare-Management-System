@@ -103,16 +103,9 @@ def user_login(request):
             login(request, user)
             messages.success(request, f'Welcome back, {user.first_name}!')
             
-            # Get selected role from dropdown
-            selected_role = request.POST.get('role', 'student')
-            
-            # Redirect based on selected role (with permission check)
-            if selected_role == 'admin':
-                if user.is_staff:
-                    return redirect('hms:admin_dashboard')
-                else:
-                    messages.warning(request, 'You do not have admin privileges. Redirecting to student dashboard.')
-                    return redirect('hms:student_dashboard')
+            # Auto-redirect based on user type
+            if user.is_staff:
+                return redirect('hms:admin_dashboard')
             else:
                 return redirect('hms:student_dashboard')
         else:
