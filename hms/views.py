@@ -2831,3 +2831,17 @@ def resolve_item(request, item_id):
         messages.error(request, 'You do not have permission to resolve this item.')
         
     return redirect('hms:lost_found_list')
+
+@login_required
+@require_POST
+def mark_notification_read(request, notif_id):
+    """Mark a notification as read via AJAX"""
+    from .models import Notification
+    from django.http import JsonResponse
+    try:
+        notification = Notification.objects.get(id=notif_id, user=request.user)
+        notification.is_read = True
+        notification.save()
+        return JsonResponse({'status': 'success'})
+    except Notification.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)

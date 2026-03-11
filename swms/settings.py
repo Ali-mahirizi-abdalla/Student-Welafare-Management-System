@@ -150,6 +150,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'hms.context_processors.unread_messages',
                 'hms.context_processors.staff_role_info',
+                'hms.context_processors.unread_notifications',
             ],
             # Explicitly disable template caching in DEBUG mode
             'loaders': [

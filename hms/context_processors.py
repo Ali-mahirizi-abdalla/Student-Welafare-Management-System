@@ -1,4 +1,15 @@
-from .models import Message
+from .models import Message, Notification
+
+def unread_notifications(request):
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(user=request.user, is_read=False)[:5]
+        unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
+        return {
+            'unread_notifications': notifications,
+            'unread_notification_count': unread_count
+        }
+    return {'unread_notifications': [], 'unread_notification_count': 0}
+
 
 def unread_messages(request):
     if request.user.is_authenticated:

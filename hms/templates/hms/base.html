@@ -144,7 +144,7 @@
                 </button>
 
                 <!-- Notifications with Dropdown -->
-                <div class="relative" x-data="{ open: false }">
+                <div class="relative">
                     <button id="notification-bell" onclick="toggleNotificationDropdown()"
                         class="p-2 text-slate-600 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition-all relative group">
                         <div
@@ -155,29 +155,69 @@
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
                             </path>
                         </svg>
-                        <span id="notification-dot"
-                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-[#003366] animate-pulse"></span>
+                        {% if unread_notification_count > 0 %}
+                        <span id="notification-badge"
+                            class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-500 rounded-full border-2 border-white dark:border-[#003366] animate-pulse">
+                            {{ unread_notification_count }}
+                        </span>
+                        {% endif %}
                     </button>
 
                     <!-- Notification Dropdown -->
                     <div id="notification-dropdown"
-                        class="hidden absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-gray-200 dark:border-slate-700 z-50 overflow-hidden">
-                        <div class="p-4 border-b border-gray-100 dark:border-slate-700">
+                        class="hidden absolute right-0 mt-2 w-80 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 z-50 overflow-hidden transform origin-top-right transition-all duration-200 opacity-0 scale-95">
+                        <div class="p-4 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-900/50 flex justify-between items-center">
                             <h3 class="font-bold text-gray-900 dark:text-white">Notifications</h3>
-                            <p id="notification-status" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Click to
-                                enable notifications</p>
+                            {% if unread_notification_count > 0 %}
+                            <span class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-full">{{ unread_notification_count }} New</span>
+                            {% endif %}
                         </div>
-                        <div class="p-3">
-                            <button onclick="enableNotifications()"
-                                class="w-full py-2 px-4 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-medium rounded-lg transition-all transform hover:scale-[1.02]">
-                                🔔 Enable Push Notifications
-                            </button>
-                        </div>
-                        <div class="px-4 pb-3">
-                            <button onclick="testNotification()"
-                                class="w-full py-2 px-4 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-all">
-                                🧪 Test Notification
-                            </button>
+                        
+                        <div class="max-h-[320px] overflow-y-auto custom-scrollbar">
+                            {% if unread_notifications %}
+                                <div class="divide-y divide-gray-100 dark:divide-slate-700/50" id="notification-list">
+                                    {% for notif in unread_notifications %}
+                                    <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors relative group" id="notif-{{ notif.id }}">
+                                        <div class="flex gap-3">
+                                            <!-- Icon based on type -->
+                                            <div class="flex-shrink-0 mt-1">
+                                                {% if notif.notification_type == 'meal' %}
+                                                <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center"><span class="text-sm">🍔</span></div>
+                                                {% elif notif.notification_type == 'finance' %}
+                                                <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><span class="text-sm">💰</span></div>
+                                                {% elif notif.notification_type == 'maintenance' %}
+                                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><span class="text-sm">🔧</span></div>
+                                                {% else %}
+                                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><span class="text-sm">📢</span></div>
+                                                {% endif %}
+                                            </div>
+                                            <!-- Content -->
+                                            <div class="flex-1 min-w-0 pr-6">
+                                                <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ notif.title }}</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2 leading-relaxed">{{ notif.message }}</p>
+                                                <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1.5">{{ notif.created_at|timesince }} ago</p>
+                                            </div>
+                                        </div>
+                                        <!-- Dismiss button -->
+                                        <button onclick="dismissNotification({{ notif.id }})" title="Mark as read"
+                                            class="absolute top-4 right-4 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white dark:bg-slate-800 rounded-full shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        </button>
+                                        {% if notif.link %}
+                                        <a href="{{ notif.link }}" class="absolute inset-0 z-0" onclick="dismissNotification({{ notif.id }})"></a>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="p-8 text-center" id="empty-notifications">
+                                    <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">All caught up!</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">You have no new notifications.</p>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -354,20 +394,84 @@
             });
         }, 5000);
 
-        // Notification Dropdown Toggle
+        // Notification Dropdown Toggle with Animation
         function toggleNotificationDropdown() {
             const dropdown = document.getElementById('notification-dropdown');
-            dropdown.classList.toggle('hidden');
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                // Small delay to allow CSS transition to work
+                setTimeout(() => {
+                    dropdown.classList.remove('opacity-0', 'scale-95');
+                    dropdown.classList.add('opacity-100', 'scale-100');
+                }, 10);
+            } else {
+                dropdown.classList.remove('opacity-100', 'scale-100');
+                dropdown.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    dropdown.classList.add('hidden');
+                }, 200); // match duration-200
+            }
         }
 
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             const bell = document.getElementById('notification-bell');
             const dropdown = document.getElementById('notification-dropdown');
-            if (bell && dropdown && !bell.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add('hidden');
+            if (bell && dropdown && !bell.contains(e.target) && !dropdown.contains(e.target) && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('opacity-100', 'scale-100');
+                dropdown.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    dropdown.classList.add('hidden');
+                }, 200);
             }
         });
+
+        // Dismiss Notification via AJAX
+        function dismissNotification(id) {
+            fetch(`/notifications/read/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const notifElement = document.getElementById(`notif-${id}`);
+                    if (notifElement) {
+                        notifElement.style.transition = 'all 0.3s ease';
+                        notifElement.style.opacity = '0';
+                        notifElement.style.transform = 'translateX(20px)';
+                        setTimeout(() => {
+                            notifElement.remove();
+                            // Update badge count
+                            const badge = document.getElementById('notification-badge');
+                            if (badge) {
+                                let count = parseInt(badge.textContent);
+                                count--;
+                                if (count > 0) {
+                                    badge.textContent = count;
+                                } else {
+                                    badge.remove();
+                                    const list = document.getElementById('notification-list');
+                                    if (list) {
+                                        list.innerHTML = `
+                                        <div class="p-8 text-center" id="empty-notifications">
+                                            <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            </div>
+                                            <p class="text-sm font-medium text-gray-900 dark:text-white">All caught up!</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">You have no new notifications.</p>
+                                        </div>`;
+                                    }
+                                }
+                            }
+                        }, 300);
+                    }
+                }
+            });
+        }
 
         // Enable Push Notifications
         async function enableNotifications() {

@@ -167,4 +167,7 @@ urlpatterns = [
     path('manage/subscription/', views.admin_subscription_pay, name='admin_subscription_pay'),
     path('manage/subscriptions/', views.manage_subscriptions, name='manage_subscriptions'),
     path('system-locked/', views.system_locked, name='system_locked'),
+    
+    # Notifications
+    path('notifications/read/<int:notif_id>/', views.mark_notification_read, name='mark_notification_read'),
 ]

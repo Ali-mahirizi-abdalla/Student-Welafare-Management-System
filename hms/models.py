@@ -643,3 +643,26 @@ class LostItem(models.Model):
         
     def __str__(self):
         return f"{self.get_status_display()}: {self.name}"
+
+class Notification(models.Model):
+    NOTIFICATION_TYPES = [
+        ('meal', 'Meal & Kitchen'),
+        ('finance', 'Finance & Payment'),
+        ('maintenance', 'Maintenance & Support'),
+        ('broadcast', 'General Broadcast'),
+        ('system', 'System Alert')
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', null=True, blank=True, help_text="Null for system-wide broadcasts")
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, default='system')
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    link = models.CharField(max_length=255, blank=True, null=True, help_text="Optional URL to redirect when clicked")
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.get_notification_type_display()}: {self.title}"
