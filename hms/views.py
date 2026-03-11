@@ -12,7 +12,7 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document
                      Message, AuditLog,
                      LeaveRequest, DefermentRequest, Visitor,
                      Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
-                     AdminSubscription, RegistrationPayment)
+                     AdminSubscription, RegistrationPayment, TutoringPost)
 from .decorators import role_required, admin_only
 from .utils.telegram import send_telegram_message
 
@@ -422,6 +422,8 @@ def student_dashboard(request):
         'activities': Activity.objects.filter(active=True).order_by('weekday', 'time'),
         'documents': Document.objects.all().order_by('-uploaded_at'),
         'unread_messages': Message.objects.filter(recipient=request.user, is_read=False).count(),
+        'recent_tutoring': TutoringPost.objects.filter(is_active=True).exclude(student=student).select_related('student__user')[:3],
+        'tutoring_count': TutoringPost.objects.filter(is_active=True).count(),
     }
     return render(request, 'hms/student/dashboard.html', context)
 
@@ -2873,3 +2875,69 @@ def mark_notification_read(request, notif_id):
         return JsonResponse({'status': 'success'})
     except Notification.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
+
+@login_required
+def tutoring_hub(request):
+    """Browse and filter tutoring posts"""
+    try:
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        return redirect('hms:student_dashboard')
+
+    post_type = request.GET.get('type', 'all')
+    search_query = request.GET.get('q', '')
+
+    posts = TutoringPost.objects.filter(is_active=True).select_related('student__user')
+
+    if post_type == 'offer':
+        posts = posts.filter(post_type='offer')
+    elif post_type == 'request':
+        posts = posts.filter(post_type='request')
+
+    if search_query:
+        posts = posts.filter(
+            Q(subject__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    context = {
+        'posts': posts,
+        'post_type': post_type,
+        'search_query': search_query,
+        'student': student,
+    }
+    return render(request, 'hms/student/tutoring_hub.html', context)
+
+@login_required
+@require_POST
+def create_tutoring_post(request):
+    """Create a new tutoring offer or request"""
+    try:
+        student = request.user.student_profile
+        subject = request.POST.get('subject')
+        description = request.POST.get('description')
+        post_type = request.POST.get('post_type')
+
+        if subject and description and post_type:
+            TutoringPost.objects.create(
+                student=student,
+                subject=subject,
+                description=description,
+                post_type=post_type
+            )
+            messages.success(request, "Your tutoring post has been published!")
+        else:
+            messages.error(request, "Please fill in all fields.")
+    except Exception as e:
+        messages.error(request, f"Error: {str(e)}")
+    
+    return redirect('hms:tutoring_hub')
+
+@login_required
+@require_POST
+def delete_tutoring_post(request, post_id):
+    """Delete a student's own tutoring post"""
+    post = get_object_or_404(TutoringPost, id=post_id, student__user=request.user)
+    post.delete()
+    messages.success(request, "Post removed successfully.")
+    return redirect('hms:tutoring_hub')

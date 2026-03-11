@@ -470,6 +470,47 @@
                 </form>
             </div>
 
+            <!-- Tutoring Hub Widget -->
+            <div class="bg-gradient-to-br from-white to-indigo-50/30 dark:from-slate-800 dark:to-indigo-900/10 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 overflow-hidden relative group">
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2">
+                            <i class="fas fa-graduation-cap text-indigo-500"></i>
+                            Tutoring Hub
+                        </h3>
+                        <span class="text-[10px] font-bold bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full">
+                            {{ tutoring_count }} active
+                        </span>
+                    </div>
+
+                    {% if recent_tutoring %}
+                    <div class="space-y-3 mb-4">
+                        {% for post in recent_tutoring %}
+                        <div class="p-3 rounded-lg bg-white/60 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/50 hover:border-indigo-200 dark:hover:border-indigo-800 transition-all">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[9px] font-bold uppercase tracking-wider {% if post.post_type == 'offer' %}text-emerald-500{% else %}text-amber-500{% endif %}">
+                                    {{ post.get_post_type_display }}
+                                </span>
+                                <span class="h-1 w-1 rounded-full bg-slate-300"></span>
+                                <span class="text-[10px] text-slate-500">{{ post.student.user.first_name }}</span>
+                            </div>
+                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">{{ post.subject }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-sm text-slate-500 italic mb-4">No recent posts. Start a conversation!</p>
+                    {% endif %}
+
+                    <a href="{% url 'hms:tutoring_hub' %}" class="flex items-center justify-center gap-2 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-indigo-500/25">
+                        Browse Hub
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+                <!-- Decoration -->
+                <i class="fas fa-book-open absolute -bottom-4 -right-4 text-6xl text-indigo-500/5 group-hover:scale-110 transition-transform duration-500"></i>
+            </div>
+
             <!-- Weekly Activities -->
             <div
                 class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-5">

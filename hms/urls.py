@@ -115,6 +115,11 @@ urlpatterns = [
     path('lost-found/report/', views.report_lost_item, name='report_lost_item'),
     path('lost-found/resolve/<int:item_id>/', views.resolve_item, name='resolve_item'),
 
+    # Tutoring Hub
+    path('student/tutoring/', views.tutoring_hub, name='tutoring_hub'),
+    path('student/tutoring/create/', views.create_tutoring_post, name='create_tutoring_post'),
+    path('student/tutoring/delete/<int:post_id>/', views.delete_tutoring_post, name='delete_tutoring_post'),
+
     
     # Event Management - DISABLED
     # path('events/', views.events_list, name='events_list'),

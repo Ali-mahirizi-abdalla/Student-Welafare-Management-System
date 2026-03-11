@@ -664,5 +664,21 @@ class Notification(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+
+class TutoringPost(models.Model):
+    POST_TYPE_CHOICES = [
+        ('offer', 'Offering Help (Tutor)'),
+        ('request', 'Requesting Help (Student)'),
+    ]
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='tutoring_posts')
+    subject = models.CharField(max_length=100, help_text="e.g., Mathematics, Python, Accounting")
+    description = models.TextField(help_text="Details about what you can teach or need help with")
+    post_type = models.CharField(max_length=10, choices=POST_TYPE_CHOICES)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
-        return f"{self.get_notification_type_display()}: {self.title}"
+        return f"{self.get_post_type_display()}: {self.subject} by {self.student.user.first_name}"

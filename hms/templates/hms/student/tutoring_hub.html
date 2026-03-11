@@ -1,0 +1,172 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="p-4 sm:p-6 space-y-8 max-w-7xl mx-auto animate-fade-in">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-800 dark:text-white">Peer Tutoring Hub</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Connect with fellow students for academic support and collaboration.</p>
+        </div>
+        <button onclick="document.getElementById('createPostModal').classList.remove('hidden')" 
+                class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-indigo-500/25 active:scale-95">
+            <i class="fas fa-plus"></i>
+            Post an Offer/Request
+        </button>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-6 shadow-sm">
+        <form method="GET" class="flex flex-wrap items-center gap-4">
+            <div class="flex-1 min-w-[200px]">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" name="q" value="{{ search_query }}" placeholder="Search by subject or description..." 
+                           class="w-full pl-11 pr-4 py-2.5 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 transition-all outline-none">
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl">
+                <a href="?type=all" class="px-4 py-2 rounded-lg text-sm font-medium transition-all {% if post_type == 'all' %}bg-white dark:bg-slate-800 shadow-sm text-indigo-600 dark:text-indigo-400{% else %}text-slate-500 hover:text-slate-700{% endif %}">
+                    All
+                </a>
+                <a href="?type=offer" class="px-4 py-2 rounded-lg text-sm font-medium transition-all {% if post_type == 'offer' %}bg-white dark:bg-slate-800 shadow-sm text-indigo-600 dark:text-indigo-400{% else %}text-slate-500 hover:text-slate-700{% endif %}">
+                    Tutors
+                </a>
+                <a href="?type=request" class="px-4 py-2 rounded-lg text-sm font-medium transition-all {% if post_type == 'request' %}bg-white dark:bg-slate-800 shadow-sm text-indigo-600 dark:text-indigo-400{% else %}text-slate-500 hover:text-slate-700{% endif %}">
+                    Requests
+                </a>
+            </div>
+            <button type="submit" class="bg-slate-800 dark:bg-slate-700 text-white px-6 py-2.5 rounded-xl font-medium hover:opacity-90 transition-all">
+                Filter
+            </button>
+        </form>
+    </div>
+
+    <!-- Posts Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for post in posts %}
+        <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+            <!-- Type badge -->
+            <div class="absolute top-0 right-0 p-3">
+                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider 
+                             {% if post.post_type == 'offer' %}bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400
+                             {% else %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400{% endif %}">
+                    {{ post.get_post_type_display }}
+                </span>
+            </div>
+
+            <div class="flex items-center gap-4 mb-4">
+                <div class="h-12 w-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center">
+                    {% if post.student.profile_image %}
+                        <img src="{{ post.student.profile_image.url }}" class="h-full w-full object-cover rounded-xl border border-indigo-100 dark:border-indigo-800">
+                    {% else %}
+                        <i class="fas fa-user-graduate text-indigo-500 text-xl"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 dark:text-white leading-tight">{{ post.student.user.first_name }} {{ post.student.user.last_name|first }}.</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">{{ post.created_at|timesince }} ago</p>
+                </div>
+            </div>
+
+            <h4 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 truncate" title="{{ post.subject }}">
+                {{ post.subject }}
+            </h4>
+            <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 min-h-[4.5rem] mb-6">
+                {{ post.description }}
+            </p>
+
+            <div class="flex items-center justify-between mt-auto">
+                {% if post.student.user == request.user %}
+                    <form action="{% url 'hms:delete_tutoring_post' post.id %}" method="POST" class="w-full">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full py-2.5 rounded-xl border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                            Delete My Post
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'hms:chat_with' post.student.user.id %}" class="w-full py-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 text-sm font-bold hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane text-xs"></i>
+                        Connect with {{ post.student.user.first_name }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-20 text-center">
+            <div class="h-20 w-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-book-reader text-3xl text-slate-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">No tutoring posts found</h3>
+            <p class="text-slate-500 dark:text-slate-400">Be the first to offer help or request support!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Create Post Modal -->
+<div id="createPostModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white">New Tutoring Post</h3>
+            <button onclick="document.getElementById('createPostModal').classList.add('hidden')" class="h-10 w-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 transition-all">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="{% url 'hms:create_tutoring_post' %}" method="POST" class="p-6 space-y-5">
+            {% csrf_token %}
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Subject / Unit</label>
+                <input type="text" name="subject" required placeholder="e.g. Data Structures, Applied Math II..." 
+                       class="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Post Type</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="relative cursor-pointer group">
+                        <input type="radio" name="post_type" value="offer" checked class="peer sr-only">
+                        <div class="p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-700 peer-checked:border-indigo-500 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-900/20 transition-all text-center">
+                            <i class="fas fa-chalkboard-teacher text-xl text-slate-400 group-hover:text-indigo-500 mb-1"></i>
+                            <div class="text-sm font-bold text-slate-600 dark:text-slate-300">I'm a Tutor</div>
+                        </div>
+                    </label>
+                    <label class="relative cursor-pointer group">
+                        <input type="radio" name="post_type" value="request" class="peer sr-only">
+                        <div class="p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-50/50 dark:peer-checked:bg-amber-900/20 transition-all text-center">
+                            <i class="fas fa-user-graduate text-xl text-slate-400 group-hover:text-amber-500 mb-1"></i>
+                            <div class="text-sm font-bold text-slate-600 dark:text-slate-300">I need Help</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Description</label>
+                <textarea name="description" required rows="4" placeholder="Mention specifically what topics you can help with or need help understanding..." 
+                          class="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-2xl transition-all shadow-lg hover:shadow-indigo-500/25">
+                Publish Post
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    @keyframes slide-up {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up {
+        animation: slide-up 0.4s ease-out forwards;
+    }
+    .animate-fade-in {
+        animation: fade-in 0.6s ease-out;
+    }
+    @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+{% endblock %}
