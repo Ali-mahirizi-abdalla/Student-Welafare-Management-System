@@ -85,18 +85,24 @@
                 </div>
             </div>
 
-            <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Residence Type</label>
-                <div class="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 w-full">
-                    {% for radio in form.residence_type %}
-                    <label class="residence-btn flex-1 text-center cursor-pointer py-2.5 px-4 text-sm font-medium transition-all select-none
-                        {% if radio.data.selected %}bg-primary-600 text-white{% else %}bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700{% endif %}"
-                        data-value="{{ radio.data.value }}">
-                        <input type="radio" name="{{ radio.name }}" value="{{ radio.data.value }}" {% if radio.data.selected %}checked{% endif %} class="sr-only" onchange="toggleHostelFields(this.value)">
-                        {{ radio.choice_label }}
-                    </label>
-                    {% endfor %}
+            <!-- Residence Type Toggle -->
+            <div>
+                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Residence Type</label>
+                <div class="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+                    <button type="button" id="btn-hostel"
+                        onclick="selectResidence('hostel')"
+                        class="flex-1 py-2.5 px-4 text-sm font-semibold transition-all bg-primary-600 text-white">
+                        🏠 In Hostel
+                    </button>
+                    <button type="button" id="btn-off_campus"
+                        onclick="selectResidence('off_campus')"
+                        class="flex-1 py-2.5 px-4 text-sm font-semibold transition-all bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
+                        🏘️ Off-Campus
+                    </button>
                 </div>
+                <!-- Hidden radio inputs to submit form value -->
+                <input type="radio" name="residence_type" value="hostel" id="r_hostel" class="sr-only" checked>
+                <input type="radio" name="residence_type" value="off_campus" id="r_off_campus" class="sr-only">
             </div>
 
             <!-- Hostel-only fields: hidden by default, shown via JS when 'hostel' radio is selected -->
@@ -244,31 +250,40 @@
         }
     }
 
-    function toggleHostelFields(value) {
-        const hostelFields = document.getElementById('hostel-fields');
-        if (!hostelFields) return;
-        // Get value from argument or by checking which radio is checked
-        if (!value) {
-            const checked = document.querySelector('input[name="residence_type"]:checked');
-            value = checked ? checked.value : 'hostel';
+    function selectResidence(value) {
+        // Update hidden radios
+        const rHostel = document.getElementById('r_hostel');
+        const rOffCampus = document.getElementById('r_off_campus');
+        if (rHostel && rOffCampus) {
+            rHostel.checked = (value === 'hostel');
+            rOffCampus.checked = (value === 'off_campus');
         }
 
-        // Update pill button styles
-        document.querySelectorAll('.residence-btn').forEach(btn => {
-            const isActive = btn.dataset.value === value;
-            btn.classList.toggle('bg-primary-600', isActive);
-            btn.classList.toggle('text-white', isActive);
-            btn.classList.toggle('bg-white', !isActive);
-            btn.classList.toggle('dark:bg-slate-800', !isActive);
-            btn.classList.toggle('text-slate-600', !isActive);
-            btn.classList.toggle('dark:text-slate-300', !isActive);
-        });
+        // Update button styles
+        const btnHostel = document.getElementById('btn-hostel');
+        const btnOffCampus = document.getElementById('btn-off_campus');
+        
+        const activeClass = 'flex-1 py-2.5 px-4 text-sm font-semibold transition-all bg-primary-600 text-white';
+        const inactiveClass = 'flex-1 py-2.5 px-4 text-sm font-semibold transition-all bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700';
+        
+        if (btnHostel && btnOffCampus) {
+            if (value === 'hostel') {
+                btnHostel.className = activeClass;
+                btnOffCampus.className = inactiveClass;
+            } else {
+                btnHostel.className = inactiveClass;
+                btnOffCampus.className = activeClass;
+            }
+        }
 
         // Show/hide hostel fields
-        if (value === 'hostel') {
-            hostelFields.classList.remove('hidden');
-        } else {
-            hostelFields.classList.add('hidden');
+        const hostelFields = document.getElementById('hostel-fields');
+        if (hostelFields) {
+            if (value === 'hostel') {
+                hostelFields.classList.remove('hidden');
+            } else {
+                hostelFields.classList.add('hidden');
+            }
         }
     }
 
@@ -279,7 +294,12 @@
         }
 
         // Set initial visibility based on which radio is pre-selected
-        toggleHostelFields();
+        const initialResidence = document.querySelector('input[name="residence_type"]:checked');
+        if (initialResidence) {
+            selectResidence(initialResidence.value);
+        } else {
+            selectResidence('hostel');
+        }
         toggleDisabilityDetails();
     });
 </script>
