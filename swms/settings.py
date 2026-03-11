@@ -37,18 +37,20 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # CSRF Cookie Settings
-CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_USE_SESSIONS = False  # Switch back to cookie-based for robustness
 CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_DOMAIN = None
-CSRF_USE_SESSIONS = True  # Consistent session-based CSRF
 
 if DEBUG:
     CSRF_COOKIE_SECURE = False
     CSRF_TRUSTED_ORIGINS += [
-        'http://127.0.0.1:8000', 
-        'http://localhost:8000',
+        'http://38.247.148.232',
+        'https://38.247.148.232',
         'http://38.247.148.232:8000',
         'https://38.247.148.232:8000',
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
     ]
 else:
     CSRF_COOKIE_SECURE = True
@@ -64,8 +66,8 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
 # Proxy & CSRF Fix for Cloudflare/Nginx
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# USE_X_FORWARDED_HOST = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 # ============================================
