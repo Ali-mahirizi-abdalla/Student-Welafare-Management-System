@@ -127,6 +127,12 @@ urlpatterns = [
     path('student/tutoring/create/', views.create_tutoring_post, name='create_tutoring_post'),
     path('student/tutoring/delete/<int:post_id>/', views.delete_tutoring_post, name='delete_tutoring_post'),
 
+    # Health Services
+    path('student/health/', views.health_appointment_list, name='student_health_appointments'),
+    path('student/health/book/', views.book_health_appointment, name='book_health_appointment'),
+    path('health/manage/', views.manage_health, name='manage_health'),
+    path('health/appointment/<int:pk>/', views.health_appointment_detail, name='health_appointment_detail'),
+
     
     # Event Management - DISABLED
     # path('events/', views.events_list, name='events_list'),
