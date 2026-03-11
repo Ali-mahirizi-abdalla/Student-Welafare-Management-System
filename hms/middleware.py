@@ -56,6 +56,11 @@ class SubscriptionLockMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        # Scheduled Activation Check: Features start May 1st, 2026
+        activation_date = timezone.datetime(2026, 5, 1, tzinfo=timezone.get_current_timezone())
+        if timezone.now() < activation_date:
+            return self.get_response(request)
+
         # Static and media files are always whitelisted
         if request.path.startswith('/static/') or request.path.startswith('/media/'):
             return self.get_response(request)

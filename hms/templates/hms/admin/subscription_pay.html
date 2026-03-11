@@ -7,6 +7,16 @@
         <div>
             <h1 class="text-3xl font-bold text-slate-900 dark:text-white">System Subscription</h1>
             <p class="text-slate-500">Manage your monthly service payments to keep Campus Care active.</p>
+            
+            <!-- Scheduled Activation Notice -->
+            <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-xl flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400 flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <p class="text-[11px] text-amber-800 dark:text-amber-300 text-left leading-tight">
+                    <span class="font-bold">Scheduled Activation:</span> System-wide lock and mandatory payments are bypassed until <span class="font-bold">May 1st, 2026</span>. No payment is required for full access until then.
+                </p>
+            </div>
         </div>
         {% if subscription and subscription.is_active %}
         <span class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold flex items-center">

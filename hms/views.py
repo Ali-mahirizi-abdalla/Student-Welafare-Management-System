@@ -42,6 +42,20 @@ def register_student(request):
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
+            # Scheduled Activation Check
+            activation_date = timezone.datetime(2026, 5, 1, tzinfo=timezone.get_current_timezone())
+            if timezone.now() < activation_date:
+                # Bypass payment and create user immediately
+                try:
+                    with transaction.atomic():
+                        student = form.save()
+                    login(request, student.user, backend='django.contrib.auth.backends.ModelBackend')
+                    messages.success(request, "Registration successful! Welcome to Campus Care.")
+                    return redirect('hms:student_dashboard')
+                except Exception as e:
+                    messages.error(request, f"Registration failed: {str(e)}")
+                    return render(request, 'hms/register.html', {'form': form})
+
             try:
                 # Get phone number for M-Pesa (already validated in form)
                 phone = form.cleaned_data.get('phone')
