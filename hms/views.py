@@ -873,7 +873,8 @@ def export_students_csv(request):
             student.user.email,
             student.phone,
             student.get_gender_display() if student.gender else '-',
-            student.get_county_display() if student.county else '-',
+
+
             student.get_residence_type_display(),
             student.hostel or '-',
             student.room_number or '-',
@@ -1081,7 +1082,8 @@ def edit_student(request, user_id):
         # New fields sync
         student.residence_type = request.POST.get('residence_type', 'hostel')
         student.hostel = request.POST.get('hostel') if request.POST.get('hostel') else None
-        student.county = request.POST.get('county')
+
+
         student.gender = request.POST.get('gender')
         student.program_of_study = request.POST.get('program_of_study')
         student.disability = request.POST.get('disability', 'none')
@@ -1097,7 +1099,8 @@ def edit_student(request, user_id):
     context = {
         'student': student,
         'residence_choices': Student.RESIDENCE_TYPE_CHOICES,
-        'county_choices': Student.COUNTY_CHOICES,
+
+
         'gender_choices': Student.GENDER_CHOICES,
         'disability_choices': Student.DISABILITY_CHOICES,
     }

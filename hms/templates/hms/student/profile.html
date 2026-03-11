@@ -117,13 +117,12 @@
                     {% endif %}
                 </div>
 
-                <!-- County & Phone -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">County</label>
-                        {{ profile_form.county }}
-                        {% if profile_form.county.errors %}
-                        <p class="text-xs text-red-600 mt-1">{{ profile_form.county.errors.0 }}</p>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone
+                            Number</label>
+                        {{ profile_form.phone }}
+                        {% if profile_form.phone.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ profile_form.phone.errors.0 }}</p>
                         {% endif %}
                     </div>
                     <div>

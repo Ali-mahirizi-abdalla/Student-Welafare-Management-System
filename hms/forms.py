@@ -96,16 +96,8 @@ class StudentRegistrationForm(forms.ModelForm):
             'placeholder': 'e.g., 201'
         })
     )
-    
-    county = forms.ChoiceField(
-        choices=[('', '-- Select County --')] + Student.COUNTY_CHOICES, 
-        required=True,
-        widget=forms.Select(attrs={
-            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
-            'id': 'county-select'
-        })
-    )
-    
+
+
     phone = forms.CharField(
         max_length=15, 
         required=True, 
@@ -163,7 +155,7 @@ class StudentRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ['university_id', 'residence_type', 'hostel', 'room_number', 'county', 'phone', 'gender', 'program_of_study', 'disability', 'disability_details']
+        fields = ['university_id', 'residence_type', 'hostel', 'room_number', 'phone', 'gender', 'program_of_study', 'disability', 'disability_details']
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -221,7 +213,6 @@ class StudentRegistrationForm(forms.ModelForm):
         # 3. Update it with form data
         student.university_id = self.cleaned_data['university_id']
         student.residence_type = self.cleaned_data['residence_type']
-        student.county = self.cleaned_data.get('county') or None
         
         # Only set hostel/room if residence type is hostel
         if self.cleaned_data['residence_type'] == 'hostel':
@@ -439,14 +430,8 @@ class ProfileEditForm(forms.Form):
             'placeholder': 'e.g., Computer Science'
         })
     )
-    county = forms.ChoiceField(
-        choices=[('', '-- Select County --')] + Student.COUNTY_CHOICES,
-        required=True,
-        widget=forms.Select(attrs={
-            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
-            'id': 'county-select'
-        })
-    )
+
+
     residence_type = forms.ChoiceField(
         choices=Student.RESIDENCE_TYPE_CHOICES,
         required=True,
@@ -506,7 +491,8 @@ class ProfileEditForm(forms.Form):
             self.fields['university_id'].initial = student.university_id
             self.fields['gender'].initial = student.gender
             self.fields['program_of_study'].initial = student.program_of_study
-            self.fields['county'].initial = student.county
+
+
             self.fields['residence_type'].initial = student.residence_type
             self.fields['hostel'].initial = student.hostel
             self.fields['room_number'].initial = student.room_number
@@ -539,7 +525,8 @@ class ProfileEditForm(forms.Form):
             self.student.university_id = self.cleaned_data.get('university_id')
             self.student.gender = self.cleaned_data.get('gender')
             self.student.program_of_study = self.cleaned_data.get('program_of_study')
-            self.student.county = self.cleaned_data.get('county')
+
+
             self.student.residence_type = self.cleaned_data.get('residence_type')
             
             if self.student.residence_type == 'hostel':

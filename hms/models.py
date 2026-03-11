@@ -75,58 +75,8 @@ class Student(models.Model):
     program_of_study = models.CharField(max_length=100, blank=True, null=True, help_text="Department or Program of Study")
     
     hostel = models.CharField(max_length=50, blank=True, null=True, help_text="Name of the hostel/hall")
-    
-    COUNTY_CHOICES = [
-        ('baringo', 'Baringo'),
-        ('bomet', 'Bomet'),
-        ('bungoma', 'Bungoma'),
-        ('busia', 'Busia'),
-        ('elgeyo_marakwet', 'Elgeyo Marakwet'),
-        ('embu', 'Embu'),
-        ('garissa', 'Garissa'),
-        ('homa_bay', 'Homa Bay'),
-        ('isiolo', 'Isiolo'),
-        ('kajiado', 'Kajiado'),
-        ('kakamega', 'Kakamega'),
-        ('kericho', 'Kericho'),
-        ('kiambu', 'Kiambu'),
-        ('kilifi', 'Kilifi'),
-        ('kirinyaga', 'Kirinyaga'),
-        ('kisii', 'Kisii'),
-        ('kisumu', 'Kisumu'),
-        ('kitui', 'Kitui'),
-        ('kwale', 'Kwale'),
-        ('laikipia', 'Laikipia'),
-        ('lamu', 'Lamu'),
-        ('machakos', 'Machakos'),
-        ('makueni', 'Makueni'),
-        ('mandera', 'Mandera'),
-        ('marsabit', 'Marsabit'),
-        ('meru', 'Meru'),
-        ('migori', 'Migori'),
-        ('mombasa', 'Mombasa'),
-        ('muranga', "Murang'a"),
-        ('nairobi', 'Nairobi'),
-        ('nakuru', 'Nakuru'),
-        ('nandi', 'Nandi'),
-        ('narok', 'Narok'),
-        ('nyamira', 'Nyamira'),
-        ('nyandarua', 'Nyandarua'),
-        ('nyeri', 'Nyeri'),
-        ('samburu', 'Samburu'),
-        ('siaya', 'Siaya'),
-        ('taita_taveta', 'Taita Taveta'),
-        ('tana_river', 'Tana River'),
-        ('tharaka_nithi', 'Tharaka Nithi'),
-        ('trans_nzoia', 'Trans Nzoia'),
-        ('turkana', 'Turkana'),
-        ('uasin_gishu', 'Uasin Gishu'),
-        ('vihiga', 'Vihiga'),
-        ('wajir', 'Wajir'),
-        ('west_pokot', 'West Pokot'),
-    ]
-    county = models.CharField(max_length=50, choices=COUNTY_CHOICES, blank=True, null=True)
-    
+
+
     is_warden = models.BooleanField(default=False)
     is_on_attachment = models.BooleanField(default=False, help_text="Is the student currently on industrial attachment?")
     is_graduating = models.BooleanField(default=False, help_text="Is the student in their graduating semester/year?")
