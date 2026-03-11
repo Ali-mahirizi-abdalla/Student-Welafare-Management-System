@@ -25,10 +25,11 @@ class ActivityAnalyticsView(APIView):
             start_date = end_date - timedelta(days=29)
             labels = [(start_date + timedelta(days=i)).strftime('%b %d') for i in range(30)]
         else: # weekly
-            # Align to the start of the current week (Monday)
-            start_date = end_date - timedelta(days=end_date.weekday())
+            # Rolling 7-day window (Today - 6 days)
             days = 7
-            labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            start_date = end_date - timedelta(days=6)
+            labels = [(start_date + timedelta(days=i)).strftime('%a') for i in range(7)]
+            # Note: Using %a for short day names (Mon, Tue, etc.)
 
         data_points = []
         for i in range(days):

@@ -2086,7 +2086,9 @@ def analytics_dashboard(request):
     from django.db.models.functions import TruncDate
     
     today = date.today()
-    week_start = today - timedelta(days=today.weekday())
+    # Rolling 7-day window (Today - 6 days)
+    week_start = today - timedelta(days=6)
+    # Rolling 30-day window (Today - 29 days)
     month_start = today - timedelta(days=29)
     
     # ==================== SUMMARY STATS ====================
@@ -2126,8 +2128,8 @@ def analytics_dashboard(request):
     weekly_dates = [week_start + timedelta(days=i) for i in range(7)]
     monthly_dates = [month_start + timedelta(days=i) for i in range(30)]
 
-    # Weekly Trends
-    weekly_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    # Weekly Trends (Rolling 7 days)
+    weekly_labels = [(week_start + timedelta(days=i)).strftime('%a') for i in range(7)]
     weekly_registrations = get_counts_for_dates(Student.objects, 'user__date_joined', weekly_dates)
     weekly_payments = get_counts_for_dates(Payment.objects.filter(status='Completed'), 'created_at', weekly_dates)
     weekly_maintenance = get_counts_for_dates(MaintenanceRequest.objects, 'created_at', weekly_dates)
