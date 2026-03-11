@@ -87,11 +87,13 @@
 
             <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-700/50">
                 <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Residence Type</label>
-                <div class="flex gap-6">
+                <div class="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 w-full">
                     {% for radio in form.residence_type %}
-                    <label class="inline-flex items-center cursor-pointer group">
-                        <input type="radio" name="{{ radio.name }}" value="{{ radio.data.value }}" {% if radio.data.selected %}checked{% endif %} class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500" onchange="toggleHostelFields(this.value)">
-                        <span class="ml-2 text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary-600 transition">{{ radio.choice_label }}</span>
+                    <label class="residence-btn flex-1 text-center cursor-pointer py-2.5 px-4 text-sm font-medium transition-all select-none
+                        {% if radio.data.selected %}bg-primary-600 text-white{% else %}bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700{% endif %}"
+                        data-value="{{ radio.data.value }}">
+                        <input type="radio" name="{{ radio.name }}" value="{{ radio.data.value }}" {% if radio.data.selected %}checked{% endif %} class="sr-only" onchange="toggleHostelFields(this.value)">
+                        {{ radio.choice_label }}
                     </label>
                     {% endfor %}
                 </div>
@@ -250,6 +252,19 @@
             const checked = document.querySelector('input[name="residence_type"]:checked');
             value = checked ? checked.value : 'hostel';
         }
+
+        // Update pill button styles
+        document.querySelectorAll('.residence-btn').forEach(btn => {
+            const isActive = btn.dataset.value === value;
+            btn.classList.toggle('bg-primary-600', isActive);
+            btn.classList.toggle('text-white', isActive);
+            btn.classList.toggle('bg-white', !isActive);
+            btn.classList.toggle('dark:bg-slate-800', !isActive);
+            btn.classList.toggle('text-slate-600', !isActive);
+            btn.classList.toggle('dark:text-slate-300', !isActive);
+        });
+
+        // Show/hide hostel fields
         if (value === 'hostel') {
             hostelFields.classList.remove('hidden');
         } else {
