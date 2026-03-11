@@ -104,7 +104,7 @@ The **Hostel Management System (HMS)** is a robust, web-based application design
     ```bash
     python manage.py runserver
     ```
-    Access the app at: `http://127.0.0.1:8000/`
+    Access the app at: `https://campus-care.co.ke/` (Production) or `http://127.0.0.1:8000/` (Local Development)
 
 ## 6. Project Structure
 - `Hostel_System/`: Main Django project configuration (`settings.py`, `urls.py`).

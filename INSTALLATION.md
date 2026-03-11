@@ -193,7 +193,7 @@ python manage.py collectstatic --noinput
 python manage.py runserver
 ```
 
-The application should now be running at: **http://127.0.0.1:8000/**
+The application should now be running at: **https://campus-care.co.ke/** (Production) or **http://127.0.0.1:8000/** (Local Development)
 
 ## Initial Setup
 

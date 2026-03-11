@@ -74,19 +74,7 @@ class Student(models.Model):
 
     program_of_study = models.CharField(max_length=100, blank=True, null=True, help_text="Department or Program of Study")
     
-    HOSTEL_CHOICES = [
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
-        ('4', '4'),
-        ('5', '5'),
-        ('6', '6'),
-        ('7', '7'),
-        ('8', '8'),
-        ('9', '9'),
-        ('10', '10'),
-    ]
-    hostel = models.CharField(max_length=20, choices=HOSTEL_CHOICES, blank=True, null=True)
+    hostel = models.CharField(max_length=50, blank=True, null=True, help_text="Name of the hostel/hall")
     
     COUNTY_CHOICES = [
         ('baringo', 'Baringo'),

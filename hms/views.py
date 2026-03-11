@@ -987,7 +987,6 @@ def edit_student(request, user_id):
     context = {
         'student': student,
         'residence_choices': Student.RESIDENCE_TYPE_CHOICES,
-        'hostel_choices': Student.HOSTEL_CHOICES,
         'county_choices': Student.COUNTY_CHOICES,
         'gender_choices': Student.GENDER_CHOICES,
         'disability_choices': Student.DISABILITY_CHOICES,

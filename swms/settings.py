@@ -321,7 +321,7 @@ MPESA_CONSUMER_KEY = os.getenv('MPESA_CONSUMER_KEY', '')
 MPESA_CONSUMER_SECRET = os.getenv('MPESA_CONSUMER_SECRET', '')
 MPESA_SHORTCODE = os.getenv('MPESA_SHORTCODE', '174379') # Sandbox Paybill
 MPESA_PASSKEY = os.getenv('MPESA_PASSKEY', '') # Sandbox Passkey
-MPESA_CALLBACK_URL = os.getenv('MPESA_CALLBACK_URL', 'https://balustraded-unsatirizable-marhta.ngrok-free.dev/payment/callback/')
+MPESA_CALLBACK_URL = os.getenv('MPESA_CALLBACK_URL', 'https://campus-care.co.ke/payment/callback/')
 
 
 # ============================================

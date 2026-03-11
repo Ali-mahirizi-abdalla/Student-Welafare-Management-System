@@ -3,6 +3,8 @@
 ## Overview
 The **Student Welfare Management System (SWMS)** is a comprehensive platform designed to manage student accommodation, meals, welfare, and activities. It streamlines administrative tasks for the warden/kitchen staff and provides students with an easy-to-use portal for their daily needs.
 
+**Live Application:** [https://campus-care.co.ke/](https://campus-care.co.ke/)
+
 ## Features
 
 ### For Students

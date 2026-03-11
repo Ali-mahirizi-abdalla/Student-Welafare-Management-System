@@ -1,5 +1,8 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+import re
+
 from .models import (Student, AwayPeriod, Document, Meal, MaintenanceRequest, 
                      LeaveRequest, Activity, Visitor,
                      Message, Announcement, Room, RoomAssignment, RoomChangeRequest, LostItem, StaffProfile)
@@ -19,14 +22,53 @@ class VisitorForm(forms.ModelForm):
 
 class StudentRegistrationForm(forms.ModelForm):
     # User fields
-    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
-    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
-    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
+    first_name = forms.CharField(
+        max_length=30, 
+        required=True, 
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': 'First Name'
+        })
+    )
+    last_name = forms.CharField(
+        max_length=30, 
+        required=True, 
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': 'Last Name'
+        })
+    )
+    email = forms.EmailField(
+        required=True, 
+        widget=forms.EmailInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': 'student@example.com'
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': '••••••••'
+        })
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': '••••••••'
+        })
+    )
 
     # Student fields
-    university_id = forms.CharField(max_length=50, required=True, label='Reg Number', widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 uppercase', 'placeholder': 'e.g., SD06/PU/30104/25', 'style': 'text-transform: uppercase;'}))
+    university_id = forms.CharField(
+        max_length=50, 
+        required=True, 
+        label='Reg Number', 
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition uppercase', 
+            'placeholder': 'e.g., SD06/PU/30104/25', 
+            'style': 'text-transform: uppercase;'
+        })
+    )
     
     residence_type = forms.ChoiceField(
         choices=Student.RESIDENCE_TYPE_CHOICES, 
@@ -35,25 +77,49 @@ class StudentRegistrationForm(forms.ModelForm):
         widget=forms.RadioSelect(attrs={'class': 'residence-type-radio'})
     )
     
-    hostel = forms.ChoiceField(choices=[('', '-- Select Hostel --')] + Student.HOSTEL_CHOICES, required=False, widget=forms.Select(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
-    room_number = forms.CharField(max_length=10, required=False, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'e.g., 201'}))
+    hostel = forms.CharField(
+        max_length=50, 
+        required=False, 
+        label='Hostel Name',
+        validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message='Hostel Name should only contain letters and spaces.')],
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': 'e.g., Central Hall'
+        })
+    )
+    room_number = forms.CharField(
+        max_length=10, 
+        required=False, 
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': 'e.g., 201'
+        })
+    )
     
     county = forms.ChoiceField(
         choices=[('', '-- Select County --')] + Student.COUNTY_CHOICES, 
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'id': 'county-select'
         })
     )
     
-    phone = forms.CharField(max_length=15, required=False, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'}))
+    phone = forms.CharField(
+        max_length=15, 
+        required=True, 
+        validators=[RegexValidator(regex=r'^(?:\+254|0)[17]\d{8}$', message='Enter a valid Kenyan phone number (e.g., 0712345678 or +254712345678).')],
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'placeholder': '0712345678'
+        })
+    )
     
     gender = forms.ChoiceField(
         choices=[('', '-- Select Gender --'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')],
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'id': 'gender'
         })
     )
@@ -61,7 +127,7 @@ class StudentRegistrationForm(forms.ModelForm):
         max_length=100,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': 'e.g., Computer Science'
         })
     )
@@ -98,18 +164,30 @@ class StudentRegistrationForm(forms.ModelForm):
         model = Student
         fields = ['university_id', 'residence_type', 'hostel', 'room_number', 'county', 'phone', 'gender', 'program_of_study', 'disability', 'disability_details']
 
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if len(password) < 8:
+            raise ValidationError("Password must be at least 8 characters long.")
+        if not re.search(r'[A-Z]', password):
+            raise ValidationError("Password must contain at least one uppercase letter.")
+        if not re.search(r'[a-z]', password):
+            raise ValidationError("Password must contain at least one lowercase letter.")
+        if not re.search(r'\d', password):
+            raise ValidationError("Password must contain at least one digit.")
+        return password
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
         residence_type = cleaned_data.get("residence_type")
 
-        if password != confirm_password:
+        if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match")
         
         # If residence_type is hostel, hostel field becomes required
         if residence_type == 'hostel' and not cleaned_data.get('hostel'):
-            self.add_error('hostel', 'Please select a hostel.')
+            self.add_error('hostel', 'Please provide a hostel name.')
         
         return cleaned_data
 
@@ -165,26 +243,84 @@ class StudentRegistrationForm(forms.ModelForm):
 
 class StaffRegistrationForm(forms.ModelForm):
     # User fields
-    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'First Name'}))
-    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Last Name'}))
-    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Email Address'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Password'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Confirm Password'}))
+    first_name = forms.CharField(
+        max_length=30, 
+        required=True, 
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition', 
+            'placeholder': 'First Name'
+        })
+    )
+    last_name = forms.CharField(
+        max_length=30, 
+        required=True, 
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition', 
+            'placeholder': 'Last Name'
+        })
+    )
+    email = forms.EmailField(
+        required=True, 
+        widget=forms.EmailInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition', 
+            'placeholder': 'Email Address'
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition', 
+            'placeholder': '••••••••'
+        })
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition', 
+            'placeholder': '••••••••'
+        })
+    )
 
     # Staff fields
     role = forms.CharField(
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'list': 'role_list',
-            'placeholder': 'Type or select a role...'
+            'placeholder': 'Select Role'
         })
     )
-    national_id = forms.CharField(max_length=20, required=True, label='Role ID / National ID', widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Enter Role ID or National ID'}))
-    phone = forms.CharField(max_length=15, required=True, widget=forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500', 'placeholder': 'Phone Number'}))
+    national_id = forms.CharField(
+        max_length=20, 
+        required=True, 
+        label='Role ID / National ID', 
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition', 
+            'placeholder': 'ID Number'
+        })
+    )
+    phone = forms.CharField(
+        max_length=15, 
+        required=True, 
+        validators=[RegexValidator(regex=r'^(?:\+254|0)[17]\d{8}$', message='Enter a valid Kenyan phone number (e.g., 0712345678 or +254712345678).')],
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition', 
+            'placeholder': '0712345678'
+        })
+    )
 
     class Meta:
         model = StaffProfile
         fields = ['role', 'national_id', 'phone']
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if len(password) < 8:
+            raise ValidationError("Password must be at least 8 characters long.")
+        if not re.search(r'[A-Z]', password):
+            raise ValidationError("Password must contain at least one uppercase letter.")
+        if not re.search(r'[a-z]', password):
+            raise ValidationError("Password must contain at least one lowercase letter.")
+        if not re.search(r'\d', password):
+            raise ValidationError("Password must contain at least one digit.")
+        return password
 
     def clean_role(self):
         role_label = self.cleaned_data.get('role')
@@ -243,7 +379,7 @@ class ProfileEditForm(forms.Form):
         max_length=30, 
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': 'First Name'
         })
     )
@@ -251,14 +387,14 @@ class ProfileEditForm(forms.Form):
         max_length=30,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': 'Last Name'
         })
     )
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': 'Email Address'
         })
     )
@@ -266,7 +402,7 @@ class ProfileEditForm(forms.Form):
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': 'Username'
         })
     )
@@ -274,7 +410,7 @@ class ProfileEditForm(forms.Form):
         max_length=50,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 uppercase',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition uppercase',
             'placeholder': 'e.g., SD06/PU/30104/25'
         })
     )
@@ -282,7 +418,7 @@ class ProfileEditForm(forms.Form):
         max_length=15,
         required=False,
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': '+254...'
         })
     )
@@ -290,7 +426,7 @@ class ProfileEditForm(forms.Form):
         choices=[('', '-- Select Gender --')] + Student.GENDER_CHOICES,
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'id': 'gender'
         })
     )
@@ -298,7 +434,7 @@ class ProfileEditForm(forms.Form):
         max_length=100,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': 'e.g., Computer Science'
         })
     )
@@ -306,7 +442,7 @@ class ProfileEditForm(forms.Form):
         choices=[('', '-- Select County --')] + Student.COUNTY_CHOICES,
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'id': 'county-select'
         })
     )
@@ -315,19 +451,21 @@ class ProfileEditForm(forms.Form):
         required=True,
         widget=forms.RadioSelect(attrs={'class': 'residence-type-radio'})
     )
-    hostel = forms.ChoiceField(
-        choices=[('', '-- Select Hostel --')] + Student.HOSTEL_CHOICES,
+    hostel = forms.CharField(
+        max_length=50,
         required=False,
-        widget=forms.Select(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
-            'id': 'hostel'
+        validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message='Hostel Name should only contain letters and spaces.')],
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'id': 'hostel',
+            'placeholder': 'e.g., Central Hall'
         })
     )
     room_number = forms.CharField(
         max_length=10,
         required=False,
         widget=forms.TextInput(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'placeholder': 'e.g., 201',
             'id': 'room_number'
         })
@@ -336,14 +474,14 @@ class ProfileEditForm(forms.Form):
         choices=Student.DISABILITY_CHOICES,
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'id': 'disability-select',
             'onchange': 'toggleDisabilityDetails()'
         })
     )
     disability_details = forms.CharField(
         widget=forms.Textarea(attrs={
-            'class': 'w-full p-2 rounded bg-gray-50 border border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
             'id': 'disability_details',
             'placeholder': 'Please specify...',
             'rows': '2'
