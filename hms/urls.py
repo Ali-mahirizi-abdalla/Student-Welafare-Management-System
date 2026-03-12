@@ -112,6 +112,7 @@ urlpatterns = [
     path('manage/warden/dashboard/', views.warden_dashboard, name='warden_dashboard'),
     path('manage/staff/<int:staff_id>/', views.staff_detail, name='staff_detail'),
     path('manage/roles/assign/<int:staff_id>/', views.assign_staff_role, name='assign_staff_role'),
+    path('manage/staff/<int:staff_id>/permissions/', views.staff_permissions, name='staff_permissions'),
     path('manage/staff/generate-link/', views.generate_staff_link, name='generate_staff_link'),
     path('manage/staff/revoke-link/<int:link_id>/', views.revoke_staff_link, name='revoke_staff_link'),
     path('register/staff/<str:token>/', views.register_staff_via_link, name='register_staff_via_link'),

@@ -375,6 +375,47 @@ class StaffProfile(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.get_role_display()}"
 
+
+class StaffPermission(models.Model):
+    """Granular per-staff feature permissions managed by Super Admin"""
+    staff = models.OneToOneField(StaffProfile, on_delete=models.CASCADE, related_name='permissions')
+
+    # System Feature Toggles
+    can_health_management = models.BooleanField(default=False, verbose_name="Health Management")
+    can_accommodation = models.BooleanField(default=False, verbose_name="Accommodation & Deferment")
+    can_dining = models.BooleanField(default=False, verbose_name="Dining Management")
+    can_maintenance = models.BooleanField(default=False, verbose_name="Maintenance Requests")
+    can_visitors = models.BooleanField(default=False, verbose_name="Visitors Log")
+    can_news = models.BooleanField(default=False, verbose_name="News Alerts")
+    can_payments = models.BooleanField(default=False, verbose_name="Payments & M-Pesa")
+    can_audit = models.BooleanField(default=False, verbose_name="Audit Logs")
+    can_emergency = models.BooleanField(default=False, verbose_name="Emergency Alerts")
+    can_chat = models.BooleanField(default=False, verbose_name="Student Chat")
+    can_admin = models.BooleanField(default=False, verbose_name="System Administration")
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    FEATURE_FIELDS = [
+        ('can_health_management', 'Health Management', 'fas fa-heartbeat'),
+        ('can_accommodation', 'Accommodation & Deferment', 'fas fa-building'),
+        ('can_dining', 'Dining Management', 'fas fa-utensils'),
+        ('can_maintenance', 'Maintenance Requests', 'fas fa-tools'),
+        ('can_visitors', 'Visitors Log', 'fas fa-id-badge'),
+        ('can_news', 'News Alerts', 'fas fa-bullhorn'),
+        ('can_payments', 'Payments & M-Pesa', 'fas fa-credit-card'),
+        ('can_audit', 'Audit Logs', 'fas fa-clipboard-list'),
+        ('can_emergency', 'Emergency Alerts', 'fas fa-exclamation-triangle'),
+        ('can_chat', 'Student Chat', 'fas fa-comments'),
+        ('can_admin', 'System Administration', 'fas fa-cogs'),
+    ]
+
+    class Meta:
+        verbose_name = "Staff Permission"
+        verbose_name_plural = "Staff Permissions"
+
+    def __str__(self):
+        return f"Permissions for {self.staff.user.get_full_name()}"
+
 class Document(models.Model):
     """Uploaded documents for students"""
     title = models.CharField(max_length=200)

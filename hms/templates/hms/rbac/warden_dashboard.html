@@ -18,32 +18,33 @@
 
                 <div class="relative z-10 flex items-center gap-5">
                     <div class="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white border border-white/20 shadow-2xl">
-                        <i class="fas fa-building text-3xl"></i>
+                        <span class="text-3xl">🏢</span>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black text-white tracking-widest uppercase">Warden</h1>
-                        <p class="text-indigo-400 text-xs font-bold tracking-[0.2em] uppercase mt-1">Accommodation Operations</p>
+                        <h1 class="text-2xl font-black text-white tracking-widest uppercase">WARDEN</h1>
+                        <p class="text-indigo-400 text-xs font-bold tracking-[0.2em] uppercase mt-1">Accommodation Management</p>
                     </div>
                 </div>
 
                 <div class="relative z-10 flex items-center gap-4 bg-white/5 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10">
                     <div class="text-right hidden md:block">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Logged in as</p>
-                        <p class="text-white font-black">{{ request.user.first_name }}</p>
+                        <p class="text-white font-black">{{ request.user.first_name }} ▼</p>
                     </div>
                     <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">
                         {{ request.user.first_name|first }}
                     </div>
-                    <i class="fas fa-chevron-down text-slate-500 text-xs"></i>
                 </div>
             </div>
 
             <!-- Banner Notice -->
-            <div class="bg-indigo-600 dark:bg-indigo-900/40 p-4 border-y border-indigo-500/20">
-                <p class="text-center text-xs md:text-sm font-bold text-white dark:text-indigo-200 tracking-wide">
-                    <i class="fas fa-key mr-2"></i>
-                    ROLE: ACCOMMODATION MANAGEMENT – ACCESS LIMITED TO HOUSING & DEFERMENTS
-                </p>
+            <div class="bg-indigo-600 dark:bg-indigo-900/40 p-6 border-y border-indigo-500/20">
+                <div class="max-w-3xl mx-auto text-center">
+                    <p class="text-lg md:text-xl font-bold text-white dark:text-indigo-200 tracking-wider">
+                        ════════════════════════════════════════════════════════════════<br>
+                        "Your Role: Accommodation Management – Access Limited to Housing"<br>
+                        ════════════════════════════════════════════════════════════════
+                    </p>
+                </div>
             </div>
 
             <div class="p-8 md:p-12">
@@ -54,8 +55,8 @@
                         <!-- Authorized Menu -->
                         <div class="space-y-6">
                             <div class="flex items-center gap-3">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Authorized Access Menu</span>
-                                <div class="h-px bg-slate-100 dark:bg-slate-800 flex-1"></div>
+                                <span class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">📋 YOUR AUTHORIZED MENU</span>
+                                <div class="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
                             </div>
 
                             <div class="grid grid-cols-1 gap-3">
@@ -64,9 +65,8 @@
                                         <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                                             <i class="fas fa-home"></i>
                                         </div>
-                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">Accommodation Dashboard</span>
+                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">✅ Accommodation Dashboard</span>
                                     </div>
-                                    <i class="fas fa-check-circle text-emerald-500"></i>
                                 </a>
 
                                 <a href="{% url 'hms:admin_deferment_all' %}" class="group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-500/30 transition-all">
@@ -74,9 +74,8 @@
                                         <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                                             <i class="fas fa-file-alt"></i>
                                         </div>
-                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">Deferment Management</span>
+                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">✅ Deferment Management</span>
                                     </div>
-                                    <i class="fas fa-check-circle text-emerald-500"></i>
                                 </a>
 
                                 <a href="{% url 'hms:assign_room' %}" class="group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-500/30 transition-all">
@@ -84,42 +83,68 @@
                                         <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                                             <i class="fas fa-bed"></i>
                                         </div>
-                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">Bed Allocation</span>
+                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">✅ Bed Allocation</span>
                                     </div>
-                                    <i class="fas fa-check-circle text-emerald-500"></i>
+                                </a>
+
+                                <a href="{% url 'hms:room_assignments' %}" class="group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-500/30 transition-all">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                            <i class="fas fa-users-cog"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">✅ Student Housing Records</span>
+                                    </div>
                                 </a>
 
                                 <!-- Restricted Items -->
-                                <div class="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/50 opacity-50">
+                                <div class="flex justify-between items-center p-4 bg-slate-100/30 dark:bg-slate-800/20 rounded-2xl border border-slate-200 dark:border-slate-800 opacity-60">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 bg-rose-100/50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center text-rose-500/50">
                                             <i class="fas fa-times-circle"></i>
                                         </div>
-                                        <span class="font-bold text-slate-400 line-through uppercase tracking-wider text-sm">Health Management</span>
+                                        <span class="font-bold text-slate-500 uppercase tracking-wider text-sm">❌ Health Management (Not Authorized)</span>
                                     </div>
                                 </div>
 
-                                <div class="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/50 opacity-50">
+                                <div class="flex justify-between items-center p-4 bg-slate-100/30 dark:bg-slate-800/20 rounded-2xl border border-slate-200 dark:border-slate-800 opacity-60">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 bg-rose-100/50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center text-rose-500/50">
                                             <i class="fas fa-times-circle"></i>
                                         </div>
-                                        <span class="font-bold text-slate-400 line-through uppercase tracking-wider text-sm">Payments & Finance</span>
+                                        <span class="font-bold text-slate-500 uppercase tracking-wider text-sm">❌ Payments (Not Authorized)</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center p-4 bg-slate-100/30 dark:bg-slate-800/20 rounded-2xl border border-slate-200 dark:border-slate-800 opacity-60">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-rose-100/50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center text-rose-500/50">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-500 uppercase tracking-wider text-sm">❌ Maintenance (Not Authorized)</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center p-4 bg-slate-100/30 dark:bg-slate-800/20 rounded-2xl border border-slate-200 dark:border-slate-800 opacity-60">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-rose-100/50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center text-rose-500/50">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-500 uppercase tracking-wider text-sm">❌ System Settings (Not Authorized)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Notice Box -->
-                        <div class="p-6 bg-slate-900 rounded-[2rem] border border-white/5 relative overflow-hidden group">
+                        <div class="p-6 bg-slate-900 rounded-[2.5rem] border border-white/5 relative overflow-hidden group">
                             <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            <div class="relative z-10 space-y-3">
+                            <div class="relative z-10 space-y-4">
                                 <div class="flex items-center gap-2 text-rose-400">
-                                    <i class="fas fa-exclamation-triangle text-sm"></i>
-                                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Unauthorized Access Notice</span>
+                                    <span class="text-xl">⚠️</span>
+                                    <span class="text-sm font-black uppercase tracking-[0.2em]">Unauthorized Access Notice</span>
                                 </div>
-                                <p class="text-slate-400 text-xs leading-relaxed italic">
-                                    "You are logged in as **Warden**. Access is limited to accommodation and deferment features only. Automated logs track all housing modifications."
+                                <p class="text-slate-300 text-sm leading-relaxed font-bold italic">
+                                    "You are logged in as Warden. Access is limited to accommodation and deferment features only."
                                 </p>
                             </div>
                         </div>

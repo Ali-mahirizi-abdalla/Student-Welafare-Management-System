@@ -12,7 +12,8 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document
                      Message, AuditLog,
                      LeaveRequest, DefermentRequest, Visitor, EmergencyAlert,
                      Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
-                     AdminSubscription, RegistrationPayment, TutoringPost, HealthAppointment, StaffRegistrationLink)
+                     AdminSubscription, RegistrationPayment, TutoringPost, HealthAppointment, StaffRegistrationLink,
+                     StaffPermission)
 from .decorators import (
     super_admin_required, welfare_officer_required,
     hostel_manager_required, kitchen_manager_required, security_required,
@@ -3373,3 +3374,45 @@ def warden_dashboard(request):
         'pending_room_changes': RoomChangeRequest.objects.filter(status='pending').count(),
     }
     return render(request, 'hms/rbac/warden_dashboard.html', context)
+
+
+@login_required
+@super_admin_required
+def staff_permissions(request, staff_id):
+    """Granular permission assignment for a specific staff member (Super Admin only)"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    permission, created = StaffPermission.objects.get_or_create(staff=staff)
+
+    feature_fields = StaffPermission.FEATURE_FIELDS
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'save':
+            for field_name, label, icon in feature_fields:
+                value = request.POST.get(field_name) == 'on'
+                setattr(permission, field_name, value)
+            permission.save()
+            messages.success(request, f"Permissions updated for {staff.user.get_full_name()}")
+        elif action == 'reset':
+            for field_name, label, icon in feature_fields:
+                setattr(permission, field_name, False)
+            permission.save()
+            messages.warning(request, f"All permissions reset for {staff.user.get_full_name()}")
+        return redirect('hms:staff_permissions', staff_id=staff.id)
+
+    # Build feature list with current values
+    features = []
+    for field_name, label, icon in feature_fields:
+        features.append({
+            'field': field_name,
+            'label': label,
+            'icon': icon,
+            'allowed': getattr(permission, field_name),
+        })
+
+    context = {
+        'staff': staff,
+        'permission': permission,
+        'features': features,
+    }
+    return render(request, 'hms/admin/staff_permissions.html', context)

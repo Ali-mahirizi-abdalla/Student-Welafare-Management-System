@@ -1,0 +1,166 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Permission Assignment – {{ staff.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 md:px-8 bg-slate-50 dark:bg-slate-950">
+    <div class="max-w-3xl mx-auto space-y-8">
+
+        <!-- 🔐 PREMIUM HEADER -->
+        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="bg-slate-900 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+                <!-- Abstract Background Elements -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-amber-500 rounded-full blur-[80px]"></div>
+                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-rose-500 rounded-full blur-[80px]"></div>
+                </div>
+
+                <div class="relative z-10 flex items-center gap-5">
+                    <div class="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white border border-white/20 shadow-2xl">
+                        <span class="text-3xl">🔐</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-white tracking-widest uppercase">PERMISSION ASSIGNMENT</h1>
+                        <p class="text-amber-400 text-xs font-bold tracking-[0.2em] uppercase mt-1">Super Admin Control Panel</p>
+                    </div>
+                </div>
+
+                <span class="relative z-10 px-4 py-2 bg-amber-500/20 border border-amber-500/30 rounded-xl text-amber-400 text-[10px] font-black uppercase tracking-widest">
+                    Super Admin
+                </span>
+            </div>
+
+            <div class="p-8 md:p-12 space-y-10">
+
+                <!-- Staff Identity Card -->
+                <div class="flex items-center gap-6 p-6 bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] border border-slate-100 dark:border-slate-800">
+                    <div class="w-16 h-16 bg-indigo-500 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-indigo-500/30">
+                        {{ staff.user.first_name|first }}{{ staff.user.last_name|first }}
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">👤 Staff</p>
+                        <p class="text-xl font-black text-slate-900 dark:text-white mt-1">{{ staff.user.get_full_name }}</p>
+                        <p class="text-xs text-slate-500 font-bold mt-1">{{ staff.get_role_display }} · {{ staff.get_category }}</p>
+                    </div>
+                </div>
+
+                <!-- Permission Form -->
+                <form method="post" id="permissionForm">
+                    {% csrf_token %}
+
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">GRANT ACCESS TO:</span>
+                            <div class="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
+                        </div>
+
+                        <!-- Table Header -->
+                        <div class="flex items-center justify-between px-5 py-3 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest flex-1">System Features</span>
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest w-32 text-center">Permission</span>
+                        </div>
+
+                        <!-- Feature Rows -->
+                        <div class="space-y-2">
+                            {% for feature in features %}
+                            <label for="toggle_{{ feature.field }}" class="flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all group
+                                {% if feature.allowed %}
+                                    bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50
+                                {% else %}
+                                    bg-white dark:bg-slate-800/30 border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700
+                                {% endif %}">
+                                
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center
+                                        {% if feature.allowed %}
+                                            bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400
+                                        {% else %}
+                                            bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500
+                                        {% endif %}">
+                                        <i class="{{ feature.icon }}"></i>
+                                    </div>
+                                    <span class="font-bold text-sm tracking-wide
+                                        {% if feature.allowed %}
+                                            text-slate-900 dark:text-white
+                                        {% else %}
+                                            text-slate-500 dark:text-slate-400
+                                        {% endif %}">
+                                        {% if feature.allowed %}☑{% else %}☐{% endif %} {{ feature.label }}
+                                    </span>
+                                </div>
+
+                                <!-- Toggle Switch -->
+                                <div class="w-32 flex justify-center">
+                                    <div class="relative">
+                                        <input type="checkbox" name="{{ feature.field }}" id="toggle_{{ feature.field }}" 
+                                            class="sr-only peer" {% if feature.allowed %}checked{% endif %}
+                                            onchange="updateToggleLabel(this)">
+                                        <div class="w-14 h-7 bg-slate-200 dark:bg-slate-700 peer-checked:bg-emerald-500 rounded-full transition-all"></div>
+                                        <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform peer-checked:translate-x-7"></div>
+                                    </div>
+                                    <span class="ml-3 text-[10px] font-black uppercase tracking-widest min-w-[50px]
+                                        {% if feature.allowed %}
+                                            text-emerald-600 dark:text-emerald-400
+                                        {% else %}
+                                            text-rose-500 dark:text-rose-400
+                                        {% endif %}" id="label_{{ feature.field }}">
+                                        {% if feature.allowed %}✅ ALLOW{% else %}❌ DENY{% endif %}
+                                    </span>
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-center gap-4 mt-10 pt-8 border-t border-slate-100 dark:border-slate-800">
+                        <button type="submit" name="action" value="save"
+                            class="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-xl">
+                            <span>💾</span> Save Permissions
+                        </button>
+                        <button type="submit" name="action" value="reset"
+                            class="px-8 py-4 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-amber-100 flex items-center gap-3"
+                            onclick="return confirm('Reset ALL permissions for this staff to DENY?')">
+                            <span>↩️</span> Reset
+                        </button>
+                        <a href="{% url 'hms:manage_roles' %}"
+                            class="px-8 py-4 bg-white dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-slate-50 flex items-center gap-3">
+                            <span>❌</span> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateToggleLabel(checkbox) {
+    const label = document.getElementById('label_' + checkbox.name);
+    const row = checkbox.closest('label');
+    const icon = row.querySelector('.w-10');
+    const text = row.querySelector('span.font-bold');
+    
+    if (checkbox.checked) {
+        label.innerHTML = '✅ ALLOW';
+        label.className = label.className.replace('text-rose-500 dark:text-rose-400', 'text-emerald-600 dark:text-emerald-400');
+        row.classList.remove('bg-white', 'dark:bg-slate-800/30', 'border-slate-100', 'dark:border-slate-800');
+        row.classList.add('bg-emerald-50/50', 'dark:bg-emerald-900/10', 'border-emerald-200', 'dark:border-emerald-800/50');
+        icon.classList.remove('bg-slate-100', 'dark:bg-slate-700', 'text-slate-400', 'dark:text-slate-500');
+        icon.classList.add('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
+        text.classList.remove('text-slate-500', 'dark:text-slate-400');
+        text.classList.add('text-slate-900', 'dark:text-white');
+    } else {
+        label.innerHTML = '❌ DENY';
+        label.className = label.className.replace('text-emerald-600 dark:text-emerald-400', 'text-rose-500 dark:text-rose-400');
+        row.classList.remove('bg-emerald-50/50', 'dark:bg-emerald-900/10', 'border-emerald-200', 'dark:border-emerald-800/50');
+        row.classList.add('bg-white', 'dark:bg-slate-800/30', 'border-slate-100', 'dark:border-slate-800');
+        icon.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
+        icon.classList.add('bg-slate-100', 'dark:bg-slate-700', 'text-slate-400', 'dark:text-slate-500');
+        text.classList.remove('text-slate-900', 'dark:text-white');
+        text.classList.add('text-slate-500', 'dark:text-slate-400');
+    }
+}
+</script>
+{% endblock %}
