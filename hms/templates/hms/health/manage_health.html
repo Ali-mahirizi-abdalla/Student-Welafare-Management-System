@@ -1,227 +1,107 @@
 {% extends 'hms/base.html' %}
 {% load static %}
 
-{% block title %}Clinical Hub - Campus Care{% endblock %}
+{% block title %}Medical Dashboard - CampusCare{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-[#f8fafc] dark:bg-[#020617] py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-8">
-        
-        <!-- Dashboard Header -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-primary-50 dark:bg-primary-900/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
-                    🏥
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Clinical Operations Hub</h1>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Real-time healthcare management & patient tracking</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-slate-800">
-                <div class="text-right hidden sm:block">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 text-center">Active Provider</p>
-                    <p class="text-sm font-bold text-slate-900 dark:text-white">{{ user.get_full_name }}</p>
-                </div>
-                <div class="relative group">
-                    <div class="w-12 h-12 rounded-full border-2 border-primary-500 p-0.5 cursor-pointer hover:shadow-lg transition-all active:scale-95 overflow-hidden">
-                        {% if user.student_profile.profile_picture %}
-                             <img src="{{ user.student_profile.profile_picture.url }}" class="w-full h-full object-cover rounded-full" alt="Profile">
-                        {% else %}
-                             <div class="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-lg">👨‍⚕️</div>
-                        {% endif %}
-                    </div>
-                    <!-- Dropdown Mockup (Functionality would require JS) -->
-                    <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800 py-2 hidden group-hover:block z-50">
-                        <a href="{% url 'hms:student_profile' %}" class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">My Profile</a>
-                        <a href="#" class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">System Settings</a>
-                        <div class="border-t border-slate-100 dark:border-slate-800 my-1"></div>
-                        <a href="{% url 'hms:logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">Logout</a>
-                    </div>
-                </div>
-            </div>
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">🏥 Medical Dashboard</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Clinical operations and patient waiting lists</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Pending Requests</p>
+          <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ stats.pending }}</p>
         </div>
-
-        <!-- Quick Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Pending -->
-            <div class="bg-gradient-to-br from-white to-amber-50/30 dark:from-slate-900 dark:to-amber-900/10 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-amber-500/10 text-amber-600 rounded-xl flex items-center justify-center text-lg">⏳</div>
-                    <span class="text-[10px] font-bold text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-full">↑ 12%</span>
-                </div>
-                <div>
-                    <p class="text-4xl font-bold text-slate-900 dark:text-white mb-1">{{ stats.pending }}</p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pending Requests</p>
-                </div>
-            </div>
-
-            <!-- Assigned -->
-            <div class="bg-gradient-to-br from-white to-blue-50/30 dark:from-slate-900 dark:to-blue-900/10 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-blue-500/10 text-blue-600 rounded-xl flex items-center justify-center text-lg">🩺</div>
-                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full">Active</span>
-                </div>
-                <div>
-                    <p class="text-4xl font-bold text-slate-900 dark:text-white mb-1">{{ stats.assigned_to_me }}</p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Assigned to Me</p>
-                </div>
-            </div>
-
-            <!-- Completed -->
-            <div class="bg-gradient-to-br from-white to-emerald-50/30 dark:from-slate-900 dark:to-emerald-900/10 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center text-lg">✅</div>
-                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">↑ 4%</span>
-                </div>
-                <div>
-                    <p class="text-4xl font-bold text-slate-900 dark:text-white mb-1">{{ stats.completed_today }}</p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Completed Today</p>
-                </div>
-            </div>
-
-            <!-- Total -->
-            <div class="bg-gradient-to-br from-white to-indigo-50/30 dark:from-slate-900 dark:to-indigo-900/10 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-indigo-500/10 text-indigo-600 rounded-xl flex items-center justify-center text-lg">📈</div>
-                    <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full">Lifetime</span>
-                </div>
-                <div>
-                    <p class="text-4xl font-bold text-slate-900 dark:text-white mb-1">{{ stats.total_all_time }}</p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Managed</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- Priority Waiting List Section -->
-            <div class="lg:col-span-2 space-y-6">
-                <div class="flex items-center justify-between px-2">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                        Priority Waiting List
-                    </h2>
-                    <button class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors">Refresh Queue</button>
-                </div>
-
-                {% if pending_appointments %}
-                <div class="grid grid-cols-1 gap-4">
-                    {% for app in pending_appointments %}
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex overflow-hidden group hover:shadow-md transition-all">
-                        <!-- Priority Color Bar -->
-                        <div class="w-1.5 {% if app.service_type == 'emergency' %}bg-red-500{% elif app.service_type == 'counseling' %}bg-amber-500{% else %}bg-blue-500{% endif %}"></div>
-                        
-                        <div class="p-5 flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-xl shadow-inner">
-                                    {% if app.service_type == 'general' %}🩺{% elif app.service_type == 'counseling' %}🧠{% elif app.service_type == 'emergency' %}🚑{% else %}🦷{% endif %}
-                                </div>
-                                <div>
-                                    <div class="flex items-center gap-2 mb-0.5">
-                                        <h3 class="font-bold text-slate-900 dark:text-white">{{ app.student.user.get_full_name }}</h3>
-                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider 
-                                            {% if app.service_type == 'emergency' %}bg-red-100 text-red-700{% elif app.service_type == 'counseling' %}bg-amber-100 text-amber-700{% else %}bg-blue-100 text-blue-700{% endif %}">
-                                            {{ app.get_service_type_display }}
-                                        </span>
-                                    </div>
-                                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400 line-clamp-1 italic">"{{ app.reason }}"</p>
-                                    <div class="flex items-center gap-3 mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                        <span>Slot: {{ app.preferred_slot }}</span>
-                                        <span class="w-1 h-1 bg-slate-300 rounded-full text-center"></span>
-                                        <span>Requested: {{ app.created_at|timesince }} ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center gap-3 ml-auto sm:ml-0">
-                                <a href="{% url 'hms:health_appointment_detail' app.pk %}" class="w-10 h-10 bg-slate-50 dark:bg-slate-800 hover:bg-primary-600 hover:text-white text-slate-900 dark:text-white rounded-xl flex items-center justify-center transition-all group-hover:shadow-lg transform group-hover:-translate-x-1">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="bg-white dark:bg-slate-900 p-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 text-center">
-                    <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">✨</div>
-                    <h3 class="text-slate-900 dark:text-white font-bold mb-1">Queue is Clear</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm">No pending patient requests at this moment.</p>
-                </div>
-                {% endif %}
-            </div>
-
-            <!-- Active Consultations Sidebar -->
-            <div class="space-y-6">
-                <div class="px-2">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Active Consultations
-                    </h2>
-                </div>
-
-                <div class="space-y-4">
-                    {% if my_appointments %}
-                        {% for app in my_appointments %}
-                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 relative overflow-hidden group">
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-full -mr-8 -mt-8"></div>
-                            
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-md text-[9px] font-black uppercase tracking-wider">In Progress</span>
-                                <span class="text-[10px] font-bold text-slate-400">#HC-{{ app.pk }}</span>
-                            </div>
-
-                            <div class="mb-5">
-                                <h3 class="font-bold text-slate-900 dark:text-white text-lg leading-tight">{{ app.student.user.get_full_name }}</h3>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{{ app.get_service_type_display }}</p>
-                            </div>
-
-                            <div class="flex items-center justify-between gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                <div class="text-[10px] text-slate-500">
-                                    <p class="font-bold text-slate-400">TIME ELAPSED</p>
-                                    <p class="text-slate-700 dark:text-slate-300">{{ app.updated_at|timesince }}</p>
-                                </div>
-                                <a href="{% url 'hms:health_appointment_detail' app.pk %}" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-[10px] font-bold rounded-xl shadow-lg shadow-primary-500/20 transition-all uppercase tracking-widest">
-                                    Document Case
-                                </a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-center">
-                            <div class="text-2xl mb-3">🩺</div>
-                            <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">Available for Care</h4>
-                            <p class="text-xs text-slate-500 mt-1">No active consultations assigned. New consultations will appear here.</p>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Provider Quick Stats Placeholder -->
-                <div class="bg-indigo-600 p-5 rounded-2xl text-white shadow-xl shadow-indigo-500/20 relative overflow-hidden">
-                    <div class="absolute -bottom-8 -right-8 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div class="relative z-10">
-                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">Shift Efficiency</p>
-                        <h4 class="text-2xl font-bold mt-1">94%</h4>
-                        <div class="w-full bg-white/20 h-1 rounded-full mt-3">
-                            <div class="bg-white h-full rounded-full" style="width: 94%"></div>
-                        </div>
-                        <p class="text-[9px] mt-2 opacity-80 italic">Top tier performance today, Doc!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900 rounded-xl flex items-center justify-center text-2xl">⏳</div>
+      </div>
     </div>
-</div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Assigned To Me</p>
+          <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">{{ stats.assigned_to_me }}</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center text-2xl">🩺</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Completed Today</p>
+          <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ stats.completed_today }}</p>
+        </div>
+        <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900 rounded-xl flex items-center justify-center text-2xl">✅</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Total All Time</p>
+          <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">{{ stats.total_all_time }}</p>
+        </div>
+        <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center text-2xl">📈</div>
+      </div>
+    </div>
+  </div>
 
-<style>
-    /* Custom Scrollbar for modern feel */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    .dark ::-webkit-scrollbar-thumb { background: #334155; }
-</style>
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+    <div class="bg-blue-600 text-white rounded-xl p-4 text-center font-semibold shadow-sm">Pending Appointments</div>
+    <div class="bg-amber-500 text-white rounded-xl p-4 text-center font-semibold shadow-sm">Active Consultations</div>
+    <div class="bg-emerald-500 text-white rounded-xl p-4 text-center font-semibold shadow-sm">Completed Logs</div>
+    <div class="bg-gray-700 text-white rounded-xl p-4 text-center font-semibold shadow-sm">All Records</div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Priority Waiting List -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🚨 Priority Waiting List</h2>
+      <div class="space-y-3">
+        {% for app in pending_appointments %}
+        <div class="flex items-start gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0 relative">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 
+            {% if app.service_type == 'emergency' %}bg-red-100 text-red-700{% elif app.service_type == 'counseling' %}bg-amber-100 text-amber-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+            {% if app.service_type == 'general' %}🩺{% elif app.service_type == 'counseling' %}🧠{% elif app.service_type == 'emergency' %}🚑{% else %}🦷{% endif %}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-gray-800 dark:text-gray-200 truncate font-semibold">{{ app.student.user.get_full_name }}</p>
+            <p class="text-xs text-gray-500 line-clamp-1">"{{ app.reason }}"</p>
+            <p class="text-xs text-gray-400 mt-0.5">Time: {{ app.preferred_slot }} | Requested {{ app.created_at|timesince }} ago</p>
+          </div>
+          <a href="{% url 'hms:health_appointment_detail' app.pk %}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">View</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-400 text-sm text-center py-4">Queue is clear.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Active Consultations -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🩺 Active Consultations</h2>
+      <div class="space-y-3">
+        {% for app in my_appointments %}
+        <div class="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+          <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-xs font-bold text-blue-700 dark:text-blue-300">{{ app.student.user.first_name|first|upper }}</div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ app.student.user.get_full_name }}</p>
+            <p class="text-xs text-gray-400">{{ app.get_service_type_display }} | {{ app.updated_at|timesince }} elapsed</p>
+          </div>
+          <a href="{% url 'hms:health_appointment_detail' app.pk %}" class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800">Document</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-400 text-sm text-center py-4">No active consultations assigned.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
