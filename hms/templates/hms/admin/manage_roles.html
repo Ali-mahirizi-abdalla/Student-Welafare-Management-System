@@ -1,0 +1,140 @@
+{% extends 'hms/base.html' %}
+
+{% block title %}Role Management - CampusCare{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header Section -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Role Management
+            </h1>
+            <p class="mt-2 text-slate-600 dark:text-slate-400">
+                Assign specific dashboard features to staff members based on their responsibilities.
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg text-sm font-semibold border border-indigo-200 dark:border-indigo-800">
+                {{ staff_members.count }} Total Staff
+            </span>
+            <span class="px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg text-sm font-semibold border border-emerald-200 dark:border-emerald-800">
+                10 Configurable Roles
+            </span>
+        </div>
+    </div>
+
+    <!-- Staff Selection Interface -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-800 dark:text-white">Active Staff Directory</h2>
+            <div class="relative">
+                <input type="text" id="staffSearch" placeholder="Search staff..." 
+                    class="block w-64 pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all text-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-800/50">
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Staff Member</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Current Role</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Assign New Feature Base Role</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                    {% for staff in staff_members %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors staff-row">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 dark:bg-indigo-900/40 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
+                                    {{ staff.user.first_name|first }}{{ staff.user.last_name|first }}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-semibold text-slate-900 dark:text-white">{{ staff.user.get_full_name }}</div>
+                                    <div class="text-xs text-slate-500">ID: {{ staff.national_id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-700">
+                                {{ staff.get_role_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <form action="{% url 'hms:assign_staff_role' staff.id %}" method="POST" id="form-{{ staff.id }}" class="flex items-center gap-2">
+                                {% csrf_token %}
+                                <select name="role" class="block w-full text-sm border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="" disabled selected>Select a new feature role...</option>
+                                    {% for r_val, r_label in feature_roles %}
+                                    <option value="{{ r_val }}" {% if staff.role == r_val %}selected{% endif %}>{{ r_val }} ({{ r_label }})</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button type="submit" form="form-{{ staff.id }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition shadow-sm">
+                                Update Role
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-6 py-12 text-center text-slate-500">
+                            No staff members found in the system.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Feature Descriptions -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-2xl border border-indigo-100 dark:border-indigo-800">
+            <h3 class="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-2">Health Manager</h3>
+            <p class="text-sm text-indigo-700 dark:text-indigo-400">Access to health dashboard, patient records, appointments, and medical prescriptions.</p>
+        </div>
+        <div class="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-2xl border border-amber-100 dark:border-amber-800">
+            <h3 class="text-lg font-bold text-amber-900 dark:text-amber-300 mb-2">Maintenance Sup</h3>
+            <p class="text-sm text-amber-700 dark:text-amber-400">Manage all student maintenance requests, room repairs, and infrastructure planning.</p>
+        </div>
+        <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-800">
+            <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-300 mb-2">Finance Officer</h3>
+            <p class="text-sm text-emerald-700 dark:text-emerald-400">Full visibility into student payments, revenue reports, and M-Pesa transaction auditing.</p>
+        </div>
+        <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-2xl border border-blue-100 dark:border-blue-800">
+            <h3 class="text-lg font-bold text-blue-900 dark:text-blue-300 mb-2">Security Officer</h3>
+            <p class="text-sm text-blue-700 dark:text-blue-400">Monitor visitor logs, entrance/exit records, and campus safety incidents.</p>
+        </div>
+        <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-2xl border border-purple-100 dark:border-purple-800">
+            <h3 class="text-lg font-bold text-purple-900 dark:text-purple-300 mb-2">News Editor</h3>
+            <p class="text-sm text-purple-700 dark:text-purple-400">Post announcements, manage news categories, and publish campus alerts.</p>
+        </div>
+        <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border border-red-100 dark:border-red-800">
+            <h3 class="text-lg font-bold text-red-900 dark:text-red-300 mb-2">Emergency Coord</h3>
+            <p class="text-sm text-red-700 dark:text-red-400">Trigger system-wide emergency broadcasts and manage critical incident response.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('staffSearch').addEventListener('keyup', function() {
+        let searchValue = this.value.toLowerCase();
+        let rows = document.querySelectorAll('.staff-row');
+        
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(searchValue) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

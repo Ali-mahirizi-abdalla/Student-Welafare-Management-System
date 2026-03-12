@@ -3208,3 +3208,39 @@ def manage_health(request):
         'my_active': my_active,
         'staff_role': staff_role
     })
+
+@login_required
+@super_admin_required
+def manage_roles(request):
+    """Staff role management for Super Admin"""
+    staff_members = StaffProfile.objects.select_related("user").all()
+    # Define the 10 featured roles for easy selection
+    feature_roles = [
+        ("Super Admin", "Full System Access"),
+        ("Health Manager", "Health Management Only"),
+        ("Maintenance Sup", "Maintenance Requests Only"),
+        ("Warden", "Accommodation & Deferment Only"),
+        ("Finance Officer", "Payments & M-Pesa Records Only"),
+        ("Security Officer", "Visitors Log Only"),
+        ("News Editor", "News Alerts Only"),
+        ("Auditor", "Audit Logs Only (Read-Only)"),
+        ("Emergency Coord", "Emergency Alert Only"),
+        ("Support Agent", "Student Chat Only"),
+    ]
+    return render(request, "hms/admin/manage_roles.html", {
+        "staff_members": staff_members,
+        "feature_roles": feature_roles,
+        "current_roles_count": len(feature_roles)
+    })
+
+@require_POST
+@super_admin_required
+def assign_staff_role(request, staff_id):
+    """Assign a new feature-based role to a staff member"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    new_role = request.POST.get("role")
+    if new_role:
+        staff.role = new_role
+        staff.save()
+        messages.success(request, f"Role updated for {staff.user.get_full_name()} to {new_role}")
+    return redirect("hms:manage_roles")

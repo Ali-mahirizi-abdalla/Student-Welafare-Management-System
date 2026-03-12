@@ -190,8 +190,19 @@ class MaintenanceRequest(models.Model):
 
 class StaffProfile(models.Model):
     ROLE_CHOICES = [
-        # New Standardized Roles
+        # Feature-Based RBAC Roles
         ('Super Admin', 'Super Admin'),
+        ('Health Manager', 'Health Manager'),
+        ('Maintenance Sup', 'Maintenance Sup.'),
+        ('Warden', 'Warden'),
+        ('Finance Officer', 'Finance Officer'),
+        ('Security Officer', 'Security Officer'),
+        ('News Editor', 'News Editor'),
+        ('Auditor', 'Auditor'),
+        ('Emergency Coord', 'Emergency Coord.'),
+        ('Support Agent', 'Support Agent'),
+
+        # Legacy Standardized Roles (Keep for compatibility)
         ('Welfare Officer', 'Welfare Officer'),
         ('Hostel Manager', 'Hostel Manager'),
         ('Kitchen Manager', 'Kitchen Manager'),
@@ -315,8 +326,32 @@ class StaffProfile(models.Model):
     phone = models.CharField(max_length=15)
 
     def get_category(self):
-        """Categorize roles for permission logic"""
+        """Categorize roles for feature-based permission logic"""
         role = self.role
+        
+        # Primary Feature Roles mapping
+        if role == 'Super Admin':
+            return 'EXECUTIVE'
+        if role == 'Health Manager' or role == 'Medical Officer':
+            return 'HEALTH_SERVICES'
+        if role == 'Maintenance Sup':
+            return 'TECHNICAL_ESTATES'
+        if role == 'Warden' or role == 'Welfare Officer' or role == 'Hostel Manager':
+            return 'STUDENT_SERVICES'
+        if role == 'Finance Officer':
+            return 'FINANCE_ADMIN'
+        if role == 'Security Officer' or role == 'Security':
+            return 'SECURITY'
+        if role == 'News Editor':
+            return 'NEWS_MANAGEMENT'
+        if role == 'Auditor' or role == 'Auditor':
+            return 'AUDIT'
+        if role == 'Emergency Coord':
+            return 'EMERGENCY'
+        if role == 'Support Agent':
+            return 'SUPPORT'
+
+        # Legacy/Hierarchical mapping
         if role in ['VC', 'DVC_AFP', 'DVC_ASA', 'DVC_RE', 'REG_AP', 'REG_ASA']:
             return 'EXECUTIVE'
         if role.startswith('DEAN_') or role.startswith('DIR_') or role.startswith('DEP_REG_'):
@@ -329,7 +364,7 @@ class StaffProfile(models.Model):
             return 'STUDENT_SERVICES'
         if role in ['ICT_MANAGER', 'SECURITY_CHIEF', 'ESTATES_HEAD', 'MAINTENANCE_HEAD', 'TRANSPORT_HEAD', 'LAB_IN_CHARGE', 'MAINTENANCE_HOSTEL', 'VISITORS']:
             return 'TECHNICAL_ESTATES'
-        if role in ['CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'HEALTH_ADMIN', 'HEALTH_UNIT_HEAD', 'COUNSELLING_IN_CHARGE', 'Medical Officer']:
+        if role in ['CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'HEALTH_ADMIN']:
             return 'HEALTH_SERVICES'
         return 'GENERAL_STAFF'
 

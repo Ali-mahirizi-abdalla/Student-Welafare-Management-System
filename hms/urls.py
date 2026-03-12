@@ -107,6 +107,10 @@ urlpatterns = [
     path('manage/rooms/change-requests/approve/<int:pk>/', views.approve_room_change, name='approve_room_change'),
     path('student/room-change/', views.student_request_room_change, name='student_request_room_change'),
 
+    # RBAC / Role Management
+    path('manage/roles/', views.manage_roles, name='manage_roles'),
+    path('manage/roles/assign/<int:staff_id>/', views.assign_staff_role, name='assign_staff_role'),
+
     # Analytics Dashboard
     path('manage/analytics/', views.analytics_dashboard, name='analytics_dashboard'),
     path('manage/emergency-broadcast/', views.emergency_broadcast, name='emergency_broadcast'),

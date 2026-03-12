@@ -11,7 +11,7 @@
             </h2>
             <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-1">
                 {% if user.is_superuser %}Full Control
-                {% elif user.staff_profile.role == 'Medical Officer' %}Campus Health Services
+                {% elif staff_category_raw == 'HEALTH_SERVICES' %}Campus Health Services
                 {% else %}Management{% endif %}
             </p>
             {% else %}
@@ -44,6 +44,20 @@
                 </path>
             </svg>
             Dashboard
+        </a>
+        {% endif %}
+
+        <!-- Role Management: Super Admin only -->
+        {% if user.is_superuser %}
+        <a href="{% url 'hms:manage_roles' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'manage_roles' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
+            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3m0 0a10.003 10.003 0 018.146 16.48l.054.09M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                </path>
+            </svg>
+            Role Management
         </a>
         {% endif %}
 
@@ -127,9 +141,9 @@
         {% endif %}
         {% endif %}
 
-        <!-- Visitors: EXECUTIVE, TECHNICAL_ESTATES -->
+        <!-- Visitors: EXECUTIVE, TECHNICAL_ESTATES, SECURITY -->
         {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' %}
+        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' or staff_category_raw == 'SECURITY' %}
         <a href="{% url 'hms:visitor_management' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/visitors' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -143,9 +157,9 @@
         {% endif %}
         {% endif %}
 
-        <!-- News Alerts: EXECUTIVE, ACADEMIC_ADMIN, STUDENT_SERVICES -->
+        <!-- News Alerts: EXECUTIVE, ACADEMIC_ADMIN, STUDENT_SERVICES, NEWS_MANAGEMENT -->
         {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' %}
+        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' or staff_category_raw == 'NEWS_MANAGEMENT' %}
         <a href="{% url 'hms:manage_announcements' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'announcements' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -160,7 +174,7 @@
         {% endif %}
 
         <!-- Medical Navigation: HEALTH_SERVICES -->
-        {% if user.staff_profile.role == 'Medical Officer' %}
+        {% if staff_category_raw == 'HEALTH_SERVICES' %}
         <a href="{% url 'hms:manage_health' %}" class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'manage_health' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             Dashboard
@@ -218,9 +232,9 @@
         {% endif %}
         {% endif %}
 
-        <!-- Audit Logs: EXECUTIVE, FINANCE_ADMIN -->
+        <!-- Audit Logs: EXECUTIVE, FINANCE_ADMIN, AUDIT -->
         {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'FINANCE_ADMIN' %}
+        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'FINANCE_ADMIN' or staff_category_raw == 'AUDIT' %}
         <a href="{% url 'hms:audit_logs' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'audit-logs' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -234,9 +248,9 @@
         {% endif %}
         {% endif %}
 
-        <!-- Emergency Broadcast: EXECUTIVE only -->
+        <!-- Emergency Broadcast: EXECUTIVE, EMERGENCY -->
         {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' %}
+        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'EMERGENCY' %}
         <a href="{% url 'hms:emergency_broadcast' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'emergency-broadcast' in request.path %}bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800 shadow-lg text-red-600 dark:text-red-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -248,6 +262,23 @@
             Emergency Alert
         </a>
         {% endif %}
+        {% endif %}
+
+        <!-- Staff Chat: EXECUTIVE, SUPPORT -->
+        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'SUPPORT' %}
+        <a href="{% url 'hms:chat' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if 'chat' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
+            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                </path>
+            </svg>
+            Support Inbox
+            {% if unread_messages > 0 %}
+            <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{{ unread_messages }}</span>
+            {% endif %}
+        </a>
         {% endif %}
 
         {% else %}
