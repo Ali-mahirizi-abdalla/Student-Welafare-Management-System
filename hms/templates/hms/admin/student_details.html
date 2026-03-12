@@ -143,9 +143,37 @@
             </div>
             {% endif %}
 
+            {% if health_appointments %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Medical History</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for app in health_appointments %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ app.get_service_type_display }}</h6>
+                                <small class="text-muted">{{ app.preferred_date|date:"M j, Y" }}</small>
+                            </div>
+                            <p class="mb-1 text-sm"><strong>Status:</strong> {{ app.get_status_display }}</p>
+                            {% if app.lab_results %}
+                            <p class="mb-1 text-sm"><strong>Lab Results:</strong> {{ app.lab_results|truncatewords:20 }}</p>
+                            {% endif %}
+                            {% if app.referral_to %}
+                            <p class="mb-1 text-sm"><strong>Referral:</strong> {{ app.referral_to }}</p>
+                            {% endif %}
+                            <a href="{% url 'hms:appointment_detail' app.id %}" class="btn btn-sm btn-link p-0 text-blue-600">View Details</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Recent Activities -->
             {% if recent_activities %}
-            <div class="card">
+            <div class="card mt-4">
                 <div class="card-header">
                     <h5 class="mb-0">Recent Activities</h5>
                 </div>

@@ -1171,10 +1171,12 @@ def student_details(request, user_id):
     user = get_object_or_404(User, id=user_id)
     student = get_object_or_404(Student, user=user)
     meal_history = student.meals.all().order_by('-date')[:15]
+    health_appointments = HealthAppointment.objects.filter(student=student).order_by('-preferred_date')
     
     return render(request, 'hms/admin/student_details.html', {
         'student': student,
-        'meal_history': meal_history
+        'meal_history': meal_history,
+        'health_appointments': health_appointments
     })
 
 @login_required
@@ -2993,8 +2995,6 @@ def super_admin_dashboard(request):
         'total_staff': StaffProfile.objects.count(),
         'pending_deferments': DefermentRequest.objects.filter(status='pending').count(),
         'pending_maintenance': MaintenanceRequest.objects.filter(status='pending').count(),
-        'pending_medical': HealthAppointment.objects.filter(status='pending').count(),
-        'active_medical': HealthAppointment.objects.filter(status='ongoing').count(),
         'active_announcements': Announcement.objects.filter(is_active=True).count(),
         'total_rooms': Room.objects.count(),
         'occupied_rooms': Room.objects.filter(is_available=False).count(),

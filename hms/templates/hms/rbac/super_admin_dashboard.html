@@ -50,24 +50,7 @@
         <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-xl flex items-center justify-center text-2xl">🔧</div>
       </div>
     </div>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Pending Medical</p>
-          <p class="text-3xl font-bold text-pink-600 dark:text-pink-400 mt-1">{{ pending_medical }}</p>
-        </div>
-        <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-xl flex items-center justify-center text-2xl">⏳</div>
-      </div>
-    </div>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Active Medical</p>
-          <p class="text-3xl font-bold text-rose-600 dark:text-rose-400 mt-1">{{ active_medical }}</p>
-        </div>
-        <div class="w-12 h-12 bg-rose-100 dark:bg-rose-900 rounded-xl flex items-center justify-center text-2xl">🩺</div>
-      </div>
-    </div>
+
     <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
       <div class="flex items-center justify-between">
         <div>
@@ -89,7 +72,7 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
     <a href="{% url 'hms:manage_students' %}" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Manage Students</a>
     <a href="{% url 'hms:admin_deferment_all' %}" class="bg-amber-500 hover:bg-amber-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Deferments</a>
     <a href="{% url 'hms:manage_maintenance' %}" class="bg-red-500 hover:bg-red-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Maintenance</a>
@@ -98,8 +81,6 @@
     <a href="{% url 'hms:visitor_management' %}" class="bg-teal-600 hover:bg-teal-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm">Visitors</a>
     <a href="{% url 'hms:analytics_dashboard' %}" class="bg-purple-600 hover:bg-purple-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">Analytics</a>
     <a href="{% url 'hms:register_staff' %}" class="bg-green-600 hover:bg-green-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">Add Staff</a>
-    <a href="{% url 'hms:manage_health' %}" class="bg-pink-600 hover:bg-pink-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">Medical</a>
-    <a href="{% url 'hms:manage_health' %}#pending-reviews" class="bg-rose-500 hover:bg-rose-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">Priority List</a>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
