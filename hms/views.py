@@ -14,9 +14,9 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document
                      Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
                      AdminSubscription, RegistrationPayment, TutoringPost, HealthAppointment)
 from .decorators import (
-    role_required, staff_only, admin_only,
     super_admin_required, welfare_officer_required,
-    hostel_manager_required, kitchen_manager_required, security_required
+    hostel_manager_required, kitchen_manager_required, security_required,
+    medical_officer_required
 )
 from .utils.telegram import send_telegram_message
 
@@ -219,6 +219,8 @@ def user_login(request):
         user_groups = user.groups.values_list('name', flat=True)
         if 'Super Admin' in user_groups or user.is_superuser:
             return redirect('hms:super_admin_dashboard')
+        elif 'Medical Officer' in user_groups:
+            return redirect('hms:manage_health')
         elif 'Welfare Officer' in user_groups:
             return redirect('hms:welfare_officer_dashboard')
         elif 'Hostel Manager' in user_groups:
@@ -246,6 +248,8 @@ def user_login(request):
             
             if 'Super Admin' in user_groups or user.is_superuser:
                 return redirect('hms:super_admin_dashboard')
+            elif 'Medical Officer' in user_groups:
+                return redirect('hms:manage_health')
             elif 'Welfare Officer' in user_groups:
                 return redirect('hms:welfare_officer_dashboard')
             elif 'Hostel Manager' in user_groups:
@@ -3166,7 +3170,7 @@ def health_appointment_detail(request, pk):
     })
 
 @login_required
-@role_required(allowed_roles=['HEALTH_ADMIN', 'CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'Super Admin'])
+@medical_officer_required
 def manage_health(request):
     """Redesigned medical dashboard for health staff"""
     staff_profile = getattr(request.user, 'staff_profile', None)

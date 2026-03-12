@@ -873,11 +873,14 @@ class HealthStaffUpdateForm(forms.ModelForm):
     """Form for nurses/doctors to update appointment details"""
     class Meta:
         model = HealthAppointment
-        fields = ['status', 'assigned_staff', 'vitals', 'clinical_notes', 'prescription']
+        fields = ['status', 'assigned_staff', 'vitals', 'clinical_notes', 'prescription', 'lab_results', 'referral_to', 'discharge_summary']
         widgets = {
-            'status': forms.Select(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white'}),
-            'assigned_staff': forms.Select(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white'}),
-            'vitals': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white', 'rows': 2, 'placeholder': 'BP: 120/80, Temp: 37C...'}),
-            'clinical_notes': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white', 'rows': 3}),
-            'prescription': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:text-white', 'rows': 3}),
+            'status': forms.Select(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4'}),
+            'assigned_staff': forms.Select(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4'}),
+            'vitals': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4', 'rows': 2, 'placeholder': 'BP: 120/80, HR: 72, Temp: 37C...'}),
+            'clinical_notes': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4', 'rows': 4, 'placeholder': 'Detailed clinical assessment and notes...'}),
+            'prescription': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4', 'rows': 3, 'placeholder': 'Medication names, dosage, and frequency...'}),
+            'lab_results': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4', 'rows': 3, 'placeholder': 'Ordered tests or results summary...'}),
+            'referral_to': forms.TextInput(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4', 'placeholder': 'e.g., County Referral Hospital / Dr. Smith (Cardiology)'}),
+            'discharge_summary': forms.Textarea(attrs={'class': 'w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 dark:text-white mb-4', 'rows': 3, 'placeholder': 'Final diagnosis and clearance instructions...'}),
         }

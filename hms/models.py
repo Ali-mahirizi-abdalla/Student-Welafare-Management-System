@@ -196,6 +196,7 @@ class StaffProfile(models.Model):
         ('Hostel Manager', 'Hostel Manager'),
         ('Kitchen Manager', 'Kitchen Manager'),
         ('Security', 'Security'),
+        ('Medical Officer', 'Medical Officer'),
 
         # Executive
         ('VC', 'Vice Chancellor'),
@@ -328,7 +329,7 @@ class StaffProfile(models.Model):
             return 'STUDENT_SERVICES'
         if role in ['ICT_MANAGER', 'SECURITY_CHIEF', 'ESTATES_HEAD', 'MAINTENANCE_HEAD', 'TRANSPORT_HEAD', 'LAB_IN_CHARGE', 'MAINTENANCE_HOSTEL', 'VISITORS']:
             return 'TECHNICAL_ESTATES'
-        if role in ['CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'HEALTH_ADMIN', 'HEALTH_UNIT_HEAD', 'COUNSELLING_IN_CHARGE']:
+        if role in ['CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'HEALTH_ADMIN', 'HEALTH_UNIT_HEAD', 'COUNSELLING_IN_CHARGE', 'Medical Officer']:
             return 'HEALTH_SERVICES'
         return 'GENERAL_STAFF'
 
@@ -730,6 +731,11 @@ class HealthAppointment(models.Model):
     vitals = models.TextField(blank=True, null=True, help_text="Recorded by Nurse (BP, Temp, Weight, etc.)")
     clinical_notes = models.TextField(blank=True, null=True, help_text="Notes from the session (Private)")
     prescription = models.TextField(blank=True, null=True, help_text="Medication or follow-up instructions")
+    
+    # Advanced Medical Data
+    lab_results = models.TextField(blank=True, null=True, help_text="Lab tests and imaging results")
+    referral_to = models.CharField(max_length=255, blank=True, null=True, help_text="Specialist or Hospital referred to")
+    discharge_summary = models.TextField(blank=True, null=True, help_text="Summary upon completion of care episode")
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

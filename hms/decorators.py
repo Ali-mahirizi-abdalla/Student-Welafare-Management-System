@@ -53,6 +53,9 @@ def kitchen_manager_required(view_func):
 def security_required(view_func):
     return role_required(allowed_roles=['Security', 'Super Admin'])(view_func)
 
+def medical_officer_required(view_func):
+    return role_required(allowed_roles=['Medical Officer', 'HEALTH_ADMIN', 'CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'Super Admin'])(view_func)
+
 def student_required(view_func):
     def check_student(user):
         return hasattr(user, 'student_profile') or user.is_superuser

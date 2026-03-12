@@ -97,6 +97,21 @@
           {{ form.prescription }}
         </div>
 
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Lab Results (Imaging & Tests)</label>
+          {{ form.lab_results }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Referral</label>
+          {{ form.referral_to }}
+        </div>
+
+        <div>
+           <label class="block text-xs font-semibold text-gray-500 mb-1">Discharge Summary</label>
+           {{ form.discharge_summary }}
+        </div>
+
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-sm">
           Update Record
         </button>
@@ -113,7 +128,7 @@
 
       {% if appointment.clinical_notes %}
       <div class="mb-4">
-        <p class="text-xs font-semibold text-gray-500 mb-1">Clinical Notes</p>
+        <p class="text-xs font-semibold text-gray-500 mb-1">Clinic Summary</p>
         <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300">{{ appointment.clinical_notes }}</div>
       </div>
       {% endif %}
@@ -121,12 +136,36 @@
       {% if appointment.prescription %}
       <div class="mb-4">
         <p class="text-xs font-semibold text-gray-500 mb-1">Prescription</p>
-        <div class="bg-emerald-50 dark:bg-emerald-900/20 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300 font-medium">{{ appointment.prescription }}</div>
+        <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300 font-medium">{{ appointment.prescription }}</div>
       </div>
       {% endif %}
 
-      {% if not appointment.vitals and not appointment.clinical_notes and not appointment.prescription %}
-      <p class="text-gray-400 text-sm text-center py-4">Clinical documentation will appear here after your consultation.</p>
+      {% if appointment.lab_results %}
+      <div class="mb-4">
+        <p class="text-xs font-semibold text-gray-500 mb-1">Lab Results</p>
+        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300 font-medium">{{ appointment.lab_results }}</div>
+      </div>
+      {% endif %}
+
+      {% if appointment.referral_to %}
+      <div class="mb-4">
+        <p class="text-xs font-semibold text-gray-500 mb-1">Referral</p>
+         <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2"><span>🔗</span> {{ appointment.referral_to }}</div>
+      </div>
+      {% endif %}
+
+      {% if appointment.discharge_summary %}
+      <div class="mb-4">
+        <p class="text-xs font-semibold text-gray-500 mb-1">Discharge Summary</p>
+        <div class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300 font-medium">{{ appointment.discharge_summary }}</div>
+      </div>
+      {% endif %}
+
+      {% if not appointment.vitals and not appointment.clinical_notes and not appointment.prescription and not appointment.lab_results and not appointment.referral_to and not appointment.discharge_summary %}
+      <div class="flex flex-col items-center justify-center py-8">
+        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-2xl mb-3">🕒</div>
+        <p class="text-gray-400 text-sm italic">Clinical documentation will appear here after your consultation.</p>
+      </div>
       {% endif %}
       {% endif %}
     </div>
