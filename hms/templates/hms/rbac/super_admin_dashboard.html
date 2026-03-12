@@ -101,7 +101,7 @@
           <div class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300 flex-shrink-0">{{ log.user.first_name|first|upper }}{{ log.user.last_name|first|upper }}</div>
           <div class="flex-1 min-w-0">
             <p class="text-sm text-gray-800 dark:text-gray-200 truncate">{{ log.action }}</p>
-            <p class="text-xs text-gray-400 mt-0.5">{{ log.created_at|timesince }} ago</p>
+            <p class="text-xs text-gray-400 mt-0.5">{{ log.timestamp|timesince }} ago</p>
           </div>
         </div>
         {% empty %}
