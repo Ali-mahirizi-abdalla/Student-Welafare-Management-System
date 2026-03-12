@@ -54,15 +54,15 @@
 
   <!-- Quick Actions -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-    <div class="bg-blue-600 text-white rounded-xl p-4 text-center font-semibold shadow-sm">Pending Appointments</div>
-    <div class="bg-amber-500 text-white rounded-xl p-4 text-center font-semibold shadow-sm">Active Consultations</div>
-    <div class="bg-emerald-500 text-white rounded-xl p-4 text-center font-semibold shadow-sm">Completed Logs</div>
-    <div class="bg-gray-700 text-white rounded-xl p-4 text-center font-semibold shadow-sm">All Records</div>
+    <a href="#priority-list" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">Priority List</a>
+    <a href="#active-consultations" class="bg-amber-500 hover:bg-amber-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">Active Consultations</a>
+    <a href="{% url 'hms:manage_health' %}" class="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">Completed Logs</a>
+    <a href="{% url 'hms:manage_health' %}" class="bg-gray-700 hover:bg-gray-800 text-white rounded-xl p-4 text-center font-semibold transition-all hover:scale-105 shadow-sm block">All Records</a>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Priority Waiting List -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+    <div id="priority-list" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 scroll-mt-24">
       <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🚨 Priority Waiting List</h2>
       <div class="space-y-3">
         {% for app in pending_appointments %}
@@ -85,7 +85,7 @@
     </div>
 
     <!-- Active Consultations -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+    <div id="active-consultations" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 scroll-mt-24">
       <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🩺 Active Consultations</h2>
       <div class="space-y-3">
         {% for app in my_appointments %}
