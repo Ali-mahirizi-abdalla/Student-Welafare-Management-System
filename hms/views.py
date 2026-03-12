@@ -2989,6 +2989,8 @@ def super_admin_dashboard(request):
         'total_staff': StaffProfile.objects.count(),
         'pending_deferments': DefermentRequest.objects.filter(status='pending').count(),
         'pending_maintenance': MaintenanceRequest.objects.filter(status='pending').count(),
+        'pending_medical': HealthAppointment.objects.filter(status='pending').count(),
+        'active_medical': HealthAppointment.objects.filter(status='ongoing').count(),
         'active_announcements': Announcement.objects.filter(is_active=True).count(),
         'total_rooms': Room.objects.count(),
         'occupied_rooms': Room.objects.filter(is_available=False).count(),
