@@ -1,0 +1,157 @@
+{% extends 'hms/base.html' %}
+{% block title %}Staff Details - {{ staff.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-6 flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+    <div class="max-w-3xl w-full">
+        <!-- 👤 STAFF DETAILS HEADER -->
+        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl shadow-slate-200 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden">
+            
+            <!-- Header Section -->
+            <div class="bg-slate-900 p-8 flex justify-between items-center relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white rounded-full blur-2xl"></div>
+                    <div class="absolute -left-4 -bottom-4 w-24 h-24 bg-white rounded-full blur-2xl"></div>
+                </div>
+                
+                <div class="relative z-10 flex items-center gap-4">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl text-white">
+                        <i class="fas fa-user-shield text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-white tracking-widest uppercase">Staff Details</h1>
+                </div>
+
+                <div class="relative z-10">
+                    <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-black text-white uppercase tracking-[0.2em]">
+                        [SUPER ADMIN]
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-8 md:p-12 space-y-10">
+                
+                <!-- PERSONAL INFORMATION SECTION -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Personal Information</span>
+                        <div class="h-px bg-slate-100 dark:bg-slate-800 flex-1"></div>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-8 relative group overflow-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Full Name</p>
+                                <p class="text-lg font-black text-slate-900 dark:text-white">{{ staff.user.get_full_name }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email Address</p>
+                                <p class="text-lg font-black text-slate-900 dark:text-white">{{ staff.user.email }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Phone Number</p>
+                                <p class="text-lg font-black text-slate-900 dark:text-white">{{ staff.phone }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Employee / National ID</p>
+                                <p class="text-lg font-black text-slate-900 dark:text-white">{{ staff.national_id }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Joined Date</p>
+                                <p class="text-lg font-black text-slate-900 dark:text-white">{{ staff.created_at|date:"d/m/Y" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROLE ASSIGNMENT SECTION -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Role Assignment</span>
+                        <div class="h-px bg-slate-100 dark:bg-slate-800 flex-1"></div>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Primary Role</p>
+                                <p class="text-xl font-black text-slate-900 dark:text-white uppercase">{{ staff.get_role_display }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 animate-pulse"></span>
+                                    <p class="text-lg font-black text-emerald-600 dark:text-emerald-400 uppercase">Active</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Functional Access Permissions</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {% with role=staff.role %}
+                                    <!-- Health Permissions -->
+                                    <div class="flex items-center gap-3 text-sm {% if role == 'Health Manager' or role == 'Medical Officer' %}text-slate-900 dark:text-white font-bold{% else %}text-slate-400 line-through opacity-50{% endif %}">
+                                        <i class="fas {% if role == 'Health Manager' or role == 'Medical Officer' %}fa-check-circle text-emerald-500{% else %}fa-times-circle{% endif %} w-5"></i>
+                                        Health Management Dashboard
+                                    </div>
+                                    <div class="flex items-center gap-3 text-sm {% if role == 'Health Manager' or role == 'Medical Officer' %}text-slate-900 dark:text-white font-bold{% else %}text-slate-400 line-through opacity-50{% endif %}">
+                                        <i class="fas {% if role == 'Health Manager' or role == 'Medical Officer' %}fa-check-circle text-emerald-500{% else %}fa-times-circle{% endif %} w-5"></i>
+                                        Manage Patient Records
+                                    </div>
+
+                                    <!-- Super Admin / Finance -->
+                                    <div class="flex items-center gap-3 text-sm {% if role == 'Super Admin' or role == 'Finance Officer' %}text-slate-900 dark:text-white font-bold{% else %}text-slate-400 line-through opacity-50{% endif %}">
+                                        <i class="fas {% if role == 'Super Admin' or role == 'Finance Officer' %}fa-check-circle text-emerald-500{% else %}fa-times-circle{% endif %} w-5"></i>
+                                        Payments & Finance
+                                    </div>
+
+                                    <!-- Maintenance -->
+                                    <div class="flex items-center gap-3 text-sm {% if role == 'Super Admin' or role == 'Maintenance Sup' %}text-slate-900 dark:text-white font-bold{% else %}text-slate-400 line-through opacity-50{% endif %}">
+                                        <i class="fas {% if role == 'Super Admin' or role == 'Maintenance Sup' %}fa-check-circle text-emerald-500{% else %}fa-times-circle{% endif %} w-5"></i>
+                                        Maintenance Requests
+                                    </div>
+
+                                    <!-- Security -->
+                                    <div class="flex items-center gap-3 text-sm {% if role == 'Super Admin' or role == 'Security Officer' or role == 'Warden' %}text-slate-900 dark:text-white font-bold{% else %}text-slate-400 line-through opacity-50{% endif %}">
+                                        <i class="fas {% if role == 'Super Admin' or role == 'Security Officer' or role == 'Warden' %}fa-check-circle text-emerald-500{% else %}fa-times-circle{% endif %} w-5"></i>
+                                        Security & Visitor Logs
+                                    </div>
+
+                                    <!-- System Settings -->
+                                    <div class="flex items-center gap-3 text-sm {% if role == 'Super Admin' %}text-slate-900 dark:text-white font-bold{% else %}text-slate-400 line-through opacity-50{% endif %}">
+                                        <i class="fas {% if role == 'Super Admin' %}fa-check-circle text-emerald-500{% else %}fa-times-circle{% endif %} w-5"></i>
+                                        Global System Settings
+                                    </div>
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIONS SECTION -->
+                <div class="flex flex-wrap gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <a href="{% url 'hms:assign_staff_role' staff.id %}" class="flex-1 min-w-[150px] py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold text-xs uppercase tracking-widest text-center transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
+                        <i class="fas fa-edit"></i> Edit Role
+                    </a>
+                    <button class="flex-1 min-w-[150px] py-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center gap-2">
+                        <i class="fas fa-key"></i> Reset Password
+                    </button>
+                    <button class="flex-1 min-w-[150px] py-4 bg-rose-50 dark:bg-rose-900/10 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/20 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-rose-100 dark:hover:bg-rose-900/20 flex items-center justify-center gap-2">
+                        <i class="fas fa-user-slash"></i> Deactivate
+                    </button>
+                    <a href="mailto:{{ staff.user.email }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl flex items-center justify-center transition-all hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="{% url 'hms:manage_roles' %}" class="text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest hover:text-slate-900 dark:hover:text-white transition-colors flex items-center justify-center gap-2">
+                <i class="fas fa-arrow-left"></i> Return to Staff Management
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

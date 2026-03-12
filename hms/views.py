@@ -3247,6 +3247,15 @@ def assign_staff_role(request, staff_id):
 
 @login_required
 @super_admin_required
+def staff_detail(request, staff_id):
+    """Detailed staff profile view for Super Admin"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    return render(request, "hms/admin/staff_detail.html", {
+        "staff": staff
+    })
+
+@login_required
+@super_admin_required
 def generate_staff_link(request):
     """View to generate temporary staff registration links"""
     links = StaffRegistrationLink.objects.all().order_by('-created_at')
