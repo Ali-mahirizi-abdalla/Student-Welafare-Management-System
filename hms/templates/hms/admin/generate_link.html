@@ -102,40 +102,107 @@
 
             <!-- Content Area - Active Links Table -->
             <div class="lg:col-span-2">
-                <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Active Invite Links</h3>
+                <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Active Registration Links</h3>
+                    <div class="flex items-center gap-2">
+                        <a href="." class="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded transition" title="Refresh">
+                            <i class="fas fa-sync-alt text-sm"></i>
+                        </a>
+                    </div>
+                </div>
                 
-                <div class="space-y-4">
-                    {% for l in links %}
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center justify-between hover:border-primary-500/50 transition">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500 dark:text-slate-400">
-                                <i class="fas fa-user-shield"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white">{{ l.role }}</h4>
-                                <div class="flex items-center gap-3 text-xs text-slate-500 mt-1">
-                                    <span>Uses: {{ l.current_uses }}/{{ l.max_uses|default:"∞" }}</span>
-                                    <span>•</span>
-                                    <span>Expiry: {{ l.expires_at|date:"M d, Y"|default:"Never" }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="copySpecificLink('{{ request.scheme }}://{{ request.get_host }}{% url 'hms:register_staff_via_link' token=l.token %}')" class="p-2 text-slate-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition" title="Copy Link">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 text-[10px] font-bold rounded uppercase">Active</span>
-                        </div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-widest border-b border-slate-100 dark:border-slate-800">
+                                    <th class="px-4 py-3">Role</th>
+                                    <th class="px-4 py-3">Uses</th>
+                                    <th class="px-4 py-3">Expiry</th>
+                                    <th class="px-4 py-3">Status</th>
+                                    <th class="px-4 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                {% for l in links %}
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center text-slate-500">
+                                                <i class="fas fa-user-shield text-xs"></i>
+                                            </div>
+                                            <span class="font-bold text-slate-900 dark:text-white text-sm">{{ l.role }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <span class="text-xs text-slate-600 dark:text-slate-400 font-mono">{{ l.current_uses }}/{{ l.max_uses|default:"∞" }}</span>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <span class="text-xs text-slate-500">
+                                            {% if l.expires_at %}
+                                                {{ l.expires_at|date:"M d, H:i" }}
+                                            {% else %}
+                                                <span class="text-slate-300 dark:text-slate-600">No Expiry</span>
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        {% if not l.is_active %}
+                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold rounded-full uppercase">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Revoked
+                                            </span>
+                                        {% elif l.is_valid %}
+                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 text-[10px] font-bold rounded-full uppercase">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                                            </span>
+                                        {% elif l.expires_at and l.is_expired %}
+                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 text-[10px] font-bold rounded-full uppercase">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Expired
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-rose-100 dark:bg-rose-900/30 text-rose-600 text-[10px] font-bold rounded-full uppercase">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Exhausted
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-4 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-1">
+                                            <button onclick="copySpecificLink('{{ request.scheme }}://{{ request.get_host }}{% url 'hms:register_staff_via_link' token=l.token %}')" 
+                                                    class="p-1.5 text-slate-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded transition" 
+                                                    title="Copy Link">
+                                                <i class="fas fa-copy text-sm"></i>
+                                            </button>
+                                            
+                                            {% if l.is_active and l.is_valid %}
+                                            <form action="{% url 'hms:revoke_staff_link' link_id=l.id %}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to revoke this link? It will no longer be usable.')">
+                                                {% csrf_token %}
+                                                <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded transition" title="Revoke Link">
+                                                    <i class="fas fa-ban text-sm"></i>
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="py-12 text-center">
+                                        <div class="text-slate-300 dark:text-slate-700 mb-3">
+                                            <i class="fas fa-link-slash text-4xl"></i>
+                                        </div>
+                                        <p class="text-slate-500 dark:text-slate-400 font-medium">No registration links found.</p>
+                                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Generate your first link using the sidebar.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                    {% empty %}
-                    <div class="text-center py-12 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-                        <div class="text-slate-300 dark:text-slate-700 mb-3">
-                            <i class="fas fa-link-slash text-4xl"></i>
-                        </div>
-                        <p class="text-slate-500 dark:text-slate-400 font-medium">No active registration links found.</p>
-                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Generate your first link using the sidebar.</p>
-                    </div>
-                    {% endfor %}
+                </div>
+
+                <div class="mt-4 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
+                    <p>Total Links: {{ links|length }}</p>
+                    <p>Showing all active and historical links</p>
                 </div>
             </div>
         </div>

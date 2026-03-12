@@ -782,10 +782,14 @@ class StaffRegistrationLink(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='generated_links')
     is_active = models.BooleanField(default=True)
 
+    @property
+    def is_expired(self):
+        return self.expires_at and timezone.now() > self.expires_at
+
     def is_valid(self):
         if not self.is_active:
             return False
-        if self.expires_at and timezone.now() > self.expires_at:
+        if self.is_expired:
             return False
         if self.max_uses > 0 and self.current_uses >= self.max_uses:
             return False

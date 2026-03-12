@@ -3249,7 +3249,7 @@ def assign_staff_role(request, staff_id):
 @super_admin_required
 def generate_staff_link(request):
     """View to generate temporary staff registration links"""
-    links = StaffRegistrationLink.objects.filter(is_active=True).order_by('-created_at')
+    links = StaffRegistrationLink.objects.all().order_by('-created_at')
     
     if request.method == 'POST':
         role = request.POST.get('role')
@@ -3340,3 +3340,14 @@ def register_staff_via_link(request, token):
         'form': form,
         'link_role': link.role
     })
+
+@login_required
+@super_admin_required
+@require_POST
+def revoke_staff_link(request, link_id):
+    """Manually deactivate a registration link"""
+    link = get_object_or_404(StaffRegistrationLink, id=link_id)
+    link.is_active = False
+    link.save()
+    messages.warning(request, f"Registration link for {link.role} has been revoked.")
+    return redirect('hms:generate_staff_link')
