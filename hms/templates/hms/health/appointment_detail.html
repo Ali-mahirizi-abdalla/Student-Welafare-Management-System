@@ -1,190 +1,166 @@
 {% extends 'hms/base.html' %}
 {% load static %}
 
-{% block title %}Case Document - #HC-{{ appointment.pk }}{% endblock %}
+{% block title %}Patient Record - #HC-{{ appointment.pk }}{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-[#f8fafc] dark:bg-[#020617] py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-5xl mx-auto space-y-6">
-        
-        <!-- Navigation Header -->
-        <div class="flex items-center justify-between">
-            <a href="{% if is_health_staff %}{% url 'hms:manage_health' %}{% else %}{% url 'hms:student_health_appointments' %}{% endif %}" class="flex items-center gap-2 text-slate-500 hover:text-primary-600 transition-colors font-bold text-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Back to Dashboard
-            </a>
-            <div class="flex items-center gap-3">
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Case ID</span>
-                <span class="px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm">#HC-{{ appointment.pk|stringformat:"04d" }}</span>
-            </div>
-        </div>
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- Left Column: Patient & Case Info -->
-            <div class="lg:col-span-1 space-y-6">
-                <!-- Patient Card -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-                    <div class="text-center">
-                        <div class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner border border-slate-100 dark:border-slate-700">
-                            {% if appointment.student.user.first_name %}{{ appointment.student.user.first_name|first }}{{ appointment.student.user.last_name|first }}{% else %}👤{% endif %}
-                        </div>
-                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ appointment.student.user.get_full_name }}</h2>
-                        <p class="text-sm text-slate-500 font-medium">{{ appointment.student.university_id }}</p>
-                    </div>
-                    
-                    <div class="mt-6 space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
-                        <div class="flex justify-between text-xs">
-                            <span class="text-slate-400 font-bold uppercase">Service</span>
-                            <span class="text-slate-900 dark:text-white font-bold">{{ appointment.get_service_type_display }}</span>
-                        </div>
-                        <div class="flex justify-between text-xs">
-                            <span class="text-slate-400 font-bold uppercase">Requested</span>
-                            <span class="text-slate-900 dark:text-white font-bold">{{ appointment.preferred_date|date:"M d, Y" }} @ {{ appointment.preferred_slot }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Status Badge -->
-                <div class="p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 text-center
-                    {% if appointment.status == 'completed' %}bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-900/30
-                    {% elif appointment.status == 'in_progress' %}bg-blue-50/50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/30
-                    {% else %}bg-amber-50/50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-900/30{% endif %}">
-                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Live Status</p>
-                    <span class="text-lg font-black uppercase tracking-widest
-                        {% if appointment.status == 'completed' %}text-emerald-600 dark:text-emerald-400
-                        {% elif appointment.status == 'in_progress' %}text-blue-600 dark:text-blue-400
-                        {% else %}text-amber-600 dark:text-amber-400{% endif %}">
-                        {{ appointment.get_status_display }}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Right Column: Documentation & Notes -->
-            <div class="lg:col-span-2">
-                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-                    <div class="p-8">
-                        {% if is_health_staff %}
-                        <form method="POST" class="space-y-8">
-                            {% csrf_token %}
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Current Phase</label>
-                                    {{ form.status }}
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Assigned Clinician</label>
-                                    {{ form.assigned_staff }}
-                                </div>
-                            </div>
-
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Vitals & Observations</label>
-                                {{ form.vitals }}
-                                <p class="text-[9px] text-slate-400 italic">Example: BP: 120/80, Temp: 37.2C, Pulse: 72bpm</p>
-                            </div>
-
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Detailed Clinical Notes (Confidential)</label>
-                                {{ form.clinical_notes }}
-                            </div>
-
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Diagnosis & Prescription</label>
-                                {{ form.prescription }}
-                            </div>
-
-                            <div class="pt-4">
-                                <button type="submit" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-4 px-6 rounded-2xl font-black uppercase tracking-widest text-xs hover:shadow-2xl hover:shadow-primary-500/20 transition-all active:scale-[0.98]">
-                                    Update Clinical Record
-                                </button>
-                            </div>
-                        </form>
-                        {% else %}
-                        <!-- Student View -->
-                        <div class="space-y-10">
-                            <div>
-                                <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                    <span class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center text-xs text-blue-600">🩺</span>
-                                    Visit Summary
-                                </h3>
-                                <div class="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                    <p class="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">{{ appointment.reason }}</p>
-                                </div>
-                            </div>
-
-                            {% if appointment.vitals or appointment.prescription %}
-                            <div class="grid grid-cols-1 gap-6">
-                                {% if appointment.vitals %}
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <span class="w-6 h-6 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center text-xs text-amber-600">📊</span>
-                                        Clinical Observations
-                                    </h3>
-                                    <div class="p-6 rounded-2xl bg-amber-50/50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 text-sm text-slate-700 dark:text-slate-300 italic">
-                                        {{ appointment.vitals }}
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if appointment.prescription %}
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <span class="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-xs text-emerald-600">💊</span>
-                                        Medication & Care Plan
-                                    </h3>
-                                    <div class="p-6 rounded-2xl bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-bold">
-                                        {{ appointment.prescription }}
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            {% else %}
-                            <div class="py-12 text-center">
-                                <p class="text-3xl mb-4">🩺</p>
-                                <p class="text-slate-500 font-medium italic">Clinical documentation will appear here after your consultation.</p>
-                            </div>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="px-8 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                         <div class="flex items-center gap-2">
-                             <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Confidential Record</span>
-                         </div>
-                         <p class="text-[10px] font-bold text-slate-400">LAST SYNC: {{ appointment.updated_at|timesince }} AGO</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Header -->
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">🏥 Patient Record</h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-1">Case #HC-{{ appointment.pk|stringformat:"04d" }}</p>
     </div>
+    <a href="{% if is_health_staff %}{% url 'hms:manage_health' %}{% else %}{% url 'hms:student_health_appointments' %}{% endif %}" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">← Back</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Patient Info Card -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">👤 Patient Info</h2>
+      <div class="text-center mb-4">
+        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-xl font-bold text-blue-700 dark:text-blue-300 mx-auto mb-3">
+          {{ appointment.student.user.first_name|first|upper }}{{ appointment.student.user.last_name|first|upper }}
+        </div>
+        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ appointment.student.user.get_full_name }}</p>
+        <p class="text-sm text-gray-500">{{ appointment.student.university_id }}</p>
+      </div>
+      <div class="space-y-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-500">Service</span>
+          <span class="font-semibold text-gray-900 dark:text-white">{{ appointment.get_service_type_display }}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-500">Date</span>
+          <span class="font-semibold text-gray-900 dark:text-white">{{ appointment.preferred_date|date:"M d, Y" }}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-500">Time Slot</span>
+          <span class="font-semibold text-gray-900 dark:text-white">{{ appointment.preferred_slot }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status & Reason -->
+    <div class="space-y-6">
+      <!-- Status -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 text-center">
+        <p class="text-sm text-gray-500 mb-2">Current Status</p>
+        <span class="inline-block px-4 py-2 rounded-xl text-sm font-bold uppercase
+          {% if appointment.status == 'completed' %}bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300
+          {% elif appointment.status == 'ongoing' %}bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300
+          {% elif appointment.status == 'cancelled' %}bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300
+          {% else %}bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300{% endif %}">
+          {{ appointment.get_status_display }}
+        </span>
+      </div>
+
+      <!-- Reason -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📝 Reason for Visit</h2>
+        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{ appointment.reason }}</p>
+      </div>
+    </div>
+
+    <!-- Clinical Form (Staff) or Clinical Info (Student) -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+      {% if is_health_staff %}
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🩺 Clinical Update</h2>
+      <form method="POST" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Status</label>
+          {{ form.status }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Assigned Clinician</label>
+          {{ form.assigned_staff }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Vitals</label>
+          {{ form.vitals }}
+          <p class="text-xs text-gray-400 mt-1">e.g. BP: 120/80, Temp: 37.2°C, Pulse: 72bpm</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Clinical Notes</label>
+          {{ form.clinical_notes }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Prescription</label>
+          {{ form.prescription }}
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-sm">
+          Update Record
+        </button>
+      </form>
+      {% else %}
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🩺 Clinical Summary</h2>
+
+      {% if appointment.vitals %}
+      <div class="mb-4">
+        <p class="text-xs font-semibold text-gray-500 mb-1">Vitals</p>
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300">{{ appointment.vitals }}</div>
+      </div>
+      {% endif %}
+
+      {% if appointment.clinical_notes %}
+      <div class="mb-4">
+        <p class="text-xs font-semibold text-gray-500 mb-1">Clinical Notes</p>
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300">{{ appointment.clinical_notes }}</div>
+      </div>
+      {% endif %}
+
+      {% if appointment.prescription %}
+      <div class="mb-4">
+        <p class="text-xs font-semibold text-gray-500 mb-1">Prescription</p>
+        <div class="bg-emerald-50 dark:bg-emerald-900/20 p-3 rounded-xl text-sm text-gray-700 dark:text-gray-300 font-medium">{{ appointment.prescription }}</div>
+      </div>
+      {% endif %}
+
+      {% if not appointment.vitals and not appointment.clinical_notes and not appointment.prescription %}
+      <p class="text-gray-400 text-sm text-center py-4">Clinical documentation will appear here after your consultation.</p>
+      {% endif %}
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Footer Info -->
+  <div class="mt-6 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 flex justify-between items-center">
+    <p class="text-xs text-gray-400">Last updated: {{ appointment.updated_at|timesince }} ago</p>
+    <p class="text-xs text-gray-400">Created: {{ appointment.created_at|date:"M d, Y" }}</p>
+  </div>
 </div>
 
 <style>
-    /* Professional input styles */
     input, select, textarea {
         width: 100%;
-        padding: 0.875rem 1rem;
-        background-color: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 1rem;
+        padding: 0.75rem 1rem;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
         outline: none;
         font-size: 0.875rem;
-        color: #1e293b;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #1f2937;
+        transition: all 0.2s;
     }
     .dark input, .dark select, .dark textarea {
-        background-color: #0f172a;
-        border-color: #1e293b;
-        color: #f1f5f9;
+        background-color: #1f2937;
+        border-color: #374151;
+        color: #f3f4f6;
     }
     input:focus, select:focus, textarea:focus {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.05);
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
-    textarea { min-height: 120px; resize: vertical; }
+    textarea { min-height: 100px; resize: vertical; }
 </style>
 {% endblock %}
