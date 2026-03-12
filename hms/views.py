@@ -3168,32 +3168,39 @@ def health_appointment_detail(request, pk):
 @login_required
 @role_required(allowed_roles=['HEALTH_ADMIN', 'CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'Super Admin'])
 def manage_health(request):
-    """Dashboard for health staff"""
+    """Redesigned medical dashboard for health staff"""
     staff_profile = getattr(request.user, 'staff_profile', None)
     staff_role = staff_profile.role if staff_profile else None
-    
-    # Filter appointments based on role if needed, or show all for admin
-    if staff_role in ['CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR']:
-        assigned_appointments = HealthAppointment.objects.filter(assigned_staff=request.user)
-        pending_appointments = HealthAppointment.objects.filter(status='pending', service_type='general' if staff_role == 'CAMPUS_DOCTOR' else 'counseling')
-    else:
-        assigned_appointments = HealthAppointment.objects.none()
-        pending_appointments = HealthAppointment.objects.filter(status='pending')
-
     today = date.today()
     all_appointments = HealthAppointment.objects.all()
     
+    # Filter appointments based on role
+    if staff_role in ['CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR']:
+        my_active = all_appointments.filter(assigned_staff=request.user, status='ongoing')
+        pending_feed = all_appointments.filter(status='pending', service_type='general' if staff_role == 'CAMPUS_DOCTOR' else 'counseling')
+    else:
+        my_active = all_appointments.none()
+        pending_feed = all_appointments.filter(status='pending')
+
     stats = {
         'pending': all_appointments.filter(status='pending').count(),
-        'assigned_to_me': all_appointments.filter(assigned_staff=request.user, status='ongoing').count(),
-        'completed_today': all_appointments.filter(status='completed', updated_at__date=today).count(),
-        'total_all_time': all_appointments.count(),
+        'active': all_appointments.filter(status='ongoing').count(),
+        'total_patients': all_appointments.values('student').distinct().count(),
+        'today_appointments': all_appointments.filter(preferred_date=today).count(),
+        'admissions': all_appointments.filter(status='ongoing', updated_at__date=today).count() or all_appointments.filter(status='ongoing').count(),
+        'discharges': all_appointments.filter(status='completed', updated_at__date=today).count(),
     }
 
+    # Feeds for the dashboard
+    recent_activity = all_appointments.order_by('-updated_at')[:10]
+    pending_reviews = all_appointments.filter(status='pending').order_by('-created_at')[:10]
+    active_cases = all_appointments.filter(status='ongoing').order_by('-updated_at')[:10]
+
     return render(request, 'hms/health/manage_health.html', {
-        'pending_appointments': pending_appointments,
-        'my_appointments': assigned_appointments.filter(status='ongoing'),
-        'all_appointments': all_appointments.order_by('-created_at')[:50],
         'stats': stats,
+        'recent_activity': recent_activity,
+        'pending_reviews': pending_reviews,
+        'active_cases': active_cases,
+        'my_active': my_active,
         'staff_role': staff_role
     })
