@@ -61,6 +61,20 @@
         </a>
         {% endif %}
 
+        <!-- Staff invitation: Super Admin only -->
+        {% if user.is_superuser %}
+        <a href="{% url 'hms:generate_staff_link' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'generate_staff_link' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
+            <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+                </path>
+            </svg>
+            Staff Invitation
+        </a>
+        {% endif %}
+
         <!-- Students: EXECUTIVE, ACADEMIC_ADMIN, STUDENT_SERVICES -->
         {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
         {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' %}

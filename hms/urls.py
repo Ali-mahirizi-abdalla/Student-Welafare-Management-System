@@ -110,6 +110,8 @@ urlpatterns = [
     # RBAC / Role Management
     path('manage/roles/', views.manage_roles, name='manage_roles'),
     path('manage/roles/assign/<int:staff_id>/', views.assign_staff_role, name='assign_staff_role'),
+    path('manage/staff/generate-link/', views.generate_staff_link, name='generate_staff_link'),
+    path('register/staff/<str:token>/', views.register_staff_via_link, name='register_staff_via_link'),
 
     # Analytics Dashboard
     path('manage/analytics/', views.analytics_dashboard, name='analytics_dashboard'),

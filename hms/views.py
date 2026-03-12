@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-# Trigger reload
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.contrib.auth import login, logout
@@ -8,11 +7,12 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q
+from datetime import date, datetime, time, timedelta
 from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document, MaintenanceRequest,
                      Message, AuditLog,
                      LeaveRequest, DefermentRequest, Visitor, EmergencyAlert,
                      Room, RoomAssignment, RoomChangeRequest, Payment, Notification, LoginActivity, LostItem, StaffProfile,
-                     AdminSubscription, RegistrationPayment, TutoringPost, HealthAppointment)
+                     AdminSubscription, RegistrationPayment, TutoringPost, HealthAppointment, StaffRegistrationLink)
 from .decorators import (
     super_admin_required, welfare_officer_required,
     hostel_manager_required, kitchen_manager_required, security_required,
@@ -28,7 +28,6 @@ from .forms import (
     LeaveRequestForm, DefermentRequestForm, LeaveApprovalForm, VisitorForm, AnnouncementForm, LostItemForm,
     HealthAppointmentForm, HealthStaffUpdateForm
 )
-from datetime import date, datetime, time, timedelta
 from django.db import transaction, models
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
@@ -49,7 +48,8 @@ def register_student(request):
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             # Scheduled Activation Check
-            activation_date = timezone.datetime(2026, 5, 1, tzinfo=timezone.get_current_timezone())
+            activation_date = datetime(2026, 5, 1, tzinfo=timezone.get_current_timezone())
+
             if timezone.now() < activation_date:
                 # Bypass payment and create user immediately
                 try:
@@ -3242,5 +3242,101 @@ def assign_staff_role(request, staff_id):
     if new_role:
         staff.role = new_role
         staff.save()
-        messages.success(request, f"Role updated for {staff.user.get_full_name()} to {new_role}")
-    return redirect("hms:manage_roles")
+        messages.success(request, f"Role for {staff.user.get_full_name()} updated to {new_role}")
+    return redirect('hms:manage_roles')
+
+@login_required
+@super_admin_required
+def generate_staff_link(request):
+    """View to generate temporary staff registration links"""
+    links = StaffRegistrationLink.objects.filter(is_active=True).order_by('-created_at')
+    
+    if request.method == 'POST':
+        role = request.POST.get('role')
+        expiry_choice = request.POST.get('expiry')
+        max_uses_choice = request.POST.get('max_uses')
+        
+        # Expiry Logic
+        expires_at = None
+        if expiry_choice == '24h':
+            expires_at = timezone.now() + timedelta(hours=24)
+        elif expiry_choice == '7d':
+            expires_at = timezone.now() + timedelta(days=7)
+        elif expiry_choice == '30d':
+            expires_at = timezone.now() + timedelta(days=30)
+            
+        # Max Uses Logic
+        max_uses = 1
+        if max_uses_choice == '5':
+            max_uses = 5
+        elif max_uses_choice == 'unlimited':
+            max_uses = 0
+            
+        link = StaffRegistrationLink.objects.create(
+            role=role,
+            expires_at=expires_at,
+            max_uses=max_uses,
+            created_by=request.user
+        )
+        
+        # Use absolute URL or request.build_absolute_uri
+        full_link = request.build_absolute_uri(reverse('hms:register_staff_via_link', kwargs={'token': link.token}))
+        
+        return render(request, 'hms/admin/generate_link.html', {
+            'links': links,
+            'generated_link': full_link,
+            'link_obj': link,
+            'success': True
+        })
+        
+    return render(request, 'hms/admin/generate_link.html', {
+        'links': links,
+        'feature_roles': [
+            "Health Manager", "Maintenance Sup", "Warden", "Finance Officer", 
+            "Security Officer", "News Editor", "Auditor", "Emergency Coord", "Support Agent"
+        ]
+    })
+
+def register_staff_via_link(request, token):
+    """Public registration view using a secure token"""
+    link = get_object_or_404(StaffRegistrationLink, token=token)
+    
+    if not link.is_valid():
+        return render(request, 'hms/error.html', {
+            'title': 'Link Expired or Invalid',
+            'message': 'This registration link is no longer valid or has reached its maximum uses.'
+        })
+    
+    if request.method == 'POST':
+        form = StaffRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data.get('password')
+            user.set_password(password)
+            user.is_staff = True
+            user.save()
+            
+            # Create StaffProfile with pre-assigned role
+            StaffProfile.objects.create(
+                user=user,
+                role=link.role,
+                national_id=form.cleaned_data.get('national_id'),
+                phone=form.cleaned_data.get('phone')
+            )
+            
+            # Update link uses
+            link.current_uses += 1
+            if link.max_uses > 0 and link.current_uses >= link.max_uses:
+                link.is_active = False
+            link.save()
+            
+            messages.success(request, "Registration successful! You can now log in.")
+            return redirect('hms:login')
+    else:
+        # Pre-fill role (read-only in template)
+        form = StaffRegistrationForm(initial={'role': link.role})
+    
+    return render(request, 'hms/registration/staff_register_token.html', {
+        'form': form,
+        'link_role': link.role
+    })

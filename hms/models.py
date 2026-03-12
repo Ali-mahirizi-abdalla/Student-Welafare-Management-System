@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import date, datetime
 import json
+import secrets
 
 class AuditLog(models.Model):
     """
@@ -780,3 +781,29 @@ class HealthAppointment(models.Model):
 
     def __str__(self):
         return f"{self.get_service_type_display()} - {self.student.user.get_full_name()} ({self.preferred_date})"
+
+class StaffRegistrationLink(models.Model):
+    """
+    Temporary invitation links for staff members to register themselves
+    with a pre-assigned role.
+    """
+    token = models.CharField(max_length=64, unique=True, default=secrets.token_urlsafe)
+    role = models.CharField(max_length=50, choices=StaffProfile.ROLE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    max_uses = models.IntegerField(default=1) # 0 for unlimited
+    current_uses = models.IntegerField(default=0)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='generated_links')
+    is_active = models.BooleanField(default=True)
+
+    def is_valid(self):
+        if not self.is_active:
+            return False
+        if self.expires_at and timezone.now() > self.expires_at:
+            return False
+        if self.max_uses > 0 and self.current_uses >= self.max_uses:
+            return False
+        return True
+
+    def __str__(self):
+        return f"{self.role} link - {self.token[:8]}"
