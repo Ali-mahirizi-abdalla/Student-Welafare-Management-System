@@ -213,29 +213,71 @@ def register_staff(request):
     })
 
 
+def _get_role_redirect(user):
+    """Determine the correct dashboard redirect for a user based on groups and staff role"""
+    user_groups = list(user.groups.values_list('name', flat=True))
+
+    # 1. Super Admin / Superuser
+    if 'Super Admin' in user_groups or user.is_superuser:
+        return redirect('hms:super_admin_dashboard')
+
+    # 2. Group-based redirects (RBAC Groups)
+    group_redirects = {
+        'Medical Officer': 'hms:manage_health',
+        'Welfare Officer': 'hms:welfare_officer_dashboard',
+        'Hostel Manager': 'hms:hostel_manager_dashboard',
+        'Warden': 'hms:warden_dashboard',
+        'Kitchen Manager': 'hms:kitchen_manager_dashboard',
+        'Security': 'hms:security_dashboard',
+    }
+    for group, url_name in group_redirects.items():
+        if group in user_groups:
+            return redirect(url_name)
+
+    # 3. Staff profile role-based redirects (feature-based roles)
+    if hasattr(user, 'staff_profile'):
+        role = user.staff_profile.role
+        role_redirects = {
+            'Super Admin': 'hms:super_admin_dashboard',
+            'Health Manager': 'hms:manage_health',
+            'Medical Officer': 'hms:manage_health',
+            'Warden': 'hms:warden_dashboard',
+            'Welfare Officer': 'hms:welfare_officer_dashboard',
+            'Hostel Manager': 'hms:hostel_manager_dashboard',
+            'Kitchen Manager': 'hms:kitchen_manager_dashboard',
+            'Security': 'hms:security_dashboard',
+            'Security Officer': 'hms:security_dashboard',
+            'Maintenance Sup': 'hms:admin_dashboard',
+            'Finance Officer': 'hms:admin_dashboard',
+            'News Editor': 'hms:admin_dashboard',
+            'Auditor': 'hms:audit_logs',
+            'Emergency Coord': 'hms:admin_dashboard',
+            'Support Agent': 'hms:admin_dashboard',
+        }
+        if role in role_redirects:
+            return redirect(role_redirects[role])
+
+        # Health services category fallback
+        if user.staff_profile.get_category() == 'HEALTH_SERVICES':
+            return redirect('hms:manage_health')
+
+        # Any other staff -> admin dashboard
+        return redirect('hms:admin_dashboard')
+
+    # 4. Students
+    if hasattr(user, 'student_profile'):
+        return redirect('hms:student_dashboard')
+
+    # 5. Ultimate fallback
+    if user.is_staff:
+        return redirect('hms:admin_dashboard')
+    return redirect('hms:student_dashboard')
+
+
 def user_login(request):
-    """Login view for all users with role selection"""
+    """Login view for all users with role-based auto-redirect"""
     if request.user.is_authenticated:
-        user = request.user
-        user_groups = user.groups.values_list('name', flat=True)
-        if 'Super Admin' in user_groups or user.is_superuser:
-            return redirect('hms:super_admin_dashboard')
-        elif 'Medical Officer' in user_groups:
-            return redirect('hms:manage_health')
-        elif 'Welfare Officer' in user_groups:
-            return redirect('hms:welfare_officer_dashboard')
-        elif 'Hostel Manager' in user_groups:
-            return redirect('hms:hostel_manager_dashboard')
-        elif 'Kitchen Manager' in user_groups:
-            return redirect('hms:kitchen_manager_dashboard')
-        elif 'Security' in user_groups:
-            return redirect('hms:security_dashboard')
-        elif hasattr(user, 'student_profile'):
-            return redirect('hms:student_dashboard')
-        elif hasattr(user, 'staff_profile') and user.staff_profile.get_category() == 'HEALTH_SERVICES':
-            return redirect('hms:manage_health')
-        else:
-            return redirect('hms:admin_dashboard')
+        return _get_role_redirect(request.user)
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -243,31 +285,7 @@ def user_login(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f'Welcome back, {user.first_name}!')
-            
-            # Auto-redirect based on RBAC Group
-            user_groups = user.groups.values_list('name', flat=True)
-            
-            if 'Super Admin' in user_groups or user.is_superuser:
-                return redirect('hms:super_admin_dashboard')
-            elif 'Medical Officer' in user_groups:
-                return redirect('hms:manage_health')
-            elif 'Welfare Officer' in user_groups:
-                return redirect('hms:welfare_officer_dashboard')
-            elif 'Hostel Manager' in user_groups:
-                return redirect('hms:hostel_manager_dashboard')
-            elif 'Kitchen Manager' in user_groups:
-                return redirect('hms:kitchen_manager_dashboard')
-            elif 'Security' in user_groups:
-                return redirect('hms:security_dashboard')
-            elif hasattr(user, 'student_profile'):
-                return redirect('hms:student_dashboard')
-            elif hasattr(user, 'staff_profile') and user.staff_profile.get_category() == 'HEALTH_SERVICES':
-                return redirect('hms:manage_health')
-            else:
-                # Fallback for staff with undefined group or legacy admin
-                if user.is_staff:
-                    return redirect('hms:admin_dashboard')
-                return redirect('hms:student_dashboard')
+            return _get_role_redirect(user)
         else:
             messages.error(request, 'Invalid email or password.')
     else:
