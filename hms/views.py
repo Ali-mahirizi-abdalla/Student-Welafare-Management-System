@@ -2993,7 +2993,7 @@ def super_admin_dashboard(request):
         'total_rooms': Room.objects.count(),
         'occupied_rooms': Room.objects.filter(is_available=False).count(),
         'today_visitors': Visitor.objects.filter(check_in_time__date=today).count(),
-        'recent_logs': AuditLog.objects.order_by('-created_at')[:10],
+        'recent_logs': AuditLog.objects.order_by('-timestamp')[:10],
         'recent_students': Student.objects.select_related('user').order_by('-created_at')[:5],
         'recent_payments': Payment.objects.filter(status='Completed').order_by('-created_at')[:5],
     }
