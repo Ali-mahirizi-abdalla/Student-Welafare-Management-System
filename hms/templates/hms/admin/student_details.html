@@ -74,12 +74,8 @@
         <!-- Meal History Card -->
         <div class="col-md-8">
             <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header">
                     <h5 class="mb-0">Recent Meal History</h5>
-                    <a href="{% url 'hms:meal_history' %}?student_id={{ student.user.id }}"
-                        class="btn btn-sm btn-outline-primary">
-                        View All <i class="fas fa-arrow-right ms-1"></i>
-                    </a>
                 </div>
                 <div class="card-body">
                     {% if meal_history %}
@@ -163,7 +159,7 @@
                             {% if app.referral_to %}
                             <p class="mb-1 text-sm"><strong>Referral:</strong> {{ app.referral_to }}</p>
                             {% endif %}
-                            <a href="{% url 'hms:appointment_detail' app.id %}" class="btn btn-sm btn-link p-0 text-blue-600">View Details</a>
+                            <a href="{% url 'hms:health_appointment_detail' app.id %}" class="btn btn-sm btn-link p-0 text-blue-600">View Details</a>
                         </div>
                         {% endfor %}
                     </div>
