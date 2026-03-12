@@ -3379,7 +3379,7 @@ def revoke_staff_link(request, link_id):
 def warden_dashboard(request):
     """Accommodation and Deferment management dashboard for Warden"""
     total_beds = Room.objects.aggregate(models.Sum('capacity'))['capacity__sum'] or 0
-    occupied_beds = RoomAssignment.objects.filter(is_current=True).count()
+    occupied_beds = RoomAssignment.objects.filter(is_active=True).count()
     
     context = {
         'total_beds': total_beds,
