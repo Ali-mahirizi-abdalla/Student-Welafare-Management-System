@@ -57,9 +57,9 @@
         {% for visitor in active_visitors %}
         <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
           <div>
-            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ visitor.visitor_name }}</p>
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ visitor.name }}</p>
             <p class="text-xs text-gray-400">Visiting: {{ visitor.student.user.get_full_name }}</p>
-            <p class="text-xs text-gray-400">In since {{ visitor.checkin_time|timesince }} ago</p>
+            <p class="text-xs text-gray-400">In since {{ visitor.check_in_time|timesince }} ago</p>
           </div>
           <a href="{% url 'hms:checkout_visitor' visitor.id %}" class="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-200 transition-colors flex-shrink-0 ml-3">Check Out</a>
         </div>
@@ -79,15 +79,15 @@
         {% for visitor in recent_visitors %}
         <div class="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
           <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0
-            {% if visitor.checkout_time %}bg-green-100 dark:bg-green-900 text-green-700{% else %}bg-red-100 dark:bg-red-900 text-red-700{% endif %}">
-            {{ visitor.visitor_name|first|upper }}
+            {% if visitor.check_out_time %}bg-green-100 dark:bg-green-900 text-green-700{% else %}bg-red-100 dark:bg-red-900 text-red-700{% endif %}">
+            {{ visitor.name|first|upper }}
           </div>
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ visitor.visitor_name }}</p>
-            <p class="text-xs text-gray-400">{{ visitor.checkin_time|date:"d M Y, H:i" }}</p>
+            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ visitor.name }}</p>
+            <p class="text-xs text-gray-400">{{ visitor.check_in_time|date:"d M Y, H:i" }}</p>
           </div>
-          <span class="text-xs px-2 py-1 rounded-full {% if visitor.checkout_time %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
-            {% if visitor.checkout_time %}Out{% else %}In{% endif %}
+          <span class="text-xs px-2 py-1 rounded-full {% if visitor.check_out_time %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+            {% if visitor.check_out_time %}Out{% else %}In{% endif %}
           </span>
         </div>
         {% empty %}
