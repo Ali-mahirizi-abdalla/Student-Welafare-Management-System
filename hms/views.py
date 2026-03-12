@@ -3178,18 +3178,20 @@ def manage_health(request):
         assigned_appointments = HealthAppointment.objects.none()
         pending_appointments = HealthAppointment.objects.filter(status='pending')
 
+    today = date.today()
     all_appointments = HealthAppointment.objects.all()
     
     stats = {
         'pending': all_appointments.filter(status='pending').count(),
-        'today': all_appointments.filter(preferred_date=date.today()).count(),
-        'completed': all_appointments.filter(status='completed').count(),
+        'assigned_to_me': all_appointments.filter(assigned_staff=request.user, status='ongoing').count(),
+        'completed_today': all_appointments.filter(status='completed', updated_at__date=today).count(),
+        'total_all_time': all_appointments.count(),
     }
 
     return render(request, 'hms/health/manage_health.html', {
         'pending_appointments': pending_appointments,
-        'assigned_appointments': assigned_appointments,
-        'all_appointments': all_appointments[:50], # Recent 50
+        'my_appointments': assigned_appointments.filter(status='ongoing'),
+        'all_appointments': all_appointments.order_by('-created_at')[:50],
         'stats': stats,
         'staff_role': staff_role
     })
