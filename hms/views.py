@@ -3338,7 +3338,8 @@ def register_staff_via_link(request, token):
     
     return render(request, 'hms/registration/staff_register_token.html', {
         'form': form,
-        'link_role': link.role
+        'link_role': link.role,
+        'link': link
     })
 
 @login_required
