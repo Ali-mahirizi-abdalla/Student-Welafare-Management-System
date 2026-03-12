@@ -16,7 +16,7 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document
 from .decorators import (
     super_admin_required, welfare_officer_required,
     hostel_manager_required, kitchen_manager_required, security_required,
-    medical_officer_required
+    medical_officer_required, admin_only, role_required
 )
 from .utils.telegram import send_telegram_message
 
