@@ -16,7 +16,7 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement, Document
 from .decorators import (
     super_admin_required, welfare_officer_required,
     hostel_manager_required, kitchen_manager_required, security_required,
-    medical_officer_required, admin_only, role_required
+    medical_officer_required, admin_only, role_required, warden_required
 )
 from .utils.telegram import send_telegram_message
 
@@ -3354,3 +3354,22 @@ def revoke_staff_link(request, link_id):
     link.save()
     messages.warning(request, f"Registration link for {link.role} has been revoked.")
     return redirect('hms:generate_staff_link')
+
+@login_required
+@warden_required
+def warden_dashboard(request):
+    """Accommodation and Deferment management dashboard for Warden"""
+    total_beds = Room.objects.aggregate(models.Sum('capacity'))['capacity__sum'] or 0
+    occupied_beds = RoomAssignment.objects.filter(is_current=True).count()
+    
+    context = {
+        'total_beds': total_beds,
+        'occupied_beds': occupied_beds,
+        'free_beds': max(0, total_beds - occupied_beds),
+        'pending_deferments_count': DefermentRequest.objects.filter(status='pending').count(),
+        'pending_deferments': DefermentRequest.objects.filter(status='pending').select_related('student__user').order_by('-created_at')[:5],
+        'total_rooms': Room.objects.count(),
+        'available_rooms': Room.objects.filter(is_available=True).count(),
+        'pending_room_changes': RoomChangeRequest.objects.filter(status='pending').count(),
+    }
+    return render(request, 'hms/rbac/warden_dashboard.html', context)

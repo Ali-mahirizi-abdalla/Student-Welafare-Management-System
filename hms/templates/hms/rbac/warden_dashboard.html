@@ -1,0 +1,218 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Accommodation Management - Warden Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 md:px-8 bg-slate-50 dark:bg-slate-950">
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- 🏢 PREMIUM HEADER -->
+        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="bg-slate-900 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+                <!-- Abstract Background Elements -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500 rounded-full blur-[80px]"></div>
+                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-slate-500 rounded-full blur-[80px]"></div>
+                </div>
+
+                <div class="relative z-10 flex items-center gap-5">
+                    <div class="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white border border-white/20 shadow-2xl">
+                        <i class="fas fa-building text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-white tracking-widest uppercase">Warden</h1>
+                        <p class="text-indigo-400 text-xs font-bold tracking-[0.2em] uppercase mt-1">Accommodation Operations</p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 flex items-center gap-4 bg-white/5 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10">
+                    <div class="text-right hidden md:block">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Logged in as</p>
+                        <p class="text-white font-black">{{ request.user.first_name }}</p>
+                    </div>
+                    <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">
+                        {{ request.user.first_name|first }}
+                    </div>
+                    <i class="fas fa-chevron-down text-slate-500 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Banner Notice -->
+            <div class="bg-indigo-600 dark:bg-indigo-900/40 p-4 border-y border-indigo-500/20">
+                <p class="text-center text-xs md:text-sm font-bold text-white dark:text-indigo-200 tracking-wide">
+                    <i class="fas fa-key mr-2"></i>
+                    ROLE: ACCOMMODATION MANAGEMENT – ACCESS LIMITED TO HOUSING & DEFERMENTS
+                </p>
+            </div>
+
+            <div class="p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    
+                    <!-- LEFT COLUMN: AUTHORIZED MENU & NOTICE -->
+                    <div class="lg:col-span-5 space-y-10">
+                        <!-- Authorized Menu -->
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Authorized Access Menu</span>
+                                <div class="h-px bg-slate-100 dark:bg-slate-800 flex-1"></div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-3">
+                                <a href="{% url 'hms:warden_dashboard' %}" class="group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-500/30 transition-all">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">Accommodation Dashboard</span>
+                                    </div>
+                                    <i class="fas fa-check-circle text-emerald-500"></i>
+                                </a>
+
+                                <a href="{% url 'hms:admin_deferment_all' %}" class="group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-500/30 transition-all">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">Deferment Management</span>
+                                    </div>
+                                    <i class="fas fa-check-circle text-emerald-500"></i>
+                                </a>
+
+                                <a href="{% url 'hms:assign_room' %}" class="group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-500/30 transition-all">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                            <i class="fas fa-bed"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm">Bed Allocation</span>
+                                    </div>
+                                    <i class="fas fa-check-circle text-emerald-500"></i>
+                                </a>
+
+                                <!-- Restricted Items -->
+                                <div class="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/50 opacity-50">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-rose-100/50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center text-rose-500/50">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-400 line-through uppercase tracking-wider text-sm">Health Management</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/50 opacity-50">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-rose-100/50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center text-rose-500/50">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                        <span class="font-bold text-slate-400 line-through uppercase tracking-wider text-sm">Payments & Finance</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notice Box -->
+                        <div class="p-6 bg-slate-900 rounded-[2rem] border border-white/5 relative overflow-hidden group">
+                            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative z-10 space-y-3">
+                                <div class="flex items-center gap-2 text-rose-400">
+                                    <i class="fas fa-exclamation-triangle text-sm"></i>
+                                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Unauthorized Access Notice</span>
+                                </div>
+                                <p class="text-slate-400 text-xs leading-relaxed italic">
+                                    "You are logged in as **Warden**. Access is limited to accommodation and deferment features only. Automated logs track all housing modifications."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: ACCOMMODATION SUMMARY -->
+                    <div class="lg:col-span-7 space-y-10">
+                        
+                        <!-- Accommodation Summary -->
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Accommodation Summary</span>
+                                    <span class="px-2 py-0.5 bg-indigo-500/10 text-indigo-500 text-[10px] font-bold rounded-md">{{ total_beds }} Total Beds</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- Occupied -->
+                                <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Occupied</p>
+                                    <p class="text-3xl font-black text-slate-900 dark:text-white mt-2">{{ occupied_beds }}</p>
+                                    <div class="h-1 bg-slate-100 dark:bg-slate-800 rounded-full mt-4 overflow-hidden">
+                                        <div class="h-full bg-indigo-500" style="width: {% if total_beds > 0 %}{{ occupied_beds|divisibleby:total_beds }}%{% else %}0%{% endif %}"></div>
+                                    </div>
+                                </div>
+                                <!-- Free -->
+                                <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Free</p>
+                                    <p class="text-3xl font-black text-emerald-500 mt-2">{{ free_beds }}</p>
+                                    <div class="flex items-center gap-2 mt-4 text-[10px] font-bold text-emerald-500 uppercase">
+                                        <i class="fas fa-check"></i> Available
+                                    </div>
+                                </div>
+                                <!-- Pending Deferments -->
+                                <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Deferments Pending</p>
+                                    <p class="text-3xl font-black text-rose-500 mt-2">{{ pending_deferments_count }}</p>
+                                    <a href="{% url 'hms:admin_deferment_all' %}" class="mt-4 text-[10px] font-bold text-indigo-500 uppercase hover:underline">Review All</a>
+                                </div>
+                            </div>
+
+                            <!-- Recent Pending Deferments List -->
+                            <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden mt-6">
+                                <div class="p-5 border-b border-slate-50 dark:border-slate-700">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recent Pending Deferments</p>
+                                </div>
+                                <div class="divide-y divide-slate-50 dark:divide-slate-700">
+                                    {% for def in pending_deferments %}
+                                    <div class="p-5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-rose-100 dark:bg-rose-900/30 rounded-xl flex items-center justify-center text-rose-600 dark:text-rose-400 font-bold">
+                                                {{ def.student.user.first_name|first }}
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-slate-900 dark:text-white text-sm">{{ def.student.user.get_full_name }}</p>
+                                                <p class="text-[10px] text-slate-500 uppercase tracking-wide font-medium">{{ def.created_at|date:"d M, Y" }} — {{ def.student.registration_number }}</p>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'hms:review_deferment' def.pk %}" class="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold rounded-lg uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all">
+                                            Review
+                                        </a>
+                                    </div>
+                                    {% empty %}
+                                    <div class="p-12 text-center text-slate-400 italic text-sm">
+                                        No pending deferment requests.
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS BAR -->
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="{% url 'hms:room_list' %}" class="px-6 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-xl">
+                <i class="fas fa-door-open"></i> Manage All Rooms
+            </a>
+            <a href="{% url 'hms:room_assignments' %}" class="px-6 py-4 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-slate-50 flex items-center gap-3">
+                <i class="fas fa-list-ul"></i> Room Assignments
+            </a>
+            <a href="{% url 'hms:room_change_requests' %}" class="px-6 py-4 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-slate-50 flex items-center gap-3">
+                <i class="fas fa-exchange-alt"></i> Change Requests
+                {% if pending_room_changes > 0 %}
+                <span class="px-2 py-0.5 bg-rose-500 text-white text-[8px] rounded-full">{{ pending_room_changes }}</span>
+                {% endif %}
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
