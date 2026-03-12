@@ -2992,7 +2992,7 @@ def super_admin_dashboard(request):
         'active_announcements': Announcement.objects.filter(is_active=True).count(),
         'total_rooms': Room.objects.count(),
         'occupied_rooms': Room.objects.filter(is_available=False).count(),
-        'today_visitors': Visitor.objects.filter(checkin_time__date=today).count(),
+        'today_visitors': Visitor.objects.filter(check_in_time__date=today).count(),
         'recent_logs': AuditLog.objects.order_by('-created_at')[:10],
         'recent_students': Student.objects.select_related('user').order_by('-created_at')[:5],
         'recent_payments': Payment.objects.filter(status='Completed').order_by('-created_at')[:5],
@@ -3058,10 +3058,10 @@ def security_dashboard(request):
     """Visitor log and security management dashboard"""
     today = date.today()
     context = {
-        'active_visitors': Visitor.objects.filter(checkout_time__isnull=True).select_related('student__user').order_by('-checkin_time'),
-        'today_visitors_count': Visitor.objects.filter(checkin_time__date=today).count(),
-        'checked_out_today': Visitor.objects.filter(checkout_time__date=today).count(),
-        'recent_visitors': Visitor.objects.select_related('student__user').order_by('-checkin_time')[:10],
+        'active_visitors': Visitor.objects.filter(check_out_time__isnull=True).select_related('student__user').order_by('-check_in_time'),
+        'today_visitors_count': Visitor.objects.filter(check_in_time__date=today).count(),
+        'checked_out_today': Visitor.objects.filter(check_out_time__date=today).count(),
+        'recent_visitors': Visitor.objects.select_related('student__user').order_by('-check_in_time')[:10],
         'recent_alerts': EmergencyAlert.objects.order_by('-created_at')[:5],
     }
     return render(request, 'hms/rbac/security_dashboard.html', context)
