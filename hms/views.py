@@ -3310,19 +3310,12 @@ def register_staff_via_link(request, token):
     if request.method == 'POST':
         form = StaffRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            password = form.cleaned_data.get('password')
-            user.set_password(password)
-            user.is_staff = True
-            user.save()
+            # The form's save() method handles creating both the User and StaffProfile
+            staff_profile = form.save()
             
-            # Create StaffProfile with pre-assigned role
-            StaffProfile.objects.create(
-                user=user,
-                role=link.role,
-                national_id=form.cleaned_data.get('national_id'),
-                phone=form.cleaned_data.get('phone')
-            )
+            # Ensure the role from the link is applied (security measure)
+            staff_profile.role = link.role
+            staff_profile.save()
             
             # Update link uses
             link.current_uses += 1
