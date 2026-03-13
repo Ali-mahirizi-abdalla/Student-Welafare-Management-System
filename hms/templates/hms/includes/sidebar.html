@@ -33,8 +33,8 @@
         {% if user.is_staff or user.is_superuser %}
         <!-- ADMIN/STAFF LINKS -->
 
-        <!-- Dashboard: Everyone staff -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
+        <!-- Dashboard: Super Admin + admin-level roles ONLY (NOT Warden/Security/Health) -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Maintenance Sup' or user.staff_profile.role == 'Finance Officer' or user.staff_profile.role == 'News Editor' or user.staff_profile.role == 'Emergency Coord' or user.staff_profile.role == 'Support Agent' or user.staff_profile.role == 'Kitchen Manager' or user.staff_profile.role == 'Welfare Officer' or user.staff_profile.role == 'Hostel Manager' %}
         <a href="{% url 'hms:admin_dashboard' %}"
             class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'admin_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -47,7 +47,7 @@
         </a>
         {% endif %}
 
-        {% if user.staff_profile.role == 'Warden' %}
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Warden' or user.staff_profile.role == 'Hostel Manager' %}
         <a href="{% url 'hms:warden_dashboard' %}"
             class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'warden_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,9 +85,8 @@
         </a>
         {% endif %}
 
-        <!-- Students: EXECUTIVE, ACADEMIC_ADMIN, STUDENT_SERVICES -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' %}
+        <!-- Students: Super Admin + Welfare Officer + Hostel Manager -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Welfare Officer' or user.staff_profile.role == 'Hostel Manager' %}
         <a href="{% url 'hms:manage_students' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/students' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -99,11 +98,9 @@
             Students
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- Deferment: EXECUTIVE, ACADEMIC_ADMIN -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' %}
+        <!-- Deferment: Super Admin + Welfare Officer -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Welfare Officer' %}
         <a href="{% url 'hms:manage_leave_requests' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/deferment' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -114,11 +111,9 @@
             Deferment
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- Maintenance: EXECUTIVE, TECHNICAL_ESTATES, STUDENT_SERVICES -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' or staff_category_raw == 'STUDENT_SERVICES' %}
+        <!-- Maintenance: Super Admin + Maintenance Sup + Warden + Hostel Manager -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Maintenance Sup' or user.staff_profile.role == 'Warden' or user.staff_profile.role == 'Hostel Manager' %}
         <a href="{% url 'hms:manage_maintenance' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/maintenance' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -132,11 +127,9 @@
             Maintenance
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- Rooms: EXECUTIVE, TECHNICAL_ESTATES, STUDENT_SERVICES -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' or staff_category_raw == 'STUDENT_SERVICES' %}
+        <!-- Rooms: Super Admin + Warden + Hostel Manager + Maintenance Sup -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Warden' or user.staff_profile.role == 'Hostel Manager' or user.staff_profile.role == 'Maintenance Sup' %}
         <a href="{% url 'hms:room_list' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/rooms' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -148,11 +141,9 @@
             Rooms
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- Activities: EXECUTIVE, STUDENT_SERVICES -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'STUDENT_SERVICES' %}
+        <!-- Activities: Super Admin + Kitchen Manager + Hostel Manager -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Kitchen Manager' or user.staff_profile.role == 'Hostel Manager' %}
         <a href="{% url 'hms:activities' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/activities' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -163,11 +154,9 @@
             Activities
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- Visitors: EXECUTIVE, TECHNICAL_ESTATES, SECURITY -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'TECHNICAL_ESTATES' or staff_category_raw == 'SECURITY' %}
+        <!-- Visitors: Super Admin + Security Officer + Security -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Security Officer' or user.staff_profile.role == 'Security' %}
         <a href="{% url 'hms:visitor_management' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/visitors' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -179,11 +168,9 @@
             Visitors
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- News Alerts: EXECUTIVE, ACADEMIC_ADMIN, STUDENT_SERVICES, NEWS_MANAGEMENT -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' or staff_category_raw == 'NEWS_MANAGEMENT' %}
+        <!-- News Alerts: Super Admin + News Editor -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'News Editor' %}
         <a href="{% url 'hms:manage_announcements' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'announcements' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -194,7 +181,6 @@
             </svg>
             News Alerts
         </a>
-        {% endif %}
         {% endif %}
 
         <!-- Medical Navigation: HEALTH_SERVICES -->
@@ -240,9 +226,8 @@
         </a>
         {% endif %}
 
-        <!-- Payments: EXECUTIVE, FINANCE_ADMIN -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'FINANCE_ADMIN' %}
+        <!-- Payments: Super Admin + Finance Officer -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Finance Officer' %}
         <a href="{% url 'hms:manage_payments' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'manage/payments' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -254,11 +239,9 @@
             Payments
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- Audit Logs: EXECUTIVE, FINANCE_ADMIN, AUDIT -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'FINANCE_ADMIN' or staff_category_raw == 'AUDIT' %}
+        <!-- Audit Logs: Super Admin + Auditor + Finance Officer -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Auditor' or user.staff_profile.role == 'Finance Officer' %}
         <a href="{% url 'hms:audit_logs' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'audit-logs' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -270,11 +253,9 @@
             Audit Logs
         </a>
         {% endif %}
-        {% endif %}
 
-        <!-- Emergency Broadcast: EXECUTIVE, EMERGENCY -->
-        {% if user.is_superuser or user.staff_profile.role != 'Medical Officer' %}
-        {% if user.is_superuser or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'EMERGENCY' %}
+        <!-- Emergency Broadcast: Super Admin + Emergency Coord -->
+        {% if user.is_superuser or user.staff_profile.role == 'Super Admin' or user.staff_profile.role == 'Emergency Coord' %}
         <a href="{% url 'hms:emergency_broadcast' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'emergency-broadcast' in request.path %}bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800 shadow-lg text-red-600 dark:text-red-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -285,7 +266,6 @@
             </svg>
             Emergency Alert
         </a>
-        {% endif %}
         {% endif %}
 
         <!-- Staff Chat: EXECUTIVE, SUPPORT -->
