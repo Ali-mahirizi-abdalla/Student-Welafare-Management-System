@@ -1,0 +1,108 @@
+{% extends "hms/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg overflow-hidden animate__animated animate__fadeInUp" style="border-radius: 20px;">
+                <div class="card-header bg-warning py-3 text-center border-0">
+                    <h5 class="mb-0 text-dark fw-bold">
+                        <i class="fas fa-user-clock me-2"></i> ACCOUNT PENDING APPROVAL
+                        <span class="badge bg-dark ms-2">STAFF</span>
+                    </h5>
+                </div>
+                
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <i class="fas fa-check-circle text-success fa-4x mb-3 animate__animated animate__bounceIn animate__delay-1s"></i>
+                        </div>
+                        <h3 class="fw-bold">Registration Successful!</h3>
+                        <p class="text-muted">Thank you for joining our team, <strong>{{ staff.user.get_full_name }}</strong>.</p>
+                    </div>
+
+                    <div class="alert alert-soft-warning p-4 border-0 mb-4" style="background-color: rgba(255, 193, 7, 0.1); border-left: 5px solid #ffc107 !important;">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-hourglass-half text-warning fs-3 mt-1"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h5 class="fw-bold text-dark mb-2">YOUR ACCOUNT IS PENDING APPROVAL</h5>
+                                <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
+                                    Your account has been created but requires activation by the <strong>Super Administrator</strong> before you can access the system features.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <p class="mb-2"><i class="fas fa-envelope-open-text me-2 text-primary"></i> You will receive a notification once your account has been approved.</p>
+                        <p class="text-muted small"><i class="fas fa-clock me-1"></i> Estimated approval time: Within 24 hours</p>
+                    </div>
+
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                        <button type="button" class="btn btn-primary px-4 py-2 rounded-pill">
+                            <i class="fas fa-bell me-2"></i> Notify Me
+                        </button>
+                        <a href="mailto:admin@campus.edu" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                            <i class="fas fa-envelope me-2"></i> Contact Admin
+                        </a>
+                    </div>
+
+                    <div class="card bg-light border-0" style="border-radius: 15px;">
+                        <div class="card-body p-4">
+                            <h6 class="text-uppercase fw-bold text-muted small mb-3 ls-wide">Your Details</h6>
+                            <div class="row g-3">
+                                <div class="col-4 text-muted">Name:</div>
+                                <div class="col-8 fw-bold">{{ staff.user.get_full_name }}</div>
+                                
+                                <div class="col-4 text-muted">Email:</div>
+                                <div class="col-8 text-break">{{ staff.user.email }}</div>
+                                
+                                <div class="col-4 text-muted">Role:</div>
+                                <div class="col-8">
+                                    <span class="badge bg-primary-soft text-primary">{{ staff.get_role_display }}</span>
+                                    <small class="text-muted ms-1">(Pending)</small>
+                                </div>
+                                
+                                <div class="col-4 text-muted">Status:</div>
+                                <div class="col-8">
+                                    <span class="text-warning fw-bold">
+                                        <i class="fas fa-spinner fa-spin me-1 small"></i> Awaiting Admin Approval
+                                    </span>
+                                </div>
+                                
+                                <div class="col-4 text-muted">Registered:</div>
+                                <div class="col-8 small">{{ staff.created_at|date:"d F Y, H:i" }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <hr class="my-4 opacity-50">
+                        <a href="{% url 'hms:logout' %}" class="btn btn-link text-danger text-decoration-none">
+                            <i class="fas fa-sign-out-alt me-1"></i> Log Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(78, 115, 223, 0.3);
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
+    }
+    .ls-wide { letter-spacing: 0.1em; }
+    .bg-primary-soft { background-color: rgba(78, 115, 223, 0.1); }
+</style>
+{% endblock %}

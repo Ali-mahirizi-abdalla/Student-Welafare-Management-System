@@ -369,11 +369,12 @@ class StaffProfile(models.Model):
             return 'HEALTH_SERVICES'
         return 'GENERAL_STAFF'
 
+    is_approved = models.BooleanField(default=False, help_text="Awaiting Super Admin approval")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.get_role_display()}"
+        return f"{self.user.get_full_name()} - {self.get_role_display()} ({'Approved' if self.is_approved else 'Pending'})"
 
 
 class StaffPermission(models.Model):

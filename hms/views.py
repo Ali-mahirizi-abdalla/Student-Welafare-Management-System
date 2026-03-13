@@ -236,7 +236,13 @@ def _get_role_redirect(user):
 
     # 3. Staff profile role-based redirects (feature-based roles)
     if hasattr(user, 'staff_profile'):
-        role = user.staff_profile.role
+        staff = user.staff_profile
+        
+        # Approval Check: All staff must be approved by Super Admin
+        if not staff.is_approved:
+            return redirect('hms:account_pending')
+
+        role = staff.role
         role_redirects = {
             'Super Admin': 'hms:super_admin_dashboard',
             'Health Manager': 'hms:manage_health',
@@ -322,6 +328,27 @@ def user_logout(request):
 def terms_and_conditions(request):
     """Terms and Conditions page"""
     return render(request, 'hms/terms.html')
+
+def account_pending(request):
+    """View shown to staff awaiting admin approval"""
+    if not request.user.is_authenticated:
+        return redirect('hms:login')
+    
+    # If they are a student or an approved staff, don't show this
+    if hasattr(request.user, 'student_profile'):
+        return redirect('hms:student_dashboard')
+    
+    staff = getattr(request.user, 'staff_profile', None)
+    if staff and staff.is_approved:
+        return _get_role_redirect(request.user)
+    
+    if not staff and not request.user.is_superuser:
+        # Default fallback for users with no profile
+        return redirect('hms:home')
+
+    return render(request, 'hms/auth/pending_approval.html', {
+        'staff': staff
+    })
 
 @login_required
 def global_search(request):
@@ -3296,6 +3323,23 @@ def staff_detail(request, staff_id):
     return render(request, "hms/admin/staff_detail.html", {
         "staff": staff
     })
+
+@login_required
+@super_admin_required
+@require_POST
+def approve_staff(request, staff_id):
+    """Approve a staff member's account (Super Admin only)"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    if not staff.is_approved:
+        staff.is_approved = True
+        staff.save()
+        messages.success(request, f"Account for {staff.user.get_full_name()} has been approved.")
+        
+        # Optional: Send email notification here
+    else:
+        messages.info(request, f"{staff.user.get_full_name()} is already approved.")
+        
+    return redirect('hms:manage_roles')
 
 @login_required
 @super_admin_required

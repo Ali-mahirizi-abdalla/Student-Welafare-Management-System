@@ -45,6 +45,7 @@
                     <tr class="bg-slate-50 dark:bg-slate-800/50">
                         <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Staff Member</th>
                         <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Current Role</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Approval Status</th>
                         <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Assign New Feature Base Role</th>
                         <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
                     </tr>
@@ -64,9 +65,15 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-700">
-                                {{ staff.get_role_display }}
+                            {% if staff.is_approved %}
+                            <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-bold border border-emerald-200 dark:border-emerald-800">
+                                <i class="fas fa-check-circle me-1"></i> Approved
                             </span>
+                            {% else %}
+                            <span class="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full text-xs font-bold border border-amber-200 dark:border-amber-800">
+                                <i class="fas fa-clock me-1"></i> Pending
+                            </span>
+                            {% endif %}
                         </td>
                         <td class="px-6 py-4">
                             <form action="{% url 'hms:assign_staff_role' staff.id %}" method="POST" id="form-{{ staff.id }}" class="flex items-center gap-2">
@@ -80,7 +87,15 @@
                             </form>
                         </td>
                         <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <a href="{% url 'hms:staff_detail' staff.id %}" class="inline-flex items-center px-4 py-2 border border-slate-200 dark:border-slate-700 text-sm font-medium rounded-lg text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm">
+                            {% if not staff.is_approved %}
+                            <form action="{% url 'hms:approve_staff' staff.id %}" method="POST" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-bold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-sm">
+                                    <i class="fas fa-user-check me-2"></i> Approve
+                                </button>
+                            </form>
+                            {% endif %}
+                            <a href="{% url 'hms:staff_detail' staff.id %}" class="inline-flex items-center px-4 py-2 border border-slate-200 dark:border-slate-800 text-sm font-medium rounded-lg text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm">
                                 View Details
                             </a>
                             <a href="{% url 'hms:staff_permissions' staff.id %}" class="inline-flex items-center px-4 py-2 border border-amber-200 dark:border-amber-700 text-sm font-medium rounded-lg text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition shadow-sm">

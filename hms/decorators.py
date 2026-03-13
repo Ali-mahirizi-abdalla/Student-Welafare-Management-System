@@ -27,6 +27,11 @@ def role_required(allowed_roles=[]):
             # 3. Check StaffProfile role for secondary verification
             staff_profile = getattr(request.user, 'staff_profile', None)
             if staff_profile:
+                # NEW: Account Approval Check
+                if not staff_profile.is_approved:
+                    from django.shortcuts import redirect
+                    return redirect('hms:account_pending')
+
                 if staff_profile.role in allowed_roles:
                     return view_func(request, *args, **kwargs)
                 

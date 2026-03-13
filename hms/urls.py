@@ -12,6 +12,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('terms/', views.terms_and_conditions, name='terms'),
+    path('pending-approval/', views.account_pending, name='account_pending'),
     
     # Global Search
     path('search/', views.global_search, name='global_search'),
@@ -112,6 +113,7 @@ urlpatterns = [
     path('manage/warden/dashboard/', views.warden_dashboard, name='warden_dashboard'),
     path('manage/staff/<int:staff_id>/', views.staff_detail, name='staff_detail'),
     path('manage/roles/assign/<int:staff_id>/', views.assign_staff_role, name='assign_staff_role'),
+    path('manage/roles/approve/<int:staff_id>/', views.approve_staff, name='approve_staff'),
     path('manage/staff/<int:staff_id>/permissions/', views.staff_permissions, name='staff_permissions'),
     path('manage/staff/generate-link/', views.generate_staff_link, name='generate_staff_link'),
     path('manage/staff/revoke-link/<int:link_id>/', views.revoke_staff_link, name='revoke_staff_link'),
