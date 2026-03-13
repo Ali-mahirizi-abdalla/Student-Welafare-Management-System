@@ -114,6 +114,7 @@ urlpatterns = [
     path('manage/staff/<int:staff_id>/', views.staff_detail, name='staff_detail'),
     path('manage/roles/assign/<int:staff_id>/', views.assign_staff_role, name='assign_staff_role'),
     path('manage/roles/approve/<int:staff_id>/', views.approve_staff, name='approve_staff'),
+    path('manage/roles/delete/<int:staff_id>/', views.delete_staff, name='delete_staff'),
     path('manage/staff/<int:staff_id>/permissions/', views.staff_permissions, name='staff_permissions'),
     path('manage/staff/generate-link/', views.generate_staff_link, name='generate_staff_link'),
     path('manage/staff/revoke-link/<int:link_id>/', views.revoke_staff_link, name='revoke_staff_link'),

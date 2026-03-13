@@ -3371,6 +3371,22 @@ CampusCare Administration
 
 @login_required
 @super_admin_required
+@require_POST
+def delete_staff(request, staff_id):
+    """Delete a staff member from the system completely (Super Admin only)"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    user = staff.user
+    staff_name = user.get_full_name() or user.username
+    # Prevent deleting yourself
+    if user == request.user:
+        messages.error(request, "You cannot delete your own account.")
+        return redirect('hms:manage_roles')
+    user.delete()  # Cascades to delete StaffProfile too
+    messages.success(request, f"Staff member '{staff_name}' has been permanently deleted.")
+    return redirect('hms:manage_roles')
+
+@login_required
+@super_admin_required
 def generate_staff_link(request):
     """View to generate temporary staff registration links"""
     links = StaffRegistrationLink.objects.all().order_by('-created_at')
