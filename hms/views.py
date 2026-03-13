@@ -3335,7 +3335,35 @@ def approve_staff(request, staff_id):
         staff.save()
         messages.success(request, f"Account for {staff.user.get_full_name()} has been approved.")
         
-        # Optional: Send email notification here
+        # Send email notification
+        from django.core.mail import send_mail
+        from django.conf import settings
+        
+        subject = 'CampusCare Account Approved'
+        message = f"""
+Hello {staff.user.get_full_name()},
+
+Great news! Your staff account for the CampusCare Student Welfare Management System has been approved by the administrator.
+
+You can now log in to the system using your credentials and access your assigned role dashboard: {staff.get_role_display()}.
+
+Login here: {request.build_absolute_uri('/')}
+
+Welcome to the team!
+
+Best regards,
+CampusCare Administration
+        """
+        try:
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [staff.user.email],
+                fail_silently=True,
+            )
+        except Exception:
+            pass # We don't want to crash the approval if email fails
     else:
         messages.info(request, f"{staff.user.get_full_name()} is already approved.")
         
