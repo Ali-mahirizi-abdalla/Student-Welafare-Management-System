@@ -88,6 +88,15 @@ def role_required(allowed_roles=[]):
                     # If Permission record doesn't exist, just fall through
                     pass
             
+            # Fallback Redirect Logic: Keep users in their designated areas
+            if hasattr(request.user, 'staff_profile'):
+                from .views import _get_role_redirect
+                return _get_role_redirect(request.user)
+            
+            if hasattr(request.user, 'student_profile'):
+                from django.shortcuts import redirect
+                return redirect('hms:student_dashboard')
+
             raise PermissionDenied(f"Access restricted to: {', '.join(allowed_roles)}")
             
         return _wrapped_view
@@ -145,12 +154,25 @@ def medical_officer_required(view_func):
     return role_required(allowed_roles=['Health Manager', 'Medical Officer', 'HEALTH_ADMIN', 'CAMPUS_NURSE', 'CAMPUS_DOCTOR', 'CAMPUS_COUNSELOR', 'Super Admin'])(view_func)
 
 def student_required(view_func):
-    def check_student(user):
-        return hasattr(user, 'student_profile') or user.is_superuser
-    return user_passes_test(check_student)(view_func)
+    """Restrict access to students only"""
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            from django.contrib.auth.views import redirect_to_login
+            return redirect_to_login(request.get_full_path(), login_url='hms:login')
+        
+        if hasattr(request.user, 'student_profile') or request.user.is_superuser:
+            return view_func(request, *args, **kwargs)
+        
+        # If staff tries to access student area, redirect to staff dashboard
+        if hasattr(request.user, 'staff_profile'):
+            from .views import _get_role_redirect
+            return _get_role_redirect(request.user)
+            
+        from django.shortcuts import redirect
+        return redirect('hms:home')
+    return _wrapped_view
 
 def staff_only(view_func):
     """Any staff member (non-student)"""
-    def check_staff(user):
-        return user.is_staff or hasattr(user, 'staff_profile') or user.is_superuser
-    return user_passes_test(check_staff)(view_func)
+    return role_required(allowed_roles=[])(view_func)
