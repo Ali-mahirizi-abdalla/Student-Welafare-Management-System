@@ -103,12 +103,36 @@ def role_required(allowed_roles=[]):
     return decorator
 
 def super_admin_required(view_func):
-    return role_required(allowed_roles=['Super Admin'])(view_func)
+    """STRICT Super Admin Check - completely ignores generic 'can_admin' permissions"""
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            from django.contrib.auth.views import redirect_to_login
+            return redirect_to_login(request.get_full_path(), login_url='hms:login')
+        
+        # 1. System superuser always bypasses
+        if request.user.is_superuser:
+            return view_func(request, *args, **kwargs)
+
+        # 2. Check if user is explicitly in the 'Super Admin' group
+        user_groups = set(request.user.groups.values_list('name', flat=True))
+        if 'Super Admin' in user_groups:
+            return view_func(request, *args, **kwargs)
+        
+        # 3. Check StaffProfile for STRICT 'Super Admin' role
+        staff_profile = getattr(request.user, 'staff_profile', None)
+        if staff_profile and staff_profile.role == 'Super Admin':
+            return view_func(request, *args, **kwargs)
+            
+        # If none of the strict checks pass, block completely. No 'can_admin' fallback.
+        raise PermissionDenied("Access restricted to Super Admins only.")
+    
+    return _wrapped_view
 
 # Backward-compatible alias - used in existing views
 def admin_only(view_func):
     """Strictly for Super Admin or system superusers"""
-    return role_required(allowed_roles=['Super Admin'])(view_func)
+    return super_admin_required(view_func)
 
 def health_manager_required(view_func):
     return role_required(allowed_roles=['Health Manager', 'Super Admin'])(view_func)
