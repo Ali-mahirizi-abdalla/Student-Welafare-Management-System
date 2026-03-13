@@ -986,7 +986,7 @@ def export_students_csv(request):
 
 
 @login_required
-@role_required(allowed_roles=['Super Admin'])
+@role_required(allowed_roles=['Super Admin', 'Auditor', 'AUDIT_LOGS'])
 def manage_payments(request):
     """Admin view to manage/view all payments"""
     from django.db import models
@@ -2670,7 +2670,7 @@ def global_search(request):
 # ==================== Audit Logs ====================
 
 @login_required
-@role_required(allowed_roles=['Super Admin'])
+@role_required(allowed_roles=['Super Admin', 'Auditor', 'AUDIT_LOGS'])
 def audit_log_list(request):
     """
     Admin/Finance view for Audit Logs.
@@ -2720,7 +2720,7 @@ def audit_log_list(request):
     return render(request, 'hms/admin/audit_logs.html', context)
 
 @login_required
-@role_required(['Admin', 'Finance', 'MAINTENANCE_HOSTEL'])
+@role_required(['Admin', 'Finance', 'MAINTENANCE_HOSTEL', 'Auditor', 'AUDIT_LOGS'])
 def audit_log_export(request):
     """
     Export Audit Logs to CSV based on current filters.
