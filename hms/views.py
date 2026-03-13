@@ -288,9 +288,11 @@ def _get_role_redirect(user):
     if hasattr(user, 'student_profile'):
         return redirect('hms:student_dashboard')
 
-    # 5. Ultimate fallback
+    # 5. Ultimate fallback - if is_staff is True but no profile, send to admin
     if user.is_staff:
         return redirect('hms:admin_dashboard')
+    
+    # If not staff and no student profile, they might need to register or we send to student dashboard (which auto-creates)
     return redirect('hms:student_dashboard')
 
 
@@ -385,20 +387,18 @@ def global_search(request):
 def student_dashboard(request):
     """
     Main dashboard for students.
-    Displays:
-    - Meal status for today/tomorrow
-    - Daily announcements
-    - Activities
-    - Quick actions (Away mode, etc.)
+    Strictly restricted to non-staff users.
     """
+    # 1. Enforce Role Isolation: Staff redirected to their dashboard
+    if request.user.is_staff or request.user.is_superuser:
+        return _get_role_redirect(request.user)
+
     try:
         student = request.user.student_profile
     except Student.DoesNotExist:
-        if request.user.is_staff:
-            return redirect('hms:admin_dashboard')
-        # Auto-create profile
+        # Auto-create profile for students (non-staff)
         student = Student.objects.create(user=request.user, university_id=None)
-        messages.warning(request, "Profile was missing and has been created.")
+        messages.warning(request, "Your student profile has been initialized.")
         
     today = date.today()
     tomorrow = today + timedelta(days=1)
@@ -672,6 +672,7 @@ def toggle_early_breakfast(request):
 @login_required
 @role_required(allowed_roles=[
     'Super Admin', 'Welfare Officer', 'Hostel Manager', 'Kitchen Manager', 'Security',
+    'Maintenance Sup', 'Finance Officer', 'News Editor', 'Emergency Coord', 'Support Agent',
     'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'
 ])
 def dashboard_admin(request):

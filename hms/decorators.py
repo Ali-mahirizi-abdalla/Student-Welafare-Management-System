@@ -40,22 +40,35 @@ def role_required(allowed_roles=[]):
                         'Health Manager': 'can_health_management',
                         'Medical Officer': 'can_health_management',
                         'HEALTH_ADMIN': 'can_health_management',
+                        'CAMPUS_NURSE': 'can_health_management',
+                        'CAMPUS_DOCTOR': 'can_health_management',
+                        'CAMPUS_COUNSELOR': 'can_health_management',
+                        
                         'Warden': 'can_accommodation',
                         'Welfare Officer': 'can_accommodation',
                         'Hostel Manager': 'can_accommodation',
-                        'MAINTENANCE_HOSTEL': 'can_accommodation', # Legacy
+                        'DEFERMENT': 'can_accommodation',
+                        'MAINTENANCE_HOSTEL': 'can_accommodation',
+                        'ACTIVITIES_ROOMS': 'can_accommodation',
+                        
                         'Kitchen Manager': 'can_dining',
                         'Maintenance Sup': 'can_maintenance',
                         'MAINTENANCE_HEAD': 'can_maintenance',
+                        
                         'Security Officer': 'can_visitors',
                         'Security': 'can_visitors',
                         'VISITORS': 'can_visitors',
+                        
                         'News Editor': 'can_news',
                         'NEWS_ALERT': 'can_news',
+                        
                         'Finance Officer': 'can_payments',
                         'FINANCE_OFFICER': 'can_payments',
+                        'Finance': 'can_payments',
+                        
                         'Auditor': 'can_audit',
                         'AUDIT_LOGS': 'can_audit',
+                        
                         'Emergency Coord': 'can_emergency',
                         'Support Agent': 'can_chat',
                         'Super Admin': 'can_admin',
