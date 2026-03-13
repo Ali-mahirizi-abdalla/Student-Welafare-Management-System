@@ -253,6 +253,13 @@ def _get_role_redirect(user):
             'Auditor': 'hms:audit_logs',
             'Emergency Coord': 'hms:admin_dashboard',
             'Support Agent': 'hms:admin_dashboard',
+            # Legacy Roles
+            'DEFERMENT': 'hms:welfare_officer_dashboard',
+            'MAINTENANCE_HOSTEL': 'hms:hostel_manager_dashboard',
+            'ACTIVITIES_ROOMS': 'hms:hostel_manager_dashboard',
+            'NEWS_ALERT': 'hms:admin_dashboard',
+            'VISITORS': 'hms:security_dashboard',
+            'AUDIT_LOGS': 'hms:audit_logs',
         }
         if role in role_redirects:
             return redirect(role_redirects[role])
@@ -260,6 +267,19 @@ def _get_role_redirect(user):
         # Health services category fallback
         if user.staff_profile.get_category() == 'HEALTH_SERVICES':
             return redirect('hms:manage_health')
+
+        # Custom Permission-based landing
+        try:
+            perms = user.staff_profile.permissions
+            if perms.can_admin: return redirect('hms:super_admin_dashboard')
+            if perms.can_health_management: return redirect('hms:manage_health')
+            if perms.can_accommodation: return redirect('hms:warden_dashboard')
+            if perms.can_dining: return redirect('hms:kitchen_manager_dashboard')
+            if perms.can_visitors: return redirect('hms:security_dashboard')
+            if perms.can_news: return redirect('hms:admin_dashboard')
+            if perms.can_audit: return redirect('hms:audit_logs')
+        except Exception:
+            pass
 
         # Any other staff -> admin dashboard
         return redirect('hms:admin_dashboard')
@@ -650,7 +670,10 @@ def toggle_early_breakfast(request):
 # ==================== Admin/Kitchen ====================
 
 @login_required
-@role_required(allowed_roles=['Super Admin', 'Welfare Officer', 'Hostel Manager', 'Kitchen Manager', 'Security'])
+@role_required(allowed_roles=[
+    'Super Admin', 'Welfare Officer', 'Hostel Manager', 'Kitchen Manager', 'Security',
+    'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'
+])
 def dashboard_admin(request):
     """Kitchen/Admin Dashboard"""
     # Auto-redirect for student attempting to access admin url handled by decorator (or 403)
