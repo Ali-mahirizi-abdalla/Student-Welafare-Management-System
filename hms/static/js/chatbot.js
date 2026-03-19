@@ -34,7 +34,7 @@ class WelfareChatbot {
     render() {
         const chatbotHTML = `
             <!-- Chatbot Container -->
-            <div id="welfare-chatbot" class="fixed bottom-6 right-6 z-50">
+            <div id="welfare-chatbot" class="fixed bottom-6 left-6 z-[70]">
                 <!-- Floating Button (Minimized State) -->
                 <button id="chatbot-toggle" 
                         class="group relative w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-110 flex items-center justify-center"
@@ -52,7 +52,7 @@ class WelfareChatbot {
                 
                 <!-- Chat Window (Expanded State) -->
                 <div id="chatbot-window" 
-                     class="hidden absolute bottom-20 right-0 w-96 h-[600px] bg-white dark:bg-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700 transition-all duration-300">
+                     class="hidden absolute bottom-20 left-0 w-96 h-[600px] bg-white dark:bg-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700 transition-all duration-300">
                     
                     <!-- Header -->
                     <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex items-center justify-between">
