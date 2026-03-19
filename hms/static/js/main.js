@@ -1,5 +1,5 @@
 /**
- * Smart Hostel Management System
+ * CampusCare SWMS
  * Premium Interactive JavaScript with 3D Effects & Glowing UI
  */
 

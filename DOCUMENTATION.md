@@ -1,11 +1,11 @@
-# Student Welfare Management System (HMS) Documentation
+# CampusCare Student Welfare Management System (SWMS) Documentation
 
 **Author:** Ali Mahirizi Abdalla  
 **Project:** Student Welfare Management System  
 **Version:** 2.0  
 
 ## 1. Introduction
-The **Hostel Management System (HMS)** is a robust, web-based application designed to digitize and streamline the day-to-day operations of managing a student hostel. It provides a seamless interface for both students and administrators to handle accommodation, meals, maintenance, and communication.
+The **CampusCare Student Welfare Management System (SWMS)** is a robust, web-based application designed to digitize and streamline the day-to-day operations of managing student welfare. It provides a seamless interface for both students and administrators to handle accommodation, meals, maintenance, and communication.
 
 ## 2. Technology Stack
 - **Backend Framework:** Django (Python)
@@ -69,7 +69,7 @@ The **Hostel Management System (HMS)** is a robust, web-based application design
 1.  **Clone the Repository**
     ```bash
     git clone <repository-url>
-    cd Hostel-Management-System-HMS-
+    cd CampusCare-SWMS-
     ```
 
 2.  **Create a Virtual Environment**
@@ -111,7 +111,7 @@ The **Hostel Management System (HMS)** is a robust, web-based application design
 - `hms/`: Main application directory.
     - `models.py`: Database schema definitions.
     - `views.py`: Application logic and request handling.
-    - `urls.py`: URL routing specific to the HMS app.
+    - `urls.py`: URL routing specific to the CampusCare app.
     - `forms.py`: Django forms for input validation.
     - `templates/`: HTML templates (organized by student/admin sections).
     - `static/`: CSS (Tailwind config), Images, and JS files.
