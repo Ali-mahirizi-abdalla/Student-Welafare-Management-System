@@ -713,6 +713,127 @@
             </svg>
         </button>
     </div>
+    <!-- Global Settings Modal -->
+    <div id="global-settings-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-0 transition-opacity duration-300 opacity-0 bg-slate-900/40 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300" id="settings-panel">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0..."></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    System Settings
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-6">
+                <!-- Dark Mode Toggle -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-800 dark:text-white">Dark Mode</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Toggle dark appearance</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="setting-dark-mode" class="sr-only peer" onchange="toggleDarkMode(this.checked)">
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                    </label>
+                </div>
+                <!-- Reduce Motion Toggle -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-800 dark:text-white">Reduce Motion</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Disable UI animations</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="setting-reduce-motion" class="sr-only peer" onchange="toggleReduceMotion(this.checked)">
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                    </label>
+                </div>
+                <hr class="border-slate-100 dark:border-slate-700">
+                <!-- Clear Cache -->
+                <button onclick="clearAppCache()" class="w-full py-2.5 px-4 bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/20 dark:hover:bg-rose-900/40 dark:text-rose-400 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Clear Local Cache & Reload
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        body.reduce-motion * {
+            transition: none !important;
+            animation: none !important;
+            scroll-behavior: auto !important;
+        }
+    </style>
+
+    <script>
+        const modal = document.getElementById('global-settings-modal');
+        const panel = document.getElementById('settings-panel');
+        const darkModeToggle = document.getElementById('setting-dark-mode');
+        const reduceMotionToggle = document.getElementById('setting-reduce-motion');
+
+        function openSettingsModal() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Sync states from localStorage / DOM
+            darkModeToggle.checked = document.documentElement.classList.contains('dark') || localStorage.theme === 'dark';
+            reduceMotionToggle.checked = document.body.classList.contains('reduce-motion') || localStorage.reduceMotion === 'true';
+
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                panel.classList.remove('scale-95');
+                panel.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSettingsModal() {
+            modal.classList.add('opacity-0');
+            panel.classList.remove('scale-100');
+            panel.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function toggleDarkMode(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            }
+        }
+
+        function toggleReduceMotion(reduce) {
+            if (reduce) {
+                document.body.classList.add('reduce-motion');
+                localStorage.reduceMotion = 'true';
+            } else {
+                document.body.classList.remove('reduce-motion');
+                localStorage.reduceMotion = 'false';
+            }
+        }
+
+        function clearAppCache() {
+            if (confirm("Are you sure you want to clear local cache? This deletes recent searches, chatbot history, and resets visual preferences.")) {
+                localStorage.clear();
+                window.location.reload();
+            }
+        }
+
+        // Initialize Settings on load
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        if (localStorage.reduceMotion === 'true') {
+            document.body.classList.add('reduce-motion');
+        }
+    </script>
 </body>
 
 </html>
