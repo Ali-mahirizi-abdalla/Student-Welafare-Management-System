@@ -678,8 +678,8 @@
 
     {% block extra_js %}{% endblock %}
 
-    <!-- AI Chatbot Widget -->
-    <script src="{% static 'js/chatbot.js' %}"></script>
+    <!-- AI Chatbot Widget Removed -->
+
 
     <!-- FAB (Floating Action Button) -->
     <div class="fixed bottom-6 right-6 z-[60] flex flex-col items-end group">
@@ -818,7 +818,7 @@
         }
 
         function clearAppCache() {
-            if (confirm("Are you sure you want to clear local cache? This deletes recent searches, chatbot history, and resets visual preferences.")) {
+            if (confirm("Are you sure you want to clear local cache? This deletes recent searches and resets visual preferences.")) {
                 localStorage.clear();
                 window.location.reload();
             }
