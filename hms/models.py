@@ -180,6 +180,9 @@ class MaintenanceRequest(models.Model):
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     image = models.ImageField(upload_to='maintenance_images/', blank=True, null=True)
+    assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_maintenance', help_text="Technician assigned to this task")
+    completion_photo = models.ImageField(upload_to='maintenance_completion/', blank=True, null=True)
+    completion_notes = models.TextField(blank=True, help_text="Notes from the technician on completion", default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     resolved_at = models.DateTimeField(null=True, blank=True)
@@ -187,6 +190,93 @@ class MaintenanceRequest(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+class Supplier(models.Model):
+    """Suppliers for maintenance inventory"""
+    name = models.CharField(max_length=200)
+    contact_person = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField(blank=True)
+    address = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+class InventoryItem(models.Model):
+    """Maintenance inventory tracking"""
+    name = models.CharField(max_length=200)
+    category = models.CharField(max_length=50, choices=[
+        ('plumbing', 'Plumbing'),
+        ('electrical', 'Electrical'),
+        ('carpentry', 'Carpentry'),
+        ('general', 'General'),
+        ('hvac', 'HVAC'),
+    ], default='general')
+    stock_level = models.PositiveIntegerField(default=0)
+    reorder_level = models.PositiveIntegerField(default=5)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, related_name='items')
+    last_restocked = models.DateTimeField(auto_now=True)
+
+    @property
+    def is_low_stock(self):
+        return self.stock_level <= self.reorder_level
+
+    @property
+    def stock_percentage(self):
+        if self.stock_level == 0: return 0
+        target = self.reorder_level * 4 # Max stock target
+        return min(100, int((self.stock_level / target) * 100)) if target > 0 else 100
+
+    def __str__(self):
+        return f"{self.name} ({self.stock_level} in stock)"
+
+class MaintenancePartUsage(models.Model):
+    """Track inventory parts used per maintenance request"""
+    maintenance_request = models.ForeignKey(MaintenanceRequest, on_delete=models.CASCADE, related_name='parts_used')
+    inventory_item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    used_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Automatically deduct from inventory when part usage is recorded
+        if not self.pk: # New usage record
+             self.inventory_item.stock_level -= self.quantity
+             self.inventory_item.save()
+        super().save(*args, **kwargs)
+
+class Equipment(models.Model):
+    """Campus equipment tracking for preventive maintenance"""
+    name = models.CharField(max_length=200)
+    category = models.CharField(max_length=50, blank=True)
+    location = models.CharField(max_length=100)
+    purchase_date = models.DateField(null=True, blank=True)
+    last_inspection_date = models.DateField(null=True, blank=True)
+    condition = models.CharField(max_length=20, choices=[
+        ('excellent', 'Excellent'),
+        ('good', 'Good'),
+        ('fair', 'Fair'),
+        ('poor', 'Poor'),
+        ('replacement_needed', 'Replacement Needed'),
+    ], default='good')
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.location}"
+
+class RecurringMaintenanceTask(models.Model):
+    """Preventive maintenance schedule"""
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name='recurring_tasks', null=True, blank=True)
+    frequency_days = models.PositiveIntegerField(default=30, help_text="Frequency in days (e.g., 30 for monthly)")
+    last_run = models.DateField(null=True, blank=True)
+    next_due = models.DateField()
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
 
 
 class StaffProfile(models.Model):

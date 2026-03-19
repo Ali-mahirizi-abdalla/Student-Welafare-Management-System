@@ -1,115 +1,531 @@
 {% extends 'hms/base.html' %}
+{% load static %}
 
-{% block title %}Manage Maintenance{% endblock %}
+{% block title %}Maintenance Commander | HMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kpi-card-glass {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.2);
+        border-radius: 10px;
+    }
+    .grid-map {
+        background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.05) 1px, transparent 0);
+        background-size: 24px 24px;
+    }
+    @keyframes pulse-red {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+    }
+    .urgent-pulse {
+        animation: pulse-red 2s infinite;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
-            Maintenance Management
-        </h1>
-        <p class="text-slate-500 text-sm mt-1">Oversee and resolve reported facilities issues.</p>
-    </div>
-
-    <!-- Maintenance Cards -->
-    <div class="grid gap-4">
-        {% for req in requests %}
-        <div
-            class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
-            <!-- Priority Strip -->
-            <div
-                class="absolute left-0 top-0 bottom-0 w-1.5 
-                {% if req.priority == 'low' %}bg-emerald-500{% elif req.priority == 'medium' %}bg-amber-500{% elif req.priority == 'high' %}bg-orange-500{% else %}bg-rose-500{% endif %}">
+<div class="max-w-7xl mx-auto px-4 py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <!-- 🏗️ COMMAND HEADER -->
+    <header class="relative overflow-hidden bg-slate-900 rounded-3xl p-8 mb-8 text-white shadow-2xl">
+        <div class="absolute top-0 right-0 p-12 -mr-16 -mt-16 bg-indigo-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 p-12 -ml-16 -mb-16 bg-blue-500/10 rounded-full blur-2xl"></div>
+        
+        <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                    <span class="p-2 bg-indigo-500/20 rounded-xl text-indigo-400">
+                        <i class="fas fa-tools text-xl"></i>
+                    </span>
+                    <h1 class="text-3xl font-black tracking-tight">Facilities Command Center</h1>
+                </div>
+                <p class="text-slate-400 font-medium">"Track, Assign, Resolve – Keeping the Campus Running Smoothly"</p>
             </div>
+            
+            <div class="flex items-center gap-4 bg-white/5 p-3 rounded-2xl border border-white/10 backdrop-blur-sm">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-xl font-bold">
+                    {{ request.user.first_name|first|default:"J" }}{{ request.user.last_name|first|default:"M" }}
+                </div>
+                <div>
+                    <div class="text-sm font-bold">{{ request.user.get_full_name|default:request.user.username }}</div>
+                    <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-black">Maintenance Supervisor</div>
+                </div>
+                <button class="ml-4 p-2 hover:bg-white/10 rounded-lg transition-colors">
+                    <i class="fas fa-chevron-down text-slate-400"></i>
+                </button>
+            </div>
+        </div>
+    </header>
 
-            <div class="p-5 flex flex-col lg:flex-row gap-6">
-                <!-- Main Content Section -->
-                <div class="flex-1 space-y-4 min-w-0">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div class="min-w-0">
-                            <h3 class="text-lg font-bold text-slate-900 truncate">{{ req.title }}</h3>
-                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
-                                <span class="text-sm font-medium text-indigo-600">
-                                    {{ req.student.user.get_full_name|default:req.student.user.username }}
-                                </span>
-                                <span class="text-slate-300">•</span>
-                                <span class="text-xs text-slate-500">
-                                    {{ req.created_at|date:"M d, Y • H:i" }}
-                                </span>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- 🚥 MAIN DASHBOARD (Left 8 Columns) -->
+        <main class="lg:col-span-8 space-y-8">
+            
+            <!-- 📊 STATUS CARDS -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                        <i class="fas fa-chart-pie text-indigo-500"></i>
+                        Status Overview
+                    </h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Open -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-amber-50 rounded-bl-3xl -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        <div class="relative">
+                            <i class="fas fa-clock text-amber-500 text-xl mb-3"></i>
+                            <div class="text-3xl font-black text-slate-900">{{ stats.pending|default:0 }}</div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Open Requests</div>
+                        </div>
+                    </div>
+                    <!-- In Progress -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-3xl -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        <div class="relative">
+                            <i class="fas fa-spinner text-blue-500 text-xl mb-3"></i>
+                            <div class="text-3xl font-black text-slate-900">{{ stats.in_progress|default:0 }}</div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-tighter">In Progress</div>
+                        </div>
+                    </div>
+                    <!-- Completed -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-50 rounded-bl-3xl -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        <div class="relative">
+                            <i class="fas fa-check-double text-emerald-500 text-xl mb-3"></i>
+                            <div class="text-3xl font-black text-slate-900">{{ stats.completed|default:0 }}</div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Completed</div>
+                        </div>
+                    </div>
+                    <!-- Urgent -->
+                    <div class="bg-white p-6 rounded-3xl border border-rose-100 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-rose-50 rounded-bl-3xl -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        <div class="relative">
+                            <i class="fas fa-exclamation-triangle text-rose-500 text-xl mb-3"></i>
+                            <div class="text-3xl font-black text-rose-600">{{ stats.urgent|default:0 }}</div>
+                            <div class="text-xs font-bold text-rose-400 uppercase tracking-tighter flex items-center gap-1">
+                                Urgent <span class="w-1.5 h-1.5 bg-rose-500 rounded-full urgent-pulse"></span>
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <p class="text-slate-700 text-sm leading-relaxed whitespace-pre-line">
+            <!-- 🗺️ CAMPUS MAP VIEW -->
+            <section class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden p-8 space-y-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <h2 class="text-xl font-black text-slate-900 tracking-tight">Campus Heatmap</h2>
+                        <p class="text-sm text-slate-500">Visual status of facilities across hospital & hostel blocks</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-xl text-xs font-bold text-slate-600 border border-slate-100 transition-colors">
+                            <i class="fas fa-search-plus mr-1"></i> Zoom
+                        </button>
+                        <button class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-xl text-xs font-bold text-slate-600 border border-slate-100 transition-colors">
+                            <i class="fas fa-expand mr-1"></i> Full Map
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid-map h-72 rounded-2xl relative border border-slate-50 flex items-center justify-center">
+                    <!-- Mock Map Buildings -->
+                    <div class="grid grid-cols-2 gap-8 w-full max-w-lg">
+                        <!-- Building A -->
+                        <div class="group relative">
+                            <div class="bg-white p-4 rounded-2xl border-2 border-emerald-400 shadow-lg shadow-emerald-500/10 transition-all hover:-translate-y-1 cursor-pointer">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-lg font-black text-slate-900 tracking-tighter">Block A</span>
+                                    <span class="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                                </div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Welfare Hall</div>
+                            </div>
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 scale-0 group-hover:scale-100 transition-transform origin-bottom">
+                                <div class="bg-slate-900 text-white text-[10px] px-2 py-1 rounded shadow-xl whitespace-nowrap">All systems operational</div>
+                            </div>
+                        </div>
+                        <!-- Building B -->
+                        <div class="group relative">
+                            <div class="bg-white p-4 rounded-2xl border-2 border-rose-400 shadow-lg shadow-rose-500/10 transition-all hover:-translate-y-1 cursor-pointer">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-lg font-black text-slate-900 tracking-tighter">Block B</span>
+                                    <span class="w-3 h-3 bg-rose-500 rounded-full animate-pulse"></span>
+                                </div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Main Hostel</div>
+                            </div>
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 scale-0 group-hover:scale-100 transition-transform origin-bottom">
+                                <div class="bg-rose-600 text-white text-[10px] px-2 py-1 rounded shadow-xl whitespace-nowrap">2 Critical Leaks Detected</div>
+                            </div>
+                        </div>
+                        <!-- Building C -->
+                        <div class="group relative">
+                            <div class="bg-white p-4 rounded-2xl border-2 border-blue-400 shadow-lg shadow-blue-500/10 transition-all hover:-translate-y-1 cursor-pointer">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-lg font-black text-slate-900 tracking-tighter">Block C</span>
+                                    <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                                </div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Dining Area</div>
+                            </div>
+                        </div>
+                        <!-- Building D -->
+                        <div class="group relative">
+                            <div class="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-lg font-black text-slate-900 tracking-tighter">Block D</span>
+                                    <span class="w-3 h-3 bg-slate-200 rounded-full"></span>
+                                </div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Science Lab</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Map Legend -->
+                    <div class="absolute bottom-6 left-6 flex items-center gap-6 bg-white/80 backdrop-blur px-4 py-2 rounded-xl border border-slate-100">
+                        <div class="flex items-center gap-2 text-[10px] font-black uppercase text-slate-500">
+                            <span class="w-2 h-2 bg-rose-500 rounded-full"></span> Urgent
+                        </div>
+                        <div class="flex items-center gap-2 text-[10px] font-black uppercase text-slate-500">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Progress
+                        </div>
+                        <div class="flex items-center gap-2 text-[10px] font-black uppercase text-slate-500">
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> Clean
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⚠️ URGENT REQUESTS (Horizontal Scroll) -->
+            <section class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                        <i class="fas fa-bolt text-rose-500"></i>
+                        Priority 1 - Response Required
+                    </h2>
+                    <a href="#" class="text-xs font-bold text-indigo-600 hover:underline">View All Critical</a>
+                </div>
+                <div class="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x">
+                    {% for req in urgent_requests %}
+                    <div class="flex-none w-[320px] snap-start bg-rose-50 rounded-3xl border border-rose-100 p-6 space-y-4 relative overflow-hidden group hover:shadow-xl hover:shadow-rose-500/10 transition-all">
+                        <div class="absolute -right-4 -top-4 w-16 h-16 bg-rose-200/30 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+                        <div class="flex items-start justify-between">
+                            <div class="space-y-1">
+                                <h3 class="font-bold text-rose-900 leading-tight">{{ req.title }}</h3>
+                                <div class="text-[10px] font-black text-rose-400 uppercase tracking-widest">{{ req.location|default:"Unknown Location" }}</div>
+                            </div>
+                            <span class="px-2 py-1 bg-rose-500 text-white text-[8px] font-black uppercase rounded shadow-lg animate-pulse">Critical</span>
+                        </div>
+                        <p class="text-xs text-rose-700/80 line-clamp-2 leading-relaxed">
                             {{ req.description }}
                         </p>
+                        <div class="flex items-center justify-between pt-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-rose-200 flex items-center justify-center text-[10px] font-bold text-rose-700 uppercase">
+                                    {{ req.student.user.first_name|first }}
+                                </div>
+                                <span class="text-[10px] text-rose-600 font-bold">{{ req.created_at|timesince }} ago</span>
+                            </div>
+                            <button onclick="openAssignModal({{ req.id }}, '{{ req.title|escapejs }}')" class="px-4 py-2 bg-white hover:bg-rose-500 hover:text-white rounded-xl text-xs font-extrabold text-rose-600 border border-rose-200 transition-all shadow-sm">
+                                Assign Now
+                            </button>
+                        </div>
                     </div>
-
-                    {% if req.photo %}
-                    <div class="pt-2">
-                        <a href="{{ req.photo.url }}" target="_blank"
-                            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors text-xs font-bold">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            View Attached Photo
-                        </a>
+                    {% empty %}
+                    <div class="flex-1 text-center py-12 bg-emerald-50 rounded-3xl border border-emerald-100 italic text-emerald-600 text-sm font-medium">
+                        <i class="fas fa-check-circle mr-2"></i> All critical issues have been assigned. Good job!
                     </div>
-                    {% endif %}
+                    {% endfor %}
                 </div>
+            </section>
 
-                <!-- Control Section (Actions & Priority) -->
-                <div
-                    class="lg:w-64 flex flex-col justify-between gap-6 border-t lg:border-t-0 lg:border-l border-slate-100 pt-6 lg:pt-0 lg:pl-6">
-                    <div class="space-y-3">
-                        <label class="text-[10px] uppercase text-slate-400 font-bold tracking-widest block">Current
-                            Status</label>
-                        <form action="{% url 'hms:update_maintenance_status' req.pk %}" method="post" class="w-full">
-                            {% csrf_token %}
-                            <select name="status" onchange="this.form.submit()"
-                                class="w-full bg-white border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-2.5 shadow-sm transition-all cursor-pointer hover:border-indigo-300">
-                                <option value="pending" {% if req.status == 'pending' %}selected{% endif %}>🟡 Pending
-                                </option>
-                                <option value="in_progress" {% if req.status == 'in_progress' %}selected{% endif %}>🔵 In
-                                    Progress</option>
-                                <option value="resolved" {% if req.status == 'resolved' %}selected{% endif %}>🟢 Resolved
-                                </option>
-                            </select>
-                        </form>
-                    </div>
-
-                    <div class="pt-2">
-                        <label
-                            class="text-[10px] uppercase text-slate-400 font-bold tracking-widest block mb-1">Priority</label>
-                        <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold border 
-                            {% if req.priority == 'low' %}text-emerald-700 border-emerald-100 bg-emerald-50
-                            {% elif req.priority == 'medium' %}text-amber-700 border-amber-100 bg-amber-50
-                            {% elif req.priority == 'high' %}text-orange-700 border-orange-100 bg-orange-50
-                            {% else %}text-rose-700 border-rose-100 bg-rose-50{% endif %}">
-                            <span class="w-2 h-2 rounded-full mr-2 
-                                {% if req.priority == 'low' %}bg-emerald-500
-                                {% elif req.priority == 'medium' %}bg-amber-500
-                                {% elif req.priority == 'high' %}bg-orange-500
-                                {% else %}bg-rose-500{% endif %}"></span>
-                            {{ req.get_priority_display }}
-                        </span>
+            <!-- 📋 RECENT REQUESTS TABLE -->
+            <section class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+                    <h2 class="text-lg font-black text-slate-900 tracking-tight">Recent Activity</h2>
+                    <div class="flex gap-2">
+                        <select class="text-xs font-bold bg-slate-50 border-none rounded-xl focus:ring-0 cursor-pointer">
+                            <option>All Blocks</option>
+                            <option>Block A</option>
+                            <option>Block B</option>
+                        </select>
+                        <button class="p-2 hover:bg-slate-50 rounded-xl transition-colors text-slate-400">
+                            <i class="fas fa-filter"></i>
+                        </button>
                     </div>
                 </div>
+                
+                <div class="overflow-x-auto" data-infinite-scroll data-batch-size="10">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50/50 text-slate-500 text-[10px] font-black uppercase tracking-widest sticky top-0 backdrop-blur z-10 transition-all" id="main_table_header">
+                            <tr>
+                                <th class="px-6 py-4">Request & Location</th>
+                                <th class="px-6 py-4">Reported By</th>
+                                <th class="px-6 py-4">Time</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            {% for req in requests %}
+                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                <td class="px-6 py-5">
+                                    <div class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ req.title }}</div>
+                                    <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-1 font-medium">
+                                        <i class="fas fa-map-marker-alt text-slate-300"></i>
+                                        {{ req.location|default:"N/A" }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xs uppercase">
+                                            {{ req.student.user.first_name|first }}{{ req.student.user.last_name|first }}
+                                        </div>
+                                        <div class="text-xs font-bold text-slate-700">{{ req.student.user.get_full_name|default:req.student.user.username }}</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <div class="text-xs text-slate-500">{{ req.created_at|date:"M j, H:i" }}</div>
+                                    <div class="text-[10px] text-slate-300 font-bold uppercase tracking-tighter">{{ req.created_at|timesince }} ago</div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    {% if req.status == 'pending' %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-100">Pending</span>
+                                    {% elif req.status == 'in_progress' %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-blue-50 text-blue-600 border border-blue-100">In Progress</span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">Resolved</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-5 text-right">
+                                    <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 hover:bg-white hover:shadow-sm rounded-lg text-slate-400 hover:text-indigo-600 border border-transparent hover:border-slate-100 transition-all">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="p-2 hover:bg-white hover:shadow-sm rounded-lg text-slate-400 hover:text-emerald-600 border border-transparent hover:border-slate-100 transition-all">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Infinite Scroll Pager (Hidden usually) -->
+                <div id="infinite-scroll-trigger" class="py-12 flex justify-center border-t border-slate-50">
+                    <div class="flex items-center gap-3 text-slate-400 animate-pulse">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                        <span class="text-xs font-black uppercase tracking-widest">Loading older requests...</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 👷 SIDEBAR (Stats & Team) -->
+        <aside class="lg:col-span-4 space-y-8">
+            
+            <!-- ⚡ QUICK ACTIONS -->
+            <section class="bg-indigo-600 rounded-3xl p-6 shadow-xl shadow-indigo-500/20 text-white relative overflow-hidden">
+                <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <h3 class="text-lg font-black tracking-tight mb-4 flex items-center gap-2">
+                    <i class="fas fa-bolt"></i> Quick Actions
+                </h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="{% url 'hms:submit_maintenance_request' %}" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all border border-white/5">
+                        <i class="fas fa-plus-circle text-xl"></i>
+                        <span class="text-[10px] font-black uppercase">New Request</span>
+                    </a>
+                    <button class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all border border-white/5">
+                        <i class="fas fa-map-marked-alt text-xl"></i>
+                        <span class="text-[10px] font-black uppercase">Campus Map</span>
+                    </button>
+                    <a href="{% url 'hms:maintenance_inventory' %}" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all border border-white/5">
+                        <i class="fas fa-boxes text-xl"></i>
+                        <span class="text-[10px] font-black uppercase">Inventory</span>
+                    </a>
+                    <a href="{% url 'hms:maintenance_schedule' %}" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all border border-white/5">
+                        <i class="fas fa-calendar-check text-xl"></i>
+                        <span class="text-[10px] font-black uppercase">Schedule</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 👷 TEAM WORKLOAD -->
+            <section class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500">Active Team</h2>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">4 Staff Online</span>
+                </div>
+                <div class="space-y-3">
+                    {% for staff in team_workload %}
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600 font-bold transition-colors group-hover:bg-indigo-50 group-hover:text-indigo-600">
+                                {{ staff.initials }}
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-slate-900">{{ staff.name }}</div>
+                                <div class="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">{{ staff.role }}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-right">
+                                <div class="text-xs font-black text-slate-700">{{ staff.tasks }}</div>
+                                <div class="text-[8px] text-slate-400 uppercase font-bold tracking-tight">Active</div>
+                            </div>
+                            <button class="p-2 hover:bg-indigo-50 rounded-lg text-slate-300 hover:text-indigo-600 transition-colors">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <button class="w-full py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl text-xs font-bold text-slate-500 transition-colors uppercase tracking-widest border border-dashed border-slate-200 mt-2">
+                        Manage Team Workload
+                    </button>
+                </div>
+            </section>
+
+            <!-- 📊 PERFORMANCE STATS -->
+            <section class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-50">
+                <div class="p-6">
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500 mb-6 flex items-center justify-between">
+                        Performance
+                        <i class="fas fa-chart-line text-slate-300"></i>
+                    </h2>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-2 uppercase tracking-tighter text-slate-400">
+                                <span>Response Time</span>
+                                <span class="text-indigo-600">{{ avg_response }}</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-indigo-500 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-2 uppercase tracking-tighter text-slate-400">
+                                <span>Completion Rate</span>
+                                <span class="text-emerald-600">{{ completion_rate }}</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-50/50">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Most Common</div>
+                            <div class="text-xs font-bold text-slate-700 truncate">{{ most_common }}</div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Requests/Week</div>
+                            <div class="text-xs font-bold text-slate-700">{{ this_week_count }}</div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-6 py-2 text-xs font-black text-indigo-600 hover:text-indigo-700 uppercase tracking-widest border border-indigo-100 rounded-xl bg-white hover:shadow-sm transition-all">
+                        Detailed Audit Report
+                    </button>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <!-- 🧭 BREADCRUMB & BOTTOM BAR -->
+    <footer class="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 py-6 border-t border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        <div class="flex items-center gap-2">
+            <a href="{% url 'hms:home' %}" class="hover:text-indigo-600">Home</a>
+            <i class="fas fa-chevron-right text-[8px]"></i>
+            <span class="text-slate-600">Maintenance Dashboard</span>
+        </div>
+        <div class="flex items-center gap-6">
+            <button class="hover:text-slate-900 flex items-center gap-2" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <i class="fas fa-arrow-up"></i> Back to Top
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                System Live
             </div>
         </div>
-        {% empty %}
-        <div class="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
-            <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <p class="text-slate-500 font-medium">All caught up! No active maintenance requests.</p>
+    </footer>
+</div>
+
+<!-- Floating Action Button (Mobile) -->
+<div class="fixed bottom-8 right-8 lg:hidden z-50">
+    <button class="w-14 h-14 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center text-xl hover:scale-110 active:scale-95 transition-transform">
+        <i class="fas fa-plus"></i>
+    </button>
+<!-- Assign Token Modal -->
+<div id="assign-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+    <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden flex flex-col shadow-2xl">
+        <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+            <h3 class="text-lg font-black text-slate-900">Assign Technician</h3>
+            <button onclick="closeAssignModal()" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
         </div>
-        {% endfor %}
+        <form action="{% url 'hms:assign_maintenance_task' %}" method="POST" class="p-6 space-y-6">
+            {% csrf_token %}
+            <input type="hidden" name="request_id" id="assign_request_id">
+            
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Selected Task</label>
+                <div id="assign_task_title" class="p-4 bg-indigo-50 text-indigo-700 rounded-2xl font-bold text-sm"></div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Select Personnel</label>
+                <div class="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                    {% for tech in team_workload %}
+                    <label class="flex items-center justify-between p-4 bg-slate-50 hover:bg-indigo-50 rounded-2xl cursor-pointer transition-colors border-2 border-transparent has-[:checked]:border-indigo-500 has-[:checked]:bg-white">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="staff_id" value="{{ tech.id }}" class="hidden" required>
+                            <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-600 font-black">{{ tech.initials }}</div>
+                            <div>
+                                <div class="text-sm font-bold text-slate-900">{{ tech.name }}</div>
+                                <div class="text-[10px] text-slate-400 font-medium">{{ tech.role }}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs font-black text-slate-700">{{ tech.tasks }}</div>
+                            <div class="text-[8px] text-slate-400 uppercase font-bold tracking-tight">Active</div>
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-indigo-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest transition-all shadow-xl shadow-indigo-500/20">
+                Confirm Assignment
+            </button>
+        </form>
     </div>
 </div>
+
+<script>
+function openAssignModal(requestId, taskTitle) {
+    const modal = document.getElementById('assign-modal');
+    document.getElementById('assign_request_id').value = requestId;
+    document.getElementById('assign_task_title').textContent = taskTitle;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeAssignModal() {
+    const modal = document.getElementById('assign-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+</script>
 {% endblock %}

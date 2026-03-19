@@ -76,6 +76,11 @@ urlpatterns = [
     path('student/maintenance/delete/<int:pk>/', views.delete_maintenance_request, name='delete_maintenance_request'),
     path('manage/maintenance/', views.manage_maintenance, name='manage_maintenance'),
     path('manage/maintenance/update/<int:pk>/', views.update_maintenance_status, name='update_maintenance_status'),
+    path('manage/maintenance/assign/', views.assign_maintenance_task, name='assign_maintenance_task'),
+    path('manage/maintenance/inventory/', views.maintenance_inventory, name='maintenance_inventory'),
+    path('manage/maintenance/schedule/', views.maintenance_schedule, name='maintenance_schedule'),
+    path('technician/tasks/', views.technician_task_list, name='technician_task_list'),
+    path('technician/task/complete/<int:pk>/', views.complete_maintenance_task, name='complete_maintenance_task'),
 
     # Deferment Requests (formerly Leave Requests)
     path('student/deferment/', views.student_leave_list, name='student_leave_list'),  # Keep old name for compatibility

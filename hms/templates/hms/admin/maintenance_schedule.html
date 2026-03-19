@@ -1,0 +1,114 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Maintenance Schedule | CampusCare{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <!-- Header -->
+    <header class="bg-indigo-900 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+        <div class="absolute bottom-0 right-0 p-12 -mr-16 -mb-16 bg-indigo-500/20 rounded-full blur-3xl"></div>
+        <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                    <span class="p-2 bg-indigo-500/20 rounded-xl text-indigo-400">
+                        <i class="fas fa-calendar-alt text-xl"></i>
+                    </span>
+                    <h1 class="text-3xl font-black tracking-tight">Preventive Maintenance</h1>
+                </div>
+                <p class="text-indigo-200 font-medium italic">"Scheduled Inspections – Catching Issues Before They Happen"</p>
+            </div>
+            <div class="flex gap-3">
+                <button class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl font-bold transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-2">
+                    <i class="fas fa-plus"></i> New Schedule
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overdue Alerts -->
+    {% if overdue_count > 0 %}
+    <div class="bg-rose-50 border border-rose-100 p-6 rounded-3xl flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-4 text-rose-800">
+            <div class="w-12 h-12 bg-rose-200 rounded-2xl flex items-center justify-center text-rose-600 animate-pulse">
+                <i class="fas fa-exclamation-triangle text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-black text-lg">Action Required</h3>
+                <p class="text-xs font-bold uppercase tracking-tight text-rose-500">{{ overdue_count }} scheduled tasks are overdue for inspection.</p>
+            </div>
+        </div>
+        <button class="px-5 py-2.5 bg-rose-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-700 transition">View Tasks</button>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Schedule (Left 2/3) -->
+        <main class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500">Upcoming Inspections</h2>
+                </div>
+                <div class="divide-y divide-slate-50">
+                    {% for task in tasks %}
+                    <div class="p-6 hover:bg-slate-50 transition-colors group">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="space-y-1">
+                                <h3 class="font-bold text-slate-900">{{ task.title }}</h3>
+                                <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">{{ task.description }}</p>
+                                <div class="flex items-center gap-4 mt-3">
+                                    <div class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tighter text-slate-400">
+                                        <i class="fas fa-tools"></i> {{ task.equipment.name|default:"General" }}
+                                    </div>
+                                    <div class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tighter text-slate-400">
+                                        <i class="fas fa-redo"></i> Every {{ task.frequency_days }} Days
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right space-y-2">
+                                <div class="text-sm font-black {% if task.next_due < today %}text-rose-600{% else %}text-slate-900{% endif %}">
+                                    {{ task.next_due|date:"M d, Y" }}
+                                </div>
+                                <div class="text-[9px] font-black uppercase tracking-widest p-1.5 rounded-lg {% if task.next_due < today %}bg-rose-100 text-rose-600{% else %}bg-emerald-100 text-emerald-600{% endif %}">
+                                    {% if task.next_due < today %}Overdue{% else %}Due Soon{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="p-12 text-center text-slate-400 italic">No scheduled maintenance tasks.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+
+        <!-- Equipment Status (Right 1/3) -->
+        <aside class="space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
+                <h2 class="text-sm font-black uppercase tracking-widest text-slate-500 mb-6 flex items-center justify-between">
+                    Equipment List
+                    <i class="fas fa-hdd text-slate-200"></i>
+                </h2>
+                <div class="space-y-4">
+                    {% for eq in equipment_list %}
+                    <div class="bg-slate-50 p-4 rounded-2xl flex items-center justify-between group hover:bg-slate-100 transition-colors">
+                        <div class="space-y-1">
+                            <div class="text-sm font-bold text-slate-900">{{ eq.name }}</div>
+                            <div class="text-[10px] text-slate-400 font-medium uppercase">{{ eq.location }}</div>
+                        </div>
+                        <div class="flex flex-col items-end gap-1">
+                            <div class="text-[9px] font-bold text-slate-500 uppercase">{{ eq.get_condition_display }}</div>
+                            <div class="w-1.5 h-1.5 rounded-full {% if eq.condition == 'excellent' %}bg-emerald-500{% elif eq.condition == 'good' %}bg-blue-500{% elif eq.condition == 'fair' %}bg-amber-500{% else %}bg-rose-500{% endif %}"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-xs text-slate-400 text-center italic py-4">No equipment tracking added.</p>
+                    {% endfor %}
+                    <button class="w-full mt-4 py-3 border border-dashed border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-indigo-600 hover:border-indigo-200 transition-all">Add Equipment Record</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
