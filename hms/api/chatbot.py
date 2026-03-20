@@ -15,6 +15,7 @@ import json
 from hms.chatbot import ChatService
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ChatbotAPIView(APIView):
     """
     API endpoint for chatbot interactions.
