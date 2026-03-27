@@ -6,6 +6,23 @@ from .models import (Student, Meal, Activity, AwayPeriod, Announcement,
                      StaffProfile, LostItem, TutoringPost, Document,
                      AdminSubscription, RegistrationPayment, EmergencyAlert, Message)
 
+class RoomAssignmentInline(admin.TabularInline):
+    model = RoomAssignment
+    extra = 0
+    readonly_fields = ('assigned_date',)
+
+class MaintenanceRequestInline(admin.StackedInline):
+    model = MaintenanceRequest
+    extra = 0
+    fields = ('title', 'priority', 'status', 'created_at')
+    readonly_fields = ('created_at',)
+
+class MealInline(admin.TabularInline):
+    model = Meal
+    extra = 0
+    fields = ('date', 'breakfast', 'early', 'supper', 'away')
+    readonly_fields = ('date',)
+
 @admin.register(HealthAppointment)
 class HealthAppointmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'service_type', 'preferred_date', 'status', 'assigned_staff')
@@ -57,8 +74,28 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'university_id', 'phone', 'is_warden')
-    search_fields = ('user__username', 'university_id', 'phone')
+    list_display = ('get_full_name', 'university_id', 'phone', 'residence_type', 'hostel', 'room_number', 'is_warden')
+    list_filter = ('residence_type', 'is_warden', 'is_on_attachment', 'is_graduating', 'gender', 'disability')
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'university_id', 'phone')
+    inlines = [RoomAssignmentInline, MaintenanceRequestInline, MealInline]
+    fieldsets = (
+        ('Account Information', {
+            'fields': ('user', 'university_id', 'profile_image')
+        }),
+        ('Contact & Personal', {
+            'fields': ('phone', 'gender', 'program_of_study')
+        }),
+        ('Residence Status', {
+            'fields': ('residence_type', 'hostel', 'room_number')
+        }),
+        ('Special Status', {
+            'fields': ('is_warden', 'is_on_attachment', 'is_graduating', 'disability', 'disability_details')
+        }),
+    )
+
+    @admin.display(description='Full Name')
+    def get_full_name(self, obj):
+        return obj.user.get_full_name()
 
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
