@@ -1,0 +1,382 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Generate Staff Registration Link - CampusCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    .gen-link-container {
+        max-width: 760px;
+        margin: 2.5rem auto;
+        padding: 0 1rem;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+        border-radius: 1rem;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 0.35rem 0;
+    }
+
+    .page-header p {
+        font-size: 0.875rem;
+        opacity: 0.8;
+        margin: 0;
+    }
+
+    .card {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.4rem;
+    }
+
+    .form-group select,
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="number"] {
+        width: 100%;
+        padding: 0.65rem 0.9rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 0.6rem;
+        font-size: 0.875rem;
+        color: #1e293b;
+        background: #f8fafc;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+        outline: none;
+        border-color: #2563eb;
+        background: white;
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.75rem;
+        border-radius: 0.6rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background: #f1f5f9;
+        color: #475569;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.6rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    /* Generated link display */
+    .link-result {
+        display: none;
+        background: #f0f9ff;
+        border: 1.5px solid #bae6fd;
+        border-radius: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .link-result.visible {
+        display: block;
+    }
+
+    .link-result .link-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #0369a1;
+        margin-bottom: 0.5rem;
+    }
+
+    .link-copy-row {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .link-copy-row input {
+        flex: 1;
+        padding: 0.6rem 0.85rem;
+        border: 1.5px solid #bae6fd;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        color: #0c4a6e;
+        background: white;
+        font-family: monospace;
+    }
+
+    .btn-copy {
+        background: #0ea5e9;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.1rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+    }
+
+    .btn-copy:hover {
+        background: #0284c7;
+    }
+
+    .expiry-note {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 0.65rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    /* Info pills */
+    .info-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .pill {
+        background: #eff6ff;
+        color: #1d4ed8;
+        padding: 0.3rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        border: 1px solid #bfdbfe;
+    }
+
+    .alert {
+        padding: 0.85rem 1.1rem;
+        border-radius: 0.65rem;
+        font-size: 0.85rem;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+    }
+
+    .alert-success {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+    }
+
+    .alert-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+    }
+
+    .alert-info {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="gen-link-container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+            <a href="{% url 'hms:manage_roles' %}" style="color:rgba(255,255,255,0.7); text-decoration:none; font-size:0.8rem;">← Back to Roles</a>
+        </div>
+        <h1>🔗 Generate Staff Registration Link</h1>
+        <p>Create a secure, time-limited invitation link to onboard a new staff member.</p>
+    </div>
+
+    <!-- Messages -->
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% else %}alert-info{% endif %}">
+        <span>{% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% else %}ℹ️{% endif %}</span>
+        <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+
+    <!-- Form Card -->
+    <div class="card">
+        <div class="card-title">⚙️ Link Configuration</div>
+
+        <form method="POST" id="generateLinkForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="role">Staff Role *</label>
+                <select name="role" id="role" required>
+                    <option value="">-- Select Role --</option>
+                    {% if roles %}
+                        {% for value, label in roles %}
+                        <option value="{{ value }}" {% if request.POST.role == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Fallback role options -->
+                        <option value="Welfare Officer">Welfare Officer</option>
+                        <option value="Hostel Manager">Hostel Manager</option>
+                        <option value="Kitchen Manager">Kitchen Manager</option>
+                        <option value="Security">Security</option>
+                        <option value="DEAN_STUDENTS">Dean of Students</option>
+                        <option value="TVET_DIRECTOR">TVET Director</option>
+                        <option value="VC">Vice Chancellor</option>
+                        <option value="FINANCE_OFFICER">Finance Officer</option>
+                        <option value="HR_MANAGER">Human Resource Manager</option>
+                        <option value="ICT_MANAGER">Manager, ICT</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Recipient Name (optional)</label>
+                <input type="text" id="name" name="name" placeholder="e.g. John Doe" value="{{ request.POST.name }}">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Recipient Email (optional)</label>
+                <input type="email" id="email" name="email" placeholder="e.g. john.doe@university.ac.ke" value="{{ request.POST.email }}">
+            </div>
+
+            <div class="form-group">
+                <label for="expiry_hours">Link Expiry</label>
+                <select name="expiry_hours" id="expiry_hours">
+                    <option value="24" {% if request.POST.expiry_hours == '24' %}selected{% endif %}>24 Hours</option>
+                    <option value="48" {% if request.POST.expiry_hours == '48' %}selected{% endif %}>48 Hours</option>
+                    <option value="72" {% if request.POST.expiry_hours == '72' %}selected{% endif %}>72 Hours</option>
+                    <option value="168" {% if request.POST.expiry_hours == '168' %}selected{% endif %}>7 Days</option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:0.75rem; margin-top:1.75rem; flex-wrap:wrap;">
+                <button type="submit" class="btn-primary" id="generateBtn">
+                    🔗 Generate Link
+                </button>
+                <a href="{% url 'hms:manage_roles' %}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+
+        <!-- Generated Link Result -->
+        {% if generated_link %}
+        <div class="link-result visible" id="linkResult">
+            <div class="link-label">✅ Registration Link Generated</div>
+            <div class="link-copy-row">
+                <input type="text" id="generatedLink" value="{{ generated_link }}" readonly>
+                <button class="btn-copy" onclick="copyLink()">📋 Copy</button>
+            </div>
+            <div class="expiry-note">
+                ⏰ This link expires in {{ expiry_hours|default:'24' }} hour(s). Share it securely with the recipient.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Info Card -->
+    <div class="card">
+        <div class="card-title">ℹ️ How It Works</div>
+        <div class="info-pills">
+            <span class="pill">🔐 Secure Token</span>
+            <span class="pill">⏰ Time-Limited</span>
+            <span class="pill">👤 Single Use</span>
+            <span class="pill">🎭 Role Pre-assigned</span>
+        </div>
+        <ul style="margin-top:1.25rem; padding-left:1.25rem; color:#475569; font-size:0.85rem; line-height:1.9;">
+            <li>Share the generated link with the new staff member via email or messaging.</li>
+            <li>The recipient clicks the link to register their account with the pre-assigned role.</li>
+            <li>The link can only be used <strong>once</strong> and expires after the selected time period.</li>
+            <li>Once registered, the staff member can log in at <strong>campus-care.co.ke</strong>.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    function copyLink() {
+        const input = document.getElementById('generatedLink');
+        input.select();
+        input.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(input.value).then(() => {
+            const btn = document.querySelector('.btn-copy');
+            btn.textContent = '✅ Copied!';
+            btn.style.background = '#16a34a';
+            setTimeout(() => {
+                btn.textContent = '📋 Copy';
+                btn.style.background = '';
+            }, 2500);
+        }).catch(() => {
+            document.execCommand('copy');
+        });
+    }
+
+    // Loading state on submit
+    document.getElementById('generateLinkForm').addEventListener('submit', function() {
+        const btn = document.getElementById('generateBtn');
+        btn.textContent = '⏳ Generating...';
+        btn.disabled = true;
+    });
+</script>
+{% endblock %}
