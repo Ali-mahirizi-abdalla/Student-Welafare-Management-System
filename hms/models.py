@@ -81,6 +81,16 @@ class Student(models.Model):
     is_on_attachment = models.BooleanField(default=False, help_text="Is the student currently on industrial attachment?")
     is_graduating = models.BooleanField(default=False, help_text="Is the student in their graduating semester/year?")
     
+    LEVEL_OF_STUDY_CHOICES = [
+        ('diploma', 'Diploma (TVET)'),
+        ('bachelors', 'Bachelor\'s'),
+        ('masters', 'Master\'s'),
+        ('doctorate', 'Ph.D (Doctorate)'),
+        ('postgrad_diploma', 'Postgrad Diploma'),
+        ('certificate', 'Certificate'),
+    ]
+    level_of_study = models.CharField(max_length=20, choices=LEVEL_OF_STUDY_CHOICES, default='bachelors')
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -208,7 +218,8 @@ class StaffProfile(models.Model):
         ('DIR_RM', 'Director, Resource Mobilisation'),
         ('DIR_RPDO', 'Director, Research, Production, Development, and Outreach'),
         ('DIR_IEC', 'Director, Innovation, Entrepreneurship and Commercialization'),
-        ('DIR_TVET', 'Director, TVET'),
+        # Academic Admin Roles (Handled by dashboards)
+        # DIR_TVET removed in favor of TVET_DIRECTOR
         ('DIR_BGS', 'Director, Board of Graduate Studies'),
         ('DIR_BUS', 'Director, Board of Undergraduate Studies'),
         
@@ -300,6 +311,9 @@ class StaffProfile(models.Model):
         ('KUSU', 'KUSU'),
         ('UASU', 'UASU'),
         
+        # Specific Roles
+        ('TVET_DIRECTOR', 'TVET Director'),
+
         # Legacy mappings (for backward compatibility)
         ('DEFERMENT', 'Deferment Manager (Legacy)'),
         ('MAINTENANCE_HOSTEL', 'Maintenance & Hostel Manager (Legacy)'),
@@ -318,9 +332,9 @@ class StaffProfile(models.Model):
         role = self.role
         if role in ['VC', 'DVC_AFP', 'DVC_ASA', 'DVC_RE', 'REG_AP', 'REG_ASA']:
             return 'EXECUTIVE'
-        if role.startswith('DEAN_') or role.startswith('DIR_') or role.startswith('DEP_REG_'):
+        if role.startswith('DEAN_') or role.startswith('DIR_') or role.startswith('DEP_REG_') or role == 'TVET_DIRECTOR':
             return 'ACADEMIC_ADMIN'
-        if role.startswith('COD_') or role.startswith('DEPT_'):
+        if role.startswith('COD_') or role.startswith('DEPT_') or role == 'TVET_DIRECTOR':
             return 'SCHOOL_DEPT'
         if role in ['FINANCE_OFFICER', 'HR_MANAGER', 'INTERNAL_AUDITOR', 'LEGAL_HEAD', 'PROCUREMENT_HEAD', 'AUDIT_LOGS']:
             return 'FINANCE_ADMIN'

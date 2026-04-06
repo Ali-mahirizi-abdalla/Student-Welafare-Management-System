@@ -28,8 +28,10 @@ urlpatterns = [
     path('super-admin/dashboard/', views.super_admin_dashboard, name='super_admin_dashboard'),
     path('welfare/dashboard/', views.welfare_officer_dashboard, name='welfare_officer_dashboard'),
     path('hostel/dashboard/', views.hostel_manager_dashboard, name='hostel_manager_dashboard'),
+    path('warden/dashboard/', views.warden_dashboard, name='warden_dashboard'),
     path('kitchen/dashboard/', views.kitchen_manager_dashboard, name='kitchen_manager_dashboard'),
     path('security/dashboard/', views.security_dashboard, name='security_dashboard'),
+    path('tvet/dashboard/', views.tvet_director_dashboard, name='tvet_director_dashboard'),
     
     # Admin Dashboard (Legacy/Generic)
     path('manage/dashboard/', views.dashboard_admin, name='admin_dashboard'),
@@ -38,6 +40,9 @@ urlpatterns = [
     path('manage/export-students-csv/', views.export_students_csv, name='export_students_csv'),
     path('manage/send-notifications/', views.send_meal_notifications, name='send_notifications'),
     path('manage/staff/register/', views.register_staff, name='register_staff'),
+    path('manage/staff/', views.manage_staff, name='manage_staff'),
+    path('manage/staff/edit/<int:staff_id>/', views.edit_staff, name='edit_staff'),
+    path('manage/staff/delete/<int:staff_id>/', views.delete_staff, name='delete_staff'),
     
     # Student Management
     path('manage/students/', views.manage_students, name='manage_students'),

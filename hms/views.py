@@ -227,6 +227,10 @@ def user_login(request):
             return redirect('hms:kitchen_manager_dashboard')
         elif 'Security' in user_groups:
             return redirect('hms:security_dashboard')
+        elif 'TVET Director' in user_groups:
+            return redirect('hms:tvet_director_dashboard')
+        elif hasattr(user, 'staff_profile') and user.staff_profile.role == 'TVET_DIRECTOR':
+            return redirect('hms:tvet_director_dashboard')
         elif hasattr(user, 'student_profile'):
             return redirect('hms:student_dashboard')
         elif hasattr(user, 'staff_profile') and user.staff_profile.get_category() == 'HEALTH_SERVICES':
@@ -254,6 +258,10 @@ def user_login(request):
                 return redirect('hms:kitchen_manager_dashboard')
             elif 'Security' in user_groups:
                 return redirect('hms:security_dashboard')
+            elif 'TVET Director' in user_groups:
+                return redirect('hms:tvet_director_dashboard')
+            elif hasattr(user, 'staff_profile') and user.staff_profile.role == 'TVET_DIRECTOR':
+                return redirect('hms:tvet_director_dashboard')
             elif hasattr(user, 'student_profile'):
                 return redirect('hms:student_dashboard')
             elif hasattr(user, 'staff_profile') and user.staff_profile.get_category() == 'HEALTH_SERVICES':
@@ -819,6 +827,90 @@ def dashboard_admin(request):
     })
 
     return render(request, 'hms/admin/dashboard.html', context)
+
+@login_required
+@admin_only
+def warden_dashboard(request):
+    """Hostel / Warden Dashboard view"""
+    return render(request, 'hms/dashboards/hostel_manager.html', {})
+
+@login_required
+@admin_only
+def hostel_manager_dashboard(request):
+    """Hostel Manager Dashboard view"""
+    return render(request, 'hms/dashboards/hostel_manager.html', {})
+
+@login_required
+@admin_only
+def welfare_officer_dashboard(request):
+    return render(request, 'hms/dashboards/welfare_officer.html', {})
+
+@login_required
+@admin_only
+def kitchen_manager_dashboard(request):
+    return render(request, 'hms/dashboards/kitchen_manager.html', {})
+
+@login_required
+@admin_only
+def security_dashboard(request):
+    return render(request, 'hms/dashboards/security.html', {})
+
+@login_required
+@admin_only
+def tvet_director_dashboard(request):
+    """TVET Director Dashboard view - Limited to Diploma Students"""
+    diploma_students = Student.objects.filter(level_of_study='diploma')
+    
+    # KEY METRICS
+    total_diploma = diploma_students.count()
+    on_campus = diploma_students.filter(residence_type='hostel').count()
+    off_campus = diploma_students.filter(residence_type='off_campus').count()
+    deferment_requests = DefermentRequest.objects.filter(student__level_of_study='diploma', status='pending').count()
+    graduating = diploma_students.filter(is_graduating=True).count()
+    attachment = diploma_students.filter(is_on_attachment=True).count()
+    
+    # LEVEL OF STUDY BREAKDOWN (Counts for all levels)
+    level_counts = {
+        'diploma': Student.objects.filter(level_of_study='diploma').count(),
+        'bachelors': Student.objects.filter(level_of_study='bachelors').count(),
+        'masters': Student.objects.filter(level_of_study='masters').count(),
+        'doctorate': Student.objects.filter(level_of_study='doctorate').count(),
+        'postgrad_diploma': Student.objects.filter(level_of_study='postgrad_diploma').count(),
+        'certificate': Student.objects.filter(level_of_study='certificate').count(),
+    }
+    
+    # Total students for percentage calculation
+    total_students = Student.objects.count()
+    
+    # Calculate percentages
+    level_percentages = {}
+    if total_students > 0:
+        for level, count in level_counts.items():
+            level_percentages[level] = int((count / total_students) * 100)
+    else:
+        for level in level_counts:
+            level_percentages[level] = 0
+
+    context = {
+        'role_title': 'TVET Director',
+        'role_subtitle': 'MANAGEMENT',
+        'dashboard_title': 'TVET Director Dashboard',
+        'dashboard_role': 'Director, TVET – Full Oversight of Diploma & Technical Programs',
+        'last_updated': timezone.now().strftime("%A, %B %d, %Y"),
+        'metrics': {
+            'total': total_diploma,
+            'on_campus': on_campus,
+            'off_campus': off_campus,
+            'deferment': deferment_requests,
+            'graduating': graduating,
+            'attachment': attachment,
+        },
+        'level_counts': level_counts,
+        'level_percentages': level_percentages,
+        'total_students_all': total_students,
+    }
+    
+    return render(request, 'hms/rbac/tvet_director_dashboard.html', context)
 
 @login_required
 @role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])
@@ -3195,3 +3287,188 @@ def manage_health(request):
         'stats': stats,
         'staff_role': staff_role
     })
+
+
+# ==================== RBAC DASHBOARDS ====================
+
+@login_required
+@super_admin_required
+def super_admin_dashboard(request):
+    """Full system analytics and management for Super Admin"""
+    today = date.today()
+    context = {
+        'total_students': Student.objects.count(),
+        'total_staff': StaffProfile.objects.count(),
+        'pending_deferments': DefermentRequest.objects.filter(status='pending').count(),
+        'pending_maintenance': MaintenanceRequest.objects.filter(status='pending').count(),
+        'active_announcements': Announcement.objects.filter(is_active=True).count(),
+        'total_rooms': Room.objects.count(),
+        'occupied_rooms': Room.objects.filter(is_available=False).count(),
+        'today_visitors': Visitor.objects.filter(check_in_time__date=today).count(),
+        'recent_logs': AuditLog.objects.order_by('-timestamp')[:10],
+        'recent_students': Student.objects.select_related('user').order_by('-created_at')[:5],
+        'recent_payments': Payment.objects.filter(status='Completed').order_by('-created_at')[:5],
+    }
+    return render(request, 'hms/rbac/super_admin_dashboard.html', context)
+
+
+@login_required
+@welfare_officer_required
+def welfare_officer_dashboard(request):
+    """Welfare and Deferment management dashboard"""
+    context = {
+        'pending_deferments': DefermentRequest.objects.filter(status='pending').select_related('student__user').order_by('-created_at'),
+        'under_review_deferments': DefermentRequest.objects.filter(status='under_review').select_related('student__user').count(),
+        'approved_deferments': DefermentRequest.objects.filter(status='approved').count(),
+        'total_students': Student.objects.count(),
+        'recent_announcements': Announcement.objects.filter(is_active=True).order_by('-created_at')[:5],
+        'recent_students': Student.objects.select_related('user').order_by('-created_at')[:5],
+    }
+    return render(request, 'hms/rbac/welfare_officer_dashboard.html', context)
+
+
+@login_required
+@hostel_manager_required
+def hostel_manager_dashboard(request):
+    """Hostel and Room management dashboard"""
+    context = {
+        'total_rooms': Room.objects.count(),
+        'available_rooms': Room.objects.filter(is_available=True).count(),
+        'occupied_rooms': Room.objects.filter(is_available=False).count(),
+        'pending_room_changes': RoomChangeRequest.objects.filter(status='pending').count(),
+        'recent_assignments': RoomAssignment.objects.select_related('student__user', 'room').order_by('-assigned_date')[:10],
+        'pending_maintenance': MaintenanceRequest.objects.filter(status='pending').select_related('student__user').order_by('-created_at')[:5],
+        'total_assigned': RoomAssignment.objects.filter(is_active=True).count(), # Fixed is_current to is_active
+    }
+    return render(request, 'hms/rbac/hostel_manager_dashboard.html', context)
+
+
+@login_required
+@hostel_manager_required
+def warden_dashboard(request):
+    """Hostel / Warden Dashboard view"""
+    return hostel_manager_dashboard(request)
+
+
+@login_required
+@kitchen_manager_required
+def kitchen_manager_dashboard(request):
+    """Kitchen and Meal management dashboard"""
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+    context = {
+        'today': today,
+        'breakfast_count': Meal.objects.filter(date=today, breakfast=True).count(),
+        'supper_count': Meal.objects.filter(date=today, supper=True).count(),
+        'early_count': Meal.objects.filter(date=today, early=True).count(),
+        'away_count': Meal.objects.filter(date=today, away=True).count(),
+        'tomorrow_breakfast': Meal.objects.filter(date=tomorrow, breakfast=True).count(),
+        'tomorrow_supper': Meal.objects.filter(date=tomorrow, supper=True).count(),
+        'today_menu': Activity.objects.filter(active=True, weekday=today.weekday()).first(),
+        'activities': Activity.objects.filter(active=True),
+        'total_students': Student.objects.count(),
+    }
+    return render(request, 'hms/rbac/kitchen_manager_dashboard.html', context)
+
+
+@login_required
+@security_required
+def security_dashboard(request):
+    """Visitor log and security management dashboard"""
+    today = date.today()
+    context = {
+        'active_visitors': Visitor.objects.filter(check_out_time__isnull=True).select_related('student__user').order_by('-check_in_time'),
+        'today_visitors_count': Visitor.objects.filter(check_in_time__date=today).count(),
+        'checked_out_today': Visitor.objects.filter(check_out_time__date=today).count(),
+        'recent_visitors': Visitor.objects.select_related('student__user').order_by('-check_in_time')[:10],
+        'recent_alerts': EmergencyAlert.objects.order_by('-created_at')[:5],
+    }
+    return render(request, 'hms/rbac/security_dashboard.html', context)
+
+
+# ==================== Staff Management ====================
+
+@login_required
+@admin_only
+def manage_staff(request):
+    """View and manage all staff members"""
+    staff_members = StaffProfile.objects.select_related('user').all()
+    # Categorize staff for the UI
+    categories = {}
+    for choice_code, choice_name in StaffProfile.CATEGORY_CHOICES:
+        categories[choice_name] = staff_members.filter(category=choice_code)
+    
+    return render(request, 'hms/rbac/manage_staff.html', {
+        'categories': categories,
+        'total_staff': staff_members.count()
+    })
+
+@login_required
+@admin_only
+def edit_staff(request, staff_id):
+    """Edit a staff member's role and profile"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    if request.method == 'POST':
+        form = StaffRegistrationForm(request.POST, request.FILES, instance=staff)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Profile for {staff.user.get_full_name()} updated.")
+            return redirect('hms:manage_staff')
+    else:
+        form = StaffRegistrationForm(instance=staff)
+    return render(request, 'hms/rbac/edit_staff.html', {'form': form, 'staff': staff})
+
+@login_required
+@admin_only
+def delete_staff(request, staff_id):
+    """Delete a staff member and their user account"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    user = staff.user
+    staff.delete()
+    user.delete()
+    messages.success(request, f"Staff account removed successfully.")
+    return redirect('hms:manage_staff')
+
+
+# ==================== Staff Management ====================
+
+@login_required
+@admin_only
+def manage_staff(request):
+    """View and manage all staff members"""
+    staff_members = StaffProfile.objects.select_related('user').all()
+    # Categorize staff for the UI
+    categories = {}
+    for choice_code, choice_name in StaffProfile.CATEGORY_CHOICES:
+        categories[choice_name] = staff_members.filter(category=choice_code)
+    
+    return render(request, 'hms/rbac/manage_staff.html', {
+        'categories': categories,
+        'total_staff': staff_members.count()
+    })
+
+@login_required
+@admin_only
+def edit_staff(request, staff_id):
+    """Edit a staff member's role and profile"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    if request.method == 'POST':
+        form = StaffRegistrationForm(request.POST, request.FILES, instance=staff)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Profile for {staff.user.get_full_name()} updated.")
+            return redirect('hms:manage_staff')
+    else:
+        form = StaffRegistrationForm(instance=staff)
+    return render(request, 'hms/rbac/edit_staff.html', {'form': form, 'staff': staff})
+
+@login_required
+@admin_only
+def delete_staff(request, staff_id):
+    """Delete a staff member and their user account"""
+    staff = get_object_or_404(StaffProfile, id=staff_id)
+    user = staff.user
+    staff.delete()
+    user.delete()
+    messages.success(request, f"Staff account removed successfully.")
+    return redirect('hms:manage_staff')

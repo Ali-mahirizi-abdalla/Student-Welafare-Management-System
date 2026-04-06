@@ -1,0 +1,427 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}TVET Director Dashboard - CampusCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --color-orange: #f39c12;
+        --color-purple: #8e44ad;
+        --color-teal: #1abc9c;
+        --color-pink: #e91e63;
+        --color-emerald: #27ae60;
+        --color-navy: #2c3e50;
+        --color-blue: #3498db;
+    }
+
+    .dashboard-container {
+        padding: 2rem;
+        background-color: #f8fafc;
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, var(--color-orange) 0%, #e67e22 100%);
+        border-radius: 1rem;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-header::after {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .role-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-card {
+        border-radius: 1rem;
+        padding: 1.5rem;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .metric-card .icon {
+        background: rgba(255, 255, 255, 0.2);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .metric-card .label {
+        font-size: 0.875rem;
+        opacity: 0.9;
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-card .value {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .bg-orange { background: var(--color-orange); }
+    .bg-purple { background: var(--color-purple); }
+    .bg-teal { background: var(--color-teal); }
+    .bg-pink { background: var(--color-pink); }
+    .bg-emerald { background: var(--color-emerald); }
+    .bg-navy { background: var(--color-navy); }
+    .bg-blue { background: var(--color-blue); }
+
+    .level-card {
+        border-radius: 1rem;
+        padding: 1.25rem;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
+
+    .level-card .percentage {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 0.75rem;
+    }
+
+    .level-card .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: auto;
+    }
+
+    .level-card .label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    .section-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .sidebar-mini {
+        background: white;
+        border-right: 1px solid #e2e8f0;
+        width: 240px;
+        height: 100vh;
+        padding: 2rem 1.5rem;
+        position: fixed;
+        left: 0;
+        top: 0;
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        color: #64748b;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-link:hover, .sidebar-link.active {
+        background: #f1f5f9;
+        color: #3b82f6;
+    }
+
+    .sidebar-link.active {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+    
+    .floating-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 56px;
+        height: 56px;
+        background: #3b82f6;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.39);
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .floating-btn:hover {
+        transform: scale(1.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <!-- Mini Sidebar (Simulated from image) -->
+    <div class="hidden lg:block w-64 bg-white border-r border-gray-100 p-6 min-h-screen">
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800">{{ role_title }}</h2>
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">{{ role_subtitle }}</p>
+        </div>
+
+        <nav class="space-y-2">
+            <a href="#" class="sidebar-link active">
+                <span>📊</span> My Dashboard
+            </a>
+            
+            <div class="pt-4 pb-2">
+                <p class="text-[10px] font-bold text-orange-500 uppercase tracking-widest mb-4">TVET Programs</p>
+                <a href="{% url 'hms:manage_students' %}?level=diploma" class="sidebar-link">
+                    <span>👥</span> My Students (TVET)
+                </a>
+                <a href="{% url 'hms:admin_deferment_pending' %}" class="sidebar-link">
+                    <span>📅</span> Deferment Requests
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span>📈</span> Reports
+                </a>
+            </div>
+
+            <a href="#" class="sidebar-link mt-8">
+                <span>⚙️</span> Profile Settings
+            </a>
+            
+            <div class="absolute bottom-10 left-6">
+                <p class="text-[8px] font-bold text-gray-300 uppercase mb-2">Developed By</p>
+                <p class="text-xs font-bold text-gray-600">Ali Mahirizi Abdalla</p>
+                <a href="{% url 'hms:logout' %}" class="sidebar-link mt-4 !p-0">
+                    <span>🚪</span> Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 dashboard-container">
+        <!-- Top Nav (Simple) -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-2 text-gray-400 text-sm">
+                <span class="text-blue-500">🏠</span>
+                <span>/</span>
+                <span>Home</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="text-gray-400 hover:text-gray-600">🌙</button>
+                <button class="text-gray-400 hover:text-gray-600">🔔</button>
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold text-xs">
+                        {{ user.first_name|first|upper }}
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-800 leading-none">{{ user.get_full_name }}</p>
+                        <p class="text-[10px] uppercase text-gray-400 font-bold">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Header Card -->
+        <div class="dashboard-header">
+            <span class="role-badge">🎓 {{ dashboard_title }}</span>
+            <h1 class="text-2xl font-bold mb-2">{{ dashboard_title }}</h1>
+            <p class="text-white/80 text-sm mb-4">{{ dashboard_role }}</p>
+            
+            <div class="flex gap-4">
+                <div class="bg-black/10 backdrop-blur-sm px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="text-sm">📅</span>
+                    <span class="text-xs font-bold">{{ last_updated|upper }}</span>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="text-sm">🔒</span>
+                    <span class="text-xs font-bold uppercase">Access Restricted: TVET Students Only</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="mb-12">
+            <h3 class="section-title">📊 Key Metrics – TVET Students Only</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Students -->
+                <div class="metric-card bg-orange">
+                    <div class="flex justify-between items-start">
+                        <div class="icon">🎓</div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Total</span>
+                    </div>
+                    <div>
+                        <p class="label">TVET Students</p>
+                        <p class="value">{{ metrics.total }}</p>
+                    </div>
+                </div>
+
+                <!-- On Campus -->
+                <div class="metric-card bg-purple">
+                    <div class="flex justify-between items-start">
+                        <div class="icon">🏠</div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Residence</span>
+                    </div>
+                    <div>
+                        <p class="label">On Campus</p>
+                        <p class="value">{{ metrics.on_campus }}</p>
+                    </div>
+                </div>
+
+                <!-- Off Campus -->
+                <div class="metric-card bg-teal">
+                    <div class="flex justify-between items-start">
+                        <div class="icon">🚲</div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Residence</span>
+                    </div>
+                    <div>
+                        <p class="label">Off Campus</p>
+                        <p class="value">{{ metrics.off_campus }}</p>
+                    </div>
+                </div>
+
+                <!-- Deferment -->
+                <div class="metric-card bg-pink">
+                    <div class="flex justify-between items-start">
+                        <div class="icon">⏳</div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Requests</span>
+                    </div>
+                    <div>
+                        <p class="label">Deferment</p>
+                        <p class="value">{{ metrics.deferment }}</p>
+                    </div>
+                </div>
+
+                <!-- Graduating -->
+                <div class="metric-card bg-emerald">
+                    <div class="flex justify-between items-start">
+                        <div class="icon">🎓</div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Finalists</span>
+                    </div>
+                    <div>
+                        <p class="label">Graduating</p>
+                        <p class="value">{{ metrics.graduating }}</p>
+                    </div>
+                </div>
+
+                <!-- Attachment -->
+                <div class="metric-card bg-navy">
+                    <div class="flex justify-between items-start">
+                        <div class="icon">💼</div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">External</span>
+                    </div>
+                    <div>
+                        <p class="label">Attachment</p>
+                        <p class="value">{{ metrics.attachment }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level of Study -->
+        <div>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="section-title !mb-0">🎓 Level of Study</h3>
+                <div class="bg-gray-100 px-3 py-1 rounded-full">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">Total Students: {{ total_students_all }}</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <!-- Diploma CARD -->
+                <div class="level-card bg-orange">
+                    <span class="percentage">{{ level_percentages.diploma }}%</span>
+                    <div class="value">{{ level_counts.diploma }}</div>
+                    <div class="label">Diploma (TVET)</div>
+                </div>
+
+                <!-- Bachelors CARD -->
+                <div class="level-card bg-blue">
+                    <span class="percentage">{{ level_percentages.bachelors }}%</span>
+                    <div class="value">{{ level_counts.bachelors }}</div>
+                    <div class="label">Bachelor's</div>
+                </div>
+
+                <!-- Masters CARD -->
+                <div class="level-card bg-purple">
+                    <span class="percentage">{{ level_percentages.masters }}%</span>
+                    <div class="value">{{ level_counts.masters }}</div>
+                    <div class="label">Master's</div>
+                </div>
+
+                <!-- Doctorate CARD -->
+                <div class="level-card bg-red-600">
+                    <span class="percentage">{{ level_percentages.doctorate }}%</span>
+                    <div class="value">{{ level_counts.doctorate }}</div>
+                    <div class="label">PH.D (Doctorate)</div>
+                </div>
+
+                <!-- Postgrad CARD -->
+                <div class="level-card bg-teal">
+                    <span class="percentage">{{ level_percentages.postgrad_diploma }}%</span>
+                    <div class="value">{{ level_counts.postgrad_diploma }}</div>
+                    <div class="label">Postgrad Diploma</div>
+                </div>
+
+                <!-- Certificate CARD -->
+                <div class="level-card bg-orange-600">
+                    <span class="percentage">{{ level_percentages.certificate }}%</span>
+                    <div class="value">{{ level_counts.certificate }}</div>
+                    <div class="label">Certificate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <div class="floating-btn">+</div>
+
+        <!-- Chat Bubble (Bottom Left) -->
+        <div class="fixed bottom-8 left-8 w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white cursor-pointer shadow-lg hover:scale-110 transition-transform">
+            💬
+        </div>
+    </div>
+</div>
+{% endblock %}
