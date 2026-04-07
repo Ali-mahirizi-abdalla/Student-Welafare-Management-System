@@ -3472,3 +3472,66 @@ def delete_staff(request, staff_id):
     user.delete()
     messages.success(request, f"Staff account removed successfully.")
     return redirect('hms:manage_staff')
+
+
+@login_required
+@admin_only
+def manage_roles(request):
+    """Manage staff roles - overview of all assigned roles and quick actions."""
+    staff_members = StaffProfile.objects.all().select_related('user').order_by('role')
+    categories = {}
+    for staff in staff_members:
+        category = staff.get_category()
+        if category not in categories:
+            categories[category] = []
+        categories[category].append(staff)
+    total_staff = staff_members.count()
+    context = {
+        'staff_members': staff_members,
+        'categories': categories,
+        'total_staff': total_staff,
+        'page_title': 'Role Management',
+    }
+    return render(request, 'hms/rbac/manage_roles.html', context)
+
+
+@login_required
+@admin_only
+def generate_staff_link(request):
+    """Generate a secure, time-limited staff registration invitation link."""
+    import secrets
+    from datetime import timedelta
+    generated_link = None
+    expiry_hours = 24
+    if request.method == 'POST':
+        role = request.POST.get('role', '').strip()
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        expiry_hours = int(request.POST.get('expiry_hours', 24))
+        if role:
+            token = secrets.token_urlsafe(32)
+            expiry_time = timezone.now() + timedelta(hours=expiry_hours)
+            active_invitations = request.session.get('staff_invitations', {})
+            active_invitations[token] = {
+                'token': token,
+                'role': role,
+                'name': name,
+                'email': email,
+                'expires_at': expiry_time.isoformat(),
+                'created_by': request.user.id,
+            }
+            request.session['staff_invitations'] = active_invitations
+            request.session.modified = True
+            generated_link = request.build_absolute_uri(
+                f"/manage/staff/register/?invite={token}"
+            )
+            messages.success(request, f"Invitation link generated for role: {role}")
+        else:
+            messages.error(request, "Please select a role before generating a link.")
+    context = {
+        'roles': StaffProfile.ROLE_CHOICES,
+        'generated_link': generated_link,
+        'expiry_hours': expiry_hours,
+        'page_title': 'Generate Staff Invitation Link',
+    }
+    return render(request, 'hms/admin/generate_link.html', context)
