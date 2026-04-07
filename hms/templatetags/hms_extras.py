@@ -19,3 +19,20 @@ def is_eq(value, arg):
     Usage: {{ value|is_eq:arg }}
     """
     return value == arg
+
+@register.filter
+def replace(value, arg):
+    """
+    Template filter to replace characters in a string.
+    Usage: {{ value|replace:"old,new" }} or custom implementation.
+    Django typically doesn't support multiple arguments for filters easily.
+    I'll implement it to take a string like "_, " and split it.
+    """
+    if not isinstance(value, str):
+        return value
+    
+    # Check if arg contains a comma to separate old and new
+    if "," in arg:
+        old, new = arg.split(",", 1)
+        return value.replace(old, new)
+    return value
