@@ -117,7 +117,7 @@
     <!-- Staff by Category -->
     {% for category, members in categories.items %}
     <div class="section-card">
-        <div class="section-title">👥 {{ category|title|replace:"_":" " }} ({{ members|length }})</div>
+        <div class="section-title">👥 {{ category|cut:"_"|title }} ({{ members|length }})</div>
         {% if members %}
         <table class="staff-table">
             <thead>
