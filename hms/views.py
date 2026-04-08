@@ -3419,53 +3419,6 @@ def security_dashboard(request):
     return render(request, 'hms/rbac/security_dashboard.html', context)
 
 
-# ==================== Staff Management ====================
-
-@login_required
-@admin_only
-def manage_staff(request):
-    """View and manage all staff members"""
-    staff_members = StaffProfile.objects.select_related('user').all()
-    # Categorize staff for the UI
-    categories = {}
-    # Fix: Manual categorization to avoid AttributeError
-    category_map = {'EXECUTIVE': 'Executive Management', 'ACADEMIC_ADMIN': 'Academic Administration', 'SCHOOL_DEPT': 'School & Departmental Heads', 'FINANCE_ADMIN': 'Finance & Administration', 'STUDENT_SERVICES': 'Student Services', 'TECHNICAL_ESTATES': 'Technical & Estates', 'HEALTH_SERVICES': 'Health Services', 'GENERAL_STAFF': 'General Staff',}
-    categories = {name: [] for name in category_map.values()}
-    for staff in staff_members:
-        cat_name = category_map.get(staff.get_category(), 'General Staff')
-        categories[cat_name].append(staff)
-    
-    return render(request, 'hms/rbac/manage_staff.html', {
-        'categories': categories,
-        'total_staff': staff_members.count()
-    })
-
-@login_required
-@admin_only
-def edit_staff(request, staff_id):
-    """Edit a staff member's role and profile"""
-    staff = get_object_or_404(StaffProfile, id=staff_id)
-    if request.method == 'POST':
-        form = StaffRegistrationForm(request.POST, request.FILES, instance=staff)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"Profile for {staff.user.get_full_name()} updated.")
-            return redirect('hms:manage_staff')
-    else:
-        form = StaffRegistrationForm(instance=staff)
-    return render(request, 'hms/rbac/edit_staff.html', {'form': form, 'staff': staff})
-
-@login_required
-@admin_only
-def delete_staff(request, staff_id):
-    """Delete a staff member and their user account"""
-    staff = get_object_or_404(StaffProfile, id=staff_id)
-    user = staff.user
-    staff.delete()
-    user.delete()
-    messages.success(request, f"Staff account removed successfully.")
-    return redirect('hms:manage_staff')
-
 
 # ==================== Staff Management ====================
 
@@ -3483,7 +3436,7 @@ def manage_staff(request):
         cat_name = category_map.get(staff.get_category(), 'General Staff')
         categories[cat_name].append(staff)
     
-    return render(request, 'hms/rbac/manage_staff.html', {
+    return render(request, 'hms/rbac/manage_roles.html', {
         'categories': categories,
         'total_staff': staff_members.count()
     })
