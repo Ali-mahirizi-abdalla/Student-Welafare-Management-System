@@ -684,11 +684,40 @@ def dashboard_admin(request):
     # Real counts from database
     attachment_count = Student.objects.filter(is_on_attachment=True).count()
     graduating_count = Student.objects.filter(is_graduating=True).count()
-    
+
+    # Level of Study breakdown
+    level_counts = {
+        'diploma': Student.objects.filter(level_of_study='diploma').count(),
+        'bachelors': Student.objects.filter(level_of_study='bachelors').count(),
+        'masters': Student.objects.filter(level_of_study='masters').count(),
+        'doctorate': Student.objects.filter(level_of_study='doctorate').count(),
+        'postgrad_diploma': Student.objects.filter(level_of_study='postgrad_diploma').count(),
+        'certificate': Student.objects.filter(level_of_study='certificate').count(),
+    }
+    level_percentages = {}
+    if total_students > 0:
+        for level, count in level_counts.items():
+            level_percentages[level] = round((count / total_students) * 100, 1)
+    else:
+        for level in level_counts:
+            level_percentages[level] = 0.0
+
+
     # Staff Role Detection
     staff_profile = getattr(request.user, 'staff_profile', None)
     staff_role = staff_profile.role if staff_profile else None
     staff_category = staff_profile.get_category() if staff_profile else None
+    
+    # Dining & Revenue Metrics
+    total_meals_served_today = today_stats['breakfast'] + today_stats['early'] + today_stats['supper']
+    total_revenue = Payment.objects.filter(status='Completed').aggregate(models.Sum('amount'))['amount__sum'] or 0
+    pending_payments_count = Payment.objects.filter(status='Pending').count()
+    
+    meal_completion_rate = 0
+    if student_on_meals > 0:
+        # Assuming max 2 meals per student (Breakfast + Supper)
+        potential_meals = student_on_meals * 2
+        meal_completion_rate = round((total_meals_served_today / potential_meals) * 100, 1) if potential_meals > 0 else 0
     
     context = {
         'today': today,
@@ -711,7 +740,10 @@ def dashboard_admin(request):
         'activities': activities,
         'staff_role': staff_role,
         'staff_category': staff_category,
-        'is_superadmin': request.user.is_superuser
+        'is_superadmin': request.user.is_superuser,
+        'level_counts': level_counts,
+        'level_percentages': level_percentages,
+        'total_students_all': total_students,
     }
 
     # ==================== ADVANCED DASHBOARD LOGIC ====================
@@ -824,6 +856,7 @@ def dashboard_admin(request):
         'chart_data_json': json.dumps(chart_data),
         'recent_activity': recent_activity,
         'searched_students': searched_students,
+        'staff_category_raw': staff_category,
     })
 
     return render(request, 'hms/admin/dashboard.html', context)
