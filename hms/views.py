@@ -3428,8 +3428,12 @@ def manage_staff(request):
     staff_members = StaffProfile.objects.select_related('user').all()
     # Categorize staff for the UI
     categories = {}
-    for choice_code, choice_name in StaffProfile.CATEGORY_CHOICES:
-        categories[choice_name] = staff_members.filter(category=choice_code)
+    # Fix: Manual categorization to avoid AttributeError
+    category_map = {'EXECUTIVE': 'Executive Management', 'ACADEMIC_ADMIN': 'Academic Administration', 'SCHOOL_DEPT': 'School & Departmental Heads', 'FINANCE_ADMIN': 'Finance & Administration', 'STUDENT_SERVICES': 'Student Services', 'TECHNICAL_ESTATES': 'Technical & Estates', 'HEALTH_SERVICES': 'Health Services', 'GENERAL_STAFF': 'General Staff',}
+    categories = {name: [] for name in category_map.values()}
+    for staff in staff_members:
+        cat_name = category_map.get(staff.get_category(), 'General Staff')
+        categories[cat_name].append(staff)
     
     return render(request, 'hms/rbac/manage_staff.html', {
         'categories': categories,
@@ -3472,8 +3476,12 @@ def manage_staff(request):
     staff_members = StaffProfile.objects.select_related('user').all()
     # Categorize staff for the UI
     categories = {}
-    for choice_code, choice_name in StaffProfile.CATEGORY_CHOICES:
-        categories[choice_name] = staff_members.filter(category=choice_code)
+    # Fix: Manual categorization to avoid AttributeError
+    category_map = {'EXECUTIVE': 'Executive Management', 'ACADEMIC_ADMIN': 'Academic Administration', 'SCHOOL_DEPT': 'School & Departmental Heads', 'FINANCE_ADMIN': 'Finance & Administration', 'STUDENT_SERVICES': 'Student Services', 'TECHNICAL_ESTATES': 'Technical & Estates', 'HEALTH_SERVICES': 'Health Services', 'GENERAL_STAFF': 'General Staff',}
+    categories = {name: [] for name in category_map.values()}
+    for staff in staff_members:
+        cat_name = category_map.get(staff.get_category(), 'General Staff')
+        categories[cat_name].append(staff)
     
     return render(request, 'hms/rbac/manage_staff.html', {
         'categories': categories,
