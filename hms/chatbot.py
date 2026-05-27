@@ -177,27 +177,3 @@ class ChatService:
                 "content": f"I encountered an error. Please try rephrasing your question. (Error: {str(e)[:50]})"
             }
     
-    def get_quick_replies(self, user_role: str) -> List[str]:
-        """
-        Get suggested quick reply prompts based on user role.
-        
-        Args:
-            user_role: User's role in the system
-            
-        Returns:
-            List of suggested questions/prompts
-        """
-        if user_role in ['Admin', 'Warden']:
-            return [
-                "How do I view today's meal confirmations?",
-                "How do I manage students?",
-                "How do I create announcements?",
-                "How do I handle maintenance requests?"
-            ]
-        else:
-            return [
-                "How do I confirm my meals?",
-                "Where can I see my room details?",
-                "How do I submit a maintenance request?",
-                "How do I make a payment?"
-            ]

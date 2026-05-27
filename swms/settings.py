@@ -168,10 +168,15 @@ WSGI_APPLICATION = 'swms.wsgi.application'
 # Database Configuration
 # Priority: DATABASE_URL > Environment Components > SQLite (if USE_SQLITE=True)
 if os.getenv('USE_SQLITE', 'False') == 'True' and not os.getenv('DATABASE_URL'):
+    render_disk = os.getenv('RENDER_DISK_DIR')
+    if render_disk:
+        sqlite_path = Path(render_disk) / 'db.sqlite3'
+    else:
+        sqlite_path = BASE_DIR / 'db.sqlite3'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': sqlite_path,
         }
     }
 else:

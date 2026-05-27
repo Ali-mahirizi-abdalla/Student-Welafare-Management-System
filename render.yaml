@@ -1,0 +1,56 @@
+# Render Blueprint Specification (render.yaml)
+# Use this to deploy the entire SWMS stack in one click: Django, PostgreSQL, and Redis.
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. Django Web Service
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: swms-web
+    runtime: python
+    plan: free # You can upgrade this to 'starter' or higher for production scale
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn swms.wsgi --log-file -
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: SECRET_KEY
+        generateValue: true # Render will automatically generate a secure 256-bit key
+      - key: DEBUG
+        value: "False"
+      - key: USE_SQLITE
+        value: "False" # Set to True if you want to use SQLite with a persistent disk instead
+      - key: ALLOWED_HOSTS
+        value: swms-web.onrender.com,localhost,127.0.0.1 # Update this with your custom domain later if needed
+      
+      # Automatically link the PostgreSQL database
+      - key: DATABASE_URL
+        fromDatabase:
+          name: swms-db
+          property: connectionString
+
+      # Automatically link the Redis service (for caching / Celery)
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: swms-redis
+          property: connectionString
+
+  # ---------------------------------------------------------------------------
+  # 2. Redis Cache Service (For Celery Task Queue and Caching)
+  # ---------------------------------------------------------------------------
+  - type: redis
+    name: swms-redis
+    plan: free
+    ipAllowList: [] # Access restricted only to internal services (secure)
+
+# -----------------------------------------------------------------------------
+# 3. PostgreSQL Managed Database
+# -----------------------------------------------------------------------------
+databases:
+  - name: swms-db
+    databaseName: swms_db
+    user: swms_user
+    plan: free
