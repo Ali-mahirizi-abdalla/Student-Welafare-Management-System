@@ -9,7 +9,7 @@ services:
     name: swms-web
     runtime: python
     plan: free # You can upgrade this to 'starter' or higher for production scale
-    buildCommand: rm -rf .venv && pip install --no-cache-dir -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    buildCommand: bash build.sh
     startCommand: gunicorn swms.wsgi --log-file -
     envVars:
       - key: PORT
