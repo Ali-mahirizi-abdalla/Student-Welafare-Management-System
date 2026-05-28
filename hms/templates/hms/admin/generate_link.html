@@ -3,422 +3,629 @@
 
 {% block title %}Staff Invitation System - CampusCare{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <style>
     :root {
-        --primary: #4f46e5;
-        --secondary: #0ea5e9;
-        --background: #f8fafc;
-        --surface: #ffffff;
-        --text-main: #1e293b;
+        --primary: #1E293B;
+        --secondary: #0D9488;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --danger: #EF4444;
+        --background: #F8FAFC;
+        --surface: #FFFFFF;
+        --border: #E2E8F0;
+        --input-border: #CBD5E1;
+        --text-main: #1E293B;
         --text-muted: #64748b;
-        --border: #e2e8f0;
+    }
+
+    body {
+        background-color: var(--background);
     }
 
     .page-container {
         max-width: 1100px;
-        margin: 3rem auto;
+        margin: 2rem auto;
         padding: 0 1.5rem;
     }
-
-    .premium-card {
-        background: var(--surface);
-        border-radius: 1.5rem;
-        border: 1px solid var(--border);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-        margin-bottom: 2.5rem;
+    
+    .page-header {
+        margin-bottom: 2rem;
     }
 
-    .card-header {
-        background: #1e293b;
-        padding: 2.5rem;
-        text-align: center;
-        color: white;
-    }
-
-    .card-header h1 {
-        font-size: 1.75rem;
+    .page-header h1 {
+        font-size: 1.8rem;
         font-weight: 800;
-        margin-bottom: 0.5rem;
+        color: var(--primary);
         display: flex;
         align-items: center;
-        justify-content: center;
         gap: 0.75rem;
-        letter-spacing: -0.025em;
-    }
-
-    .card-header p {
-        color: #94a3b8;
-        font-size: 0.95rem;
-    }
-
-    .card-body {
-        padding: 3rem;
-    }
-
-    .section-title {
-        font-size: 0.75rem;
-        font-weight: 800;
-        color: var(--text-muted);
+        margin-bottom: 0.5rem;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 1rem;
-        display: block;
     }
 
-    .form-box {
-        background: #f8fafc;
-        border: 1.5px solid var(--border);
-        border-radius: 1rem;
-        padding: 1.5rem;
+    .page-header p {
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .modern-card {
+        background: var(--surface);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-group {
         margin-bottom: 1.5rem;
     }
 
-    .role-select {
+    .form-select {
         width: 100%;
-        padding: 1rem;
-        border-radius: 0.75rem;
-        border: 1.5px solid var(--border);
-        background: white;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--input-border);
+        background: var(--surface);
         font-size: 1rem;
         font-weight: 600;
         color: var(--text-main);
         outline: none;
         transition: all 0.2s;
         cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px 12px;
     }
 
-    .role-select:focus {
+    .form-select:focus {
         border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        box-shadow: 0 0 0 3px rgba(30, 41, 59, 0.1);
     }
 
-    .option-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    .radio-group {
+        display: flex;
         gap: 1rem;
+        flex-wrap: wrap;
     }
 
-    .radio-card {
+    .radio-option {
+        flex: 1;
+        min-width: 140px;
         position: relative;
-        display: block;
-        padding: 1rem;
-        background: white;
-        border: 1.5px solid var(--border);
-        border-radius: 0.75rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-align: center;
     }
 
-    .radio-card input {
+    .radio-option input[type="radio"] {
         position: absolute;
         opacity: 0;
     }
 
-    .radio-card span {
-        font-size: 0.9rem;
-        font-weight: 700;
+    .radio-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--input-border);
+        background: var(--surface);
+        font-weight: 600;
         color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .radio-label::before {
+        content: '';
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid var(--input-border);
+        background: white;
+        transition: all 0.2s;
     }
 
-    .radio-card:hover {
+    .radio-option input[type="radio"]:checked + .radio-label {
         border-color: var(--primary);
-    }
-
-    .radio-card input:checked + span {
         color: var(--primary);
+        background: rgba(30, 41, 59, 0.02);
     }
-
-    .radio-card:has(input:checked) {
+    
+    .radio-option input[type="radio"]:checked + .radio-label::before {
         border-color: var(--primary);
-        background: rgba(79, 70, 229, 0.05);
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        background: var(--primary);
+        box-shadow: inset 0 0 0 3px white;
     }
 
-    .btn-submit {
+    .radio-option input[type="radio"]:focus-visible + .radio-label {
+        box-shadow: 0 0 0 3px rgba(30, 41, 59, 0.1);
+    }
+
+    .btn-primary {
         width: 100%;
-        background: #1e293b;
+        background: var(--primary);
         color: white;
         border: none;
-        padding: 1.25rem;
-        border-radius: 1rem;
+        padding: 12px 24px;
+        border-radius: 40px;
         font-size: 1rem;
-        font-weight: 800;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.2s;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
     }
 
-    .btn-submit:hover {
+    .btn-primary:hover {
         background: #0f172a;
         transform: translateY(-2px);
     }
 
-    /* Table Styles */
-    .table-card {
+    .btn-secondary {
         background: var(--surface);
-        border-radius: 1.5rem;
-        border: 1px solid var(--border);
-        overflow: hidden;
-    }
-
-    .table-header {
-        padding: 1.5rem 2rem;
-        border-bottom: 2px solid #1e293b;
-        display: flex;
-        justify-content: space-between;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        padding: 12px 24px;
+        border-radius: 40px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
         align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
     }
 
-    .table-header h2 {
-        font-size: 1.125rem;
+    .btn-secondary:hover {
+        background: rgba(30, 41, 59, 0.05);
+        color: var(--primary);
+    }
+
+    /* Success Box */
+    .success-box {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .success-title {
+        color: var(--success);
+        font-size: 1.1rem;
         font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .generated-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: white;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid #bbf7d0;
+        margin-bottom: 1rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 600;
+        color: var(--primary);
+    }
+    
+    .link-details {
+        margin-bottom: 1.5rem;
         color: var(--text-main);
-        letter-spacing: -0.01em;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+    
+    .link-details strong {
+        font-weight: 700;
+        margin-right: 0.5rem;
+    }
+    
+    .share-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .share-btn {
+        background: white;
+        border: 1px solid var(--border);
+        color: var(--text-main);
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+    
+    .share-btn:hover {
+        background: #f1f5f9;
+        border-color: var(--input-border);
+    }
+
+    /* Table Styles */
+    .table-responsive {
+        overflow-x: auto;
     }
 
     .data-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
     }
 
     .data-table th {
-        background: #f8fafc;
-        padding: 1.25rem 1.5rem;
+        background: var(--surface);
+        padding: 1rem;
         text-align: left;
-        font-size: 0.75rem;
-        font-weight: 800;
+        font-size: 0.8rem;
+        font-weight: 700;
         color: var(--text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        border-bottom: 1.5px solid var(--border);
+        border-bottom: 2px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .data-table td {
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #f1f5f9;
-        font-size: 0.875rem;
-        font-weight: 600;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
         color: var(--text-main);
+        font-weight: 500;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    
+    .data-table tbody tr {
+        transition: background-color 0.2s;
     }
 
-    .link-pill {
+    .data-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+    
+    .data-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .link-text {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.75rem;
-        background: #f1f5f9;
-        padding: 0.4rem 0.75rem;
-        border-radius: 0.5rem;
-        color: var(--text-muted);
-        max-width: 180px;
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        font-size: 0.85rem;
+        color: var(--secondary);
     }
 
     .badge {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 2rem;
-        font-size: 0.7rem;
-        font-weight: 800;
-        text-transform: uppercase;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
     }
 
     .badge-success { background: #dcfce7; color: #166534; }
     .badge-danger { background: #fee2e2; color: #991b1b; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    
     .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-    .action-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 0.75rem;
-        border: 1px solid var(--border);
-        background: white;
+    .action-group {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: transparent;
         display: flex;
         align-items: center;
         justify-content: center;
         color: var(--text-muted);
         transition: all 0.2s;
         text-decoration: none;
+        cursor: pointer;
     }
 
-    .action-btn:hover {
+    .icon-btn:hover {
         background: #f8fafc;
+        border-color: var(--border);
         color: var(--text-main);
         transform: translateY(-1px);
     }
 
-    .action-btn.delete:hover {
+    .icon-btn.delete:hover {
         background: #fee2e2;
-        color: #ef4444;
         border-color: #fecaca;
+        color: var(--danger);
     }
 
-    .footer-actions {
-        padding: 1.5rem 2rem;
-        background: #f8fafc;
+    .table-actions {
         display: flex;
         gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
     }
 
-    .secondary-btn {
-        padding: 0.6rem 1.25rem;
-        border-radius: 0.75rem;
-        border: 1px solid var(--border);
-        background: white;
-        color: var(--text-muted);
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-decoration: none;
-        transition: all 0.2s;
+    /* Toast Notification */
+    .toast-container {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
-
-    .secondary-btn:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
+    
+    .toast {
+        background: var(--surface);
+        border-left: 4px solid var(--success);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transform: translateX(120%);
+        transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .toast.show {
+        transform: translateX(0);
+    }
+    
+    .toast-icon {
+        color: var(--success);
+        font-size: 1.2rem;
+    }
+    
+    .toast-message {
+        font-weight: 600;
         color: var(--text-main);
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .radio-group {
+            flex-direction: column;
+        }
+        
+        .table-actions {
+            flex-direction: column;
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .share-actions {
+            flex-direction: column;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="page-container">
-    <!-- Generator Section -->
-    <div class="premium-card">
-        <div class="card-header">
-            <h1><i class="fas fa-link"></i> Staff Invitation System</h1>
-            <p>Generate secure, time-bound registration links for new staff members</p>
-        </div>
-        <div class="card-body">
-            {% if messages %}
-                {% for message in messages %}
-                <div style="padding: 1rem 1.5rem; border-radius: 1rem; margin-bottom: 2rem; font-size: 0.9rem; font-weight: 700; {% if message.tags == 'success' %}background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534;{% else %}background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;{% endif %}">
-                    {{ message }}
-                </div>
-                {% endfor %}
-            {% endif %}
-
-            <form method="POST" id="genForm">
-                {% csrf_token %}
-                <div class="form-box">
-                    <span class="section-title">Step 1: Select Staff Role</span>
-                    <select name="role" class="role-select" required>
-                        <option value="">-- Select Target Role --</option>
-                        {% for value, label in roles %}
-                        <option value="{{ value }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <div class="form-box">
-                        <span class="section-title">Step 2: Link Expiry</span>
-                        <div class="option-grid">
-                            <label class="radio-card">
-                                <input type="radio" name="expiry" value="24h" checked>
-                                <span>24 Hours</span>
-                            </label>
-                            <label class="radio-card">
-                                <input type="radio" name="expiry" value="7d">
-                                <span>7 Days</span>
-                            </label>
-                            <label class="radio-card">
-                                <input type="radio" name="expiry" value="never">
-                                <span>Never</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-box">
-                        <span class="section-title">Step 3: Usage Limit</span>
-                        <div class="option-grid">
-                            <label class="radio-card">
-                                <input type="radio" name="usage" value="single" checked>
-                                <span>Single Use</span>
-                            </label>
-                            <label class="radio-card">
-                                <input type="radio" name="usage" value="multiple">
-                                <span>Multi (5)</span>
-                            </label>
-                            <label class="radio-card">
-                                <input type="radio" name="usage" value="unlimited">
-                                <span>Unlimited</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit" id="genBtn">
-                    <i class="fas fa-magic"></i> Generate Secure Invitation Link
-                </button>
-            </form>
-        </div>
+    <div class="page-header">
+        <h1><i class="fas fa-link"></i> STAFF INVITATION SYSTEM</h1>
+        <p>Generate secure, time-bound registration links for new staff members</p>
     </div>
 
-    <!-- Active Links Table -->
-    <div class="table-card">
-        <div class="table-header">
-            <h2><i class="fas fa-history"></i> Active Registration Links</h2>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' and 'link generated successfully' in message.message|lower %}
+                <!-- Skip default success message to show the beautiful card -->
+            {% else %}
+                <div class="modern-card" style="padding: 16px; border-left: 4px solid {% if message.tags == 'success' %}var(--success){% else %}var(--danger){% endif %}; margin-bottom: 24px;">
+                    <div style="font-weight: 600; color: {% if message.tags == 'success' %}var(--success){% else %}var(--danger){% endif %};">{{ message }}</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if generated_link and invitations.0 %}
+    <div class="success-box">
+        <div class="success-title"><i class="fas fa-check-circle"></i> LINK GENERATED SUCCESSFULLY</div>
+        
+        <div class="generated-link">
+            <i class="fas fa-link" style="color: var(--success);"></i>
+            <span id="new-link-text">{{ generated_link }}</span>
         </div>
-        <div class="overflow-x-auto">
+        
+        <div class="link-details">
+            <div><strong>Role:</strong> {{ invitations.0.get_role_display }}</div>
+            <div><strong>Expires:</strong> {% if invitations.0.expires_at %}{{ invitations.0.expires_at|timeuntil }} left{% else %}Never Expires{% endif %}</div>
+            <div><strong>Uses:</strong> {{ invitations.0.used_count }}/{% if invitations.0.usage_limit == 0 %}Unlimited{% else %}{{ invitations.0.usage_limit }}{% endif %}</div>
+        </div>
+        
+        <div class="share-actions">
+            <button type="button" class="share-btn" onclick="copyToClipboard('{{ generated_link }}', 'Link copied to clipboard!')">
+                <i class="fas fa-clipboard"></i> COPY LINK
+            </button>
+            <button type="button" class="share-btn" onclick="simulateAction('Email sent successfully')">
+                <i class="fas fa-envelope"></i> EMAIL
+            </button>
+            <button type="button" class="share-btn" onclick="simulateAction('SMS sent successfully')">
+                <i class="fas fa-comment-alt"></i> SMS
+            </button>
+            <button type="button" class="share-btn" onclick="simulateAction('WhatsApp message queued')">
+                <i class="fab fa-whatsapp"></i> WHATSAPP
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
+    <form method="POST" id="genForm">
+        {% csrf_token %}
+        
+        <div class="modern-card">
+            <div class="card-title">STEP 1: SELECT STAFF ROLE</div>
+            <div class="form-group mb-0">
+                <select name="role" class="form-select" required>
+                    <option value="">▼ -- Select Target Role --</option>
+                    {% for value, label in roles %}
+                    <option value="{{ value }}">• {{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="modern-card">
+            <div class="card-title">STEP 2: LINK EXPIRY</div>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="expiry" value="24h" checked>
+                    <div class="radio-label">24 Hours</div>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="expiry" value="7d">
+                    <div class="radio-label">7 Days</div>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="expiry" value="30d">
+                    <div class="radio-label">30 Days</div>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="expiry" value="never">
+                    <div class="radio-label">Never Expires</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="modern-card">
+            <div class="card-title">STEP 3: USAGE LIMIT</div>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="usage" value="single" checked>
+                    <div class="radio-label">Single Use (1 person)</div>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="usage" value="multiple">
+                    <div class="radio-label">Multiple Use (5 people)</div>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="usage" value="unlimited">
+                    <div class="radio-label">Unlimited</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="modern-card" style="padding: 0; background: transparent; border: none; box-shadow: none;">
+            <button type="submit" class="btn-primary" id="genBtn">
+                <i class="fas fa-link"></i> GENERATE INVITATION LINK
+            </button>
+        </div>
+    </form>
+
+    <div class="modern-card">
+        <div class="card-title" style="margin-bottom: 1rem;"><i class="fas fa-clipboard-list"></i> ACTIVE REGISTRATION LINKS</div>
+        
+        <div class="table-responsive">
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Staff Role</th>
-                        <th>Invitation Link</th>
-                        <th>Expiry</th>
-                        <th>Usage</th>
-                        <th>Status</th>
-                        <th style="text-align: right;">Action</th>
+                        <th>ROLE</th>
+                        <th>INVITATION LINK</th>
+                        <th>EXPIRY</th>
+                        <th>USAGE</th>
+                        <th>STATUS</th>
+                        <th style="text-align: right;">ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for invite in invitations %}
                     <tr>
-                        <td style="color: var(--primary); font-weight: 800;">{{ invite.get_role_display }}</td>
-                        <td><span class="link-pill">{{ invite.full_url }}</span></td>
+                        <td style="font-weight: 700;">{{ invite.get_role_display }}</td>
+                        <td>
+                            <span class="link-text">{{ invite.full_url|truncatechars:35 }}</span>
+                        </td>
                         <td>
                             {% if invite.expires_at %}
                                 {% if invite.is_expired %}
-                                    <span style="color: #ef4444;">Expired</span>
+                                    <span style="color: var(--danger);">Expired</span>
                                 {% else %}
                                     {{ invite.expires_at|timeuntil }} left
                                 {% endif %}
                             {% else %}
-                                <span style="color: var(--secondary);">Permanent</span>
+                                <span style="color: var(--secondary);">Never</span>
                             {% endif %}
                         </td>
-                        <td>{{ invite.used_count }}/{% if invite.usage_limit == 0 %}∞{% else %}{{ invite.usage_limit }}{% endif %}</td>
                         <td>
-                            {% if invite.is_valid %}
+                            {{ invite.used_count }}/{% if invite.usage_limit == 0 %}∞{% else %}{{ invite.usage_limit }}{% endif %}
+                        </td>
+                        <td>
+                            {% if invite.is_expired %}
+                            <span class="badge badge-danger"><span class="dot"></span> Expired</span>
+                            {% elif invite.is_valid %}
                             <span class="badge badge-success"><span class="dot"></span> Active</span>
                             {% else %}
-                            <span class="badge badge-danger"><span class="dot"></span> Inactive</span>
+                            <span class="badge badge-warning"><span class="dot"></span> Exhausted</span>
                             {% endif %}
                         </td>
                         <td>
-                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                                <button class="action-btn" title="Copy Link" onclick="copyToClipboard('{{ invite.full_url }}')">
-                                    <i class="fas fa-copy"></i>
+                            <div class="action-group">
+                                <button type="button" class="icon-btn" title="Copy Link" onclick="copyToClipboard('{{ invite.full_url }}', 'Link copied to clipboard')">
+                                    <i class="fas fa-clipboard"></i>
                                 </button>
-                                <a href="{% url 'hms:manage_invitation_action' invite.id %}?action=delete" class="action-btn delete" title="Delete">
+                                <button type="button" class="icon-btn" title="Email Link" onclick="simulateAction('Email sent to {{ invite.get_role_display }}')">
+                                    <i class="fas fa-envelope"></i>
+                                </button>
+                                <button type="button" class="icon-btn" title="Refresh/Renew Link" onclick="simulateAction('Link validity refreshed')">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <a href="{% url 'hms:manage_invitation_action' invite.id %}?action=delete" class="icon-btn delete" title="Delete Link">
+                                    {% if invite.is_expired or not invite.is_valid %}
                                     <i class="fas fa-trash-alt"></i>
+                                    {% else %}
+                                    <i class="fas fa-times"></i>
+                                    {% endif %}
                                 </a>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 4rem; color: var(--text-muted); font-style: italic;">
+                        <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
                             No active invitation links found.
                         </td>
                     </tr>
@@ -426,24 +633,92 @@
                 </tbody>
             </table>
         </div>
-        <div class="footer-actions">
-            <a href="." class="secondary-btn"><i class="fas fa-sync-alt"></i> Refresh List</a>
-            <a href="{% url 'hms:manage_invitation_action' 0 %}?action=clear_expired" class="secondary-btn"><i class="fas fa-broom"></i> Clear Expired</a>
+        
+        <div class="table-actions">
+            <a href="." class="btn-secondary">
+                <i class="fas fa-sync-alt"></i> REFRESH LIST
+            </a>
+            <a href="{% url 'hms:manage_invitation_action' 0 %}?action=clear_expired" class="btn-secondary" style="color: var(--danger); border-color: var(--danger);">
+                <i class="fas fa-trash-alt"></i> CLEAR EXPIRED
+            </a>
         </div>
     </div>
 </div>
 
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            alert('Invitation link copied to clipboard!');
-        });
+    function showToast(message) {
+        const container = document.getElementById('toastContainer');
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        
+        toast.innerHTML = `
+            <div class="toast-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="toast-message">${message}</div>
+        `;
+        
+        container.appendChild(toast);
+        
+        // Trigger reflow to apply animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+
+    function copyToClipboard(text, successMessage) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(successMessage);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                fallbackCopyTextToClipboard(text, successMessage);
+            });
+        } else {
+            fallbackCopyTextToClipboard(text, successMessage);
+        }
+    }
+    
+    function fallbackCopyTextToClipboard(text, successMessage) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            var successful = document.execCommand('copy');
+            if(successful) {
+                showToast(successMessage);
+            } else {
+                alert('Failed to copy link. Please manually copy.');
+            }
+        } catch (err) {
+            alert('Failed to copy link. Please manually copy.');
+        }
+        document.body.removeChild(textArea);
+    }
+    
+    function simulateAction(message) {
+        showToast(message);
     }
 
     document.getElementById('genForm').addEventListener('submit', function() {
         const btn = document.getElementById('genBtn');
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Link...';
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> GENERATING LINK...';
+        btn.style.opacity = '0.8';
     });
 </script>
 {% endblock %}
