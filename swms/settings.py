@@ -48,6 +48,18 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
 ]
 
+# Allow overriding via environment variable
+_csrf_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+if _csrf_env:
+    CSRF_TRUSTED_ORIGINS.extend([h.strip() for h in _csrf_env.split(',') if h.strip()])
+
+# Dynamically add all ALLOWED_HOSTS to CSRF_TRUSTED_ORIGINS to prevent 403s
+for host in ALLOWED_HOSTS:
+    clean_host = host.lstrip('.')
+    if clean_host and clean_host not in ['*', 'localhost', '127.0.0.1']:
+        CSRF_TRUSTED_ORIGINS.extend([f'https://{clean_host}', f'http://{clean_host}'])
+
+
 # CSRF Cookie Settings
 CSRF_USE_SESSIONS = False  # Switch back to cookie-based for robustness
 CSRF_COOKIE_HTTPONLY = False
