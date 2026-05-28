@@ -20,7 +20,14 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ✅ ALLOWED HOSTS — controlled via ALLOWED_HOSTS env var on Render
 _allowed_hosts_env = os.getenv('ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()] or ['*']
+ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()] or [
+    'campus-care.co.ke',
+    'www.campus-care.co.ke',
+    'swms-web.onrender.com',
+    '.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # CSRF protection
 CSRF_TRUSTED_ORIGINS = [
