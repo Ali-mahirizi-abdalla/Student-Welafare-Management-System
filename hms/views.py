@@ -682,6 +682,16 @@ def dashboard_admin(request):
     attachment_count = Student.objects.filter(is_on_attachment=True).count()
     graduating_count = Student.objects.filter(is_graduating=True).count()
 
+    # Department counts for flash cards
+    dept_counts = {
+        'education': Student.objects.filter(program_of_study__icontains='Education').count(),
+        'agriculture': Student.objects.filter(program_of_study__icontains='Agriculture').count(),
+        'business': Student.objects.filter(program_of_study__icontains='Business').count(),
+        'environmental': Student.objects.filter(program_of_study__icontains='Environmental').count(),
+        'spas': Student.objects.filter(models.Q(program_of_study__icontains='SPAS') | models.Q(program_of_study__icontains='Spatial')).count(),
+        'health': Student.objects.filter(program_of_study__icontains='Health').count(),
+    }
+
     # Level of Study breakdown
     level_counts = {
         'diploma': Student.objects.filter(level_of_study='diploma').count(),
@@ -741,6 +751,7 @@ def dashboard_admin(request):
         'level_counts': level_counts,
         'level_percentages': level_percentages,
         'total_students_all': total_students,
+        'dept_counts': dept_counts,
     }
 
     # ==================== ADVANCED DASHBOARD LOGIC ====================

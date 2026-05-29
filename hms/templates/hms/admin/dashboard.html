@@ -28,6 +28,66 @@
         transform: scale(1.1) rotate(90deg);
         box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.5);
     }
+    
+    /* Department Cards Styles */
+    .department-cards {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+        margin: 24px 0 32px 0;
+    }
+
+    .dept-card {
+        background: white;
+        border-radius: 16px;
+        padding: 16px 12px;
+        text-align: center;
+        transition: all 0.2s ease;
+        border: 1px solid #E2E8F0;
+        cursor: pointer;
+    }
+
+    .dept-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    .dept-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .dept-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1E293B;
+        margin-bottom: 8px;
+    }
+
+    .dept-count {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0F172A;
+        line-height: 1.2;
+    }
+
+    .dept-label {
+        font-size: 10px;
+        color: #64748B;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 1200px) {
+        .department-cards { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    }
+    @media (max-width: 768px) {
+        .department-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    }
+    @media (max-width: 480px) {
+        .department-cards { grid-template-columns: repeat(1, 1fr); }
+    }
 </style>
 {% endblock %}
 
@@ -151,7 +211,52 @@
 </div>
 {% endif %}
 
-<!-- --- KEY METRICS --- -->
+<!-- Department Flash Cards -->
+<div class="mb-8">
+    <div class="flex items-center gap-2 mb-3">
+        <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest"><i class="fas fa-university mr-1"></i> Academic Departments</h2>
+    </div>
+    <div class="department-cards">
+        <div class="dept-card" style="border-top: 4px solid #2563EB;">
+            <div class="dept-icon">🎓</div>
+            <div class="dept-title">Education</div>
+            <div class="dept-count" style="color: #2563EB;">{{ dept_counts.education }}</div>
+            <div class="dept-label">students</div>
+        </div>
+        <div class="dept-card" style="border-top: 4px solid #10B981;">
+            <div class="dept-icon">🌾</div>
+            <div class="dept-title">Agriculture</div>
+            <div class="dept-count" style="color: #10B981;">{{ dept_counts.agriculture }}</div>
+            <div class="dept-label">students</div>
+        </div>
+        <div class="dept-card" style="border-top: 4px solid #F59E0B;">
+            <div class="dept-icon">💼</div>
+            <div class="dept-title">Business</div>
+            <div class="dept-count" style="color: #F59E0B;">{{ dept_counts.business }}</div>
+            <div class="dept-label">students</div>
+        </div>
+        <div class="dept-card" style="border-top: 4px solid #059669;">
+            <div class="dept-icon">🌍</div>
+            <div class="dept-title">Environ. Sci</div>
+            <div class="dept-count" style="color: #059669;">{{ dept_counts.environmental }}</div>
+            <div class="dept-label">students</div>
+        </div>
+        <div class="dept-card" style="border-top: 4px solid #7C3AED;">
+            <div class="dept-icon">🗺️</div>
+            <div class="dept-title">SPAS</div>
+            <div class="dept-count" style="color: #7C3AED;">{{ dept_counts.spas }}</div>
+            <div class="dept-label">students</div>
+        </div>
+        <div class="dept-card" style="border-top: 4px solid #EF4444;">
+            <div class="dept-icon">🏥</div>
+            <div class="dept-title">Health Sci</div>
+            <div class="dept-count" style="color: #EF4444;">{{ dept_counts.health }}</div>
+            <div class="dept-label">students</div>
+        </div>
+    </div>
+</div>
+
+<!-- - - -  KEY METRICS - - -  -->
 {% if is_superadmin or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' or staff_category_raw == 'TECHNICAL_ESTATES' %}
 <div class="mb-6">
     <div class="flex items-center gap-2 mb-3">
