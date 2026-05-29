@@ -3500,47 +3500,8 @@ def delete_staff(request, staff_id):
 @login_required
 @admin_only
 def manage_roles(request):
-    """Unified management dashboard for all 15 Staff Roles"""
-    roles = StaffProfile.ROLE_CHOICES
-
-    # Color map matching the actual ROLE_CHOICES codes in models.py
-    role_color_map = {
-        'SUPER_ADMIN':  {'name': 'Navy',   'hex': '#1E293B'},
-        'HEALTH_MGR':   {'name': 'Emerald','hex': '#059669'},
-        'MAINT_SUP':    {'name': 'Orange', 'hex': '#EA580C'},
-        'WARDEN':       {'name': 'Purple', 'hex': '#7C3AED'},
-        'FINANCE':      {'name': 'Teal',   'hex': '#0D9488'},
-        'SECURITY':     {'name': 'Blue',   'hex': '#2563EB'},
-        'NEWS_EDITOR':  {'name': 'Pink',   'hex': '#DB2777'},
-        'AUDITOR':      {'name': 'Gray',   'hex': '#4B5563'},
-        'EMERGENCY':    {'name': 'Red',    'hex': '#DC2626'},
-        'SUPPORT':      {'name': 'Cyan',   'hex': '#0891B2'},
-        'DIPLOMA':      {'name': 'Amber',  'hex': '#D97706'},
-        'DEAN_HHS':     {'name': 'Brown',  'hex': '#78350F'},
-        'DEFERMENT':    {'name': 'Green',  'hex': '#15803D'},
-        'DEPT_MCS':     {'name': 'Indigo', 'hex': '#4338CA'},
-        'DVC_ASA':      {'name': 'Violet', 'hex': '#6B21A8'},
-    }
-
-    role_stats = []
-    for role_code, role_name in roles:
-        staff_in_role = StaffProfile.objects.filter(role=role_code).select_related('user')
-        color_info = role_color_map.get(role_code, {'name': 'Gray', 'hex': '#4B5563'})
-
-        role_stats.append({
-            'code': role_code,
-            'name': role_name,
-            'count': staff_in_role.count(),
-            'color_hex': color_info['hex'],
-            'color_name': color_info['name'],
-            'staff': staff_in_role,
-        })
-
-    context = {
-        'role_stats': role_stats,
-        'total_staff': StaffProfile.objects.count(),
-    }
-    return render(request, 'hms/admin/manage_roles.html', context)
+    """Redirect to the unified management dashboard"""
+    return redirect('hms:manage_staff')
 
 
 @login_required
