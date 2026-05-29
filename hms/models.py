@@ -479,6 +479,7 @@ class LoginActivity(models.Model):
         return f"{self.user} - {self.timestamp}"
 
 
+
 class Payment(models.Model):
     """M-Pesa payment records"""
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='payments')
