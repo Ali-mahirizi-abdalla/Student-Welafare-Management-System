@@ -253,7 +253,44 @@
                         <div class="input-grid">
                             <div class="field-group">
                                 <label class="field-label">Assigned Role</label>
-                                {{ form.role }}
+                                <select name="role" class="input-control" required id="role-select">
+                                    <option value="">-- Select Staff Role --</option>
+                                    <optgroup label="Executive Leadership">
+                                        <option value="VC">Vice Chancellor</option>
+                                        <option value="DVC">Deputy Vice Chancellor</option>
+                                        <option value="DVC_ASA">DVC ASA</option>
+                                    </optgroup>
+                                    <optgroup label="Registry">
+                                        <option value="REG_ADMIN">Register Admin</option>
+                                        <option value="REG_USER">Register User</option>
+                                    </optgroup>
+                                    <optgroup label="Academic">
+                                        <option value="DEAN_HHS">Dean of Students</option>
+                                        <option value="DEAN_GRAD">Dean - Graduate School</option>
+                                        <option value="DEPT_MCS">Dept MCS Coordinator</option>
+                                        <option value="DIR_RESOURCE">Director - Resource Mobilization</option>
+                                        <option value="DIR_TVET">Director - TVET</option>
+                                        <option value="DIPLOMA">Diploma Coordinator</option>
+                                    </optgroup>
+                                    <optgroup label="Welfare &amp; Student Services">
+                                        <option value="SUPER_ADMIN">Super Admin</option>
+                                        <option value="HEALTH_MGR">Health Manager</option>
+                                        <option value="MAINT_SUP">Maintenance Supervisor</option>
+                                        <option value="WARDEN">Warden</option>
+                                        <option value="DEFERMENT">Deferment Officer</option>
+                                    </optgroup>
+                                    <optgroup label="Operations">
+                                        <option value="FINANCE">Finance Officer</option>
+                                        <option value="SECURITY">Security Officer</option>
+                                        <option value="EMERGENCY">Emergency Coordinator</option>
+                                        <option value="SUPPORT">Support Agent</option>
+                                    </optgroup>
+                                    <optgroup label="Media &amp; Communications">
+                                        <option value="NEWS_EDITOR">News Editor</option>
+                                        <option value="NEWS_AUDITOR">News Auditor</option>
+                                        <option value="AUDITOR">Auditor</option>
+                                    </optgroup>
+                                </select>
                                 {% if form.role.errors %}<span class="error-text">{{ form.role.errors.0 }}</span>{% endif %}
                             </div>
                             <div class="field-group">
