@@ -459,7 +459,9 @@
                 </td>
             </tr>
         `).join('');
-      function viewStaff(id) {
+    }
+
+    function viewStaff(id) {
         window.location.href = `/manage/staff/details/${id}/`;
     }
 
@@ -477,7 +479,6 @@
         container.appendChild(div);
         setTimeout(() => div.classList.add('active'), 10);
         setTimeout(() => { div.classList.remove('active'); setTimeout(() => div.remove(), 300); }, 3000);
-    }
     }
 
 
