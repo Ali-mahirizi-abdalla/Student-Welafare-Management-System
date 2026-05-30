@@ -3699,9 +3699,11 @@ def manage_invitation_action(request, invite_id):
                     expires_text = invite.expires_at.strftime("%Y-%m-%d %H:%M") if invite.expires_at else "never"
                     usage_text = str(invite.usage_limit) if invite.usage_limit > 0 else "unlimited"
                     
+                    role_display = dict(StaffProfile.ROLE_CHOICES).get(invite.role, invite.role)
+                    
                     send_mail(
                         subject='Staff Invitation to Campus Care',
-                        message=f'Hello,\n\nYou have been invited to join Campus Care as a {invite.get_role_display()}.\n\nPlease click the link below to register:\n{full_url}\n\nNote: This link expires on {expires_text} and can be used {usage_text} times.\n\nBest regards,\nCampus Care Admin',
+                        message=f'Hello,\n\nYou have been invited to join Campus Care as a {role_display}.\n\nPlease click the link below to register:\n{full_url}\n\nNote: This link expires on {expires_text} and can be used {usage_text} times.\n\nBest regards,\nCampus Care Admin',
                         from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[email_address],
                         fail_silently=False,
