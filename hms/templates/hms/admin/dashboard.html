@@ -33,57 +33,89 @@
     .department-cards {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        gap: 16px;
-        margin: 24px 0 32px 0;
+        gap: 8px;
+        margin: 16px 0 32px 0;
     }
 
     .dept-card {
-        background: white;
-        border-radius: 16px;
-        padding: 16px 12px;
-        text-align: center;
-        transition: all 0.2s ease;
-        border: 1px solid #E2E8F0;
+        position: relative;
+        overflow: hidden;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
         cursor: pointer;
+        text-decoration: none;
     }
 
     .dept-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .dept-icon {
-        font-size: 28px;
+    .dept-card .dept-glow {
+        position: absolute;
+        top: 0; right: 0;
+        margin-top: -16px; margin-right: -16px;
+        width: 64px; height: 64px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        filter: blur(16px);
+        transition: background 0.5s;
+    }
+
+    .dept-card:hover .dept-glow {
+        background: rgba(255,255,255,0.2);
+    }
+
+    .dept-icon-box {
+        width: 28px; height: 28px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-bottom: 8px;
+        font-size: 14px;
+        transition: transform 0.3s;
+    }
+
+    .dept-card:hover .dept-icon-box {
+        transform: scale(1.1);
     }
 
     .dept-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1E293B;
-        margin-bottom: 8px;
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.85);
+        margin-bottom: 2px;
     }
 
     .dept-count {
-        font-size: 24px;
+        font-size: 20px;
         font-weight: 700;
-        color: #0F172A;
+        color: #ffffff;
+        letter-spacing: -0.025em;
         line-height: 1.2;
     }
 
     .dept-label {
-        font-size: 10px;
-        color: #64748B;
-        margin-top: 4px;
+        font-size: 9px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.6);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.08em;
+        margin-top: 2px;
     }
 
     @media (max-width: 1200px) {
-        .department-cards { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .department-cards { grid-template-columns: repeat(3, 1fr); gap: 8px; }
     }
     @media (max-width: 768px) {
-        .department-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .department-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     }
     @media (max-width: 480px) {
         .department-cards { grid-template-columns: repeat(1, 1fr); }
@@ -217,41 +249,65 @@
         <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest"><i class="fas fa-university mr-1"></i> Academic Departments</h2>
     </div>
     <div class="department-cards">
-        <div class="dept-card" style="border-top: 4px solid #2563EB;">
-            <div class="dept-icon">🎓</div>
-            <div class="dept-title">Education</div>
-            <div class="dept-count" style="color: #2563EB;">{{ dept_counts.education }}</div>
-            <div class="dept-label">students</div>
+        <!-- Education -->
+        <div class="dept-card" style="background: linear-gradient(135deg, #2563EB, #1d4ed8);">
+            <div class="dept-glow"></div>
+            <div class="relative z-10">
+                <div class="dept-icon-box">🎓</div>
+                <p class="dept-title">Education</p>
+                <p class="dept-count">{{ dept_counts.education }}</p>
+                <p class="dept-label">Students</p>
+            </div>
         </div>
-        <div class="dept-card" style="border-top: 4px solid #10B981;">
-            <div class="dept-icon">🌾</div>
-            <div class="dept-title">Agriculture</div>
-            <div class="dept-count" style="color: #10B981;">{{ dept_counts.agriculture }}</div>
-            <div class="dept-label">students</div>
+        <!-- Agriculture -->
+        <div class="dept-card" style="background: linear-gradient(135deg, #10B981, #059669);">
+            <div class="dept-glow"></div>
+            <div class="relative z-10">
+                <div class="dept-icon-box">🌾</div>
+                <p class="dept-title">Agriculture</p>
+                <p class="dept-count">{{ dept_counts.agriculture }}</p>
+                <p class="dept-label">Students</p>
+            </div>
         </div>
-        <div class="dept-card" style="border-top: 4px solid #F59E0B;">
-            <div class="dept-icon">💼</div>
-            <div class="dept-title">Business</div>
-            <div class="dept-count" style="color: #F59E0B;">{{ dept_counts.business }}</div>
-            <div class="dept-label">students</div>
+        <!-- Business -->
+        <div class="dept-card" style="background: linear-gradient(135deg, #F59E0B, #d97706);">
+            <div class="dept-glow"></div>
+            <div class="relative z-10">
+                <div class="dept-icon-box">💼</div>
+                <p class="dept-title">Business</p>
+                <p class="dept-count">{{ dept_counts.business }}</p>
+                <p class="dept-label">Students</p>
+            </div>
         </div>
-        <div class="dept-card" style="border-top: 4px solid #059669;">
-            <div class="dept-icon">🌍</div>
-            <div class="dept-title">Environ. Sci</div>
-            <div class="dept-count" style="color: #059669;">{{ dept_counts.environmental }}</div>
-            <div class="dept-label">students</div>
+        <!-- Environmental Science -->
+        <div class="dept-card" style="background: linear-gradient(135deg, #059669, #047857);">
+            <div class="dept-glow"></div>
+            <div class="relative z-10">
+                <div class="dept-icon-box">🌍</div>
+                <p class="dept-title">Environ. Sci</p>
+                <p class="dept-count">{{ dept_counts.environmental }}</p>
+                <p class="dept-label">Students</p>
+            </div>
         </div>
-        <div class="dept-card" style="border-top: 4px solid #7C3AED;">
-            <div class="dept-icon">🗺️</div>
-            <div class="dept-title">SPAS</div>
-            <div class="dept-count" style="color: #7C3AED;">{{ dept_counts.spas }}</div>
-            <div class="dept-label">students</div>
+        <!-- SPAS -->
+        <div class="dept-card" style="background: linear-gradient(135deg, #7C3AED, #6d28d9);">
+            <div class="dept-glow"></div>
+            <div class="relative z-10">
+                <div class="dept-icon-box">🗺️</div>
+                <p class="dept-title">SPAS</p>
+                <p class="dept-count">{{ dept_counts.spas }}</p>
+                <p class="dept-label">Students</p>
+            </div>
         </div>
-        <div class="dept-card" style="border-top: 4px solid #EF4444;">
-            <div class="dept-icon">🏥</div>
-            <div class="dept-title">Health Sci</div>
-            <div class="dept-count" style="color: #EF4444;">{{ dept_counts.health }}</div>
-            <div class="dept-label">students</div>
+        <!-- Health Sciences -->
+        <div class="dept-card" style="background: linear-gradient(135deg, #EF4444, #dc2626);">
+            <div class="dept-glow"></div>
+            <div class="relative z-10">
+                <div class="dept-icon-box">🏥</div>
+                <p class="dept-title">Health Sci</p>
+                <p class="dept-count">{{ dept_counts.health }}</p>
+                <p class="dept-label">Students</p>
+            </div>
         </div>
     </div>
 </div>
