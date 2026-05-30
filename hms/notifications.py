@@ -58,59 +58,36 @@ class NotificationService:
     
     @staticmethod
     def send_sms(phone_number, message):
-        """Send SMS notification
-        
-        This is a placeholder that can be integrated with:
-        - Twilio
-        - Africa's Talking
-        - Any other SMS gateway
-        
-        Args:
-            phone_number: Recipient phone number
-            message: SMS message (keep under 160 chars for single SMS)
-        
-        Returns:
-            bool: True if sent successfully, False otherwise
-        """
+        """Send SMS via Africa's Talking"""
+        import os
         try:
-            # Check if SMS is configured
-            if not getattr(settings, 'SMS_ENABLED', False):
-                logger.warning("SMS is not enabled. Configure SMS_ENABLED in settings.")
+            username = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
+            api_key = os.environ.get('AFRICASTALKING_API_KEY')
+            if not api_key:
+                logger.warning("[SMS SKIPPED] AFRICASTALKING_API_KEY not configured.")
                 return False
-            
-            # Example: Twilio integration
-            if getattr(settings, 'TWILIO_ACCOUNT_SID', None):
-                from twilio.rest import Client
-                client = Client(
-                    settings.TWILIO_ACCOUNT_SID,
-                    settings.TWILIO_AUTH_TOKEN
-                )
-                client.messages.create(
-                    body=message,
-                    from_=settings.TWILIO_PHONE_NUMBER,
-                    to=phone_number
-                )
-                logger.info(f"SMS sent to {phone_number}")
-                return True
-            
-            # Example: Africa's Talking integration
-            elif getattr(settings, 'AFRICASTALKING_USERNAME', None):
-                import africastalking
-                africastalking.initialize(
-                    settings.AFRICASTALKING_USERNAME,
-                    settings.AFRICASTALKING_API_KEY
-                )
-                sms = africastalking.SMS
-                sms.send(message, [phone_number])
-                logger.info(f"SMS sent to {phone_number}")
-                return True
-            
+
+            # Format phone: 07XX -> +254XX
+            phone = phone_number.strip().replace(' ', '').replace('-', '') if phone_number else None
+            if not phone:
+                return False
+            if phone.startswith('0') and len(phone) == 10:
+                phone = '+254' + phone[1:]
+            elif phone.startswith('254') and not phone.startswith('+'):
+                phone = '+' + phone
+
+            import africastalking
+            africastalking.initialize(username, api_key)
+            sms = africastalking.SMS
+            sender_id = os.environ.get('AFRICASTALKING_SENDER_ID')
+            if sender_id:
+                response = sms.send(message, [phone], sender_id)
             else:
-                logger.warning("No SMS provider configured.")
-                return False
-                
+                response = sms.send(message, [phone])
+            logger.info(f"[SMS SENT] {phone}: {response}")
+            return True
         except Exception as e:
-            logger.error(f"Failed to send SMS to {phone_number}: {str(e)}")
+            logger.error(f"[SMS ERROR] {phone_number}: {str(e)}")
             return False
 
 
@@ -186,16 +163,68 @@ Student Welfare Management System
     # Send email
     email_sent = NotificationService.send_email(student_email, subject, message)
     
-    # Send SMS if phone available
+    # Send SMS if phone available and user has opted in
     sms_sent = False
-    if student_phone and getattr(settings, 'SMS_ENABLED', False):
-        sms_sent = NotificationService.send_sms(student_phone, sms_body)
+    if student_phone:
+        try:
+            sms_enabled = deferment_request.student.user.notification_preferences.sms_notifications
+        except Exception:
+            sms_enabled = False
+        if sms_enabled:
+            sms_sent = NotificationService.send_sms(student_phone, sms_body)
     
     return email_sent or sms_sent
 
 # Aliases for backward compatibility
 notify_leave_request_submitted = notify_deferment_request_submitted
 notify_leave_request_status = notify_deferment_status
+
+
+def _sms_enabled_for_user(user):
+    """Return True if user has enabled SMS notifications in their preferences."""
+    try:
+        return user.notification_preferences.sms_notifications
+    except Exception:
+        return False
+
+
+def notify_welcome(student):
+    """Send welcome SMS to a newly registered student"""
+    user = student.user
+    if not _sms_enabled_for_user(user):
+        return False
+    msg = (
+        f"Welcome to Campus Care, {user.first_name}! "
+        f"Your account is active. Login: https://www.campus-care.co.ke "
+        f"ID: {student.university_id or 'Pending'}"
+    )
+    return NotificationService.send_sms(student.phone, msg)
+
+
+def notify_emergency_sms(phone_numbers, alert_message):
+    """Broadcast an emergency alert SMS to a list of phone numbers"""
+    import os
+    try:
+        username = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
+        api_key = os.environ.get('AFRICASTALKING_API_KEY')
+        if not api_key:
+            logger.warning("[EMERGENCY SMS SKIPPED] API key not configured.")
+            return False
+        import africastalking
+        africastalking.initialize(username, api_key)
+        sms = africastalking.SMS
+        sender_id = os.environ.get('AFRICASTALKING_SENDER_ID')
+        phones = [p.strip() for p in phone_numbers if p]
+        full_msg = f"🚨 CAMPUS CARE EMERGENCY: {alert_message}. Follow safety protocols."
+        if sender_id:
+            response = sms.send(full_msg, phones, sender_id)
+        else:
+            response = sms.send(full_msg, phones)
+        logger.info(f"[EMERGENCY SMS]: {response}")
+        return True
+    except Exception as e:
+        logger.error(f"[EMERGENCY SMS ERROR] {e}")
+        return False
 
 
 def notify_maintenance_status_update(maintenance_request):

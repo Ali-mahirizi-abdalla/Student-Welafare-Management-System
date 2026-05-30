@@ -1,0 +1,125 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}Notification Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- Header -->
+    <div>
+        <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Notification
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-500">Settings</span>
+        </h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            Choose how you want to receive alerts and updates from Campus Care.
+        </p>
+    </div>
+
+    <!-- Success / Error Messages -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="p-4 rounded-2xl font-semibold
+        {% if message.tags == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
+        {% if message.tags == 'success' %}✅{% else %}❌{% endif %} {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Form Card -->
+    <form method="POST" action="{% url 'hms:notification_preferences' %}">
+        {% csrf_token %}
+        <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-slate-200 dark:border-slate-700 shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden divide-y divide-slate-100 dark:divide-slate-700">
+
+            <!-- Email -->
+            <div class="p-8 flex items-center justify-between gap-6 group hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-all">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-lg group-hover:rotate-6 transition-transform duration-300">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Email Notifications</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Receive alerts, deferment updates, and announcements via email.</p>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="email_notifications" id="email_notifications" class="sr-only peer"
+                        {% if prefs.email_notifications %}checked{% endif %}>
+                    <div class="w-14 h-7 bg-slate-200 dark:bg-slate-600 peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+            </div>
+
+            <!-- SMS -->
+            <div class="p-8 flex items-center justify-between gap-6 group hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-all">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-lg group-hover:rotate-6 transition-transform duration-300">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">SMS Notifications</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Get instant text messages for urgent alerts and status updates.</p>
+                        <span class="inline-block mt-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">Powered by Africa's Talking</span>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="sms_notifications" id="sms_notifications" class="sr-only peer"
+                        {% if prefs.sms_notifications %}checked{% endif %}>
+                    <div class="w-14 h-7 bg-slate-200 dark:bg-slate-600 peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
+                </label>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="p-8 flex items-center justify-between gap-6 group hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-all">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-green-100 dark:bg-green-900/40 flex items-center justify-center text-green-600 dark:text-green-400 shadow-lg group-hover:rotate-6 transition-transform duration-300">
+                        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">WhatsApp Notifications</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Receive rich messages with links and receipts on WhatsApp.</p>
+                        <span class="inline-block mt-1 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-full">Coming Soon</span>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer opacity-50 pointer-events-none">
+                    <input type="checkbox" name="whatsapp_notifications" id="whatsapp_notifications" class="sr-only peer"
+                        {% if prefs.whatsapp_notifications %}checked{% endif %} disabled>
+                    <div class="w-14 h-7 bg-slate-200 dark:bg-slate-600 rounded-full peer peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-600"></div>
+                </label>
+            </div>
+
+            <!-- Save Button -->
+            <div class="p-8 bg-slate-50 dark:bg-slate-900/30">
+                <button type="submit"
+                    class="w-full py-4 px-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-lg rounded-2xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0">
+                    💾 Save Preferences
+                </button>
+                <p class="text-center text-sm text-slate-400 mt-4">
+                    Make sure your phone number is set in your
+                    <a href="{% url 'hms:student_profile' %}" class="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">profile</a>
+                    for SMS to work.
+                </p>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- Back Link -->
+    <div class="text-center">
+        <a href="{% if user.is_staff %}{% url 'hms:admin_dashboard' %}{% else %}{% url 'hms:student_dashboard' %}{% endif %}"
+            class="inline-flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

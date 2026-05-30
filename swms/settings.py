@@ -340,6 +340,13 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'resend')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 're_gnrHihB4_EQqvTBYmmtNsmSdmfDmWEHKk')
 
 # ============================================
+# AFRICA'S TALKING (SMS)
+# ============================================
+AFRICASTALKING_USERNAME = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
+AFRICASTALKING_API_KEY = os.environ.get('AFRICASTALKING_API_KEY', '')
+AFRICASTALKING_SENDER_ID = os.environ.get('AFRICASTALKING_SENDER_ID', '')
+
+# ============================================
 # CACHING (Redis)
 # ============================================
 REDIS_URL = os.getenv('REDIS_URL')

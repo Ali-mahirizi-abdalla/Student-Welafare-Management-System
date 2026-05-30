@@ -699,3 +699,16 @@ class StaffInvitation(models.Model):
     def __str__(self):
         limit_str = f"{self.usage_limit}" if self.usage_limit > 0 else "∞"
         return f"Invite for {self.role} ({self.used_count}/{limit_str})"
+
+class NotificationPreference(models.Model):
+    """Stores a user's preferences for receiving notifications via different channels"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='notification_preferences')
+    email_notifications = models.BooleanField(default=True, help_text="Receive email notifications")
+    sms_notifications = models.BooleanField(default=False, help_text="Receive SMS notifications")
+    whatsapp_notifications = models.BooleanField(default=False, help_text="Receive WhatsApp notifications")
+    
+    # Track when preferences were last updated
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Notification Preferences for {self.user.username}"

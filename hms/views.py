@@ -51,8 +51,17 @@ def register_student(request):
             try:
                 with transaction.atomic():
                     student = form.save()
+                    # Create default notification preferences
+                    from .models import NotificationPreference
+                    NotificationPreference.objects.get_or_create(user=student.user)
                 login(request, student.user, backend='django.contrib.auth.backends.ModelBackend')
                 messages.success(request, "Registration successful! Welcome to Campus Care.")
+                # Fire welcome SMS (only if student opted in via preferences later)
+                try:
+                    from .notifications import notify_welcome
+                    notify_welcome(student)
+                except Exception:
+                    pass
                 return redirect('hms:student_dashboard')
             except Exception as e:
                 messages.error(request, f"Registration failed: {str(e)}")
@@ -3751,3 +3760,24 @@ def manual_register_staff(request):
         'page_title': 'Manual Staff Registration',
         'is_manual': True
     })
+
+
+@login_required
+def notification_preferences(request):
+    """Allow users to toggle their SMS/Email/WhatsApp notification preferences"""
+    from .models import NotificationPreference
+    prefs, _ = NotificationPreference.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        prefs.email_notifications = 'email_notifications' in request.POST
+        prefs.sms_notifications = 'sms_notifications' in request.POST
+        prefs.whatsapp_notifications = 'whatsapp_notifications' in request.POST
+        prefs.save()
+        messages.success(request, 'Notification preferences updated successfully!')
+        return redirect('hms:notification_preferences')
+
+    return render(request, 'hms/notification_preferences.html', {
+        'prefs': prefs,
+        'page_title': 'Notification Settings',
+    })
+
