@@ -1,0 +1,162 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}{{ dashboard_title }} - CampusCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #c2410c; /* TVET Color */
+        --secondary: #ea580c;
+        --background: #f1f5f9;
+        --surface: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+    }
+
+    .dashboard-wrapper { min-height: 100vh; background: var(--background); padding: 2.5rem; }
+    .header-section { margin-bottom: 2.5rem; }
+    .header-section h1 { font-size: 2.25rem; font-weight: 900; color: var(--text-main); margin: 0; }
+    .header-section p { color: var(--text-muted); font-weight: 500; margin-top: 0.5rem; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card { background: var(--surface); padding: 1.75rem; border-radius: 1.5rem; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 1.25rem; }
+    .stat-icon { width: 56px; height: 56px; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .stat-content p { font-size: 0.8125rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 0; }
+    .stat-content h2 { font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-top: 0.25rem; }
+
+    .layout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+    @media (max-width: 1024px) { .layout-grid { grid-template-columns: 1fr; } }
+
+    .card { background: var(--surface); border-radius: 1.5rem; border: 1px solid var(--border); padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.125rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.75rem; }
+
+    /* Attachment Table */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { text-align: left; padding: 1rem; font-size: 0.8125rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+    .data-table td { padding: 1rem; font-size: 0.9375rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    
+    .status-badge { display: inline-block; padding: 0.35rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .status-active { background: #dcfce7; color: #15803d; }
+    .status-completed { background: #e0e7ff; color: #4338ca; }
+    .status-pending { background: #fef9c3; color: #a16207; }
+
+    /* Performance Progress */
+    .prog-item { margin-bottom: 1.25rem; }
+    .prog-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
+    .prog-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="header-section">
+        <h1>{{ dashboard_title }}</h1>
+        <p>{{ dashboard_description }}</p>
+    </div>
+
+    <!-- TVET Metrics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #ffedd5; color: #c2410c;">🔧</div>
+            <div class="stat-content">
+                <p>Diploma Students</p>
+                <h2>{{ tvet_students_count|default:"385" }}</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;">🏭</div>
+            <div class="stat-content">
+                <p>On Attachment</p>
+                <h2>112</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #dcfce7; color: #15803d;">🤝</div>
+            <div class="stat-content">
+                <p>Industry Partners</p>
+                <h2>45</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f3e8ff; color: #7e22ce;">👨‍🔧</div>
+            <div class="stat-content">
+                <p>TVET Staff</p>
+                <h2>{{ tvet_staff_count|default:"28" }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-grid">
+        <!-- Attachment Tracking -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-industry"></i> Industrial Attachment Tracking</h2>
+                <button style="padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600;">Manage Logs</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Company / Partner</th>
+                            <th>Supervisor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attach in mock_attachments %}
+                        <tr>
+                            <td>
+                                <div style="font-weight: 700; color: var(--text-main);">{{ attach.student }}</div>
+                                <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ attach.course }}</div>
+                            </td>
+                            <td><div style="font-weight: 600; color: var(--text-main);">{{ attach.company }}</div></td>
+                            <td>{{ attach.supervisor }}</td>
+                            <td>
+                                <span class="status-badge {% if attach.status == 'Active' %}status-active{% elif attach.status == 'Completed' %}status-completed{% else %}status-pending{% endif %}">
+                                    {{ attach.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No active attachments.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+            <!-- TVET Program Performance Metrics -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-chart-line"></i> Program Performance</h2>
+                </div>
+                <div>
+                    <div class="prog-item">
+                        <div class="prog-header"><span>Engineering Tech (Completion Rate)</span> <span>88%</span></div>
+                        <div class="prog-bar"><div class="prog-fill" style="width: 88%; background: #c2410c;"></div></div>
+                    </div>
+                    <div class="prog-item">
+                        <div class="prog-header"><span>IT & Software (Completion Rate)</span> <span>92%</span></div>
+                        <div class="prog-bar"><div class="prog-fill" style="width: 92%; background: #2563eb;"></div></div>
+                    </div>
+                    <div class="prog-item">
+                        <div class="prog-header"><span>Hospitality (Completion Rate)</span> <span>85%</span></div>
+                        <div class="prog-bar"><div class="prog-fill" style="width: 85%; background: #10b981;"></div></div>
+                    </div>
+                    <div class="prog-item">
+                        <div class="prog-header"><span>Business Admin (Completion Rate)</span> <span>90%</span></div>
+                        <div class="prog-bar"><div class="prog-fill" style="width: 90%; background: #d97706;"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

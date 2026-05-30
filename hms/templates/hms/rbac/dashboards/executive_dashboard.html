@@ -1,0 +1,186 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}{{ dashboard_title }} - CampusCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #4f46e5;
+        --secondary: #0ea5e9;
+        --background: #f1f5f9;
+        --surface: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+    }
+
+    .dashboard-wrapper {
+        min-height: 100vh;
+        background: var(--background);
+        padding: 2.5rem;
+    }
+
+    .header-section { margin-bottom: 2.5rem; }
+    .header-section h1 { font-size: 2.25rem; font-weight: 900; color: var(--text-main); margin: 0; }
+    .header-section p { color: var(--text-muted); font-weight: 500; margin-top: 0.5rem; }
+
+    .stats-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: var(--surface); padding: 1.75rem; border-radius: 1.5rem; border: 1px solid var(--border);
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 1.25rem;
+    }
+
+    .stat-icon { width: 56px; height: 56px; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .stat-content p { font-size: 0.8125rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 0; }
+    .stat-content h2 { font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-top: 0.25rem; }
+
+    .card { background: var(--surface); border-radius: 1.5rem; border: 1px solid var(--border); padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 2rem;}
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.125rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.75rem; }
+
+    /* Department Staff Distribution */
+    .dept-dist { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .dist-bar-container { background: #f8fafc; border-radius: 12px; padding: 1rem; border: 1px solid #f1f5f9; }
+    .dist-label { display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main); }
+    .dist-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .dist-fill { height: 100%; border-radius: 4px; }
+
+    /* Staff Directory Widget */
+    .staff-table { width: 100%; border-collapse: collapse; }
+    .staff-table th { text-align: left; padding: 1rem; font-size: 0.8125rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+    .staff-table td { padding: 1rem; font-size: 0.9375rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .staff-table tr:hover td { background: #f8fafc; }
+    .staff-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    
+    .performance-score {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 36px; height: 36px; border-radius: 50%; font-weight: 800; font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="header-section">
+        <h1>{{ dashboard_title }}</h1>
+        <p>{{ dashboard_description }}</p>
+    </div>
+
+    <!-- Executive Metrics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;">👥</div>
+            <div class="stat-content">
+                <p>Total Staff</p>
+                <h2>{{ total_staff }}</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fcf6bd; color: #d97706;">⭐</div>
+            <div class="stat-content">
+                <p>Avg Performance</p>
+                <h2>92%</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #dcfce7; color: #15803d;">✅</div>
+            <div class="stat-content">
+                <p>Active Staff</p>
+                <h2>{{ active_staff_count|default:"205" }}</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fee2e2; color: #b91c1c;">✈️</div>
+            <div class="stat-content">
+                <p>On Leave</p>
+                <h2>12</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Distribution -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-chart-bar"></i> Department Staff Distribution</h2>
+        </div>
+        <div class="dept-dist">
+            <div class="dist-bar-container">
+                <div class="dist-label"><span>Academic & Faculties</span> <span>45%</span></div>
+                <div class="dist-bar"><div class="dist-fill" style="width: 45%; background: #4f46e5;"></div></div>
+            </div>
+            <div class="dist-bar-container">
+                <div class="dist-label"><span>Welfare & Services</span> <span>25%</span></div>
+                <div class="dist-bar"><div class="dist-fill" style="width: 25%; background: #10b981;"></div></div>
+            </div>
+            <div class="dist-bar-container">
+                <div class="dist-label"><span>Operations</span> <span>15%</span></div>
+                <div class="dist-bar"><div class="dist-fill" style="width: 15%; background: #f59e0b;"></div></div>
+            </div>
+            <div class="dist-bar-container">
+                <div class="dist-label"><span>Executive & Registry</span> <span>10%</span></div>
+                <div class="dist-bar"><div class="dist-fill" style="width: 10%; background: #6366f1;"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executive Staff Directory -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-users"></i> University Staff Directory</h2>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" placeholder="Search staff..." style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px;">
+                <button style="padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600;">Filter</button>
+            </div>
+        </div>
+        <div style="overflow-x: auto;">
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>Staff Member</th>
+                        <th>Role / Department</th>
+                        <th>Performance</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for staff in mock_staff_list %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #64748b;">
+                                    {{ staff.name|slice:":1" }}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 700; color: var(--text-main);">{{ staff.name }}</div>
+                                    <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ staff.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-main);">{{ staff.role }}</div>
+                            <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ staff.department }}</div>
+                        </td>
+                        <td>
+                            <div class="performance-score" style="background: {% if staff.score > 89 %}#dcfce7; color: #15803d{% else %}#fef9c3; color: #a16207{% endif %};">
+                                {{ staff.score }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="staff-badge" style="background: #dcfce7; color: #15803d;">Active</span>
+                        </td>
+                        <td>
+                            <button style="background: none; border: none; color: var(--primary); font-weight: 600; cursor: pointer;">View Profile</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

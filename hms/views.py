@@ -921,88 +921,136 @@ def render_role_dashboard(request, title, desc):
 
 @login_required
 def vc_dashboard(request):
-    return render_role_dashboard(request, 'Vice Chancellor Dashboard', 'Executive oversight of all staff and operations.')
+    context = {
+        'dashboard_title': 'Vice Chancellor Dashboard',
+        'dashboard_description': 'Executive oversight of all staff and operations.',
+        'total_staff': StaffProfile.objects.count(),
+        'active_staff_count': 205,
+        'mock_staff_list': [
+            {'name': 'Dr. Jane Smith', 'email': 'jane.smith@campus.edu', 'role': 'Dean - Sciences', 'department': 'Academic', 'score': 95},
+            {'name': 'Prof. Alan Turing', 'email': 'aturing@campus.edu', 'role': 'Director - IT', 'department': 'Operations', 'score': 98},
+            {'name': 'Sarah Jenkins', 'email': 's.jenkins@campus.edu', 'role': 'Finance Officer', 'department': 'Administration', 'score': 85},
+            {'name': 'Michael Chen', 'email': 'm.chen@campus.edu', 'role': 'Head of Security', 'department': 'Welfare & Services', 'score': 92},
+        ]
+    }
+    return render(request, 'hms/rbac/dashboards/executive_dashboard.html', context)
 
 @login_required
 def dvc_dashboard(request):
-    return render_role_dashboard(request, 'Deputy Vice Chancellor Dashboard', 'Oversight of university administration and staff.')
+    context = {
+        'dashboard_title': 'Deputy Vice Chancellor Dashboard',
+        'dashboard_description': 'Oversight of university administration and staff.',
+        'total_staff': StaffProfile.objects.count(),
+        'active_staff_count': 205,
+        'mock_staff_list': [
+            {'name': 'Dr. Jane Smith', 'email': 'jane.smith@campus.edu', 'role': 'Dean - Sciences', 'department': 'Academic', 'score': 95},
+            {'name': 'Prof. Alan Turing', 'email': 'aturing@campus.edu', 'role': 'Director - IT', 'department': 'Operations', 'score': 98},
+            {'name': 'Sarah Jenkins', 'email': 's.jenkins@campus.edu', 'role': 'Finance Officer', 'department': 'Administration', 'score': 85},
+            {'name': 'Michael Chen', 'email': 'm.chen@campus.edu', 'role': 'Head of Security', 'department': 'Welfare & Services', 'score': 92},
+        ]
+    }
+    return render(request, 'hms/rbac/dashboards/executive_dashboard.html', context)
 
 @login_required
 def reg_admin_dashboard(request):
-    return render_role_dashboard(request, 'Registrar Admin Dashboard', 'Administrative oversight of all registered staff members.')
+    context = {
+        'dashboard_title': 'Registrar Admin Dashboard',
+        'dashboard_description': 'Administrative oversight of all registered staff members.',
+        'total_staff': StaffProfile.objects.count(),
+        'active_staff_count': 205,
+        'mock_staff_list': [
+            {'name': 'Dr. Jane Smith', 'email': 'jane.smith@campus.edu', 'role': 'Dean - Sciences', 'department': 'Academic', 'score': 95},
+            {'name': 'Prof. Alan Turing', 'email': 'aturing@campus.edu', 'role': 'Director - IT', 'department': 'Operations', 'score': 98},
+            {'name': 'Sarah Jenkins', 'email': 's.jenkins@campus.edu', 'role': 'Finance Officer', 'department': 'Administration', 'score': 85},
+            {'name': 'Michael Chen', 'email': 'm.chen@campus.edu', 'role': 'Head of Security', 'department': 'Welfare & Services', 'score': 92},
+        ]
+    }
+    return render(request, 'hms/rbac/dashboards/executive_dashboard.html', context)
 
 @login_required
 def reg_user_dashboard(request):
-    return render_role_dashboard(request, 'Registrar User Dashboard', 'View and manage registered staff records.')
+    context = {
+        'dashboard_title': 'Registrar User Dashboard',
+        'dashboard_description': 'View and manage registered staff records.',
+        'total_staff': StaffProfile.objects.count(),
+        'active_staff_count': 205,
+        'mock_staff_list': [
+            {'name': 'Dr. Jane Smith', 'email': 'jane.smith@campus.edu', 'role': 'Dean - Sciences', 'department': 'Academic', 'score': 95},
+            {'name': 'Prof. Alan Turing', 'email': 'aturing@campus.edu', 'role': 'Director - IT', 'department': 'Operations', 'score': 98},
+            {'name': 'Sarah Jenkins', 'email': 's.jenkins@campus.edu', 'role': 'Finance Officer', 'department': 'Administration', 'score': 85},
+            {'name': 'Michael Chen', 'email': 'm.chen@campus.edu', 'role': 'Head of Security', 'department': 'Welfare & Services', 'score': 92},
+        ]
+    }
+    return render(request, 'hms/rbac/dashboards/executive_dashboard.html', context)
 
 @login_required
 def dean_grad_dashboard(request):
-    return render_role_dashboard(request, 'Dean - Graduate School Dashboard', "Oversight of Master's and PhD students.")
+    context = {
+        'dashboard_title': 'Dean - Graduate School Dashboard',
+        'dashboard_description': "Oversight of Master's and PhD students.",
+        'masters_count': Student.objects.filter(level_of_study='masters').count(),
+        'phd_count': Student.objects.filter(level_of_study='doctorate').count(),
+        'mock_thesis_list': [
+            {'student': 'Alice Williams', 'level': 'PhD - Computer Science', 'title': 'Machine Learning in Genomics', 'supervisor': 'Prof. A. Turing', 'status': 'Under Review'},
+            {'student': 'Robert Chase', 'level': 'Master - Education', 'title': 'Impact of E-Learning Post 2020', 'supervisor': 'Dr. H. Stevens', 'status': 'Draft'},
+            {'student': 'Linda Martinez', 'level': 'PhD - Environmental Sci', 'title': 'Urban Heat Island Mitigation Strategies', 'supervisor': 'Prof. T. Baker', 'status': 'Approved'},
+        ],
+        'mock_grad_events': [
+            {'title': 'Thesis Defense: Linda Martinez', 'day': '15', 'month': 'NOV', 'time': '10:00 AM', 'location': 'Grad Hall A'},
+            {'title': 'Grant Writing Workshop', 'day': '22', 'month': 'NOV', 'time': '02:00 PM', 'location': 'Main Library Seminar Room'},
+        ]
+    }
+    return render(request, 'hms/rbac/dashboards/dean_grad_dashboard.html', context)
 
 @login_required
 def dir_resource_dashboard(request):
-    return render_role_dashboard(request, 'Director - Resources Dashboard', 'Manage university resources and facilities.')
+    context = {
+        'dashboard_title': 'Director - Resource Mobilization Dashboard',
+        'dashboard_description': 'Manage university resources, grants, and donors.',
+        'mock_grants': [
+            {'title': 'Green Energy Initiative', 'agency': 'National Science Foundation', 'amount': '$500,000', 'status': 'Under Review'},
+            {'title': 'Rural Education Outreach', 'agency': 'Global Education Fund', 'amount': '$120,000', 'status': 'Approved'},
+            {'title': 'AI in Healthcare Research', 'agency': 'Tech Innovations Corp', 'amount': '$850,000', 'status': 'Under Review'},
+        ],
+        'mock_donors': [
+            {'name': 'Bill & Melinda Foundation', 'type': 'Philanthropy', 'total': '$1.2M'},
+            {'name': 'Tech Innovations Corp', 'type': 'Corporate Partner', 'total': '$850K'},
+            {'name': 'Alumni Association (Class of 2010)', 'type': 'Alumni Group', 'total': '$150K'},
+        ]
+    }
+    return render(request, 'hms/rbac/dashboards/dir_resource_dashboard.html', context)
 
 @login_required
 def news_auditor_dashboard(request):
-    return render_role_dashboard(request, 'News Auditor Dashboard', 'Audit university news and announcements.')
+    context = {
+        'dashboard_title': 'News Auditor Dashboard',
+        'dashboard_description': 'Read-only audit log of all university news and announcements.',
+        'total_news': Announcement.objects.count(),
+        'mock_audit_logs': [
+            {'timestamp': 'Today 09:30 AM', 'user': 'James Wilson', 'role': 'News Editor', 'action': 'CREATED', 'title': 'Campus closed for National Holiday', 'details': 'Created new broadcast announcement'},
+            {'timestamp': 'Yesterday 04:15 PM', 'user': 'Sarah Connor', 'role': 'Super Admin', 'action': 'EDITED', 'title': 'Updated Examination Timetable', 'details': 'Changed end date from 24th to 25th'},
+            {'timestamp': 'Nov 12, 11:00 AM', 'user': 'James Wilson', 'role': 'News Editor', 'action': 'DELETED', 'title': 'Old Orientation Schedule', 'details': 'Archived outdated announcement'},
+        ]
+    }
+    return render(request, 'hms/rbac/dashboards/news_auditor_dashboard.html', context)
 
 @login_required
 @admin_only
 def tvet_director_dashboard(request):
-    """TVET Director Dashboard view - Limited to Diploma Students"""
-    diploma_students = Student.objects.filter(level_of_study='diploma')
-    
-    # KEY METRICS
-    total_diploma = diploma_students.count()
-    on_campus = diploma_students.filter(residence_type='hostel').count()
-    off_campus = diploma_students.filter(residence_type='off_campus').count()
-    deferment_requests = DefermentRequest.objects.filter(student__level_of_study='diploma', status='pending').count()
-    graduating = diploma_students.filter(is_graduating=True).count()
-    attachment = diploma_students.filter(is_on_attachment=True).count()
-    
-    # LEVEL OF STUDY BREAKDOWN (Counts for all levels)
-    level_counts = {
-        'diploma': Student.objects.filter(level_of_study='diploma').count(),
-        'bachelors': Student.objects.filter(level_of_study='bachelors').count(),
-        'masters': Student.objects.filter(level_of_study='masters').count(),
-        'doctorate': Student.objects.filter(level_of_study='doctorate').count(),
-        'postgrad_diploma': Student.objects.filter(level_of_study='postgrad_diploma').count(),
-        'certificate': Student.objects.filter(level_of_study='certificate').count(),
-    }
-    
-    # Total students for percentage calculation
-    total_students = Student.objects.count()
-    
-    # Calculate percentages
-    level_percentages = {}
-    if total_students > 0:
-        for level, count in level_counts.items():
-            level_percentages[level] = int((count / total_students) * 100)
-    else:
-        for level in level_counts:
-            level_percentages[level] = 0
-
+    """TVET Director Dashboard view"""
     context = {
-        'role_title': 'TVET Director',
-        'role_subtitle': 'MANAGEMENT',
-        'dashboard_title': 'TVET Director Dashboard',
-        'dashboard_role': 'Director, TVET – Full Oversight of Diploma & Technical Programs',
-        'last_updated': timezone.now().strftime("%A, %B %d, %Y"),
-        'metrics': {
-            'total': total_diploma,
-            'on_campus': on_campus,
-            'off_campus': off_campus,
-            'deferment': deferment_requests,
-            'graduating': graduating,
-            'attachment': attachment,
-        },
-        'level_counts': level_counts,
-        'level_percentages': level_percentages,
-        'total_students_all': total_students,
+        'dashboard_title': 'Director - TVET Dashboard',
+        'dashboard_description': 'Oversight of TVET students, staff, and industrial attachments.',
+        'tvet_students_count': Student.objects.filter(level_of_study='diploma').count(),
+        'tvet_staff_count': 28,
+        'mock_attachments': [
+            {'student': 'John Doe', 'course': 'Diploma in Engineering Tech', 'company': 'Toyota Manufacturing', 'supervisor': 'H. Tanaka', 'status': 'Active'},
+            {'student': 'Jane Smith', 'course': 'Diploma in Hospitality', 'company': 'Grand Horizon Hotel', 'supervisor': 'M. Roux', 'status': 'Active'},
+            {'student': 'Sam Wilson', 'course': 'Diploma in IT Support', 'company': 'TechServe Solutions', 'supervisor': 'P. Patel', 'status': 'Completed'},
+            {'student': 'Emily Davis', 'course': 'Diploma in Business Admin', 'company': 'Global Finance Corp', 'supervisor': 'A. Johnson', 'status': 'Pending'},
+        ]
     }
-    
-    return render(request, 'hms/rbac/tvet_director_dashboard.html', context)
+    return render(request, 'hms/rbac/dashboards/dir_tvet_dashboard.html', context)
 
 @login_required
 @role_required(['Admin', 'Warden', 'Finance', 'DEFERMENT', 'MAINTENANCE_HOSTEL', 'ACTIVITIES_ROOMS', 'NEWS_ALERT', 'VISITORS', 'AUDIT_LOGS'])

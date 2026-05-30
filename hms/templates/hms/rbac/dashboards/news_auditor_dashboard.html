@@ -1,0 +1,138 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}{{ dashboard_title }} - CampusCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #475569; /* Auditor Color */
+        --secondary: #64748b;
+        --background: #f1f5f9;
+        --surface: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+    }
+
+    .dashboard-wrapper { min-height: 100vh; background: var(--background); padding: 2.5rem; }
+    .header-section { margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; }
+    .header-section h1 { font-size: 2.25rem; font-weight: 900; color: var(--text-main); margin: 0; }
+    .header-section p { color: var(--text-muted); font-weight: 500; margin-top: 0.5rem; margin-bottom: 0; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card { background: var(--surface); padding: 1.75rem; border-radius: 1.5rem; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 1.25rem; }
+    .stat-icon { width: 56px; height: 56px; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .stat-content p { font-size: 0.8125rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 0; }
+    .stat-content h2 { font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-top: 0.25rem; }
+
+    .card { background: var(--surface); border-radius: 1.5rem; border: 1px solid var(--border); padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.125rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.75rem; }
+
+    /* Tables */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { text-align: left; padding: 1rem; font-size: 0.8125rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+    .data-table td { padding: 1rem; font-size: 0.9375rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    
+    .action-badge { display: inline-block; padding: 0.35rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .action-create { background: #dcfce7; color: #15803d; }
+    .action-edit { background: #fef9c3; color: #a16207; }
+    .action-delete { background: #fee2e2; color: #b91c1c; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="header-section">
+        <div>
+            <h1>{{ dashboard_title }}</h1>
+            <p>{{ dashboard_description }}</p>
+        </div>
+        <button style="padding: 0.75rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-file-export"></i> Export News Audit Report
+        </button>
+    </div>
+
+    <!-- Audit Metrics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e2e8f0; color: #334155;">📰</div>
+            <div class="stat-content">
+                <p>Total News Articles</p>
+                <h2>{{ total_news|default:"145" }}</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #dcfce7; color: #15803d;">✅</div>
+            <div class="stat-content">
+                <p>Articles Created (7d)</p>
+                <h2>12</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fef9c3; color: #a16207;">✏️</div>
+            <div class="stat-content">
+                <p>Articles Edited (7d)</p>
+                <h2>8</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fee2e2; color: #b91c1c;">🗑️</div>
+            <div class="stat-content">
+                <p>Articles Deleted (7d)</p>
+                <h2>2</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Audit Log -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-history"></i> News & Announcements Audit Log (Read-Only)</h2>
+            <div style="display: flex; gap: 10px;">
+                <select style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px;">
+                    <option value="">All Actions</option>
+                    <option value="create">Created</option>
+                    <option value="edit">Edited</option>
+                    <option value="delete">Deleted</option>
+                </select>
+                <input type="text" placeholder="Search logs..." style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px;">
+            </div>
+        </div>
+        <div style="overflow-x: auto;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User (Editor)</th>
+                        <th>Action</th>
+                        <th>Target Article Title</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in mock_audit_logs %}
+                    <tr>
+                        <td style="color: var(--text-muted);">{{ log.timestamp }}</td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-main);">{{ log.user }}</div>
+                            <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ log.role }}</div>
+                        </td>
+                        <td>
+                            <span class="action-badge {% if log.action == 'CREATED' %}action-create{% elif log.action == 'EDITED' %}action-edit{% else %}action-delete{% endif %}">
+                                {{ log.action }}
+                            </span>
+                        </td>
+                        <td style="font-weight: 500; color: var(--text-main);">{{ log.title }}</td>
+                        <td style="font-size: 0.875rem; color: var(--text-muted);">{{ log.details }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No audit logs found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

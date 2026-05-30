@@ -1,0 +1,168 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}{{ dashboard_title }} - CampusCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #92400e; /* Dean Grad Color */
+        --secondary: #d97706;
+        --background: #f1f5f9;
+        --surface: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+    }
+
+    .dashboard-wrapper { min-height: 100vh; background: var(--background); padding: 2.5rem; }
+    .header-section { margin-bottom: 2.5rem; }
+    .header-section h1 { font-size: 2.25rem; font-weight: 900; color: var(--text-main); margin: 0; }
+    .header-section p { color: var(--text-muted); font-weight: 500; margin-top: 0.5rem; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card { background: var(--surface); padding: 1.75rem; border-radius: 1.5rem; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 1.25rem; }
+    .stat-icon { width: 56px; height: 56px; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .stat-content p { font-size: 0.8125rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 0; }
+    .stat-content h2 { font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-top: 0.25rem; }
+
+    .layout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+    @media (max-width: 1024px) { .layout-grid { grid-template-columns: 1fr; } }
+
+    .card { background: var(--surface); border-radius: 1.5rem; border: 1px solid var(--border); padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.125rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.75rem; }
+
+    /* Thesis Tracking Table */
+    .thesis-table { width: 100%; border-collapse: collapse; }
+    .thesis-table th { text-align: left; padding: 1rem; font-size: 0.8125rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+    .thesis-table td { padding: 1rem; font-size: 0.9375rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .thesis-status { display: inline-block; padding: 0.35rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .status-review { background: #fef9c3; color: #a16207; }
+    .status-approved { background: #dcfce7; color: #15803d; }
+    .status-draft { background: #f1f5f9; color: #64748b; }
+
+    /* Events List */
+    .event-item { padding: 1rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; }
+    .event-item:last-child { border-bottom: none; }
+    .event-date { background: #fef3c7; color: #b45309; padding: 0.5rem; border-radius: 0.5rem; text-align: center; min-width: 60px; }
+    .event-date strong { display: block; font-size: 1.25rem; }
+    .event-date span { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
+    .event-content h4 { margin: 0; font-weight: 700; color: var(--text-main); font-size: 0.9375rem; }
+    .event-content p { margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.8125rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="header-section">
+        <h1>{{ dashboard_title }}</h1>
+        <p>{{ dashboard_description }}</p>
+    </div>
+
+    <!-- Graduate Metrics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fef3c7; color: #b45309;">🎓</div>
+            <div class="stat-content">
+                <p>Master's Students</p>
+                <h2>{{ masters_count|default:"142" }}</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #ffedd5; color: #c2410c;">🔬</div>
+            <div class="stat-content">
+                <p>PhD Candidates</p>
+                <h2>{{ phd_count|default:"38" }}</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;">📚</div>
+            <div class="stat-content">
+                <p>Theses in Review</p>
+                <h2>14</h2>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f1f5f9; color: #475569;">👨‍🏫</div>
+            <div class="stat-content">
+                <p>Grad Faculty</p>
+                <h2>45</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-grid">
+        <!-- Thesis Tracking -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-book"></i> Thesis & Dissertation Tracking</h2>
+                <button style="padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600;">View All</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="thesis-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Topic / Title</th>
+                            <th>Supervisor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for thesis in mock_thesis_list %}
+                        <tr>
+                            <td>
+                                <div style="font-weight: 700; color: var(--text-main);">{{ thesis.student }}</div>
+                                <div style="font-size: 0.8125rem; color: var(--primary);">{{ thesis.level }}</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 600; color: var(--text-main); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ thesis.title }}">
+                                    {{ thesis.title }}
+                                </div>
+                            </td>
+                            <td>{{ thesis.supervisor }}</td>
+                            <td>
+                                <span class="thesis-status {% if thesis.status == 'Under Review' %}status-review{% elif thesis.status == 'Approved' %}status-approved{% else %}status-draft{% endif %}">
+                                    {{ thesis.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-muted);">No active theses.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+            <!-- Events Widget -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-calendar-alt"></i> Grad School Events</h2>
+                </div>
+                <div>
+                    {% for event in mock_grad_events %}
+                    <div class="event-item">
+                        <div class="event-date">
+                            <strong>{{ event.day }}</strong>
+                            <span>{{ event.month }}</span>
+                        </div>
+                        <div class="event-content">
+                            <h4>{{ event.title }}</h4>
+                            <p>{{ event.time }} • {{ event.location }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p style="color: var(--text-muted); text-align: center;">No upcoming events.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
