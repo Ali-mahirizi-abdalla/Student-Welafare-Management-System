@@ -211,7 +211,4 @@ urlpatterns = [
     path('notifications/', views.notifications_list, name='notifications'),
     path('notifications/read/<int:notif_id>/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/preferences/', views.notification_preferences, name='notification_preferences'),
-    
-    # Access Control
-    path('unauthorized/', views.unauthorized_access, name='unauthorized'),
 ]

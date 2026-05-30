@@ -3781,7 +3781,3 @@ def notification_preferences(request):
         'page_title': 'Notification Settings',
     })
 
-def unauthorized_access(request):
-    """View rendered when a user tries to access a restricted URL."""
-    return render(request, 'hms/403.html', status=403)
-

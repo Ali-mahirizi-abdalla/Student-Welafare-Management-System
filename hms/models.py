@@ -39,32 +39,6 @@ class AuditLog(models.Model):
     def __str__(self):
         return f"{self.user} - {self.action} - {self.timestamp}"
 
-class StudentManager(models.Manager):
-    def for_user(self, user):
-        qs = super().get_queryset()
-        
-        # If user is not staff, they can't see the list (or handle elsewhere)
-        if not hasattr(user, 'staff_profile'):
-            return qs.none()
-            
-        role = user.staff_profile.role
-        
-        if role in ['SUPER_ADMIN', 'VC', 'DVC', 'REG_ADMIN', 'REG_USER', 'DEAN_HHS']:
-            return qs
-        elif role == 'DEAN_GRAD':
-            return qs.filter(level_of_study__in=['masters', 'doctorate', 'postgrad_diploma'])
-        elif role in ['DIR_TVET', 'DIPLOMA']:
-            return qs.filter(level_of_study__in=['diploma', 'certificate'])
-        elif role == 'DEPT_MCS':
-            return qs.filter(program_of_study__icontains='Computer Science')
-        elif role == 'DEPT_COORD':
-            dept = user.staff_profile.department
-            if dept:
-                return qs.filter(program_of_study__icontains=dept)
-            return qs.none()
-        else:
-            return qs.none()
-
 class Student(models.Model):
     """Extended profile for students"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
@@ -119,8 +93,6 @@ class Student(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    objects = StudentManager()
 
     def __str__(self):
         return f"{self.user.get_full_name()} ({self.university_id})"
@@ -242,7 +214,7 @@ class StaffProfile(models.Model):
         ('DEAN_HHS', 'Dean of Students'),
         ('DEFERMENT', 'Deferment Officer'),
         ('DEPT_MCS', 'Dept MCS Coordinator'),
-        ('DEPT_COORD', 'Department Coordinator'),
+        ('DVC_ASA', 'DVC ASA'),
         ('VC', 'Vice Chancellor'),
         ('DVC', 'Deputy Vice Chancellor'),
         ('REG_ADMIN', 'Register Admin'),
@@ -259,7 +231,6 @@ class StaffProfile(models.Model):
     phone = models.CharField(max_length=15)
     is_approved = models.BooleanField(default=True)
     profile_image = models.ImageField(upload_to='staff_profiles/', null=True, blank=True)
-    department = models.CharField(max_length=100, blank=True, null=True, help_text="Required for DEPT_COORD role")
 
     def get_role_color(self):
         colors = {
