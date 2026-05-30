@@ -321,21 +321,23 @@ SOCIALACCOUNT_PROVIDERS = {
 # EMAIL CONFIGURATION
 # ============================================
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'alimahrez744@gmail.com')
-DEFAULT_FROM_EMAIL = f'Student Welfare Management System (SWMS) <{ADMIN_EMAIL}>'
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', f'Student Welfare Management System (SWMS) <onboarding@resend.dev>')
 
 if DEBUG:
     # Use real email for testing if credentials exist, else console
-    if os.environ.get('EMAIL_HOST_USER') and os.environ.get('EMAIL_HOST_PASSWORD'):
+    if os.environ.get('EMAIL_HOST_PASSWORD'):
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     else:
         EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# Use Resend by default, but allow overrides
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.resend.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'resend')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # ============================================
 # CACHING (Redis)
