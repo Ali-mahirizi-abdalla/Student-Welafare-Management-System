@@ -382,290 +382,314 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ══════════════════════════════════════════
-   SELECTION / BULK ACTION BAR
-══════════════════════════════════════════ */
+/* ============================================
+   STAFF & ROLE MANAGEMENT TABLES
+   ============================================ */
+
+/* Bulk Actions Bar */
 .bulk-bar {
     background: #F0FDF4;
-    border: 1.5px solid #86EFAC;
-    border-radius: var(--radius-lg);
+    border-radius: 12px;
     padding: 12px 20px;
-    display: none;
-    align-items: center;
+    margin-bottom: 20px;
+    display: none; /* JS toggles this */
     justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 16px;
-    animation: slideDown 0.2s var(--ease) both;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    border: 1px solid #D1FAE5;
 }
 
-.bulk-bar.active { display: flex; }
+.bulk-bar.active { display: flex; animation: slideDown 0.2s var(--ease) both; }
 
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.bulk-bar-info {
-    font-size: 13.5px;
-    font-weight: 600;
-    color: #166534;
+.bulk-actions-left {
     display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-bulk-status {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #CBD5E1;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1E293B;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
-.bulk-bar-info i { color: var(--success); }
-
-.bulk-bar-actions { display: flex; gap: 10px; }
-
-/* ══════════════════════════════════════════
-   DATA TABLE CARD
-══════════════════════════════════════════ */
-.card-table {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
+.btn-bulk-status:hover {
+    background: #F8FAFC;
+    border-color: #94A3B8;
 }
 
-.main-table {
+.btn-bulk-delete {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #FEE2E2;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #DC2626;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-bulk-delete:hover {
+    background: #FEF2F2;
+    border-color: #FECACA;
+}
+
+.btn-bulk-clear {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #CBD5E1;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-bulk-clear:hover {
+    background: #F1F5F9;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    background: white;
+    margin-bottom: 20px;
+}
+
+/* Data Table */
+.data-table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 14px;
+    min-width: 800px;
+}
+
+.data-table th {
     text-align: left;
-}
-
-/* Table header */
-.main-table thead tr {
-    background: #F8FAFC;
-    border-bottom: 1.5px solid var(--border);
-}
-
-.main-table th {
-    padding: 13px 16px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    white-space: nowrap;
-}
-
-/* Table rows */
-.main-table td {
     padding: 14px 16px;
-    font-size: 13.5px;
+    background: #F8FAFC;
+    font-weight: 600;
+    color: #1E293B;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table td {
+    padding: 14px 16px;
     border-bottom: 1px solid #F1F5F9;
     vertical-align: middle;
-    color: var(--text-primary);
 }
 
-.main-table tbody tr:last-child td { border-bottom: none; }
-
-.main-table tbody tr {
-    transition: background var(--transition);
-}
-
-.main-table tbody tr:hover td {
+.data-table tr:hover {
     background: #F8FAFC;
 }
 
-/* Checkbox column */
-.main-table th:first-child,
-.main-table td:first-child {
-    width: 44px;
-    padding-right: 0;
-}
-
-/* Custom checkboxes */
-input[type="checkbox"] {
-    appearance: none;
-    width: 17px;
-    height: 17px;
-    border: 2px solid #CBD5E1;
-    border-radius: 5px;
+/* Checkboxes */
+.data-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
     cursor: pointer;
-    position: relative;
-    transition: all var(--transition);
-    background: var(--white);
-    flex-shrink: 0;
-    vertical-align: middle;
+    accent-color: #0D9488;
 }
 
-input[type="checkbox"]:checked {
-    background: var(--secondary);
-    border-color: var(--secondary);
-}
-
-input[type="checkbox"]:checked::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 5px;
-    width: 5px;
-    height: 9px;
-    border: 2px solid white;
-    border-top: none;
-    border-left: none;
-    transform: rotate(45deg);
-}
-
-input[type="checkbox"]:hover:not(:checked) { border-color: var(--secondary); }
-
-/* Staff name cell */
-.staff-name-cell {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.staff-avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--secondary), #0F766E);
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    text-transform: uppercase;
-}
-
-.staff-name-text {
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 13.5px;
-}
-
-/* Email cell */
-.email-cell {
-    color: var(--text-secondary);
-    font-size: 13px;
-}
-
-/* Role badge */
+/* Role Badges */
 .role-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    border-radius: 40px;
     font-size: 12px;
-    font-weight: 600;
-    background: #F1F5F9;
-    color: var(--primary);
+    font-weight: 500;
 }
 
-/* Status badges */
-.status-badge {
-    padding: 4px 11px;
-    border-radius: var(--radius-pill);
-    font-size: 12px;
-    font-weight: 600;
+.role-badge.director {
+    background: #EFF6FF;
+    color: #1E40AF;
+}
+
+.role-badge.auditor {
+    background: #F3E8FF;
+    color: #6B21A8;
+}
+
+.role-badge.vc {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.role-badge.dvc {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.role-badge.dvc-asa {
+    background: #FCE7F3;
+    color: #9D174D;
+}
+
+.role-badge.default {
+    background: #F1F5F9;
+    color: #1E293B;
+}
+
+/* Status Indicators */
+.status-active {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    letter-spacing: 0.01em;
-}
-
-.status-badge::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.status-active  { background: var(--success-light); color: #065F46; }
-.status-active::before  { background: var(--success); }
-
-.status-pending { background: var(--warning-light); color: #92400E; }
-.status-pending::before { background: var(--warning); }
-
-.status-inactive { background: var(--danger-light); color: #9F1239; }
-.status-inactive::before { background: var(--danger); }
-
-/* Joined date */
-.date-cell { color: var(--text-secondary); font-size: 13px; }
-
-/* Action icon buttons */
-.action-icons {
-    display: flex;
     gap: 6px;
-    justify-content: flex-end;
+    padding: 4px 10px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #ECFDF5;
+    color: #065F46;
 }
 
-.action-btn {
+.status-inactive {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #FEF2F2;
+    color: #991B1B;
+}
+
+.status-pending {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #FFFBEB;
+    color: #92400E;
+}
+
+/* Action Icons Cell */
+.actions-cell {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.actions-cell button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s;
     width: 32px;
     height: 32px;
-    border-radius: var(--radius-sm);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
-    color: var(--text-secondary);
-    background: transparent;
-    border: 1.5px solid var(--border);
-    cursor: pointer;
-    text-decoration: none;
-    transition: all var(--transition);
 }
 
-.action-btn:hover {
-    background: var(--primary);
-    color: var(--white);
-    border-color: var(--primary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-xs);
+.action-view { color: #3B82F6; }
+.action-edit { color: #F59E0B; }
+.action-reset { color: #10B981; }
+.action-email { color: #8B5CF6; }
+.action-copy { color: #64748B; }
+.action-delete { color: #EF4444; }
+
+.actions-cell button:hover {
+    background: #F1F5F9;
+    transform: scale(1.05);
 }
 
-.action-btn.view:hover  { background: var(--info);    border-color: var(--info); }
-.action-btn.edit:hover  { background: var(--secondary); border-color: var(--secondary); }
-.action-btn.key:hover   { background: var(--warning); border-color: var(--warning); }
-
-/* ══════════════════════════════════════════
-   PAGINATION
-══════════════════════════════════════════ */
-.pagination-wrapper {
-    padding: 16px 20px;
+/* Pagination */
+.pagination {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid var(--border);
-    background: #FAFBFD;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #E2E8F0;
 }
 
-.pagination-info {
-    font-size: 13px;
-    color: var(--text-muted);
+.pagination span {
+    font-size: 14px;
+    color: #64748B;
 }
 
-.pagination-nav { display: flex; gap: 6px; }
+.pagination-buttons {
+    display: flex;
+    gap: 8px;
+}
 
-.page-btn {
-    min-width: 36px;
-    height: 36px;
-    padding: 0 10px;
-    border-radius: var(--radius-sm);
+.page-prev, .page-next {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #CBD5E1;
+    border-radius: 40px;
     font-size: 13px;
-    font-weight: 600;
-    font-family: inherit;
+    font-weight: 500;
+    color: #1E293B;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-prev:hover:not(:disabled),
+.page-next:hover:not(:disabled) {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+}
+
+.page-prev:disabled,
+.page-next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Table Row Selection Highlight */
+.data-table tr.selected {
+    background: #EFF6FF;
+}
+
+/* Staff Count Badge */
+.staff-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    border: 1.5px solid var(--border);
-    background: var(--card-bg);
-    color: var(--text-secondary);
-    transition: all var(--transition);
+    min-width: 24px;
+    padding: 2px 8px;
+    background: #E2E8F0;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1E293B;
 }
 
-.page-btn:hover:not(:disabled) { background: var(--bg-main); color: var(--text-primary); }
-.page-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); }
-.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ══════════════════════════════════════════
    MODALS
@@ -988,53 +1012,52 @@ input[type="checkbox"]:hover:not(:checked) { border-color: var(--secondary); }
     <div id="staff-content" class="tab-content active">
         <!-- Bulk Action Bar -->
         <div id="bulk-bar" class="bulk-bar">
-            <div class="bulk-bar-info"><i class="fas fa-check-circle"></i> <span id="select-count">0</span> items selected</div>
-            <div class="bulk-bar-actions">
-                <button class="btn btn-outline" onclick="bulkStatus()">Change Status</button>
-                <button class="btn btn-danger-solid" onclick="bulkDelete()">Bulk Delete</button>
-                <button class="btn btn-outline" onclick="clearSelection()">Clear Selection</button>
+            <div style="font-size: 13.5px; font-weight: 600; color: #166534;"><i class="fas fa-check-circle"></i> <span id="select-count">0</span> items selected</div>
+            <div class="bulk-actions-left">
+                <button class="btn-bulk-status" onclick="bulkStatus()">Change Status</button>
+                <button class="btn-bulk-delete" onclick="bulkDelete()">Bulk Delete</button>
+                <button class="btn-bulk-clear" onclick="clearSelection()">Clear Selection</button>
             </div>
         </div>
 
-        <div class="card-table">
-            <table class="main-table">
+        <div class="table-wrapper">
+            <table class="data-table">
                 <thead>
                     <tr>
-                        <th style="width: 40px;"><input type="checkbox" id="master-check"></th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Joined</th>
-                        <th style="text-align: right;">Actions</th>
+                        <th style="width: 40px;"><input type="checkbox" id="master-check" class="select-all"></th>
+                        <th>NAME</th>
+                        <th>EMAIL</th>
+                        <th>ROLE</th>
+                        <th>STATUS</th>
+                        <th>JOINED</th>
+                        <th>ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody id="staff-table-body">
                     <!-- JS Powered -->
                 </tbody>
             </table>
-            <div class="pagination-wrapper">
-                <div class="pagination-info">Showing <span id="pag-start">1</span> to <span id="pag-end">9</span> of <span id="pag-total">9</span> entries</div>
-                <div class="pagination-nav">
-                    <button class="page-btn" disabled><i class="fas fa-chevron-left"></i></button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn" disabled><i class="fas fa-chevron-right"></i></button>
-                </div>
+        </div>
+        <div class="pagination">
+            <span>Showing <span id="pag-start">1</span> to <span id="pag-end">9</span> of <span id="pag-total">9</span> entries</span>
+            <div class="pagination-buttons">
+                <button class="page-prev" disabled>Previous</button>
+                <button class="page-next" disabled>Next</button>
             </div>
         </div>
     </div>
 
     <!-- TAB: ROLE MANAGEMENT -->
     <div id="roles-content" class="tab-content">
-        <div class="card-table">
-            <table class="main-table">
+        <div class="table-wrapper">
+            <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Role Name</th>
-                        <th>Description</th>
-                        <th>Staff Count</th>
-                        <th>Status</th>
-                        <th style="text-align: right;">Actions</th>
+                        <th>ROLE NAME</th>
+                        <th>DESCRIPTION</th>
+                        <th>STAFF COUNT</th>
+                        <th>STATUS</th>
+                        <th>ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody id="roles-table-body">
@@ -1155,6 +1178,17 @@ input[type="checkbox"]:hover:not(:checked) { border-color: var(--secondary); }
         });
     }
 
+    function getRoleClass(roleCode) {
+        if (!roleCode) return 'default';
+        roleCode = roleCode.toLowerCase();
+        if (roleCode.includes('dir') || roleCode.includes('tvet')) return 'director';
+        if (roleCode.includes('auditor')) return 'auditor';
+        if (roleCode === 'vc') return 'vc';
+        if (roleCode === 'dvc') return 'dvc';
+        if (roleCode.includes('dvc_asa')) return 'dvc-asa';
+        return 'default';
+    }
+
     function renderStaffTable() {
         const tbody = document.getElementById('staff-table-body');
         const filtered = state.staff.filter(s => {
@@ -1165,31 +1199,24 @@ input[type="checkbox"]:hover:not(:checked) { border-color: var(--secondary); }
         });
 
         tbody.innerHTML = filtered.map(s => `
-            <tr>
+            <tr class="${state.selection.includes(s.id) ? 'selected' : ''}">
                 <td><input type="checkbox" class="row-check" value="${s.id}" ${state.selection.includes(s.id) ? 'checked' : ''}></td>
-                <td data-label="Name">
-                    <div class="staff-name-cell">
-                        <div class="staff-avatar">${s.name.substring(0,2)}</div>
-                        <span class="staff-name-text">${s.name}</span>
-                    </div>
-                </td>
-                <td data-label="Email" class="email-cell">${s.email}</td>
-                <td data-label="Role"><span class="role-badge">${ROLE_DATA[s.role] ? ROLE_DATA[s.role].name : s.role}</span></td>
-                <td data-label="Status">
-                    <span class="status-badge status-${s.status.toLowerCase()}">
-                        ${s.status}
+                <td>${s.name}</td>
+                <td>${s.email}</td>
+                <td><span class="role-badge ${getRoleClass(s.role)}">${ROLE_DATA[s.role] ? ROLE_DATA[s.role].name : s.role}</span></td>
+                <td>
+                    <span class="status-${s.status.toLowerCase()}">
+                        ● ${s.status}
                     </span>
                 </td>
-                <td data-label="Joined" class="date-cell">${s.joined}</td>
-                <td style="text-align: right;">
-                    <div class="action-icons">
-                        <a href="/manage/staff/details/${s.id}/" class="action-btn view" title="View Details"><i class="fas fa-eye"></i></a>
-                        <a href="/manage/staff/edit/${s.id}/" class="action-btn edit" title="Edit Staff"><i class="fas fa-edit"></i></a>
-                        <a href="javascript:void(0)" class="action-btn key" onclick="toast('Password reset link sent', 'success')" title="Reset Password"><i class="fas fa-key"></i></a>
-                    </div>
+                <td>${s.joined}</td>
+                <td class="actions-cell">
+                    <button class="action-view" onclick="window.location.href='/manage/staff/details/${s.id}/'" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="action-edit" onclick="window.location.href='/manage/staff/edit/${s.id}/'" title="Edit Staff"><i class="fas fa-edit"></i></button>
+                    <button class="action-reset" onclick="toast('Password reset link sent', 'success')" title="Reset Password"><i class="fas fa-key"></i></button>
+                    <button class="action-email" onclick="toast('Email dialog opened', 'success')" title="Email Staff"><i class="fas fa-envelope"></i></button>
                 </td>
             </tr>
-
         `).join('');
 
         if (filtered.length === 0) {
@@ -1208,21 +1235,15 @@ input[type="checkbox"]:hover:not(:checked) { border-color: var(--secondary); }
         const tbody = document.getElementById('roles-table-body');
         tbody.innerHTML = Object.keys(ROLE_DATA).map(code => `
             <tr>
-                <td data-label="Role Name">
-                    <div class="role-name-cell">
-                        <span class="role-dot" style="background: ${ROLE_DATA[code].color || '#ccc'}"></span>
-                        ${ROLE_DATA[code].name}
-                    </div>
-                </td>
-                <td data-label="Description" class="role-desc-cell">${ROLE_DATA[code].desc || 'Standard system role...'}</td>
-                <td data-label="Staff Count" class="role-count-cell">${state.staff.filter(s => s.role === code).length}</td>
-                <td data-label="Status"><span class="status-badge status-active">Active</span></td>
-                <td style="text-align: right;">
-                    <div class="action-icons">
-                        <button class="action-btn view" title="View Role"><i class="fas fa-lock"></i></button>
-                        <button class="action-btn edit" title="Edit Role"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn" title="Duplicate Role"><i class="fas fa-copy"></i></button>
-                    </div>
+                <td><span class="role-badge ${getRoleClass(code)}">${ROLE_DATA[code].name}</span></td>
+                <td>${ROLE_DATA[code].desc || 'Standard system role...'}</td>
+                <td><span class="staff-count">${state.staff.filter(s => s.role === code).length}</span></td>
+                <td><span class="status-active">● Active</span></td>
+                <td class="actions-cell">
+                    <button class="action-view" title="View Role"><i class="fas fa-eye"></i></button>
+                    <button class="action-edit" title="Edit Role"><i class="fas fa-edit"></i></button>
+                    <button class="action-copy" title="Duplicate Role"><i class="fas fa-copy"></i></button>
+                    <button class="action-delete" title="Delete Role"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `).join('');
