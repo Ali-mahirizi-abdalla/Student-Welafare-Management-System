@@ -1,337 +1,932 @@
 {% extends 'hms/base.html' %}
 {% load static %}
 
-{% block title %}Register Staff - CampusCare Admin{% endblock %}
+{% block title %}Add Staff Member – CampusCare{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    :root {
-        --primary: #4f46e5;
-        --primary-hover: #4338ca;
-        --background: #f8fafc;
-        --surface: #ffffff;
-        --text-main: #1e293b;
-        --text-muted: #64748b;
-        --border-color: #e2e8f0;
-        --accent: #6366f1;
-    }
+/* ─── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-    .page-wrapper {
-        min-height: 100vh;
-        background: var(--background);
-        padding: 3rem 1.5rem;
-    }
+.rsp-page {
+    font-family: 'Inter', system-ui, sans-serif;
+    padding: 2.5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    -webkit-font-smoothing: antialiased;
+}
 
-    .form-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
+/* ─── Back Link ────────────────────────────────── */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    text-decoration: none;
+    margin-bottom: 1.75rem;
+    transition: color .2s, gap .2s;
+}
+.back-link:hover { color: #0d9488; gap: 12px; }
+.back-link i { font-size: 12px; }
 
-    .header-section {
-        margin-bottom: 2.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
+/* ─── Page Header ──────────────────────────────── */
+.rsp-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.rsp-header-left h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 4px;
+}
+.rsp-header-left h1::before {
+    content: '';
+    width: 4px;
+    height: 28px;
+    background: linear-gradient(180deg, #0d9488, #0f766e);
+    border-radius: 99px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.rsp-header-left p {
+    font-size: 13.5px;
+    color: #64748b;
+    padding-left: 14px;
+    margin: 0;
+}
+.rsp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 99px;
+}
 
-    .header-title h1 {
-        font-size: 2rem;
-        font-weight: 800;
-        color: var(--text-main);
-        letter-spacing: -0.025em;
-    }
+/* ─── Form Card ────────────────────────────────── */
+.form-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06), 0 1px 4px rgba(0,0,0,.04);
+    overflow: hidden;
+}
 
-    .header-title p {
-        color: var(--text-muted);
-        font-weight: 500;
-        margin-top: 0.5rem;
-    }
+/* ─── Form Grid ────────────────────────────────── */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+@media (max-width: 860px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-col-right { border-left: none !important; border-top: 1px solid #e2e8f0; }
+}
 
-    .back-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-muted);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.875rem;
-        transition: color 0.2s;
-        margin-bottom: 0.5rem;
-    }
+.form-col {
+    padding: 2rem;
+}
+.form-col-right {
+    border-left: 1px solid #e2e8f0;
+}
 
-    .back-btn:hover {
-        color: var(--primary);
-    }
+/* ─── Section Title ────────────────────────────── */
+.section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #0d9488;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ccfbf1;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-title i {
+    background: #f0fdfa;
+    color: #0d9488;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    border: 1px solid #ccfbf1;
+}
 
-    .main-card {
-        background: var(--surface);
-        border-radius: 1.5rem;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
+/* ─── Field Group ──────────────────────────────── */
+.field-group {
+    margin-bottom: 1.35rem;
+}
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+.field-label .req {
+    color: #e11d48;
+    font-size: 14px;
+    line-height: 1;
+}
+.field-label .opt {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-left: 4px;
+}
 
-    .card-content {
-        padding: 2.5rem;
-    }
+/* ─── Inputs ───────────────────────────────────── */
+.rsp-input,
+.rsp-select {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #0f172a;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+    font-family: 'Inter', sans-serif;
+    appearance: none;
+}
+.rsp-input::placeholder { color: #94a3b8; }
+.rsp-input:focus,
+.rsp-select:focus {
+    background: #fff;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13,148,136,.12);
+}
+.rsp-input.has-icon { padding-left: 40px; }
 
-    .form-section-title {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--text-main);
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid var(--border-color);
-    }
+.input-wrap {
+    position: relative;
+}
+.input-wrap .input-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 13px;
+    pointer-events: none;
+    transition: color .2s;
+}
+.input-wrap:focus-within .input-icon { color: #0d9488; }
 
-    .form-section-title i {
-        color: var(--primary);
-    }
+/* Select arrow */
+.select-wrap { position: relative; }
+.select-wrap::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 11px;
+    pointer-events: none;
+}
 
-    .input-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
+/* ─── Field Hint ───────────────────────────────── */
+.field-hint {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+.field-hint i { color: #cbd5e1; font-size: 10px; }
 
-    @media (max-width: 640px) {
-        .input-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+/* ─── File Upload ──────────────────────────────── */
+.file-upload-area {
+    border: 2px dashed #e2e8f0;
+    border-radius: 14px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .25s, background .25s;
+    background: #f8fafc;
+    position: relative;
+}
+.file-upload-area:hover,
+.file-upload-area.drag-over {
+    border-color: #0d9488;
+    background: #f0fdfa;
+}
+.file-upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+.upload-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    color: #0d9488;
+    font-size: 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.upload-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 3px;
+}
+.upload-subtext {
+    font-size: 11.5px;
+    color: #94a3b8;
+}
+.file-preview {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    text-align: left;
+}
+.file-preview .file-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.file-preview .file-size {
+    font-size: 11px;
+    color: #94a3b8;
+}
+.file-preview .remove-file {
+    margin-left: auto;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+.file-preview .remove-file:hover { color: #e11d48; }
 
-    .field-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+/* ─── Password Field ───────────────────────────── */
+.pw-wrap { position: relative; }
+.pw-wrap .pw-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    transition: color .2s;
+    background: none;
+    border: none;
+    outline: none;
+}
+.pw-wrap .pw-toggle:hover { color: #475569; }
+.pw-wrap .rsp-input { padding-right: 42px; }
 
-    .field-label {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--text-main);
-    }
+/* ─── Password Strength ────────────────────────── */
+.strength-wrap { margin-top: 8px; }
+.strength-bar {
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.strength-fill {
+    height: 100%;
+    border-radius: 99px;
+    width: 0%;
+    transition: width .4s ease, background-color .4s ease;
+}
+.strength-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.strength-label .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    transition: background .4s;
+}
 
-    .input-control {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        background: white;
-        border: 1.5px solid var(--border-color);
-        border-radius: 0.75rem;
-        font-size: 0.95rem;
-        color: var(--text-main);
-        transition: all 0.2s;
-        outline: none;
-    }
+/* ─── Error Messages ───────────────────────────── */
+.field-error {
+    font-size: 11.5px;
+    color: #e11d48;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.rsp-input.error { border-color: #fca5a5; background: #fff5f5; }
 
-    .input-control:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-    }
+.alert-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #b91c1c;
+}
+.alert-error i { flex-shrink: 0; margin-top: 1px; }
 
-    .input-help {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-top: 0.25rem;
-    }
+/* ─── Form Footer ──────────────────────────────── */
+.form-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-radius: 0 0 24px 24px;
+}
+.footer-note {
+    font-size: 12px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-    .error-text {
-        color: #ef4444;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-top: 0.25rem;
-    }
+/* ─── Buttons ──────────────────────────────────── */
+.btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 28px;
+    background: #1e293b;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background .2s, transform .15s, box-shadow .2s;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.2px;
+    box-shadow: 0 4px 12px rgba(30,41,59,.25);
+}
+.btn-submit:hover {
+    background: #0f172a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(30,41,59,.3);
+}
+.btn-submit:active { transform: translateY(0); }
+.btn-submit i { font-size: 13px; }
 
-    .submit-btn {
-        width: 100%;
-        padding: 1rem;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 1rem;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-    }
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    background: white;
+    color: #475569;
+    font-size: 13.5px;
+    font-weight: 600;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+}
+.btn-cancel:hover { background: #f1f5f9; border-color: #cbd5e1; color: #1e293b; }
 
-    .submit-btn:hover {
-        background: var(--primary-hover);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-    }
+/* ─── Auto-generate button ─────────────────────── */
+.btn-gen {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    color: #0f766e;
+    font-size: 11.5px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .2s;
+    margin-top: 6px;
+    font-family: 'Inter', sans-serif;
+}
+.btn-gen:hover { background: #ccfbf1; border-color: #5eead4; }
+.btn-gen i { font-size: 10px; }
 
-    .submit-btn:active {
-        transform: translateY(0);
-    }
-
-    /* Style for Django form fields injected via {{ form.field }} */
-    input[type="text"], input[type="email"], input[type="password"], select, input[type="file"] {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        background: white !important;
-        border: 1.5px solid var(--border-color) !important;
-        border-radius: 0.75rem !important;
-        font-size: 0.95rem !important;
-        color: var(--text-main) !important;
-        transition: all 0.2s !important;
-        outline: none !important;
-    }
-
-    input:focus, select:focus {
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
-    }
+/* ─── Match indicator ──────────────────────────── */
+.match-indicator {
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.match-ok { color: #059669; }
+.match-fail { color: #dc2626; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-wrapper">
-    <div class="form-container">
-        <!-- Header -->
-        <div class="header-section">
-            <div class="header-title">
-                <a href="{% url 'hms:manage_staff' %}" class="back-btn">
-                    <i class="fas fa-arrow-left"></i> Back to Directory
-                </a>
-                <h1>Staff Registration</h1>
-                <p>Register new staff members with specialized management roles.</p>
-            </div>
+<div class="rsp-page">
+
+    <!-- Back Link -->
+    <a href="{% url 'hms:manage_staff' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Staff Directory
+    </a>
+
+    <!-- Page Header -->
+    <div class="rsp-header">
+        <div class="rsp-header-left">
+            <h1>Add Staff Member</h1>
+            <p>Create a new staff account and assign their system role</p>
         </div>
+        <span class="rsp-badge"><i class="fas fa-shield-alt"></i> Manual Registration</span>
+    </div>
 
-        <!-- Main Form Card -->
-        <div class="main-card">
-            <div class="card-content">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    <!-- Section 1: Identity -->
-                    <div class="form-section">
-                        <h2 class="form-section-title">
-                            <i class="fas fa-user-circle"></i> Personal Information
-                        </h2>
-                        <div class="input-grid">
-                            <div class="field-group">
-                                <label class="field-label">First Name</label>
-                                {{ form.first_name }}
-                                {% if form.first_name.errors %}<span class="error-text">{{ form.first_name.errors.0 }}</span>{% endif %}
-                            </div>
-                            <div class="field-group">
-                                <label class="field-label">Last Name</label>
-                                {{ form.last_name }}
-                                {% if form.last_name.errors %}<span class="error-text">{{ form.last_name.errors.0 }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="input-grid">
-                            <div class="field-group">
-                                <label class="field-label">Email Address</label>
-                                {{ form.email }}
-                                <span class="input-help">Used for portal authentication.</span>
-                                {% if form.email.errors %}<span class="error-text">{{ form.email.errors.0 }}</span>{% endif %}
-                            </div>
-                            <div class="field-group">
-                                <label class="field-label">Phone Number</label>
-                                {{ form.phone }}
-                                {% if form.phone.errors %}<span class="error-text">{{ form.phone.errors.0 }}</span>{% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 2: Role Assignment -->
-                    <div class="form-section" style="margin-top: 2rem;">
-                        <h2 class="form-section-title">
-                            <i class="fas fa-shield-alt"></i> Role & Authorization
-                        </h2>
-                        <div class="input-grid">
-                            <div class="field-group">
-                                <label class="field-label">Assigned Role</label>
-                                <select name="role" class="input-control" required id="role-select">
-                                    <option value="">-- Select Staff Role --</option>
-                                    <optgroup label="Executive Leadership">
-                                        <option value="VC">Vice Chancellor</option>
-                                        <option value="DVC">Deputy Vice Chancellor</option>
-                                        <option value="DVC_ASA">DVC ASA</option>
-                                    </optgroup>
-                                    <optgroup label="Registry">
-                                        <option value="REG_ADMIN">Register Admin</option>
-                                        <option value="REG_USER">Register User</option>
-                                    </optgroup>
-                                    <optgroup label="Academic">
-                                        <option value="DEAN_HHS">Dean of Students</option>
-                                        <option value="DEAN_GRAD">Dean - Graduate School</option>
-                                        <option value="DEPT_MCS">Dept MCS Coordinator</option>
-                                        <option value="DIR_RESOURCE">Director - Resource Mobilization</option>
-                                        <option value="DIR_TVET">Director - TVET</option>
-                                        <option value="DIPLOMA">Diploma Coordinator</option>
-                                    </optgroup>
-                                    <optgroup label="Welfare &amp; Student Services">
-                                        <option value="SUPER_ADMIN">Super Admin</option>
-                                        <option value="HEALTH_MGR">Health Manager</option>
-                                        <option value="MAINT_SUP">Maintenance Supervisor</option>
-                                        <option value="WARDEN">Warden</option>
-                                        <option value="DEFERMENT">Deferment Officer</option>
-                                    </optgroup>
-                                    <optgroup label="Operations">
-                                        <option value="FINANCE">Finance Officer</option>
-                                        <option value="SECURITY">Security Officer</option>
-                                        <option value="EMERGENCY">Emergency Coordinator</option>
-                                        <option value="SUPPORT">Support Agent</option>
-                                    </optgroup>
-                                    <optgroup label="Media &amp; Communications">
-                                        <option value="NEWS_EDITOR">News Editor</option>
-                                        <option value="NEWS_AUDITOR">News Auditor</option>
-                                        <option value="AUDITOR">Auditor</option>
-                                    </optgroup>
-                                </select>
-                                {% if form.role.errors %}<span class="error-text">{{ form.role.errors.0 }}</span>{% endif %}
-                            </div>
-                            <div class="field-group">
-                                <label class="field-label">Role ID / National ID</label>
-                                {{ form.national_id }}
-                                {% if form.national_id.errors %}<span class="error-text">{{ form.national_id.errors.0 }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">Profile Image (Optional)</label>
-                            {{ form.profile_image }}
-                        </div>
-                    </div>
-
-                    <!-- Section 3: Credentials -->
-                    <div class="form-section" style="margin-top: 2rem; margin-bottom: 2.5rem;">
-                        <h2 class="form-section-title">
-                            <i class="fas fa-key"></i> Initial Credentials
-                        </h2>
-                        <div class="input-grid">
-                            <div class="field-group">
-                                <label class="field-label">Password</label>
-                                {{ form.password }}
-                                {% if form.password.errors %}<span class="error-text">{{ form.password.errors.0 }}</span>{% endif %}
-                            </div>
-                            <div class="field-group">
-                                <label class="field-label">Confirm Password</label>
-                                {{ form.confirm_password }}
-                                {% if form.confirm_password.errors %}<span class="error-text">{{ form.confirm_password.errors.0 }}</span>{% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Button -->
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-user-plus"></i> Complete Registration
-                    </button>
-                </form>
-            </div>
+    <!-- Error Alert -->
+    {% if messages %}
+    <div class="alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <div>
+            {% for message in messages %}
+            <div>{{ message }}</div>
+            {% endfor %}
         </div>
     </div>
-</div>
+    {% endif %}
+
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data" id="staff-reg-form" novalidate>
+        {% csrf_token %}
+
+        <div class="form-card">
+            <div class="form-grid">
+
+                <!-- ══════════ LEFT COL: PERSONAL INFORMATION ══════════ -->
+                <div class="form-col form-col-left">
+                    <div class="section-title">
+                        <i class="fas fa-user"></i> Personal Information
+                    </div>
+
+                    <!-- First Name -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_first_name">
+                            First Name <span class="req">*</span>
+                        </label>
+                        <div class="input-wrap">
+                            <i class="input-icon fas fa-user-circle"></i>
+                            <input type="text" name="first_name" id="id_first_name"
+                                   class="rsp-input has-icon {% if form.first_name.errors %}error{% endif %}"
+                                   placeholder="e.g. John"
+                                   value="{{ form.first_name.value|default:'' }}"
+                                   pattern="[A-Za-z\s\-]+" required>
+                        </div>
+                        <div class="field-hint"><i class="fas fa-circle-info"></i> Letters only, no numbers</div>
+                        {% for err in form.first_name.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_last_name">
+                            Last Name <span class="req">*</span>
+                        </label>
+                        <div class="input-wrap">
+                            <i class="input-icon fas fa-user-circle"></i>
+                            <input type="text" name="last_name" id="id_last_name"
+                                   class="rsp-input has-icon {% if form.last_name.errors %}error{% endif %}"
+                                   placeholder="e.g. Doe"
+                                   value="{{ form.last_name.value|default:'' }}"
+                                   pattern="[A-Za-z\s\-]+" required>
+                        </div>
+                        <div class="field-hint"><i class="fas fa-circle-info"></i> Letters only, no numbers</div>
+                        {% for err in form.last_name.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_email">
+                            Email Address <span class="req">*</span>
+                        </label>
+                        <div class="input-wrap">
+                            <i class="input-icon fas fa-envelope"></i>
+                            <input type="email" name="email" id="id_email"
+                                   class="rsp-input has-icon {% if form.email.errors %}error{% endif %}"
+                                   placeholder="staff@example.ac.ke"
+                                   value="{{ form.email.value|default:'' }}"
+                                   required>
+                        </div>
+                        <div class="field-hint"><i class="fas fa-circle-info"></i> Used as login username — must be unique</div>
+                        {% for err in form.email.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_phone">
+                            Phone Number <span class="req">*</span>
+                        </label>
+                        <div class="input-wrap">
+                            <i class="input-icon fas fa-phone"></i>
+                            <input type="tel" name="phone" id="id_phone"
+                                   class="rsp-input has-icon {% if form.phone.errors %}error{% endif %}"
+                                   placeholder="0712 345 678"
+                                   value="{{ form.phone.value|default:'' }}"
+                                   pattern="^(\+254|0)[17]\d{8}$" required>
+                        </div>
+                        <div class="field-hint"><i class="fas fa-circle-info"></i> Kenyan format: 07XX or +2547XX</div>
+                        {% for err in form.phone.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- ── END LEFT COL ── -->
+
+                <!-- ══════════ RIGHT COL: ROLE & AUTHORIZATION ══════════ -->
+                <div class="form-col form-col-right">
+                    <div class="section-title">
+                        <i class="fas fa-id-badge"></i> Role & Authorization
+                    </div>
+
+                    <!-- Role -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_role">
+                            Assigned Role <span class="req">*</span>
+                        </label>
+                        <div class="select-wrap">
+                            <select name="role" id="id_role"
+                                    class="rsp-input rsp-select {% if form.role.errors %}error{% endif %}" required>
+                                <option value="">— Select a role —</option>
+                                <optgroup label="Executive">
+                                    <option value="super_admin"          {% if form.role.value == 'super_admin' %}selected{% endif %}>Super Admin</option>
+                                    <option value="vice_chancellor"      {% if form.role.value == 'vice_chancellor' %}selected{% endif %}>Vice Chancellor</option>
+                                    <option value="deputy_vice_chancellor" {% if form.role.value == 'deputy_vice_chancellor' %}selected{% endif %}>Deputy Vice Chancellor</option>
+                                    <option value="register_admin"       {% if form.role.value == 'register_admin' %}selected{% endif %}>Register Admin</option>
+                                    <option value="register_user"        {% if form.role.value == 'register_user' %}selected{% endif %}>Register User</option>
+                                </optgroup>
+                                <optgroup label="Academic Administration">
+                                    <option value="dean_of_students"     {% if form.role.value == 'dean_of_students' %}selected{% endif %}>Dean of Students</option>
+                                    <option value="dean_graduate_school"  {% if form.role.value == 'dean_graduate_school' %}selected{% endif %}>Dean – Graduate School</option>
+                                    <option value="director_resource"    {% if form.role.value == 'director_resource' %}selected{% endif %}>Director – Resource Mobilization</option>
+                                    <option value="director_tvet"        {% if form.role.value == 'director_tvet' %}selected{% endif %}>Director – TVET</option>
+                                    <option value="deferment_officer"    {% if form.role.value == 'deferment_officer' %}selected{% endif %}>Deferment Officer</option>
+                                    <option value="dept_mcs"             {% if form.role.value == 'dept_mcs' %}selected{% endif %}>Dept MCS Coordinator</option>
+                                    <option value="diploma_coordinator"  {% if form.role.value == 'diploma_coordinator' %}selected{% endif %}>Diploma Coordinator</option>
+                                    <option value="dept_coordinator"     {% if form.role.value == 'dept_coordinator' %}selected{% endif %}>Department Coordinator</option>
+                                </optgroup>
+                                <optgroup label="Finance & Audit">
+                                    <option value="finance_officer"      {% if form.role.value == 'finance_officer' %}selected{% endif %}>Finance Officer</option>
+                                    <option value="auditor"              {% if form.role.value == 'auditor' %}selected{% endif %}>Auditor</option>
+                                    <option value="news_auditor"         {% if form.role.value == 'news_auditor' %}selected{% endif %}>News Auditor</option>
+                                </optgroup>
+                                <optgroup label="Student Services">
+                                    <option value="news_editor"          {% if form.role.value == 'news_editor' %}selected{% endif %}>News Editor</option>
+                                    <option value="support_agent"        {% if form.role.value == 'support_agent' %}selected{% endif %}>Support Agent</option>
+                                </optgroup>
+                                <optgroup label="Technical & Estates">
+                                    <option value="maintenance_sup"      {% if form.role.value == 'maintenance_sup' %}selected{% endif %}>Maintenance Supervisor</option>
+                                    <option value="security_officer"     {% if form.role.value == 'security_officer' %}selected{% endif %}>Security Officer</option>
+                                    <option value="emergency_coord"      {% if form.role.value == 'emergency_coord' %}selected{% endif %}>Emergency Coordinator</option>
+                                </optgroup>
+                                <optgroup label="Health">
+                                    <option value="health_manager"       {% if form.role.value == 'health_manager' %}selected{% endif %}>Health Manager</option>
+                                </optgroup>
+                                <optgroup label="Accommodation">
+                                    <option value="warden"               {% if form.role.value == 'warden' %}selected{% endif %}>Warden</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="field-hint"><i class="fas fa-circle-info"></i> Determines system access & permissions</div>
+                        {% for err in form.role.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- National ID -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_national_id">
+                            Role ID / National ID <span class="req">*</span>
+                        </label>
+                        <div class="input-wrap">
+                            <i class="input-icon fas fa-id-card"></i>
+                            <input type="text" name="national_id" id="id_national_id"
+                                   class="rsp-input has-icon {% if form.national_id.errors %}error{% endif %}"
+                                   placeholder="e.g. 12345678 or EMP-001"
+                                   value="{{ form.national_id.value|default:'' }}"
+                                   required>
+                        </div>
+                        <div class="field-hint"><i class="fas fa-circle-info"></i> Alphanumeric — must be unique across all staff</div>
+                        {% for err in form.national_id.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Profile Image Upload -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            Profile Image <span class="opt">(Optional)</span>
+                        </label>
+                        <div class="file-upload-area" id="upload-area">
+                            <input type="file" name="profile_image" id="id_profile_image"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   onchange="handleFileSelect(this)">
+                            <div id="upload-placeholder">
+                                <div class="upload-icon"><i class="fas fa-camera"></i></div>
+                                <div class="upload-text">Click or drag & drop a photo</div>
+                                <div class="upload-subtext">JPG, PNG or WebP · Max 2 MB</div>
+                            </div>
+                        </div>
+                        <div class="file-preview" id="file-preview">
+                            <i class="fas fa-file-image" style="color:#0d9488;font-size:20px;flex-shrink:0;"></i>
+                            <div>
+                                <div class="file-name" id="file-name-text">–</div>
+                                <div class="file-size" id="file-size-text">–</div>
+                            </div>
+                            <i class="fas fa-times remove-file" onclick="clearFile()" title="Remove"></i>
+                        </div>
+                        <div class="field-hint"><i class="fas fa-circle-info"></i> Displayed on staff profile & directory</div>
+                    </div>
+
+                    <!-- Temporary Password -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_password">
+                            Temporary Password <span class="req">*</span>
+                        </label>
+                        <div class="pw-wrap">
+                            <input type="password" name="password" id="id_password"
+                                   class="rsp-input {% if form.password.errors %}error{% endif %}"
+                                   placeholder="Min 8 chars · Upper, lower, digit"
+                                   oninput="checkStrength(this.value)"
+                                   required>
+                            <button type="button" class="pw-toggle" onclick="togglePw('id_password',this)" title="Show/hide">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <button type="button" class="btn-gen" onclick="generatePassword()">
+                            <i class="fas fa-wand-magic-sparkles"></i> Auto-generate
+                        </button>
+
+                        <!-- Strength meter -->
+                        <div class="strength-wrap">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strength-fill"></div>
+                            </div>
+                            <div class="strength-label" id="strength-label">
+                                <span class="dot" id="strength-dot"></span>
+                                <span id="strength-text">Password strength</span>
+                            </div>
+                        </div>
+                        {% for err in form.password.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="field-group">
+                        <label class="field-label" for="id_confirm_password">
+                            Confirm Password <span class="req">*</span>
+                        </label>
+                        <div class="pw-wrap">
+                            <input type="password" name="confirm_password" id="id_confirm_password"
+                                   class="rsp-input {% if form.confirm_password.errors %}error{% endif %}"
+                                   placeholder="Re-enter password"
+                                   oninput="checkMatch()"
+                                   required>
+                            <button type="button" class="pw-toggle" onclick="togglePw('id_confirm_password',this)" title="Show/hide">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="match-indicator" id="match-indicator" style="display:none;"></div>
+                        {% for err in form.confirm_password.errors %}
+                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <!-- ── END RIGHT COL ── -->
+
+            </div><!-- .form-grid -->
+
+            <!-- Form Footer -->
+            <div class="form-footer">
+                <span class="footer-note">
+                    <i class="fas fa-lock"></i>
+                    Staff will be prompted to change their password on first login.
+                </span>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <a href="{% url 'hms:manage_staff' %}" class="btn-cancel">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn-submit" id="submit-btn">
+                        <i class="fas fa-user-plus"></i> Register Staff Member
+                    </button>
+                </div>
+            </div>
+
+        </div><!-- .form-card -->
+    </form>
+
+</div><!-- .rsp-page -->
 {% endblock %}
 
+{% block extra_js %}
+<script>
+/* ── Password Visibility ───────────────────────── */
+function togglePw(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        inp.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+/* ── Password Strength ─────────────────────────── */
+function checkStrength(val) {
+    const fill   = document.getElementById('strength-fill');
+    const dot    = document.getElementById('strength-dot');
+    const text   = document.getElementById('strength-text');
+
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[a-z]/.test(val)) score++;
+    if (/\d/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+        { w: '0%',   color: '#e2e8f0', label: 'Password strength',  dot: '#e2e8f0' },
+        { w: '25%',  color: '#ef4444', label: 'Weak',  dot: '#ef4444' },
+        { w: '50%',  color: '#f97316', label: 'Fair',  dot: '#f97316' },
+        { w: '75%',  color: '#eab308', label: 'Good',  dot: '#eab308' },
+        { w: '100%', color: '#22c55e', label: 'Strong', dot: '#22c55e' },
+        { w: '100%', color: '#14b8a6', label: 'Very Strong', dot: '#14b8a6' },
+    ];
+
+    const l = levels[Math.min(score, 5)];
+    fill.style.width = l.w;
+    fill.style.backgroundColor = l.color;
+    dot.style.backgroundColor = l.dot;
+    text.textContent = l.label;
+
+    checkMatch(); // re-run match check whenever password changes
+}
+
+/* ── Password Match ────────────────────────────── */
+function checkMatch() {
+    const pw  = document.getElementById('id_password').value;
+    const pw2 = document.getElementById('id_confirm_password').value;
+    const ind = document.getElementById('match-indicator');
+
+    if (!pw2) { ind.style.display = 'none'; return; }
+    ind.style.display = 'flex';
+
+    if (pw === pw2) {
+        ind.className = 'match-indicator match-ok';
+        ind.innerHTML = '<i class="fas fa-circle-check"></i> Passwords match';
+    } else {
+        ind.className = 'match-indicator match-fail';
+        ind.innerHTML = '<i class="fas fa-circle-xmark"></i> Passwords do not match';
+    }
+}
+
+/* ── Auto-generate Password ────────────────────── */
+function generatePassword() {
+    const upper  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lower  = 'abcdefghijklmnopqrstuvwxyz';
+    const digits = '0123456789';
+    const special = '!@#$%^&*';
+    const all    = upper + lower + digits + special;
+
+    let pw = '';
+    pw += upper[Math.floor(Math.random() * upper.length)];
+    pw += lower[Math.floor(Math.random() * lower.length)];
+    pw += digits[Math.floor(Math.random() * digits.length)];
+    pw += special[Math.floor(Math.random() * special.length)];
+    for (let i = 4; i < 12; i++) {
+        pw += all[Math.floor(Math.random() * all.length)];
+    }
+    // Shuffle
+    pw = pw.split('').sort(() => Math.random() - 0.5).join('');
+
+    const inp = document.getElementById('id_password');
+    inp.type = 'text';
+    inp.value = pw;
+    checkStrength(pw);
+
+    const inp2 = document.getElementById('id_confirm_password');
+    inp2.value = pw;
+    inp2.type = 'text';
+    checkMatch();
+
+    // Briefly flash the field
+    inp.style.borderColor = '#0d9488';
+    setTimeout(() => inp.style.borderColor = '', 1500);
+}
+
+/* ── File Upload ───────────────────────────────── */
+function handleFileSelect(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const maxMb = 2;
+    if (file.size > maxMb * 1024 * 1024) {
+        alert(`File too large. Maximum size is ${maxMb} MB.`);
+        clearFile();
+        return;
+    }
+
+    document.getElementById('upload-placeholder').style.display = 'none';
+    const preview = document.getElementById('file-preview');
+    preview.style.display = 'flex';
+    document.getElementById('file-name-text').textContent = file.name;
+    document.getElementById('file-size-text').textContent = (file.size / 1024).toFixed(1) + ' KB';
+}
+
+function clearFile() {
+    document.getElementById('id_profile_image').value = '';
+    document.getElementById('file-preview').style.display = 'none';
+    document.getElementById('upload-placeholder').style.display = '';
+}
+
+/* ── Drag & Drop ───────────────────────────────── */
+const uploadArea = document.getElementById('upload-area');
+if (uploadArea) {
+    ['dragenter','dragover'].forEach(e => uploadArea.addEventListener(e, ev => {
+        ev.preventDefault(); uploadArea.classList.add('drag-over');
+    }));
+    ['dragleave','drop'].forEach(e => uploadArea.addEventListener(e, ev => {
+        ev.preventDefault(); uploadArea.classList.remove('drag-over');
+        if (e === 'drop' && ev.dataTransfer.files.length) {
+            document.getElementById('id_profile_image').files = ev.dataTransfer.files;
+            handleFileSelect(document.getElementById('id_profile_image'));
+        }
+    }));
+}
+
+/* ── Form Submit Guard ─────────────────────────── */
+document.getElementById('staff-reg-form').addEventListener('submit', function(e) {
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+});
+</script>
+{% endblock %}
