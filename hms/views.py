@@ -3756,6 +3756,8 @@ def manage_roles(request):
             'staff': staff_in_role,
         })
         
+    staff_members = StaffProfile.objects.all().select_related('user')
+
     context = {
         'role_stats': role_stats,
         'modules': modules,
@@ -3763,9 +3765,15 @@ def manage_roles(request):
         'active_roles': len(roles),
         'assigned_roles': assigned_roles,
         'total_permissions': total_permissions,
-        'page_title': 'Role Management'
+        'page_title': 'Role Management',
+        'staff_members': staff_members,
+        'total_staff': staff_members.count(),
+        'active_count': staff_members.filter(user__is_active=True).count(),
+        'pending_count': staff_members.filter(user__is_active=False).count(),
+        'invited_count': 0,
+        'role_count': len(roles),
     }
-    return render(request, 'hms/admin/manage_roles.html', context)
+    return render(request, 'hms/rbac/manage_roles.html', context)
 
 
 @login_required
