@@ -110,27 +110,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for thesis in mock_thesis_list %}
+                        {% for student in masters_students %}
                         <tr>
                             <td>
-                                <div style="font-weight: 700; color: var(--text-main);">{{ thesis.student }}</div>
-                                <div style="font-size: 0.8125rem; color: var(--primary);">{{ thesis.level }}</div>
+                                <div style="font-weight: 700; color: var(--text-main);">{{ student.user.get_full_name }}</div>
+                                <div style="font-size: 0.8125rem; color: var(--primary);">Master's Candidate</div>
                             </td>
                             <td>
-                                <div style="font-weight: 600; color: var(--text-main); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ thesis.title }}">
-                                    {{ thesis.title }}
+                                <div style="font-weight: 600; color: var(--text-main); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ student.program_of_study }}
                                 </div>
                             </td>
-                            <td>{{ thesis.supervisor }}</td>
+                            <td>ID: {{ student.university_id }}</td>
                             <td>
-                                <span class="thesis-status {% if thesis.status == 'Under Review' %}status-review{% elif thesis.status == 'Approved' %}status-approved{% else %}status-draft{% endif %}">
-                                    {{ thesis.status }}
+                                <span class="thesis-status status-approved">
+                                    Enrolled
                                 </span>
                             </td>
                         </tr>
-                        {% empty %}
+                        {% endfor %}
+                        {% for student in phd_students %}
                         <tr>
-                            <td colspan="4" style="text-align: center; color: var(--text-muted);">No active theses.</td>
+                            <td>
+                                <div style="font-weight: 700; color: var(--text-main);">{{ student.user.get_full_name }}</div>
+                                <div style="font-size: 0.8125rem; color: var(--primary);">PhD Candidate</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 600; color: var(--text-main); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ student.program_of_study }}
+                                </div>
+                            </td>
+                            <td>ID: {{ student.university_id }}</td>
+                            <td>
+                                <span class="thesis-status status-review">
+                                    Enrolled
+                                </span>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

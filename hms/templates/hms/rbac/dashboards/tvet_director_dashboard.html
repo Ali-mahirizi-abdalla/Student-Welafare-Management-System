@@ -1,0 +1,265 @@
+{% extends 'hms/base.html' %}
+{% load static %}
+
+{% block title %}TVET Director Dashboard - CampusCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #c2410c; /* TVET Color */
+        --secondary: #ea580c;
+        --background: #f1f5f9;
+        --surface: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --danger: #dc2626;
+        --danger-light: #fef2f2;
+    }
+
+    .dashboard-wrapper { min-height: 100vh; background: var(--background); padding: 2rem; font-family: 'Inter', sans-serif; }
+    
+    .access-notice {
+        background: var(--danger-light);
+        color: var(--danger);
+        border: 1px solid #f87171;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .layout-container {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .layout-container { grid-template-columns: 1fr; }
+    }
+
+    /* Sidebar Menu */
+    .sidebar {
+        background: var(--surface);
+        border-radius: 1.25rem;
+        padding: 1.5rem 1rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        height: fit-content;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-item {
+        margin-bottom: 0.5rem;
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .sidebar-link:hover, .sidebar-link.active {
+        background: #ffedd5;
+        color: var(--primary);
+    }
+
+    /* Main Content */
+    .header-section { margin-bottom: 2rem; }
+    .header-section h1 { font-size: 2rem; font-weight: 800; color: var(--text-main); margin: 0; }
+    .header-section p { color: var(--text-muted); font-weight: 500; margin-top: 0.5rem; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .stat-card { background: var(--surface); padding: 1.5rem; border-radius: 1.25rem; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 1rem; }
+    .stat-icon { width: 50px; height: 50px; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .stat-content p { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 0; }
+    .stat-content h2 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-top: 0.25rem; }
+
+    .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+    @media (max-width: 1200px) { .content-grid { grid-template-columns: 1fr; } }
+
+    .card { background: var(--surface); border-radius: 1.25rem; border: 1px solid var(--border); padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.125rem; font-weight: 800; color: var(--text-main); }
+
+    /* Progress Bars */
+    .prog-item { margin-bottom: 1.25rem; }
+    .prog-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
+    .prog-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 4px; }
+
+    /* Data Table */
+    .table-container { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .data-table th { text-align: left; padding: 1rem; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+    .data-table td { padding: 1rem; font-size: 0.875rem; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-main); font-weight: 500;}
+    
+    .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .status-warning { background: #fef9c3; color: #a16207; }
+    .status-success { background: #dcfce7; color: #15803d; }
+
+    .filter-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .filter-input { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem; outline: none; width: 250px; font-family: inherit;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="access-notice">
+        <i class="fas fa-exclamation-triangle"></i> ACCESS RESTRICTED: TVET DEPARTMENT ONLY
+    </div>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item"><a href="#" class="sidebar-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-users"></i> TVET Students (All)</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-clock"></i> Deferment Requests</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-industry"></i> Attachment Placement</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-user-graduate"></i> Graduating Students</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-handshake"></i> Industry Partners</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-book"></i> Course Management</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-chalkboard-teacher"></i> TVET Staff</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="sidebar-item" style="margin-top: 2rem;"><a href="#" class="sidebar-link"><i class="fas fa-cog"></i> Profile Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header-section">
+                <h1>TVET Director Dashboard</h1>
+                <p>Overview of the entire TVET Department.</p>
+            </div>
+
+            <!-- Metrics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #ffedd5; color: #c2410c;"><i class="fas fa-users"></i></div>
+                    <div class="stat-content">
+                        <p>Total TVET Students</p>
+                        <h2>124</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fef3c7; color: #d97706;"><i class="fas fa-pause-circle"></i></div>
+                    <div class="stat-content">
+                        <p>Pending Deferments</p>
+                        <h2>6</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fas fa-briefcase"></i></div>
+                    <div class="stat-content">
+                        <p>Attachment Placements</p>
+                        <h2>8</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #dcfce7; color: #16a34a;"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="stat-content">
+                        <p>Graduating Students</p>
+                        <h2>12</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <!-- Data Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Student Activities</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <input type="text" class="filter-input" placeholder="Filter by program or name...">
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Program</th>
+                                    <th>Activity Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>IT</td>
+                                    <td>Deferment Request</td>
+                                    <td><span class="status-badge status-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>Engineering</td>
+                                    <td>Attachment Placement</td>
+                                    <td><span class="status-badge status-success">Placed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Michael Johnson</td>
+                                    <td>Business</td>
+                                    <td>Graduation Clearance</td>
+                                    <td><span class="status-badge status-warning">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Emily Brown</td>
+                                    <td>Hospitality</td>
+                                    <td>Deferment Request</td>
+                                    <td><span class="status-badge status-warning">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Program Breakdown -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">All Programs Breakdown</h2>
+                    </div>
+                    <div>
+                        <div class="prog-item">
+                            <div class="prog-header"><span>IT & Software</span> <span>45 Students</span></div>
+                            <div class="prog-bar"><div class="prog-fill" style="width: 36%; background: #2563eb;"></div></div>
+                        </div>
+                        <div class="prog-item">
+                            <div class="prog-header"><span>Business Admin</span> <span>32 Students</span></div>
+                            <div class="prog-bar"><div class="prog-fill" style="width: 25%; background: #d97706;"></div></div>
+                        </div>
+                        <div class="prog-item">
+                            <div class="prog-header"><span>Engineering Tech</span> <span>28 Students</span></div>
+                            <div class="prog-bar"><div class="prog-fill" style="width: 22%; background: #c2410c;"></div></div>
+                        </div>
+                        <div class="prog-item">
+                            <div class="prog-header"><span>Hospitality</span> <span>19 Students</span></div>
+                            <div class="prog-bar"><div class="prog-fill" style="width: 15%; background: #10b981;"></div></div>
+                        </div>
+                        <div style="margin-top: 1rem; text-align: center; font-size: 0.875rem; color: var(--text-muted);">
+                            <strong>Total: 124 Students</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

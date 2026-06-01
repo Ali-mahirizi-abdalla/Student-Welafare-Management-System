@@ -35,49 +35,27 @@ def role_required(allowed_roles=[]):
     return decorator
 
 
-# ─────────────────────────────────────────────────────────
 # Convenience shortcut decorators using actual model keys
 # ─────────────────────────────────────────────────────────
 
 def super_admin_required(view_func):
-    return role_required(allowed_roles=['super_admin', 'Super Admin', 'SUPER_ADMIN'])(view_func)
+    return role_required(allowed_roles=['super_admin'])(view_func)
 
-# Backward-compatible alias - used in existing views
 def admin_only(view_func):
-    """Super Admin or system superusers only"""
-    return role_required(allowed_roles=[
-        'super_admin', 'Super Admin', 'SUPER_ADMIN',
-        'vice_chancellor', 'deputy_vice_chancellor',
-        'register_admin',
-    ])(view_func)
+    """Fallback / Compatibility / Super Admin check"""
+    return role_required(allowed_roles=['super_admin'])(view_func)
 
 def welfare_officer_required(view_func):
-    return role_required(allowed_roles=[
-        'super_admin', 'dean_of_students', 'support_agent',
-        # legacy names
-        'Welfare Officer', 'WELFARE_OFFICER', 'SUPER_ADMIN',
-    ])(view_func)
+    return role_required(allowed_roles=['super_admin', 'dean_of_students'])(view_func)
 
 def hostel_manager_required(view_func):
-    return role_required(allowed_roles=[
-        'super_admin', 'warden',
-        # legacy names
-        'Hostel Manager', 'HOSTEL_MANAGER', 'SUPER_ADMIN',
-    ])(view_func)
+    return role_required(allowed_roles=['super_admin', 'warden'])(view_func)
 
 def kitchen_manager_required(view_func):
-    return role_required(allowed_roles=[
-        'super_admin', 'health_manager',
-        # legacy names
-        'Kitchen Manager', 'KITCHEN_MANAGER', 'SUPER_ADMIN',
-    ])(view_func)
+    return role_required(allowed_roles=['super_admin', 'health_manager'])(view_func)
 
 def security_required(view_func):
-    return role_required(allowed_roles=[
-        'super_admin', 'security_officer', 'emergency_coord',
-        # legacy names
-        'Security', 'SECURITY_OFFICER', 'EMERGENCY_COORDINATOR', 'SUPER_ADMIN',
-    ])(view_func)
+    return role_required(allowed_roles=['super_admin', 'security_officer'])(view_func)
 
 def student_required(view_func):
     def check_student(user):
@@ -89,3 +67,4 @@ def staff_only(view_func):
     def check_staff(user):
         return user.is_staff or hasattr(user, 'staff_profile') or user.is_superuser
     return user_passes_test(check_staff)(view_func)
+

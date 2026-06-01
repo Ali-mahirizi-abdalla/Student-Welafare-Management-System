@@ -36,174 +36,161 @@
     <nav id="sidebar-nav" tabindex="0" class="space-y-1.5 flex-grow overflow-y-auto min-h-0 pr-2 custom-scrollbar focus:outline-none">
         {% if user.is_staff or user.is_superuser %}
         
-        {% if user.staff_profile.role == 'director_tvet' or user.staff_profile.role == 'diploma_coordinator' %}
-        <!-- DIPLOMA COORDINATOR SIDEBAR -->
-        <a href="{% url 'hms:tvet_director_dashboard' %}"
-            class="flex items-center gap-3 px-4 py-3 text-sm {% if request.resolver_match.url_name == 'tvet_director_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold shadow-sm{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium{% endif %} rounded-xl transition group">
+        <!-- 1. SUPER ADMIN -->
+        {% if user.is_superuser or user.staff_profile.role == 'super_admin' %}
+        <a href="{% url 'hms:admin_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm {% if request.resolver_match.url_name == 'admin_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium{% endif %} rounded-xl transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-            My Dashboard
-        </a>
-
-        <div class="pt-4 pb-2">
-            <p class="text-[10px] font-bold text-orange-500 uppercase tracking-widest px-4 mb-2">Diploma Cohort</p>
-            
-            <a href="{% url 'hms:manage_students' %}?level=diploma" 
-                class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/students' in request.path %}text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                My Students (TVET)
-            </a>
-
-            <a href="{% url 'hms:admin_deferment_pending' %}" 
-                class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/deferment' in request.path %}text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                Deferment Requests
-            </a>
-
-            <a href="{% url 'hms:analytics_dashboard' %}"
-                class="flex items-center gap-3 px-4 py-2.5 text-sm hover:text-indigo-600 dark:hover:text-indigo-400 text-slate-600 dark:text-slate-400 font-medium transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                Reports
-            </a>
-        </div>
-
-        <a href="{% url 'hms:student_profile' %}"
-            class="flex items-center gap-3 px-4 py-3 text-sm hover:text-indigo-600 dark:hover:text-indigo-400 text-slate-600 dark:text-slate-400 font-medium transition mt-4 border-t border-slate-100 dark:border-slate-800 pt-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
-            Profile Settings
-        </a>
-        
-        {% else %}
-        <!-- GENERIC ADMIN SIDEBAR -->
-        <!-- 1. Dashboard -->
-        {% if user.is_superuser %}
-        <a href="{% url 'hms:super_admin_dashboard' %}"
-            class="flex items-center gap-3 px-4 py-3 text-sm {% if request.resolver_match.url_name == 'super_admin_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium{% endif %} rounded-xl transition group">
-        {% else %}
-        <a href="{% url 'hms:admin_dashboard' %}"
-            class="flex items-center gap-3 px-4 py-3 text-sm {% if request.resolver_match.url_name == 'admin_dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium{% endif %} rounded-xl transition group">
-        {% endif %}
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-            </svg>
             Dashboard
         </a>
+        <a href="{% url 'hms:manage_staff' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Staff Management</a>
+        <a href="{% url 'hms:manage_roles' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Role Management</a>
+        <a href="{% url 'hms:manage_students' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Students</a>
+        <a href="{% url 'hms:manage_health' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Health</a>
+        <a href="{% url 'hms:manage_maintenance' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Maintenance</a>
+        <a href="{% url 'hms:room_list' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Accommodation</a>
+        <a href="{% url 'hms:manage_payments' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Payments</a>
+        <a href="{% url 'hms:visitor_management' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Visitors Log</a>
+        <a href="{% url 'hms:manage_announcements' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">News Alerts</a>
+        <a href="{% url 'hms:emergency_broadcast' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Emergency Alerts</a>
+        <a href="{% url 'hms:audit_logs' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Audit Logs</a>
 
-        <!-- Core Features Dropdown -->
-        <div>
-            <button onclick="toggleSidebarDropdown('core-features-dropdown')" class="w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium rounded-xl transition group">
-                <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    Core Features
-                </div>
-                <svg id="arrow-core-features-dropdown" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            <div id="core-features-dropdown" class="hidden mt-1.5 space-y-1.5 pl-4">
-                <!-- 2. Role Management -->
-                {% if user.is_superuser or user.staff_profile.role == 'super_admin' %}
-                <a href="{% url 'hms:manage_roles' %}" class="flex items-center gap-3 px-4 py-3 text-sm {% if request.resolver_match.url_name == 'manage_roles' %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09m0 0a8.962 8.962 0 012.327-2.327m0 0L8.145 18.75m3.433-3.434l-.09-.054m0 0a8.962 8.962 0 01-2.327-2.327m0 0L15.855 10.25M12 11V7m0 4h4m-4 0H8m4 0v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Role Management
-                </a>
-                {% endif %}
+        <!-- 2. DIPLOMA COORDINATOR -->
+        {% elif user.staff_profile.role == 'diploma_coordinator' %}
+        <a href="{% url 'hms:diploma_coordinator_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_students' %}?level=diploma" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Diploma Students</a>
+        <a href="{% url 'hms:admin_deferment_pending' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Deferment Requests</a>
+        <a href="{% url 'hms:analytics_dashboard' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Reports</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 3. Staff Invitation -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,register_admin' %}
-                <a href="{% url 'hms:generate_staff_link' %}" class="flex items-center gap-3 px-4 py-3 text-sm {% if 'generate-link' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                    Staff Invitation
-                </a>
-                {% endif %}
+        <!-- 3. HEALTH MANAGER -->
+        {% elif user.staff_profile.role == 'health_manager' %}
+        <a href="{% url 'hms:health_manager_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_health' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Appointments</a>
+        <a href="{% url 'hms:manage_health' %}?tab=records" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Medical Records</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 4. Students -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,register_admin,vice_chancellor,deputy_vice_chancellor,dean_of_students,dept_mcs,dept_coordinator,diploma_coordinator,director_tvet,health_manager' %}
-                <a href="{% url 'hms:manage_students' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/students' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    Students
-                </a>
-                {% endif %}
+        <!-- 4. FINANCE OFFICER -->
+        {% elif user.staff_profile.role == 'finance_officer' %}
+        <a href="{% url 'hms:finance_officer_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_payments' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Payments</a>
+        <a href="{% url 'hms:manage_payments' %}?tab=mpesa" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">M-Pesa Records</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 5. Deferment -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,vice_chancellor,deferment_officer,dean_of_students' %}
-                <a href="{% url 'hms:manage_leave_requests' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/deferment' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    Deferment
-                </a>
-                {% endif %}
+        <!-- 5. WARDEN -->
+        {% elif user.staff_profile.role == 'warden' %}
+        <a href="{% url 'hms:hostel_manager_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:room_list' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Room Allocation</a>
+        <a href="{% url 'hms:room_change_requests' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Room Changes</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 6. Maintenance -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,maintenance_sup,warden' %}
-                <a href="{% url 'hms:manage_maintenance' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/maintenance' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
-                    Maintenance
-                </a>
-                {% endif %}
+        <!-- 6. MAINTENANCE SUPERVISOR -->
+        {% elif user.staff_profile.role == 'maintenance_sup' %}
+        <a href="{% url 'hms:maintenance_supervisor_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_maintenance' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Open Requests</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 7. Rooms -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,warden,dean_of_students' %}
-                <a href="{% url 'hms:room_list' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/rooms' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                    Rooms
-                </a>
-                {% endif %}
+        <!-- 7. SECURITY OFFICER -->
+        {% elif user.staff_profile.role == 'security_officer' %}
+        <a href="{% url 'hms:security_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:visitor_management' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Visitor Log</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 8. Activities -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,dean_of_students,support_agent' %}
-                <a href="{% url 'hms:activities' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/activities' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Activities
-                </a>
-                {% endif %}
+        <!-- 8. DEAN OF STUDENTS -->
+        {% elif user.staff_profile.role == 'dean_of_students' %}
+        <a href="{% url 'hms:welfare_officer_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_students' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">All Students</a>
+        <a href="{% url 'hms:admin_deferment_pending' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Welfare / Deferments</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 9. News Alerts Management -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,news_editor,news_auditor' %}
-                <a href="{% url 'hms:manage_announcements' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/announcements' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                    News Alerts
-                </a>
-                {% endif %}
+        <!-- 9. VICE CHANCELLOR -->
+        {% elif user.staff_profile.role == 'vice_chancellor' %}
+        <a href="{% url 'hms:vc_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_staff' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">All Staff (Read-Only)</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-                <!-- 10. Emergency Broadcast -->
-                {% if user.is_superuser or user.staff_profile.role in 'super_admin,emergency_coord,security_officer' %}
-                <a href="{% url 'hms:emergency_broadcast' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm {% if 'manage/emergency-broadcast' in request.path %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    Emergency Alerts
-                </a>
-                {% endif %}
+        <!-- 10. DEPUTY VICE CHANCELLOR -->
+        {% elif user.staff_profile.role == 'deputy_vice_chancellor' %}
+        <a href="{% url 'hms:dvc_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_staff' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">All Staff (Read-Only)</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-            </div>
-        </div>
+        <!-- 11. REGISTER ADMIN -->
+        {% elif user.staff_profile.role == 'register_admin' %}
+        <a href="{% url 'hms:reg_admin_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_staff' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">All Staff</a>
+        <a href="{% url 'hms:generate_staff_link' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Manage Registrations</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
 
-        <!-- 14. Reports -->
-        {% if user.is_superuser or user.staff_profile.role in 'super_admin,auditor,vice_chancellor,finance_officer' %}
-        <a href="{% url 'hms:analytics_dashboard' %}"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium rounded-xl transition group">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            Reports
-        </a>
+        <!-- 12. REGISTER USER -->
+        {% elif user.staff_profile.role == 'register_user' %}
+        <a href="{% url 'hms:reg_user_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 13. NEWS EDITOR -->
+        {% elif user.staff_profile.role == 'news_editor' %}
+        <a href="{% url 'hms:news_editor_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_announcements' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Create News / Broadcasts</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 14. NEWS AUDITOR -->
+        {% elif user.staff_profile.role == 'news_auditor' %}
+        <a href="{% url 'hms:news_auditor_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 15. AUDITOR -->
+        {% elif user.staff_profile.role == 'auditor' %}
+        <a href="{% url 'hms:auditor_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:audit_logs' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">System Audit Logs</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 16. EMERGENCY COORDINATOR -->
+        {% elif user.staff_profile.role == 'emergency_coord' %}
+        <a href="{% url 'hms:emergency_coordinator_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:emergency_broadcast' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Send Alert</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 17. SUPPORT AGENT -->
+        {% elif user.staff_profile.role == 'support_agent' %}
+        <a href="{% url 'hms:support_agent_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:chat' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Active Chats</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 18. DEFERMENT OFFICER -->
+        {% elif user.staff_profile.role == 'deferment_officer' %}
+        <a href="{% url 'hms:deferment_officer_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:admin_deferment_pending' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Pending Deferments</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 19. DEPT MCS COORDINATOR -->
+        {% elif user.staff_profile.role == 'dept_mcs' %}
+        <a href="{% url 'hms:dept_mcs_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_students' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">CS Students Only</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 20. DEPARTMENT COORDINATOR -->
+        {% elif user.staff_profile.role == 'dept_coordinator' %}
+        <a href="{% url 'hms:dept_coordinator_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_students' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Department Students</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 21. DEAN GRADUATE SCHOOL -->
+        {% elif user.staff_profile.role == 'dean_graduate_school' %}
+        <a href="{% url 'hms:dean_grad_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 22. DIRECTOR TVET -->
+        {% elif user.staff_profile.role == 'director_tvet' %}
+        <a href="{% url 'hms:tvet_director_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:manage_students' %}?level=diploma" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">TVET Students</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
+        <!-- 23. DIRECTOR RESOURCE MOBILIZATION -->
+        {% elif user.staff_profile.role == 'director_resource' %}
+        <a href="{% url 'hms:dir_resource_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
+        <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+
         {% endif %}
 
-        <!-- 16. Profile -->
-        <a href="{% url 'hms:student_profile' %}"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium rounded-xl transition group">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            Profile
-        </a>
-
-        <!-- 17. Notifications -->
-        <a href="{% url 'hms:notifications' %}"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm {% if request.resolver_match.url_name == 'notifications' %}bg-indigo-50 dark:bg-indigo-900/10 text-indigo-600 dark:text-indigo-400 font-bold{% else %}text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-            Alerts
-        </a>
-
-
-        <!-- 18. Help -->
-        <a href="#"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium rounded-xl transition group">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            Help
-        </a>
-        {% endif %}
 
 
         <script>

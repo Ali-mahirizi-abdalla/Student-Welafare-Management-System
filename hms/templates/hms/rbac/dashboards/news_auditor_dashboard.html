@@ -112,23 +112,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for log in mock_audit_logs %}
+                    {% for item in announcements %}
                     <tr>
-                        <td style="color: var(--text-muted);">{{ log.timestamp }}</td>
+                        <td style="color: var(--text-muted);">{{ item.created_at|date:"M d, Y H:i" }}</td>
                         <td>
-                            <div style="font-weight: 600; color: var(--text-main);">{{ log.user }}</div>
-                            <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ log.role }}</div>
+                            <div style="font-weight: 600; color: var(--text-main);">{{ item.author|default:"System" }}</div>
                         </td>
                         <td>
-                            <span class="action-badge {% if log.action == 'CREATED' %}action-create{% elif log.action == 'EDITED' %}action-edit{% else %}action-delete{% endif %}">
-                                {{ log.action }}
+                            <span class="action-badge action-create">
+                                {% if item.is_active %}ACTIVE{% else %}INACTIVE{% endif %}
                             </span>
                         </td>
-                        <td style="font-weight: 500; color: var(--text-main);">{{ log.title }}</td>
-                        <td style="font-size: 0.875rem; color: var(--text-muted);">{{ log.details }}</td>
+                        <td style="font-weight: 500; color: var(--text-main);">{{ item.title }}</td>
+                        <td style="font-size: 0.875rem; color: var(--text-muted);">{{ item.description|truncatewords:15 }}</td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No audit logs found.</td></tr>
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No announcements found.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>

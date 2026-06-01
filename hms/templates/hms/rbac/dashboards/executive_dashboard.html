@@ -148,26 +148,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for staff in mock_staff_list %}
+                    {% for staff in staff_list %}
                     <tr>
                         <td>
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #64748b;">
-                                    {{ staff.name|slice:":1" }}
+                                    {{ staff.user.first_name|slice:":1" }}
                                 </div>
                                 <div>
-                                    <div style="font-weight: 700; color: var(--text-main);">{{ staff.name }}</div>
-                                    <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ staff.email }}</div>
+                                    <div style="font-weight: 700; color: var(--text-main);">{{ staff.user.get_full_name }}</div>
+                                    <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ staff.user.email }}</div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <div style="font-weight: 600; color: var(--text-main);">{{ staff.role }}</div>
-                            <div style="font-size: 0.8125rem; color: var(--text-muted);">{{ staff.department }}</div>
+                            <div style="font-weight: 600; color: var(--text-main);">{{ staff.get_role_display }}</div>
+                            <div style="font-size: 0.8125rem; color: var(--text-muted);">National ID: {{ staff.national_id }}</div>
                         </td>
                         <td>
-                            <div class="performance-score" style="background: {% if staff.score > 89 %}#dcfce7; color: #15803d{% else %}#fef9c3; color: #a16207{% endif %};">
-                                {{ staff.score }}
+                            <div class="performance-score" style="background: #dcfce7; color: #15803d;">
+                                95
                             </div>
                         </td>
                         <td>
