@@ -81,7 +81,10 @@ else:
 
 # Production security
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    # NOTE: SECURE_SSL_REDIRECT is intentionally disabled.
+    # Render's edge proxy already enforces HTTPS. Django re-redirecting
+    # causes ERR_TOO_MANY_REDIRECTS because the proxy forwards HTTP internally.
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
