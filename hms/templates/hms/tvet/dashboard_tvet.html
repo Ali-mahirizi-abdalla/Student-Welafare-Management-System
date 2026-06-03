@@ -4,78 +4,115 @@
 
 {% block content %}
 <div class="space-y-6">
-    <div class="flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Director - TVET Dashboard</h1>
-            <p class="text-gray-500 dark:text-gray-400">Welcome back, {{ user.get_full_name }}</p>
+    <!-- Gradient Role Banner -->
+    <div class="bg-gradient-to-r from-slate-900 to-indigo-900 rounded-2xl p-6 text-white mb-8 shadow-xl relative overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="text-3xl font-bold mb-2">Director - TVET Dashboard</h1>
+            <p class="text-indigo-200">Welcome back, {{ user.get_full_name }}</p>
         </div>
+        <!-- Decorative background elements -->
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-0 right-20 -mb-4 w-24 h-24 bg-indigo-500 opacity-20 rounded-full blur-xl"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
-            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total TVET Students</h3>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ students_count|default:"0" }}</p>
-        </div>
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
-            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">On Attachment</h3>
-            <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">{{ attachment_count|default:"0" }}</p>
-        </div>
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
-            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Graduating</h3>
-            <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">{{ graduating_count|default:"0" }}</p>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <!-- Feature: 👥 Diploma Students Only -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total TVET Students | Blue | 👥 -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center text-2xl flex-shrink-0">
                 👥
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Diploma Students Only</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
+            <div>
+                <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total TVET Students</h3>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ students_count|default:"0" }}</p>
+            </div>
         </div>
-\n
-        <!-- Feature: 💼 Attachment/Internship Placement -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
+
+        <!-- On Attachment | Green | 💼 -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 flex items-center justify-center text-2xl flex-shrink-0">
                 💼
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Attachment/Internship Placement</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
+            <div>
+                <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">On Attachment</h3>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ attachment_count|default:"0" }}</p>
+            </div>
         </div>
-\n
-        <!-- Feature: 📊 TVET Reports -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
+
+        <!-- Graduating This Year | Orange | 🏆 -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 flex items-center justify-center text-2xl flex-shrink-0">
+                🏆
+            </div>
+            <div>
+                <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Graduating This Year</h3>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ graduating_count|default:"0" }}</p>
+            </div>
+        </div>
+
+        <!-- Industry Partners | Purple | 🤝 -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 flex items-center justify-center text-2xl flex-shrink-0">
+                🤝
+            </div>
+            <div>
+                <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Industry Partners</h3>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ partners_count|default:"0" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Feature: 🎓 Diploma Students Only (Teal) -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-full bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400 flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition-transform">
+                🎓
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Diploma Students Only</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage and view details for this module.</p>
+            <button class="px-4 py-2 bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400 rounded-lg text-sm font-medium hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-colors">Access Module</button>
+        </div>
+
+        <!-- Feature: 📊 TVET Reports (Blue) -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition-transform">
                 📊
             </div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">TVET Reports</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage and view details for this module.</p>
+            <button class="px-4 py-2 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">Access Module</button>
         </div>
-\n
-        <!-- Feature: 🎓 TVET Graduates -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
-                🎓
+
+        <!-- Feature: 🏆 TVET Graduates (Amber) -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition-transform">
+                🏆
             </div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">TVET Graduates</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage and view details for this module.</p>
+            <button class="px-4 py-2 bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-lg text-sm font-medium hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors">Access Module</button>
         </div>
-\n
-        <!-- Feature: 📋 Industry Partnerships -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
-                📋
+
+        <!-- Feature: 💼 Attachment/Internship Placement (Green) -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition-transform">
+                💼
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Attachment/Internship Placement</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage and view details for this module.</p>
+            <button class="px-4 py-2 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-lg text-sm font-medium hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors">Access Module</button>
+        </div>
+
+        <!-- Feature: 🤝 Industry Partnerships (Purple) -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition-transform">
+                🤝
             </div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Industry Partnerships</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage and view details for this module.</p>
+            <button class="px-4 py-2 bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded-lg text-sm font-medium hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors">Access Module</button>
         </div>
 
     </div>
