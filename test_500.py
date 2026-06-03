@@ -15,7 +15,7 @@ if not u:
 
 c = Client(raise_request_exception=False, HTTP_HOST='localhost')
 c.force_login(u)
-r = c.get('/manage/roles/')
+r = c.get('/manage/permissions/matrix/')
 
 if r.status_code == 500:
     content = r.content.decode('utf-8', errors='replace')
