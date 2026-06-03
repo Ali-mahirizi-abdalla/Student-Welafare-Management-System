@@ -62,7 +62,7 @@ class NotificationService:
         import os
         try:
             username = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
-            api_key = os.environ.get('AFRICASTALKING_API_KEY')
+            api_key = os.getenv('AFRICASTALKING_API_KEY')
             if not api_key:
                 logger.warning("[SMS SKIPPED] AFRICASTALKING_API_KEY not configured.")
                 return False
@@ -206,7 +206,7 @@ def notify_emergency_sms(phone_numbers, alert_message):
     import os
     try:
         username = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
-        api_key = os.environ.get('AFRICASTALKING_API_KEY')
+        api_key = os.getenv('AFRICASTALKING_API_KEY')
         if not api_key:
             logger.warning("[EMERGENCY SMS SKIPPED] API key not configured.")
             return False

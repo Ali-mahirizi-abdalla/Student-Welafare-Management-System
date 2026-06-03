@@ -6,7 +6,7 @@ from django.conf import settings
 def get_at_client():
     """Initialize Africa's Talking lazily"""
     username = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
-    api_key = os.environ.get('AFRICASTALKING_API_KEY')
+    api_key = os.getenv('AFRICASTALKING_API_KEY')
     if not api_key:
         return None
     africastalking.initialize(username, api_key)

@@ -347,7 +347,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 're_gnrHihB4_EQqvTBY
 # AFRICA'S TALKING (SMS)
 # ============================================
 AFRICASTALKING_USERNAME = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
-AFRICASTALKING_API_KEY = os.environ.get('AFRICASTALKING_API_KEY', '')
+AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY', '')
 AFRICASTALKING_SENDER_ID = os.environ.get('AFRICASTALKING_SENDER_ID', '')
 
 # ============================================

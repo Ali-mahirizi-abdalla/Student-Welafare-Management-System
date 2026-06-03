@@ -13,6 +13,7 @@ def index(request):
         
     return render(request, 'subscription/index.html')
 
+@login_required
 def payment(request):
     if request.method == 'POST':
         # Simulate payment success
@@ -29,6 +30,7 @@ def payment(request):
         return redirect('subscription:status')
     return redirect('subscription:index')
 
+@login_required
 def status(request):
     today = timezone.now().date()
     # Get the latest subscription

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Campus Care Security Scan Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F1F5F9; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { background: white; border-radius: 20px; padding: 30px; margin-bottom: 24px; text-align: center; border: 1px solid #E2E8F0; }
+        .logo { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #1E293B, #0D9488); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .summary-card { background: white; border-radius: 16px; padding: 20px; text-align: center; border: 1px solid #E2E8F0; }
+        .summary-number { font-size: 32px; font-weight: 800; }
+        .summary-label { font-size: 12px; color: #64748B; margin-top: 4px; }
+        .status { background: white; border-radius: 16px; padding: 20px; margin-bottom: 24px; text-align: center; border: 1px solid #E2E8F0; }
+        .status-pass { color: #10B981; font-size: 24px; font-weight: 700; }
+        .status-fail { color: #EF4444; font-size: 24px; font-weight: 700; }
+        .issues-section { background: white; border-radius: 20px; padding: 24px; border: 1px solid #E2E8F0; }
+        .footer { text-align: center; margin-top: 24px; padding: 20px; color: #94A3B8; font-size: 12px; }
+        hr { margin: 20px 0; border: none; border-top: 1px solid #E2E8F0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">🏥 CAMPUS CARE</div>
+        <h2 style="margin-top: 12px;">Security Scan Report</h2>
+        <p style="color: #64748B;">Scan Date: 2026-06-04 01:20:17</p>
+    </div>
+    
+    <div class="summary">
+        <div class="summary-card"><div class="summary-number" style="color: #EF4444;">3</div><div class="summary-label">CRITICAL</div></div>
+        <div class="summary-card"><div class="summary-number" style="color: #F59E0B;">16</div><div class="summary-label">HIGH</div></div>
+        <div class="summary-card"><div class="summary-number" style="color: #3B82F6;">0</div><div class="summary-label">MEDIUM</div></div>
+        <div class="summary-card"><div class="summary-number" style="color: #8B5CF6;">0</div><div class="summary-label">LOW</div></div>
+    </div>
+    
+    <div class="status">
+        <div class="status-fail">
+            ❌ ISSUES FOUND - ACTION REQUIRED
+        </div>
+        <p style="color: #64748B; margin-top: 8px;">Total Issues: 19</p>
+    </div>
+    
+    <div class="issues-section">
+        <h3 style="margin-bottom: 20px;">📋 Detailed Issues</h3>
+        
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 160)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "register_student" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def register_student(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 193)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "check_registration_status" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def check_registration_status(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 223)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "mpesa_callback" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def mpesa_callback(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 306)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "user_login" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def user_login(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 336)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "user_logout" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def user_logout(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 340)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "terms_and_conditions" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def terms_and_conditions(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 800)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "dashboard_admin" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def dashboard_admin(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 1324)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "export_meals_csv" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def export_meals_csv(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 1368)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "export_students_csv" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def export_students_csv(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 223)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "mpesa_callback" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def mpesa_callback(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 3362)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "system_locked" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def system_locked(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 3578)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "access_denied" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def access_denied(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\views.py (Line 3585)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "page_not_found" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def page_not_found(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 subscription\views.py (Line 7)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "index" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def index(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 subscription\views.py (Line 16)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "payment" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def payment(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #F59E0B; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">HIGH</span>
+                    <span style="color: #64748B; font-size: 12px;">Authorization</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 subscription\views.py (Line 32)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ View "status" missing @login_required</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Add @login_required above def status(request):</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #EF4444; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #EF4444; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">CRITICAL</span>
+                    <span style="color: #64748B; font-size: 12px;">Secrets</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\notifications.py (Line 65)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ Hardcoded API_KEY found</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Move to .env file and use os.getenv()</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #EF4444; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #EF4444; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">CRITICAL</span>
+                    <span style="color: #64748B; font-size: 12px;">Secrets</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 swms\settings.py (Line 350)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ Hardcoded API_KEY found</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Move to .env file and use os.getenv()</div>
+            </div>
+            
+            <div class="issue" style="border-left: 4px solid #EF4444; margin-bottom: 20px; padding: 15px; background: #F8FAFC; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="background: #EF4444; color: white; padding: 4px 12px; border-radius: 40px; font-size: 12px; font-weight: 600;">CRITICAL</span>
+                    <span style="color: #64748B; font-size: 12px;">Secrets</span>
+                </div>
+                <div style="font-family: monospace; font-size: 12px; color: #64748B; margin-bottom: 8px;">📁 hms\utils\notifications.py (Line 9)</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">⚠️ Hardcoded API_KEY found</div>
+                <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px;">🔧 Move to .env file and use os.getenv()</div>
+            </div>
+            
+    </div>
+    
+    <div class="footer">
+        <p>Generated by Campus Care Security Scanner | 2026-06-04 01:20:17</p>
+        <p style="margin-top: 8px;">🔒 Keep this report confidential | Fix critical and high issues immediately</p>
+    </div>
+</div>
+</body>
+</html>
