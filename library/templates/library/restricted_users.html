@@ -1,0 +1,99 @@
+{% extends 'library/librarian_base.html' %}
+
+{% block title %}Restricted Users{% endblock %}
+{% block header %}Restricted Users{% endblock %}
+
+{% block content %}
+<div class="card card-custom p-4">
+    <h5 class="text-danger mb-4"><i class="fas fa-exclamation-triangle"></i> Restricted Library Accounts</h5>
+    
+    <ul class="nav nav-tabs" id="restrictedTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="suspended-tab" data-bs-toggle="tab" data-bs-target="#suspended" type="button" role="tab">Suspended ({{ suspended.count }})</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="blocked-tab" data-bs-toggle="tab" data-bs-target="#blocked" type="button" role="tab">Blocked ({{ blocked.count }})</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="expelled-tab" data-bs-toggle="tab" data-bs-target="#expelled" type="button" role="tab">Expelled ({{ expelled.count }})</button>
+        </li>
+    </ul>
+    
+    <div class="tab-content pt-4" id="restrictedTabsContent">
+        <!-- Suspended -->
+        <div class="tab-pane fade show active" id="suspended" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Student</th><th>Card Number</th><th>Reason</th><th>End Date</th><th>Action</th></tr></thead>
+                    <tbody>
+                        {% for user in suspended %}
+                        <tr>
+                            <td>{{ user.student.user.get_full_name }}</td>
+                            <td>{{ user.library_card_number }}</td>
+                            <td>{{ user.suspension_reason }}</td>
+                            <td>{{ user.suspension_end_date|default:"Indefinite" }}</td>
+                            <td>
+                                <form action="{% url 'library:restrict_action' pk=user.id action='reinstate' %}" method="post">
+                                    {% csrf_token %}<button class="btn btn-sm btn-outline-success">Reinstate</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted py-3">No suspended users.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Blocked -->
+        <div class="tab-pane fade" id="blocked" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Student</th><th>Card Number</th><th>Reason</th><th>Action</th></tr></thead>
+                    <tbody>
+                        {% for user in blocked %}
+                        <tr>
+                            <td>{{ user.student.user.get_full_name }}</td>
+                            <td>{{ user.library_card_number }}</td>
+                            <td>{{ user.blocked_reason }}</td>
+                            <td>
+                                <form action="{% url 'library:restrict_action' pk=user.id action='reinstate' %}" method="post">
+                                    {% csrf_token %}<button class="btn btn-sm btn-outline-success">Reinstate</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted py-3">No blocked users.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Expelled -->
+        <div class="tab-pane fade" id="expelled" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Student</th><th>Card Number</th><th>Action</th></tr></thead>
+                    <tbody>
+                        {% for user in expelled %}
+                        <tr>
+                            <td>{{ user.student.user.get_full_name }}</td>
+                            <td>{{ user.library_card_number }}</td>
+                            <td>
+                                <form action="{% url 'library:restrict_action' pk=user.id action='reinstate' %}" method="post">
+                                    {% csrf_token %}<button class="btn btn-sm btn-outline-success">Reinstate</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center text-muted py-3">No expelled users.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

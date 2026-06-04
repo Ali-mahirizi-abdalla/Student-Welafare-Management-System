@@ -459,6 +459,8 @@ def dashboard_redirect(request):
         return redirect('hms:diploma_coordinator_dashboard')
     elif role == 'dept_coordinator':
         return redirect('hms:dept_coordinator_dashboard')
+    elif role == 'librarian':
+        return redirect('library:librarian_dashboard')
 
     return redirect('hms:admin_dashboard')
 
@@ -2900,7 +2902,7 @@ def pay_accommodation(request):
         student = request.user.student_profile
     except Student.DoesNotExist:
         messages.error(request, "Student profile not found.")
-        return redirect('hms:dashboard')
+        return redirect('hms:dashboard_redirect')
 
     # Get active room assignment to find the fee
     room_assignment = RoomAssignment.objects.filter(student=student, is_active=True).first()

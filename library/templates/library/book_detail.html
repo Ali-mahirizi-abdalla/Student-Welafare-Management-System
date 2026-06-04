@@ -1,0 +1,42 @@
+{% extends 'library/librarian_base.html' %}
+
+{% block title %}Book Details{% endblock %}
+{% block header %}Book Details{% endblock %}
+
+{% block content %}
+<div class="card card-custom p-4">
+    <h4 class="mb-3">{{ book.title }}</h4>
+    <p><strong>Author:</strong> {{ book.author }}</p>
+    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+    <p><strong>Category:</strong> {{ book.category.name|default:"Uncategorized" }}</p>
+    <p><strong>Total Copies:</strong> {{ book.total_copies }}</p>
+    <p><strong>Available Copies:</strong> {{ book.available_copies }}</p>
+    <hr>
+    <h5>Borrowing History</h5>
+    {% if borrow_history %}
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>User</th>
+                    <th>Borrowed Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in borrow_history %}
+                <tr>
+                    <td>{{ record.library_user.student.user.get_full_name }}</td>
+                    <td>{{ record.borrowed_date|date:"d/m/Y" }}</td>
+                    <td>{{ record.due_date|date:"d/m/Y" }}</td>
+                    <td>{{ record.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No borrowing history for this book.</p>
+    {% endif %}
+    <a href="{% url 'library:book_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'library/librarian_base.html' %}
+
+{% block title %}Issue Book{% endblock %}
+{% block header %}Issue Book{% endblock %}
+
+{% block content %}
+<div class="card card-custom p-4" style="max-width: 600px; margin: 0 auto;">
+    <h5 class="border-bottom pb-2 mb-4"><i class="fas fa-hand-holding-medical text-primary"></i> Issue Book to Student</h5>
+    
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in field.errors %}<small>{{ error }}</small>{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{% url 'library:librarian_dashboard' %}" class="btn btn-light border">Cancel</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Issue Book</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

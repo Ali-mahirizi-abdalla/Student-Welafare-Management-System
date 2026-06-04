@@ -1,0 +1,27 @@
+{% extends 'library/librarian_base.html' %}
+
+{% block title %}Return Book{% endblock %}
+{% block header %}Return Book{% endblock %}
+
+{% block content %}
+<div class="card card-custom p-4" style="max-width: 600px; margin: 0 auto;">
+    <h5 class="border-bottom pb-2 mb-4"><i class="fas fa-undo text-success"></i> Confirm Return</h5>
+    
+    <div class="mb-4">
+        <p><strong>Book:</strong> <span class="text-primary">{{ borrowed_book.book.title }}</span></p>
+        <p><strong>Student:</strong> {{ borrowed_book.library_user.student.user.get_full_name }}</p>
+        <p><strong>Borrowed Date:</strong> {{ borrowed_book.borrowed_date|date:"d/m/Y" }}</p>
+        <p><strong>Due Date:</strong> <span class="{% if borrowed_book.due_date < now.date %}text-danger fw-bold{% endif %}">{{ borrowed_book.due_date|date:"d/m/Y" }}</span></p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <p class="text-muted">By confirming, the book's status will be marked as returned, and available copies will be updated. If the book is overdue, a fine will be generated automatically.</p>
+        
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{% url 'library:librarian_borrowed_books' %}" class="btn btn-light border">Cancel</a>
+            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Confirm Return</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'library/librarian_base.html' %}
+
+{% block title %}Collect Fine{% endblock %}
+{% block header %}Collect Fine{% endblock %}
+
+{% block content %}
+<div class="card card-custom p-4" style="max-width: 500px; margin: 0 auto;">
+    <h5 class="border-bottom pb-2 mb-4 text-center">Fine Details</h5>
+    
+    <div class="text-center mb-4">
+        <h2 class="text-warning mb-0">KES {{ fine.amount }}</h2>
+        <p class="text-muted">Pending Payment</p>
+    </div>
+
+    <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Student</strong>
+            <span>{{ fine.library_user.student.user.get_full_name }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Book</strong>
+            <span class="text-end">{{ fine.borrowed_book.book.title }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Reason</strong>
+            <span>{{ fine.reason }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Date Generated</strong>
+            <span>{{ fine.created_date|date:"d/m/Y" }}</span>
+        </li>
+    </ul>
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <p class="text-muted text-center small mb-3">Marking this fine as collected will update its status to Paid. This indicates that the student has completed the payment process.</p>
+        <button type="submit" class="btn btn-success w-100 py-2 fw-bold"><i class="fas fa-check-circle"></i> Mark as Paid</button>
+        <a href="{% url 'library:fine_list' %}" class="btn btn-light w-100 py-2 mt-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

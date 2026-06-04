@@ -1,0 +1,133 @@
+{% extends 'library/librarian_base.html' %}
+
+{% block title %}User Profile - {{ lib_user.student.user.get_full_name }}{% endblock %}
+{% block header %}Student Library Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- User Info -->
+    <div class="col-md-4">
+        <div class="card card-custom p-4 text-center">
+            <i class="fas fa-user-circle fa-5x text-secondary mb-3"></i>
+            <h4 class="mb-1">{{ lib_user.student.user.get_full_name }}</h4>
+            <p class="text-muted mb-3">{{ lib_user.student.university_id }}</p>
+            
+            <div class="p-3 bg-light rounded text-start mb-4">
+                <p class="mb-2"><strong>Library Card:</strong> {{ lib_user.library_card_number }}</p>
+                <p class="mb-2"><strong>Status:</strong> 
+                    {% if lib_user.is_suspended %}
+                        <span class="badge bg-warning text-dark">Suspended</span>
+                    {% elif lib_user.is_expelled %}
+                        <span class="badge bg-danger">Expelled</span>
+                    {% elif lib_user.is_blocked %}
+                        <span class="badge bg-secondary">Blocked</span>
+                    {% elif lib_user.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% endif %}
+                </p>
+                <p class="mb-0"><strong>Expiry:</strong> {{ lib_user.studentship_expiry|date:"d/m/Y" }}</p>
+            </div>
+
+            <!-- Quick Restriction Actions -->
+            <div class="d-grid gap-2">
+                {% if not lib_user.is_suspended and not lib_user.is_expelled and not lib_user.is_blocked %}
+                    <form action="{% url 'library:restrict_action' pk=lib_user.id action='suspend' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="reason" value="Suspended by Librarian">
+                        <button class="btn btn-warning w-100 mb-2">Suspend</button>
+                    </form>
+                    <form action="{% url 'library:restrict_action' pk=lib_user.id action='block' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="reason" value="Blocked by Librarian">
+                        <button class="btn btn-secondary w-100">Block</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'library:restrict_action' pk=lib_user.id action='reinstate' %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-success w-100">Reinstate User</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- User History -->
+    <div class="col-md-8">
+        <!-- Borrowed Books -->
+        <div class="card card-custom p-4 mb-4">
+            <h5 class="border-bottom pb-2 mb-3">Borrowing History</h5>
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Borrowed</th>
+                            <th>Due/Returned</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for borrow in borrowed_books %}
+                        <tr>
+                            <td>{{ borrow.book.title }}</td>
+                            <td>{{ borrow.borrowed_date|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if borrow.status == 'RETURNED' %}
+                                    {{ borrow.returned_date|date:"d/m/Y" }}
+                                {% else %}
+                                    {{ borrow.due_date|date:"d/m/Y" }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if borrow.status == 'RETURNED' %}
+                                    <span class="badge bg-secondary">Returned</span>
+                                {% else %}
+                                    <span class="badge bg-primary">Borrowed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted">No borrowing history.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Fines -->
+        <div class="card card-custom p-4">
+            <h5 class="border-bottom pb-2 mb-3">Fines History</h5>
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Reason</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fine in fines %}
+                        <tr>
+                            <td>{{ fine.created_date|date:"d/m/Y" }}</td>
+                            <td>{{ fine.reason }}</td>
+                            <td>KES {{ fine.amount }}</td>
+                            <td>
+                                {% if fine.paid %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Pending</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted">No fines history.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
