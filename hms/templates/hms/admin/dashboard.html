@@ -397,8 +397,18 @@
             </div>
         </div>
         
+
+    </div>
+</div>
+
+<!-- System Modules -->
+{% if feature_flags.library_management %}
+<div class="mb-6">
+    <div class="flex items-center gap-2 mb-3 mt-6">
+        <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest"><i class="fas fa-cubes mr-1"></i> System Modules</h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
         <!-- Library Management -->
-        {% if feature_flags.library_management %}
         <a href="{% url 'library:librarian_dashboard' %}" class="dept-card" style="background: linear-gradient(135deg, #4F46E5, #3730A3); display: block; text-decoration: none;">
             <div class="dept-glow"></div>
             <div class="relative z-10">
@@ -408,9 +418,9 @@
                 <p class="dept-label" style="color: rgba(255,255,255,0.7);">Manage Catalog</p>
             </div>
         </a>
-        {% endif %}
     </div>
 </div>
+{% endif %}
 
 <!-- - - -  KEY METRICS - - -  -->
 {% if is_superadmin or staff_category_raw == 'EXECUTIVE' or staff_category_raw == 'ACADEMIC_ADMIN' or staff_category_raw == 'STUDENT_SERVICES' or staff_category_raw == 'TECHNICAL_ESTATES' %}
