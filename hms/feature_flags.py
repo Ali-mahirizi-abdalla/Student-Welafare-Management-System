@@ -18,7 +18,7 @@ NEW_FEATURES = [
     { "name": "advanced_reports", "label": "Advanced Reports", "icon": "fa-chart-line", "description": "Detailed analytics and reporting", "default": False },
     { "name": "parent_portal", "label": "Parent Portal", "icon": "fa-users", "description": "Parent access to student progress", "default": False },
     { "name": "e_learning", "label": "E-Learning Integration", "icon": "fa-laptop-code", "description": "Online course management", "default": False },
-    { "name": "library_management", "label": "Library Management", "icon": "fa-book", "description": "Digital library and book tracking", "default": False },
+    { "name": "library_management", "label": "Library Management", "icon": "fa-book", "description": "Digital library and book tracking", "default": True },
     { "name": "alumni_portal", "label": "Alumni Portal", "icon": "fa-graduation-cap", "description": "Graduate alumni network", "default": False }
 ]
 

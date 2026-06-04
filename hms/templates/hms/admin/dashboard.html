@@ -390,12 +390,25 @@
         <div class="dept-card" style="background: linear-gradient(135deg, #EF4444, #dc2626);">
             <div class="dept-glow"></div>
             <div class="relative z-10">
-                <div class="dept-icon-box">🏥</div>
+                <div class="dept-icon-box"><i class="fas fa-heartbeat"></i></div>
                 <p class="dept-title">Health Sci</p>
                 <p class="dept-count">{{ dept_counts.health }}</p>
                 <p class="dept-label">Students</p>
             </div>
         </div>
+        
+        <!-- Library Management -->
+        {% if feature_flags.library_management %}
+        <a href="{% url 'library:librarian_dashboard' %}" class="dept-card" style="background: linear-gradient(135deg, #4F46E5, #3730A3); display: block; text-decoration: none;">
+            <div class="dept-glow"></div>
+            <div class="relative z-10">
+                <div class="dept-icon-box" style="color: white;"><i class="fas fa-book-reader text-2xl"></i></div>
+                <p class="dept-title" style="color: white; margin-top: 8px;">Library</p>
+                <p class="dept-count" style="color: white; font-size: 0.9rem; margin-top: 4px;">Module</p>
+                <p class="dept-label" style="color: rgba(255,255,255,0.7);">Manage Catalog</p>
+            </div>
+        </a>
+        {% endif %}
     </div>
 </div>
 
