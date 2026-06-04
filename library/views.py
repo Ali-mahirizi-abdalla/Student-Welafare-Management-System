@@ -51,24 +51,29 @@ def pay_fine(request, fine_id):
 @staff_member_required
 def librarian_dashboard(request):
     """Librarian main dashboard"""
-    total_books = Book.objects.count()
-    borrowed_books = BorrowedBook.objects.filter(status='BORROWED').count()
-    overdue_books = BorrowedBook.objects.filter(status='OVERDUE').count()
-    pending_fines = LibraryFine.objects.filter(paid=False).count()
-    total_fines_amount = sum(f.amount for f in LibraryFine.objects.filter(paid=False))
-    registered_users = LibraryUser.objects.count()
-    suspended_users = LibraryUser.objects.filter(is_suspended=True).count()
-    
-    context = {
-        'total_books': total_books,
-        'borrowed_books': borrowed_books,
-        'overdue_books': overdue_books,
-        'pending_fines': pending_fines,
-        'total_fines_amount': total_fines_amount,
-        'registered_users': registered_users,
-        'suspended_users': suspended_users,
-    }
-    return render(request, 'library/librarian_dashboard.html', context)
+    try:
+        total_books = Book.objects.count()
+        borrowed_books = BorrowedBook.objects.filter(status='BORROWED').count()
+        overdue_books = BorrowedBook.objects.filter(status='OVERDUE').count()
+        pending_fines = LibraryFine.objects.filter(paid=False).count()
+        total_fines_amount = sum(f.amount for f in LibraryFine.objects.filter(paid=False))
+        registered_users = LibraryUser.objects.count()
+        suspended_users = LibraryUser.objects.filter(is_suspended=True).count()
+        
+        context = {
+            'total_books': total_books,
+            'borrowed_books': borrowed_books,
+            'overdue_books': overdue_books,
+            'pending_fines': pending_fines,
+            'total_fines_amount': total_fines_amount,
+            'registered_users': registered_users,
+            'suspended_users': suspended_users,
+        }
+        return render(request, 'library/librarian_dashboard.html', context)
+    except Exception as e:
+        import traceback
+        from django.http import HttpResponseServerError
+        return HttpResponseServerError(f"<pre>{traceback.format_exc()}</pre>")
 
 @staff_member_required
 def book_list(request):
