@@ -110,6 +110,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'hms',  # Your app
+    'library',  # Library module
 
 
     # Allauth
@@ -474,6 +475,8 @@ else:
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 
-
-
+# ============================================
+# MYLOFT LIBRARY INTEGRATION
+# ============================================
+MYLOFT_API_KEY = os.getenv('MYLOFT_API_KEY', 'dummy_key')
 

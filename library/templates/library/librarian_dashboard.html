@@ -1,0 +1,127 @@
+{% extends 'hms/base.html' %}
+
+{% block title %}Librarian Dashboard - Campus Care{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center space-x-3">
+            <div class="p-3 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl">
+                <i class="fas fa-book-reader text-2xl text-indigo-600 dark:text-indigo-400"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Librarian Dashboard</h1>
+                <p class="text-slate-500 dark:text-slate-400">Manage books, fines, and users</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 mb-6">
+        <h2 class="text-lg font-semibold text-slate-800 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Quick Actions</h2>
+        <div class="flex flex-wrap gap-3">
+            <form action="{% url 'library:issue_book' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shadow-sm font-medium">
+                    <i class="fas fa-book"></i>
+                    <span>Issue Book</span>
+                </button>
+            </form>
+            <form action="{% url 'library:return_book' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors border border-slate-200 dark:border-slate-600 font-medium">
+                    <i class="fas fa-undo"></i>
+                    <span>Return Book</span>
+                </button>
+            </form>
+            <button class="flex items-center space-x-2 px-4 py-2 bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/30 dark:hover:bg-orange-900/50 text-orange-600 dark:text-orange-400 rounded-lg transition-colors border border-orange-200 dark:border-orange-800 font-medium">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Pay Fine</span>
+            </button>
+            <form action="{% url 'library:block_student' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="flex items-center space-x-2 px-4 py-2 bg-red-50 hover:bg-red-100 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg transition-colors border border-red-200 dark:border-red-800 font-medium">
+                    <i class="fas fa-ban"></i>
+                    <span>Block Student</span>
+                </button>
+            </form>
+            <button class="flex items-center space-x-2 px-4 py-2 bg-green-50 hover:bg-green-100 dark:bg-green-900/30 dark:hover:bg-green-900/50 text-green-600 dark:text-green-400 rounded-lg transition-colors border border-green-200 dark:border-green-800 font-medium">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reports</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-6 shadow-sm border border-amber-200 dark:border-amber-800 mb-6">
+        <div class="flex items-center space-x-2 mb-4">
+            <i class="fas fa-bell text-amber-600 dark:text-amber-400"></i>
+            <h2 class="text-lg font-semibold text-amber-800 dark:text-amber-300">Alerts</h2>
+        </div>
+        <ul class="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+            <li>12 books overdue today</li>
+            <li>{{ suspended_users.count }} students suspended</li>
+            <li>{{ expelled_users.count }} students expelled</li>
+            <li>5 students blocked from entry</li>
+        </ul>
+    </div>
+
+    <!-- Suspended/Expelled/Blocked Students -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+        <h2 class="text-lg font-semibold text-slate-800 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Suspended / Expelled / Blocked Students</h2>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-xs uppercase text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 border-y border-slate-200 dark:border-slate-700">
+                        <th class="py-3 px-4 font-medium">Reg No</th>
+                        <th class="py-3 px-4 font-medium">Student Name</th>
+                        <th class="py-3 px-4 font-medium">Status</th>
+                        <th class="py-3 px-4 font-medium">Reason</th>
+                        <th class="py-3 px-4 font-medium">End Date</th>
+                        <th class="py-3 px-4 font-medium">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                    <!-- Example row for suspended student -->
+                    {% for user in suspended_users %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+                        <td class="py-3 px-4 text-sm text-slate-800 dark:text-white">{{ user.student.university_id }}</td>
+                        <td class="py-3 px-4 text-sm text-slate-800 dark:text-white">{{ user.student.user.get_full_name }}</td>
+                        <td class="py-3 px-4 text-sm text-red-600 dark:text-red-400 font-medium">Suspended</td>
+                        <td class="py-3 px-4 text-sm text-slate-600 dark:text-slate-300">{{ user.suspension_reason|default:"-" }}</td>
+                        <td class="py-3 px-4 text-sm text-slate-600 dark:text-slate-300">{{ user.suspension_end_date|date:"d/m/Y"|default:"-" }}</td>
+                        <td class="py-3 px-4 text-sm space-x-2">
+                            <button class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium">Reinstate</button>
+                            <button class="text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-300">Extend</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- Example row for expelled student -->
+                    {% for user in expelled_users %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+                        <td class="py-3 px-4 text-sm text-slate-800 dark:text-white">{{ user.student.university_id }}</td>
+                        <td class="py-3 px-4 text-sm text-slate-800 dark:text-white">{{ user.student.user.get_full_name }}</td>
+                        <td class="py-3 px-4 text-sm text-red-800 dark:text-red-300 font-medium bg-red-100 dark:bg-red-900/30 inline-block px-2 py-1 rounded">Expelled</td>
+                        <td class="py-3 px-4 text-sm text-slate-600 dark:text-slate-300">Misconduct</td>
+                        <td class="py-3 px-4 text-sm text-slate-600 dark:text-slate-300">Permanent</td>
+                        <td class="py-3 px-4 text-sm space-x-2">
+                            <button class="text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-300">View Details</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    {% if not suspended_users and not expelled_users %}
+                    <tr>
+                        <td colspan="6" class="py-8 text-center text-slate-500 dark:text-slate-400">
+                            No restricted students found.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

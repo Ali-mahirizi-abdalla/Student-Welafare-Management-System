@@ -232,6 +232,7 @@ class StaffProfile(models.Model):
         ('auditor', 'Auditor'),
         ('diploma_coordinator', 'Diploma Coordinator'),
         ('dept_coordinator', 'Department Coordinator'),
+        ('librarian', 'Librarian'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile')
@@ -266,6 +267,7 @@ class StaffProfile(models.Model):
             'auditor': {'name': 'Gray', 'hex': '#4B5563'},
             'diploma_coordinator': {'name': 'Amber', 'hex': '#D97706'},
             'dept_coordinator': {'name': 'Teal', 'hex': '#14B8A6'},
+            'librarian': {'name': 'Indigo', 'hex': '#4F46E5'},
         }
         return colors.get(self.role, {'name': 'Gray', 'hex': '#4B5563'})
 
@@ -274,7 +276,7 @@ class StaffProfile(models.Model):
         role = self.role
         if role in ['super_admin', 'vice_chancellor', 'deputy_vice_chancellor', 'register_admin', 'register_user']:
             return 'EXECUTIVE'
-        if role in ['dean_of_students', 'dean_graduate_school', 'director_tvet', 'deferment_officer', 'dept_mcs', 'diploma_coordinator', 'dept_coordinator']:
+        if role in ['dean_of_students', 'dean_graduate_school', 'director_tvet', 'deferment_officer', 'dept_mcs', 'diploma_coordinator', 'dept_coordinator', 'librarian']:
             return 'ACADEMIC_ADMIN'
         if role in ['finance_officer', 'auditor', 'director_resource', 'news_auditor']:
             return 'FINANCE_ADMIN'
