@@ -6,4 +6,5 @@ pip install cryptography
 pip install -r requirements.txt
 
 python manage.py collectstatic --noinput
-python manage.py migrate --fake-initial --noinput
+python manage.py migrate --fake library 0001_initial --noinput || true
+python manage.py migrate --noinput
