@@ -202,8 +202,10 @@
 
         <!-- 24. LIBRARIAN -->
         {% elif user.staff_profile.role == 'librarian' %}
+        {% if feature_flags.library_management %}
         <a href="{% url 'library:librarian_dashboard' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl transition">My Dashboard</a>
         <a href="{% url 'hms:student_profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">Profile</a>
+        {% endif %}
 
         {% endif %}
 
@@ -315,6 +317,7 @@
             </svg>
             My Profile
         </a>
+        {% if feature_flags.library_management %}
         <a href="{% url 'library:student_library' %}"
             class="flex items-center gap-3 px-4 py-3 {% if 'library' in request.path %}bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-lg text-indigo-600 dark:text-indigo-400{% else %}hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400{% endif %} rounded-xl transition group">
             <svg class="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none"
@@ -323,6 +326,7 @@
             </svg>
             Library
         </a>
+        {% endif %}
         {% endif %}
     </nav>
 
