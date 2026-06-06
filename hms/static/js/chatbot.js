@@ -60,12 +60,15 @@ class WelfareChatbot {
                             <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-white font-bold text-lg">Welfare Assistant</h3>
-                                <p class="text-white/80 text-xs">AI-Powered Help</p>
+                                <h3 class="text-white font-bold text-lg">AI Campus Assistant</h3>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                                    <p class="text-white/80 text-xs">Online • 24/7 Support</p>
+                                </div>
                             </div>
                         </div>
                         <button id="chatbot-close" 
@@ -85,20 +88,33 @@ class WelfareChatbot {
                             <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
                                 </svg>
                             </div>
-                            <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%]">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[85%]">
                                 <p class="text-slate-700 dark:text-slate-200 text-sm">
-                                    👋 Hi! I'm your AI Welfare Assistant. How can I help you today?
+                                    <strong>Hi! I'm your AI Campus Assistant.</strong><br>
+                                    I can help you with anything about Campus Care!<br><br>
+                                    💡 Try asking:<br>
+                                    • "How to apply for deferment?"<br>
+                                    • "Check my fee balance"<br>
+                                    • "Who is the owner?"<br>
+                                    • "Book health appointment"<br>
+                                    • "Report maintenance issue"<br>
+                                    • "Borrow library book"<br>
+                                    • "Reset my password"
                                 </p>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Quick Replies (Optional) -->
-                    <div id="chatbot-quick-replies" class="px-4 py-2 hidden">
-                        <div class="flex flex-wrap gap-2"></div>
+                    <!-- Quick Replies -->
+                    <div id="chatbot-quick-replies" class="px-4 py-2">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="document.getElementById('chatbot-input').value='How to apply for deferment?'; document.getElementById('chatbot-send').click();" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-200 transition-colors">📝 Apply for Deferment</button>
+                            <button onclick="document.getElementById('chatbot-input').value='Check my fee balance'; document.getElementById('chatbot-send').click();" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-200 transition-colors">💰 Fee Balance</button>
+                            <button onclick="document.getElementById('chatbot-input').value='Who is the owner?'; document.getElementById('chatbot-send').click();" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-200 transition-colors">👨‍💻 Owner Info</button>
+                        </div>
                     </div>
                     
                     <!-- Input Area -->
@@ -260,7 +276,7 @@ class WelfareChatbot {
                 <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex-shrink-0 flex items-center justify-center">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                              d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
                     </svg>
                 </div>
                 <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] ${isError ? 'border-2 border-red-300' : ''}">
