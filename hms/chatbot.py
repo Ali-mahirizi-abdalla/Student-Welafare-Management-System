@@ -176,4 +176,21 @@ class ChatService:
                 "role": "assistant",
                 "content": f"I encountered an error. Please try rephrasing your question. (Error: {str(e)[:50]})"
             }
+            
+    def get_quick_replies(self, user_role: str) -> List[str]:
+        """Get role-specific quick replies."""
+        if user_role in ['Admin', 'Warden']:
+            return [
+                "View pending maintenance",
+                "How to manage students?",
+                "Dashboard statistics",
+                "Who is the owner?"
+            ]
+        else:
+            return [
+                "How to apply for deferment?",
+                "Check my fee balance",
+                "Book health appointment",
+                "Who is the owner?"
+            ]
     
