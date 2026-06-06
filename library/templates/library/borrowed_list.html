@@ -26,7 +26,7 @@
                 {% for borrow in borrowed_books %}
                 <tr class="{% if borrow.status == 'RETURNED' %}table-light text-muted{% elif borrow.due_date < now.date and borrow.status == 'BORROWED' %}table-danger-subtle{% endif %}">
                     <td class="fw-bold text-primary">{{ borrow.book.title }}</td>
-                    <td>{{ borrow.library_user.student.user.get_full_name }}<br><small class="text-muted">{{ borrow.library_user.library_card_number }}</small></td>
+                    <td>{{ borrow.library_user.user.get_full_name }}<br><small class="text-muted">{{ borrow.library_user.library_card_number }}</small></td>
                     <td>{{ borrow.borrowed_date|date:"d/m/Y" }}</td>
                     <td>{{ borrow.due_date|date:"d/m/Y" }}</td>
                     <td>
@@ -38,10 +38,10 @@
                     </td>
                     <td>
                         {% if borrow.status == 'BORROWED' %}
-                            <a href="{% url 'library:return_book' borrow.id %}" class="btn btn-sm btn-success" title="Return Book"><i class="fas fa-undo"></i> Return</a>
+                            <a href="{% url 'library:return_book_id' borrow.id %}" class="btn btn-sm btn-success" title="Return Book"><i class="fas fa-undo"></i> Return</a>
                             <form action="{% url 'library:renew_book' borrow.id %}" method="post" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-info text-white" title="Renew Book"><i class="fas fa-sync-alt"></i> Renew ({{ borrow.renewal_count }})</button>
+                                <button type="submit" class="btn btn-sm btn-info text-white" title="Renew Book"><i class="fas fa-sync-alt"></i> Renew ({{ borrow.renewed_count }})</button>
                             </form>
                         {% else %}
                             <small>Returned on {{ borrow.returned_date|date:"d/m/Y" }}</small>

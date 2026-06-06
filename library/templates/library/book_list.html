@@ -29,7 +29,7 @@
                     <td class="fw-bold text-primary">{{ book.title }}</td>
                     <td>{{ book.author }}</td>
                     <td>{{ book.isbn }}</td>
-                    <td>{{ book.category.name|default:"Uncategorized" }}</td>
+                    <td>{{ book.get_category_display }}</td>
                     <td>{{ book.total_copies }}</td>
                     <td>
                         <span class="badge {% if book.available_copies > 0 %}bg-success{% else %}bg-danger{% endif %} rounded-pill">

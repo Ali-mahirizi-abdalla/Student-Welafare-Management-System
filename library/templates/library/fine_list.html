@@ -26,7 +26,7 @@
                 {% for fine in fines %}
                 <tr class="{% if not fine.paid %}table-warning-subtle{% endif %}">
                     <td>{{ fine.created_date|date:"d/m/Y" }}</td>
-                    <td>{{ fine.library_user.student.user.get_full_name }}</td>
+                    <td>{{ fine.library_user.user.get_full_name }}</td>
                     <td>{{ fine.borrowed_book.book.title }}</td>
                     <td>{{ fine.reason }}</td>
                     <td class="fw-bold">KES {{ fine.amount }}</td>

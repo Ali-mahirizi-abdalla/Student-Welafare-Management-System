@@ -24,8 +24,8 @@
                 {% for lib_user in users %}
                 <tr>
                     <td class="fw-bold">{{ lib_user.library_card_number }}</td>
-                    <td>{{ lib_user.student.user.get_full_name }}</td>
-                    <td>{{ lib_user.student.university_id }}</td>
+                    <td>{{ lib_user.user.get_full_name }}</td>
+                    <td>{{ lib_user.user.username }}</td>
                     <td>
                         {% if lib_user.is_suspended %}
                             <span class="badge bg-warning text-dark">Suspended</span>
