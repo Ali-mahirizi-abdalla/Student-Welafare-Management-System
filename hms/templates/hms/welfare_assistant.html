@@ -263,8 +263,10 @@
 <body>
 <div class="chat-container">
     <div class="chat-header">
-        <div class="avatar">
-            <i class="fas fa-robot"></i>
+        <div class="avatar" style="background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);">
+            <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+            </svg>
         </div>
         <div class="header-text">
             <h2>AI Campus Assistant</h2>
@@ -278,7 +280,11 @@
 
     <div class="chat-messages" id="chatMessages">
         <div class="message bot">
-            <div class="message-avatar">🤖</div>
+            <div class="message-avatar" style="background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);">
+                <svg style="width: 16px; height: 16px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                </svg>
+            </div>
             <div class="message-content">
                 <strong>Hi! I'm your AI Campus Assistant.</strong><br>
                 I can help you with anything about Campus Care!<br><br>
@@ -498,7 +504,7 @@
     function addMessage(text, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-        const avatar = isUser ? '👤' : '🤖';
+        const avatar = isUser ? '👤' : `<div style="width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); display: flex; align-items: center; justify-content: center;"><svg style="width: 16px; height: 16px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg></div>`;
         
         messageDiv.innerHTML = `
             <div class="message-avatar">${avatar}</div>
@@ -516,7 +522,11 @@
         typingDiv.className = 'message bot';
         typingDiv.id = 'typingIndicator';
         typingDiv.innerHTML = `
-            <div class="message-avatar">🤖</div>
+            <div class="message-avatar" style="background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);">
+                <svg style="width: 16px; height: 16px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                </svg>
+            </div>
             <div class="typing">
                 <span></span><span></span><span></span>
             </div>
