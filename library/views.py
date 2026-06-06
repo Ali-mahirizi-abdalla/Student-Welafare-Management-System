@@ -38,7 +38,7 @@ def borrowed_books(request):
     """List student's borrowed books"""
     library_user = LibraryUser.objects.get(user=request.user)
     books = BorrowedBook.objects.filter(library_user=library_user)
-    return render(request, 'library/borrowed_books.html', {'books': books})
+    return render(request, 'library/borrowed_list.html', {'books': books})
 
 @login_required
 def pay_fine(request, fine_id):
@@ -100,7 +100,7 @@ def add_book(request):
         )
         messages.success(request, f'Book "{book.title}" added successfully')
         return redirect('library:book_list')
-    return render(request, 'library/add_book.html')
+    return render(request, 'library/book_form.html')
 
 @staff_member_required
 def edit_book(request, book_id):
@@ -118,7 +118,7 @@ def edit_book(request, book_id):
         book.save()
         messages.success(request, f'Book "{book.title}" updated successfully')
         return redirect('library:book_list')
-    return render(request, 'library/edit_book.html', {'book': book})
+    return render(request, 'library/book_form.html', {'book': book})
 
 @staff_member_required
 def issue_book(request):
@@ -190,7 +190,7 @@ def return_book(request):
 def library_users(request):
     """List all library users"""
     users = LibraryUser.objects.all()
-    return render(request, 'library/library_users.html', {'users': users})
+    return render(request, 'library/users_list.html', {'users': users})
 
 @staff_member_required
 def fine_list(request):
