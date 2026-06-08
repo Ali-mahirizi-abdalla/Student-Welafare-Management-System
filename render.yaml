@@ -10,7 +10,7 @@ services:
     runtime: python
     plan: free # You can upgrade this to 'starter' or higher for production scale
     buildCommand: bash build.sh
-    startCommand: gunicorn swms.wsgi --log-file -
+    startCommand: python fix_library_migrations.py && python manage.py migrate --noinput && gunicorn swms.wsgi --log-file -
     envVars:
       - key: PORT
         value: 10000

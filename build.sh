@@ -6,4 +6,3 @@ pip install cryptography
 pip install -r requirements.txt
 
 python manage.py collectstatic --noinput
-python fix_library_migrations.py
