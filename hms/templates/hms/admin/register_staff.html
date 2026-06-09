@@ -7,787 +7,362 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-/* ─── Reset & Base ─────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+/* Base overrides for font */
+.font-inter { font-family: 'Inter', system-ui, sans-serif; }
 
-.rsp-page {
-    font-family: 'Inter', system-ui, sans-serif;
-    padding: 2.5rem 2rem;
-    max-width: 1100px;
-    margin: 0 auto;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* ─── Back Link ────────────────────────────────── */
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #475569;
-    text-decoration: none;
-    margin-bottom: 1.75rem;
-    transition: color .2s, gap .2s;
-}
-.back-link:hover { color: #0d9488; gap: 12px; }
-.back-link i { font-size: 12px; }
-
-/* ─── Page Header ──────────────────────────────── */
-.rsp-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-.rsp-header-left h1 {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #0f172a;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 4px;
-}
-.rsp-header-left h1::before {
-    content: '';
-    width: 4px;
-    height: 28px;
-    background: linear-gradient(180deg, #0d9488, #0f766e);
-    border-radius: 99px;
-    display: inline-block;
-    flex-shrink: 0;
-}
-.rsp-header-left p {
-    font-size: 13.5px;
-    color: #64748b;
-    padding-left: 14px;
-    margin: 0;
-}
-.rsp-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    color: #166534;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 99px;
-}
-
-/* ─── Form Card ────────────────────────────────── */
-.form-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 24px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.06), 0 1px 4px rgba(0,0,0,.04);
-    overflow: hidden;
-}
-
-/* ─── Form Grid ────────────────────────────────── */
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-}
-@media (max-width: 860px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-col-right { border-left: none !important; border-top: 1px solid #e2e8f0; }
-}
-
-.form-col {
-    padding: 2rem;
-}
-.form-col-right {
-    border-left: 1px solid #e2e8f0;
-}
-
-/* ─── Section Title ────────────────────────────── */
-.section-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: #0d9488;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #ccfbf1;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.section-title i {
-    background: #f0fdfa;
-    color: #0d9488;
-    width: 26px;
-    height: 26px;
-    border-radius: 7px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    border: 1px solid #ccfbf1;
-}
-
-/* ─── Field Group ──────────────────────────────── */
-.field-group {
-    margin-bottom: 1.35rem;
-}
-.field-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 6px;
-}
-.field-label .req {
-    color: #e11d48;
-    font-size: 14px;
-    line-height: 1;
-}
-.field-label .opt {
-    font-size: 10.5px;
-    font-weight: 500;
-    color: #94a3b8;
-    margin-left: 4px;
-}
-
-/* ─── Inputs ───────────────────────────────────── */
-.rsp-input,
-.rsp-select {
-    width: 100%;
-    padding: 11px 14px;
-    font-size: 14px;
-    color: #0f172a;
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    outline: none;
-    transition: border-color .2s, box-shadow .2s, background .2s;
-    font-family: 'Inter', sans-serif;
-    appearance: none;
-}
-.rsp-input::placeholder { color: #94a3b8; }
-.rsp-input:focus,
-.rsp-select:focus {
-    background: #fff;
-    border-color: #0d9488;
-    box-shadow: 0 0 0 3px rgba(13,148,136,.12);
-}
-.rsp-input.has-icon { padding-left: 40px; }
-
-.input-wrap {
-    position: relative;
-}
-.input-wrap .input-icon {
-    position: absolute;
-    left: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    font-size: 13px;
-    pointer-events: none;
-    transition: color .2s;
-}
-.input-wrap:focus-within .input-icon { color: #0d9488; }
-
-/* Select arrow */
-.select-wrap { position: relative; }
-.select-wrap::after {
-    content: '\f078';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
+/* Custom select dropdown styling */
+.select-icon {
     position: absolute;
     right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: #94a3b8;
-    font-size: 11px;
     pointer-events: none;
+    color: #94a3b8;
 }
 
-/* ─── Field Hint ───────────────────────────────── */
-.field-hint {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11.5px;
-    color: #94a3b8;
-    margin-top: 5px;
+/* File upload drag state */
+.drag-over {
+    border-color: #0d9488 !important;
+    background-color: #f0fdfa !important;
 }
-.field-hint i { color: #cbd5e1; font-size: 10px; }
 
-/* ─── File Upload ──────────────────────────────── */
-.file-upload-area {
-    border: 2px dashed #e2e8f0;
-    border-radius: 14px;
-    padding: 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color .25s, background .25s;
-    background: #f8fafc;
-    position: relative;
-}
-.file-upload-area:hover,
-.file-upload-area.drag-over {
-    border-color: #0d9488;
-    background: #f0fdfa;
-}
-.file-upload-area input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-}
-.upload-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 10px;
-    color: #0d9488;
-    font-size: 18px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.06);
-}
-.upload-text {
-    font-size: 13px;
-    font-weight: 600;
-    color: #334155;
-    margin-bottom: 3px;
-}
-.upload-subtext {
-    font-size: 11.5px;
-    color: #94a3b8;
-}
-.file-preview {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin-top: 10px;
-    text-align: left;
-}
-.file-preview .file-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: #334155;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.file-preview .file-size {
-    font-size: 11px;
-    color: #94a3b8;
-}
-.file-preview .remove-file {
-    margin-left: auto;
-    color: #94a3b8;
-    cursor: pointer;
-    font-size: 13px;
-    flex-shrink: 0;
-}
-.file-preview .remove-file:hover { color: #e11d48; }
-
-/* ─── Password Field ───────────────────────────── */
-.pw-wrap { position: relative; }
-.pw-wrap .pw-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 4px;
-    transition: color .2s;
-    background: none;
-    border: none;
-    outline: none;
-}
-.pw-wrap .pw-toggle:hover { color: #475569; }
-.pw-wrap .rsp-input { padding-right: 42px; }
-
-/* ─── Password Strength ────────────────────────── */
-.strength-wrap { margin-top: 8px; }
-.strength-bar {
-    height: 4px;
-    background: #e2e8f0;
-    border-radius: 99px;
-    overflow: hidden;
-    margin-bottom: 5px;
-}
+/* Custom Password Strength Bar Transition */
 .strength-fill {
-    height: 100%;
-    border-radius: 99px;
-    width: 0%;
-    transition: width .4s ease, background-color .4s ease;
+    transition: width 0.4s ease-in-out, background-color 0.4s ease-in-out;
 }
-.strength-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #94a3b8;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.strength-label .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #e2e8f0;
-    transition: background .4s;
-}
-
-/* ─── Error Messages ───────────────────────────── */
-.field-error {
-    font-size: 11.5px;
-    color: #e11d48;
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.rsp-input.error { border-color: #fca5a5; background: #fff5f5; }
-
-.alert-error {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 13px;
-    color: #b91c1c;
-}
-.alert-error i { flex-shrink: 0; margin-top: 1px; }
-
-/* ─── Form Footer ──────────────────────────────── */
-.form-footer {
-    padding: 1.5rem 2rem;
-    border-top: 1px solid #e2e8f0;
-    background: #f8fafc;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    border-radius: 0 0 24px 24px;
-}
-.footer-note {
-    font-size: 12px;
-    color: #94a3b8;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-/* ─── Buttons ──────────────────────────────────── */
-.btn-submit {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    padding: 12px 28px;
-    background: #1e293b;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: background .2s, transform .15s, box-shadow .2s;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 0.2px;
-    box-shadow: 0 4px 12px rgba(30,41,59,.25);
-}
-.btn-submit:hover {
-    background: #0f172a;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(30,41,59,.3);
-}
-.btn-submit:active { transform: translateY(0); }
-.btn-submit i { font-size: 13px; }
-
-.btn-cancel {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 22px;
-    background: white;
-    color: #475569;
-    font-size: 13.5px;
-    font-weight: 600;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all .2s;
-    text-decoration: none;
-    font-family: 'Inter', sans-serif;
-}
-.btn-cancel:hover { background: #f1f5f9; border-color: #cbd5e1; color: #1e293b; }
-
-/* ─── Auto-generate button ─────────────────────── */
-.btn-gen {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #f0fdfa;
-    border: 1px solid #99f6e4;
-    color: #0f766e;
-    font-size: 11.5px;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all .2s;
-    margin-top: 6px;
-    font-family: 'Inter', sans-serif;
-}
-.btn-gen:hover { background: #ccfbf1; border-color: #5eead4; }
-.btn-gen i { font-size: 10px; }
-
-/* ─── Match indicator ──────────────────────────── */
-.match-indicator {
-    font-size: 11.5px;
-    font-weight: 600;
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.match-ok { color: #059669; }
-.match-fail { color: #dc2626; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="rsp-page">
+<div class="font-inter max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
 
     <!-- Back Link -->
-    <a href="{% url 'hms:manage_staff' %}" class="back-link">
-        <i class="fas fa-arrow-left"></i> Back to Staff Directory
+    <a href="{% url 'hms:manage_staff' %}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors mb-6 group">
+        <i class="fas fa-arrow-left text-xs transition-transform group-hover:-translate-x-1"></i> 
+        Back to Staff Directory
     </a>
 
     <!-- Page Header -->
-    <div class="rsp-header">
-        <div class="rsp-header-left">
-            <h1>Add Staff Member</h1>
-            <p>Create a new staff account and assign their system role</p>
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3 mb-2">
+                <span class="w-1.5 h-8 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full inline-block"></span>
+                Add Staff Member
+            </h1>
+            <p class="text-sm text-slate-500 font-medium pl-4">Create a new staff account and assign their system role</p>
         </div>
-        <span class="rsp-badge"><i class="fas fa-shield-alt"></i> Manual Registration</span>
+        <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold shadow-sm self-start">
+            <i class="fas fa-shield-alt"></i> Manual Registration
+        </div>
     </div>
 
     <!-- Error Alert -->
     {% if messages %}
-    <div class="alert-error">
-        <i class="fas fa-exclamation-circle"></i>
-        <div>
-            {% for message in messages %}
-            <div>{{ message }}</div>
-            {% endfor %}
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl mb-8 shadow-sm">
+        <div class="flex items-start gap-3">
+            <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
+            <div class="text-sm text-red-800 font-medium space-y-1">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
     {% endif %}
 
-    <!-- Form -->
-    <form method="POST" enctype="multipart/form-data" id="staff-reg-form" novalidate>
+    <!-- Main Form -->
+    <form method="POST" enctype="multipart/form-data" id="staff-reg-form" novalidate class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
         {% csrf_token %}
 
-        <div class="form-card">
-            <div class="form-grid">
+        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+            
+            <!-- LEFT COLUMN: Personal Information -->
+            <div class="p-8 lg:p-10 bg-slate-50/30">
+                <div class="flex items-center gap-3 text-xs font-bold uppercase tracking-wider text-teal-600 mb-8 border-b-2 border-teal-100/50 pb-3">
+                    <span class="flex items-center justify-center w-7 h-7 bg-teal-50 border border-teal-100 rounded-lg text-teal-600">
+                        <i class="fas fa-user text-[10px]"></i>
+                    </span>
+                    Personal Information
+                </div>
 
-                <!-- ══════════ LEFT COL: PERSONAL INFORMATION ══════════ -->
-                <div class="form-col form-col-left">
-                    <div class="section-title">
-                        <i class="fas fa-user"></i> Personal Information
-                    </div>
-
+                <div class="space-y-6">
                     <!-- First Name -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_first_name">
-                            First Name <span class="req">*</span>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2" for="id_first_name">
+                            First Name <span class="text-rose-500 leading-none">*</span>
                         </label>
-                        <div class="input-wrap">
-                            <i class="input-icon fas fa-user-circle"></i>
-                            <input type="text" name="first_name" id="id_first_name"
-                                   class="rsp-input has-icon {% if form.first_name.errors %}error{% endif %}"
-                                   placeholder="e.g. John"
-                                   value="{{ form.first_name.value|default:'' }}"
-                                   pattern="[A-Za-z\s\-]+" required>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                                <i class="fas fa-user-circle text-sm"></i>
+                            </div>
+                            <input type="text" name="first_name" id="id_first_name" required pattern="[A-Za-z\s\-]+"
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white transition-all outline-none {% if form.first_name.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}"
+                                placeholder="e.g. John" value="{{ form.first_name.value|default:'' }}">
                         </div>
-                        <div class="field-hint"><i class="fas fa-circle-info"></i> Letters only, no numbers</div>
+                        <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-info-circle text-slate-300"></i> Letters only, no numbers</p>
                         {% for err in form.first_name.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
                         {% endfor %}
                     </div>
 
                     <!-- Last Name -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_last_name">
-                            Last Name <span class="req">*</span>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2" for="id_last_name">
+                            Last Name <span class="text-rose-500 leading-none">*</span>
                         </label>
-                        <div class="input-wrap">
-                            <i class="input-icon fas fa-user-circle"></i>
-                            <input type="text" name="last_name" id="id_last_name"
-                                   class="rsp-input has-icon {% if form.last_name.errors %}error{% endif %}"
-                                   placeholder="e.g. Doe"
-                                   value="{{ form.last_name.value|default:'' }}"
-                                   pattern="[A-Za-z\s\-]+" required>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                                <i class="fas fa-user-circle text-sm"></i>
+                            </div>
+                            <input type="text" name="last_name" id="id_last_name" required pattern="[A-Za-z\s\-]+"
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white transition-all outline-none {% if form.last_name.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}"
+                                placeholder="e.g. Doe" value="{{ form.last_name.value|default:'' }}">
                         </div>
-                        <div class="field-hint"><i class="fas fa-circle-info"></i> Letters only, no numbers</div>
+                        <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-info-circle text-slate-300"></i> Letters only, no numbers</p>
                         {% for err in form.last_name.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
                         {% endfor %}
                     </div>
 
                     <!-- Email -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_email">
-                            Email Address <span class="req">*</span>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2" for="id_email">
+                            Email Address <span class="text-rose-500 leading-none">*</span>
                         </label>
-                        <div class="input-wrap">
-                            <i class="input-icon fas fa-envelope"></i>
-                            <input type="email" name="email" id="id_email"
-                                   class="rsp-input has-icon {% if form.email.errors %}error{% endif %}"
-                                   placeholder="staff@example.ac.ke"
-                                   value="{{ form.email.value|default:'' }}"
-                                   required>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                                <i class="fas fa-envelope text-sm"></i>
+                            </div>
+                            <input type="email" name="email" id="id_email" required
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white transition-all outline-none {% if form.email.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}"
+                                placeholder="staff@example.ac.ke" value="{{ form.email.value|default:'' }}">
                         </div>
-                        <div class="field-hint"><i class="fas fa-circle-info"></i> Used as login username — must be unique</div>
+                        <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-info-circle text-slate-300"></i> Used as login username — must be unique</p>
                         {% for err in form.email.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
                         {% endfor %}
                     </div>
 
                     <!-- Phone -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_phone">
-                            Phone Number <span class="req">*</span>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2" for="id_phone">
+                            Phone Number <span class="text-rose-500 leading-none">*</span>
                         </label>
-                        <div class="input-wrap">
-                            <i class="input-icon fas fa-phone"></i>
-                            <input type="tel" name="phone" id="id_phone"
-                                   class="rsp-input has-icon {% if form.phone.errors %}error{% endif %}"
-                                   placeholder="0712 345 678"
-                                   value="{{ form.phone.value|default:'' }}"
-                                   pattern="^(\+254|0)[17]\d{8}$" required>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                                <i class="fas fa-phone text-sm"></i>
+                            </div>
+                            <input type="tel" name="phone" id="id_phone" required pattern="^(\+254|0)[17]\d{8}$"
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white transition-all outline-none {% if form.phone.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}"
+                                placeholder="0712 345 678" value="{{ form.phone.value|default:'' }}">
                         </div>
-                        <div class="field-hint"><i class="fas fa-circle-info"></i> Kenyan format: 07XX or +2547XX</div>
+                        <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-info-circle text-slate-300"></i> Kenyan format: 07XX or +2547XX</p>
                         {% for err in form.phone.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
                         {% endfor %}
                     </div>
                 </div>
-                <!-- ── END LEFT COL ── -->
+            </div>
 
-                <!-- ══════════ RIGHT COL: ROLE & AUTHORIZATION ══════════ -->
-                <div class="form-col form-col-right">
-                    <div class="section-title">
-                        <i class="fas fa-id-badge"></i> Role & Authorization
-                    </div>
+            <!-- RIGHT COLUMN: Role & Authorization -->
+            <div class="p-8 lg:p-10">
+                <div class="flex items-center gap-3 text-xs font-bold uppercase tracking-wider text-teal-600 mb-8 border-b-2 border-teal-100/50 pb-3">
+                    <span class="flex items-center justify-center w-7 h-7 bg-teal-50 border border-teal-100 rounded-lg text-teal-600">
+                        <i class="fas fa-id-badge text-[10px]"></i>
+                    </span>
+                    Role & Authorization
+                </div>
 
-                    <!-- Role -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_role">
-                            Assigned Role <span class="req">*</span>
+                <div class="space-y-6">
+                    <!-- Role Selection -->
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2" for="id_role">
+                            Assigned Role <span class="text-rose-500 leading-none">*</span>
                         </label>
-                        <div class="select-wrap">
-                            <select name="role" id="id_role"
-                                    class="rsp-input rsp-select {% if form.role.errors %}error{% endif %}" required>
+                        <div class="relative">
+                            <select name="role" id="id_role" required
+                                class="w-full appearance-none pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white transition-all outline-none {% if form.role.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}">
                                 <option value="">— Select a role —</option>
                                 <optgroup label="Executive">
-                                    <option value="super_admin"          {% if form.role.value == 'super_admin' %}selected{% endif %}>Super Admin</option>
-                                    <option value="vice_chancellor"      {% if form.role.value == 'vice_chancellor' %}selected{% endif %}>Vice Chancellor</option>
+                                    <option value="super_admin" {% if form.role.value == 'super_admin' %}selected{% endif %}>Super Admin</option>
+                                    <option value="vice_chancellor" {% if form.role.value == 'vice_chancellor' %}selected{% endif %}>Vice Chancellor</option>
                                     <option value="deputy_vice_chancellor" {% if form.role.value == 'deputy_vice_chancellor' %}selected{% endif %}>Deputy Vice Chancellor</option>
-                                    <option value="register_admin"       {% if form.role.value == 'register_admin' %}selected{% endif %}>Register Admin</option>
-                                    <option value="register_user"        {% if form.role.value == 'register_user' %}selected{% endif %}>Register User</option>
+                                    <option value="register_admin" {% if form.role.value == 'register_admin' %}selected{% endif %}>Register Admin</option>
+                                    <option value="register_user" {% if form.role.value == 'register_user' %}selected{% endif %}>Register User</option>
                                 </optgroup>
                                 <optgroup label="Academic Administration">
-                                    <option value="dean_of_students"     {% if form.role.value == 'dean_of_students' %}selected{% endif %}>Dean of Students</option>
-                                    <option value="dean_graduate_school"  {% if form.role.value == 'dean_graduate_school' %}selected{% endif %}>Dean – Graduate School</option>
-                                    <option value="director_resource"    {% if form.role.value == 'director_resource' %}selected{% endif %}>Director – Resource Mobilization</option>
-                                    <option value="director_tvet"        {% if form.role.value == 'director_tvet' %}selected{% endif %}>Director – TVET</option>
-                                    <option value="deferment_officer"    {% if form.role.value == 'deferment_officer' %}selected{% endif %}>Deferment Officer</option>
-                                    <option value="dept_mcs"             {% if form.role.value == 'dept_mcs' %}selected{% endif %}>Dept MCS Coordinator</option>
-                                    <option value="diploma_coordinator"  {% if form.role.value == 'diploma_coordinator' %}selected{% endif %}>Diploma Coordinator</option>
-                                    <option value="dept_coordinator"     {% if form.role.value == 'dept_coordinator' %}selected{% endif %}>Department Coordinator</option>
-                                    <option value="librarian"            {% if form.role.value == 'librarian' %}selected{% endif %}>Head Of Library Services (HOLS)</option>
+                                    <option value="dean_of_students" {% if form.role.value == 'dean_of_students' %}selected{% endif %}>Dean of Students</option>
+                                    <option value="dean_graduate_school" {% if form.role.value == 'dean_graduate_school' %}selected{% endif %}>Dean – Graduate School</option>
+                                    <option value="director_resource" {% if form.role.value == 'director_resource' %}selected{% endif %}>Director – Resource Mobilization</option>
+                                    <option value="director_tvet" {% if form.role.value == 'director_tvet' %}selected{% endif %}>Director – TVET</option>
+                                    <option value="deferment_officer" {% if form.role.value == 'deferment_officer' %}selected{% endif %}>Deferment Officer</option>
+                                    <option value="dept_mcs" {% if form.role.value == 'dept_mcs' %}selected{% endif %}>Dept MCS Coordinator</option>
+                                    <option value="diploma_coordinator" {% if form.role.value == 'diploma_coordinator' %}selected{% endif %}>Diploma Coordinator</option>
+                                    <option value="dept_coordinator" {% if form.role.value == 'dept_coordinator' %}selected{% endif %}>Department Coordinator</option>
+                                    <option value="librarian" {% if form.role.value == 'librarian' %}selected{% endif %}>Head Of Library Services (HOLS)</option>
                                 </optgroup>
                                 <optgroup label="Finance & Audit">
-                                    <option value="finance_officer"      {% if form.role.value == 'finance_officer' %}selected{% endif %}>Finance Officer</option>
-                                    <option value="auditor"              {% if form.role.value == 'auditor' %}selected{% endif %}>Auditor</option>
-                                    <option value="news_auditor"         {% if form.role.value == 'news_auditor' %}selected{% endif %}>News Auditor</option>
+                                    <option value="finance_officer" {% if form.role.value == 'finance_officer' %}selected{% endif %}>Finance Officer</option>
+                                    <option value="auditor" {% if form.role.value == 'auditor' %}selected{% endif %}>Auditor</option>
+                                    <option value="news_auditor" {% if form.role.value == 'news_auditor' %}selected{% endif %}>News Auditor</option>
                                 </optgroup>
                                 <optgroup label="Student Services">
-                                    <option value="news_editor"          {% if form.role.value == 'news_editor' %}selected{% endif %}>News Editor</option>
-                                    <option value="support_agent"        {% if form.role.value == 'support_agent' %}selected{% endif %}>Support Agent</option>
+                                    <option value="news_editor" {% if form.role.value == 'news_editor' %}selected{% endif %}>News Editor</option>
+                                    <option value="support_agent" {% if form.role.value == 'support_agent' %}selected{% endif %}>Support Agent</option>
                                 </optgroup>
                                 <optgroup label="Technical & Estates">
-                                    <option value="maintenance_sup"      {% if form.role.value == 'maintenance_sup' %}selected{% endif %}>Maintenance Supervisor</option>
-                                    <option value="security_officer"     {% if form.role.value == 'security_officer' %}selected{% endif %}>Security Officer</option>
-                                    <option value="emergency_coord"      {% if form.role.value == 'emergency_coord' %}selected{% endif %}>Emergency Coordinator</option>
+                                    <option value="maintenance_sup" {% if form.role.value == 'maintenance_sup' %}selected{% endif %}>Maintenance Supervisor</option>
+                                    <option value="security_officer" {% if form.role.value == 'security_officer' %}selected{% endif %}>Security Officer</option>
+                                    <option value="emergency_coord" {% if form.role.value == 'emergency_coord' %}selected{% endif %}>Emergency Coordinator</option>
                                 </optgroup>
                                 <optgroup label="Health">
-                                    <option value="health_manager"       {% if form.role.value == 'health_manager' %}selected{% endif %}>Health Manager</option>
+                                    <option value="health_manager" {% if form.role.value == 'health_manager' %}selected{% endif %}>Health Manager</option>
                                 </optgroup>
                                 <optgroup label="Accommodation">
-                                    <option value="warden"               {% if form.role.value == 'warden' %}selected{% endif %}>Warden</option>
+                                    <option value="warden" {% if form.role.value == 'warden' %}selected{% endif %}>Warden</option>
                                 </optgroup>
                             </select>
+                            <i class="fas fa-chevron-down select-icon text-xs"></i>
                         </div>
-                        <div class="field-hint"><i class="fas fa-circle-info"></i> Determines system access & permissions</div>
+                        <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-info-circle text-slate-300"></i> Determines system access & permissions</p>
                         {% for err in form.role.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
                         {% endfor %}
                     </div>
 
                     <!-- National ID -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_national_id">
-                            Role ID / National ID <span class="req">*</span>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2" for="id_national_id">
+                            Role ID / National ID <span class="text-rose-500 leading-none">*</span>
                         </label>
-                        <div class="input-wrap">
-                            <i class="input-icon fas fa-id-card"></i>
-                            <input type="text" name="national_id" id="id_national_id"
-                                   class="rsp-input has-icon {% if form.national_id.errors %}error{% endif %}"
-                                   placeholder="e.g. 12345678 or EMP-001"
-                                   value="{{ form.national_id.value|default:'' }}"
-                                   required>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                                <i class="fas fa-id-card text-sm"></i>
+                            </div>
+                            <input type="text" name="national_id" id="id_national_id" required
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white transition-all outline-none {% if form.national_id.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}"
+                                placeholder="e.g. 12345678 or EMP-001" value="{{ form.national_id.value|default:'' }}">
                         </div>
-                        <div class="field-hint"><i class="fas fa-circle-info"></i> Alphanumeric — must be unique across all staff</div>
+                        <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-info-circle text-slate-300"></i> Alphanumeric — must be unique</p>
                         {% for err in form.national_id.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
+                        <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
                         {% endfor %}
                     </div>
 
                     <!-- Profile Image Upload -->
-                    <div class="field-group">
-                        <label class="field-label">
-                            Profile Image <span class="opt">(Optional)</span>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2">
+                            Profile Image <span class="text-[10px] font-medium text-slate-400">(Optional)</span>
                         </label>
-                        <div class="file-upload-area" id="upload-area">
-                            <input type="file" name="profile_image" id="id_profile_image"
-                                   accept="image/jpeg,image/png,image/webp"
-                                   onchange="handleFileSelect(this)">
+                        <div class="relative border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center bg-slate-50 hover:bg-teal-50 hover:border-teal-400 transition-all cursor-pointer" id="upload-area">
+                            <input type="file" name="profile_image" id="id_profile_image" accept="image/jpeg,image/png,image/webp" onchange="handleFileSelect(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                            
                             <div id="upload-placeholder">
-                                <div class="upload-icon"><i class="fas fa-camera"></i></div>
-                                <div class="upload-text">Click or drag & drop a photo</div>
-                                <div class="upload-subtext">JPG, PNG or WebP · Max 2 MB</div>
+                                <div class="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-teal-600 text-xl mx-auto shadow-sm mb-3">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                                <p class="text-sm font-semibold text-slate-700">Click or drag & drop a photo</p>
+                                <p class="text-xs text-slate-500 mt-1">JPG, PNG or WebP · Max 2 MB</p>
                             </div>
                         </div>
-                        <div class="file-preview" id="file-preview">
-                            <i class="fas fa-file-image" style="color:#0d9488;font-size:20px;flex-shrink:0;"></i>
-                            <div>
-                                <div class="file-name" id="file-name-text">–</div>
-                                <div class="file-size" id="file-size-text">–</div>
-                            </div>
-                            <i class="fas fa-times remove-file" onclick="clearFile()" title="Remove"></i>
-                        </div>
-                        <div class="field-hint"><i class="fas fa-circle-info"></i> Displayed on staff profile & directory</div>
-                    </div>
 
-                    <!-- Temporary Password -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_password">
-                            Temporary Password <span class="req">*</span>
-                        </label>
-                        <div class="pw-wrap">
-                            <input type="password" name="password" id="id_password"
-                                   class="rsp-input {% if form.password.errors %}error{% endif %}"
-                                   placeholder="Min 8 chars · Upper, lower, digit"
-                                   oninput="checkStrength(this.value)"
-                                   required>
-                            <button type="button" class="pw-toggle" onclick="togglePw('id_password',this)" title="Show/hide">
-                                <i class="fas fa-eye"></i>
+                        <!-- File Preview -->
+                        <div id="file-preview" class="hidden mt-3 items-center justify-between p-3 bg-white border border-slate-200 rounded-xl shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-file-image text-teal-500 text-xl"></i>
+                                <div>
+                                    <p class="text-xs font-semibold text-slate-700 max-w-[150px] truncate" id="file-name-text">–</p>
+                                    <p class="text-[10px] text-slate-500" id="file-size-text">–</p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="clearFile()" class="text-slate-400 hover:text-rose-500 transition-colors p-1">
+                                <i class="fas fa-times"></i>
                             </button>
                         </div>
-                        <button type="button" class="btn-gen" onclick="generatePassword()">
-                            <i class="fas fa-wand-magic-sparkles"></i> Auto-generate
-                        </button>
-
-                        <!-- Strength meter -->
-                        <div class="strength-wrap">
-                            <div class="strength-bar">
-                                <div class="strength-fill" id="strength-fill"></div>
-                            </div>
-                            <div class="strength-label" id="strength-label">
-                                <span class="dot" id="strength-dot"></span>
-                                <span id="strength-text">Password strength</span>
-                            </div>
-                        </div>
-                        {% for err in form.password.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
-                        {% endfor %}
                     </div>
 
-                    <!-- Confirm Password -->
-                    <div class="field-group">
-                        <label class="field-label" for="id_confirm_password">
-                            Confirm Password <span class="req">*</span>
-                        </label>
-                        <div class="pw-wrap">
-                            <input type="password" name="confirm_password" id="id_confirm_password"
-                                   class="rsp-input {% if form.confirm_password.errors %}error{% endif %}"
-                                   placeholder="Re-enter password"
-                                   oninput="checkMatch()"
-                                   required>
-                            <button type="button" class="pw-toggle" onclick="togglePw('id_confirm_password',this)" title="Show/hide">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                    <!-- Passwords Area Container -->
+                    <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-4">
+                        <!-- Temporary Password -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800" for="id_password">
+                                    Temporary Password <span class="text-rose-500 leading-none">*</span>
+                                </label>
+                                <button type="button" onclick="generatePassword()" class="text-[10px] font-bold uppercase tracking-wide text-teal-600 hover:text-teal-700 bg-teal-50 hover:bg-teal-100 px-2 py-1 rounded transition-colors flex items-center gap-1">
+                                    <i class="fas fa-wand-magic-sparkles"></i> Auto
+                                </button>
+                            </div>
+                            <div class="relative">
+                                <input type="password" name="password" id="id_password" required oninput="checkStrength(this.value)"
+                                    class="w-full pl-4 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 transition-all outline-none {% if form.password.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}"
+                                    placeholder="Min 8 chars · Mixed case & numbers">
+                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" onclick="togglePw('id_password', this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Strength Meter -->
+                            <div class="mt-2.5">
+                                <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden mb-1.5">
+                                    <div class="h-full strength-fill w-0" id="strength-fill"></div>
+                                </div>
+                                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-slate-500">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-200 transition-colors duration-400" id="strength-dot"></span>
+                                    <span id="strength-text">Password strength</span>
+                                </div>
+                            </div>
+                            {% for err in form.password.errors %}
+                            <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
+                            {% endfor %}
                         </div>
-                        <div class="match-indicator" id="match-indicator" style="display:none;"></div>
-                        {% for err in form.confirm_password.errors %}
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i> {{ err }}</div>
-                        {% endfor %}
+
+                        <!-- Confirm Password -->
+                        <div>
+                            <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-2" for="id_confirm_password">
+                                Confirm Password <span class="text-rose-500 leading-none">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="password" name="confirm_password" id="id_confirm_password" required oninput="checkMatch()"
+                                    class="w-full pl-4 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 transition-all outline-none {% if form.confirm_password.errors %}border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/10{% endif %}"
+                                    placeholder="Re-enter password">
+                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" onclick="togglePw('id_confirm_password', this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="match-indicator" class="hidden items-center gap-1.5 text-[11px] font-semibold mt-2"></div>
+                            {% for err in form.confirm_password.errors %}
+                            <p class="text-xs text-rose-500 mt-1.5 flex items-center gap-1.5"><i class="fas fa-exclamation-circle"></i> {{ err }}</p>
+                            {% endfor %}
+                        </div>
                     </div>
-
-                </div>
-                <!-- ── END RIGHT COL ── -->
-
-            </div><!-- .form-grid -->
-
-            <!-- Form Footer -->
-            <div class="form-footer">
-                <span class="footer-note">
-                    <i class="fas fa-lock"></i>
-                    Staff will be prompted to change their password on first login.
-                </span>
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <a href="{% url 'hms:manage_staff' %}" class="btn-cancel">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
-                    <button type="submit" class="btn-submit" id="submit-btn">
-                        <i class="fas fa-user-plus"></i> Register Staff Member
-                    </button>
                 </div>
             </div>
 
-        </div><!-- .form-card -->
-    </form>
+        </div> <!-- /grid -->
 
-</div><!-- .rsp-page -->
+        <!-- Form Footer -->
+        <div class="bg-slate-50 border-t border-slate-200 px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+                <i class="fas fa-lock text-slate-400"></i>
+                Staff will be prompted to change password on first login.
+            </div>
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <a href="{% url 'hms:manage_staff' %}" class="flex-1 sm:flex-none text-center px-6 py-2.5 bg-white border-2 border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all text-sm">
+                    Cancel
+                </a>
+                <button type="submit" id="submit-btn" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-900/20 hover:bg-slate-800 hover:shadow-xl hover:-translate-y-0.5 transition-all active:translate-y-0 text-sm">
+                    <i class="fas fa-user-plus text-xs"></i> Register Staff
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
-/* ── Password Visibility ───────────────────────── */
 function togglePw(inputId, btn) {
     const inp = document.getElementById(inputId);
     const icon = btn.querySelector('i');
@@ -800,11 +375,10 @@ function togglePw(inputId, btn) {
     }
 }
 
-/* ── Password Strength ─────────────────────────── */
 function checkStrength(val) {
-    const fill   = document.getElementById('strength-fill');
-    const dot    = document.getElementById('strength-dot');
-    const text   = document.getElementById('strength-text');
+    const fill = document.getElementById('strength-fill');
+    const dot  = document.getElementById('strength-dot');
+    const text = document.getElementById('strength-text');
 
     let score = 0;
     if (val.length >= 8) score++;
@@ -814,10 +388,10 @@ function checkStrength(val) {
     if (/[^A-Za-z0-9]/.test(val)) score++;
 
     const levels = [
-        { w: '0%',   color: '#e2e8f0', label: 'Password strength',  dot: '#e2e8f0' },
-        { w: '25%',  color: '#ef4444', label: 'Weak',  dot: '#ef4444' },
-        { w: '50%',  color: '#f97316', label: 'Fair',  dot: '#f97316' },
-        { w: '75%',  color: '#eab308', label: 'Good',  dot: '#eab308' },
+        { w: '0%',   color: '#e2e8f0', label: 'Password strength', dot: '#e2e8f0' },
+        { w: '25%',  color: '#ef4444', label: 'Weak', dot: '#ef4444' },
+        { w: '50%',  color: '#f97316', label: 'Fair', dot: '#f97316' },
+        { w: '75%',  color: '#eab308', label: 'Good', dot: '#eab308' },
         { w: '100%', color: '#22c55e', label: 'Strong', dot: '#22c55e' },
         { w: '100%', color: '#14b8a6', label: 'Very Strong', dot: '#14b8a6' },
     ];
@@ -825,37 +399,36 @@ function checkStrength(val) {
     const l = levels[Math.min(score, 5)];
     fill.style.width = l.w;
     fill.style.backgroundColor = l.color;
-    dot.style.backgroundColor = l.dot;
+    dot.style.backgroundColor = l.color;
     text.textContent = l.label;
 
-    checkMatch(); // re-run match check whenever password changes
+    checkMatch();
 }
 
-/* ── Password Match ────────────────────────────── */
 function checkMatch() {
     const pw  = document.getElementById('id_password').value;
     const pw2 = document.getElementById('id_confirm_password').value;
     const ind = document.getElementById('match-indicator');
 
-    if (!pw2) { ind.style.display = 'none'; return; }
-    ind.style.display = 'flex';
+    if (!pw2) { ind.classList.add('hidden'); ind.classList.remove('flex'); return; }
+    ind.classList.remove('hidden');
+    ind.classList.add('flex');
 
     if (pw === pw2) {
-        ind.className = 'match-indicator match-ok';
-        ind.innerHTML = '<i class="fas fa-circle-check"></i> Passwords match';
+        ind.className = 'flex items-center gap-1.5 text-[11px] font-semibold mt-2 text-emerald-600';
+        ind.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
     } else {
-        ind.className = 'match-indicator match-fail';
-        ind.innerHTML = '<i class="fas fa-circle-xmark"></i> Passwords do not match';
+        ind.className = 'flex items-center gap-1.5 text-[11px] font-semibold mt-2 text-rose-500';
+        ind.innerHTML = '<i class="fas fa-times-circle"></i> Passwords do not match';
     }
 }
 
-/* ── Auto-generate Password ────────────────────── */
 function generatePassword() {
     const upper  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lower  = 'abcdefghijklmnopqrstuvwxyz';
     const digits = '0123456789';
     const special = '!@#$%^&*';
-    const all    = upper + lower + digits + special;
+    const all = upper + lower + digits + special;
 
     let pw = '';
     pw += upper[Math.floor(Math.random() * upper.length)];
@@ -865,7 +438,6 @@ function generatePassword() {
     for (let i = 4; i < 12; i++) {
         pw += all[Math.floor(Math.random() * all.length)];
     }
-    // Shuffle
     pw = pw.split('').sort(() => Math.random() - 0.5).join('');
 
     const inp = document.getElementById('id_password');
@@ -878,12 +450,10 @@ function generatePassword() {
     inp2.type = 'text';
     checkMatch();
 
-    // Briefly flash the field
-    inp.style.borderColor = '#0d9488';
-    setTimeout(() => inp.style.borderColor = '', 1500);
+    inp.classList.add('ring-4', 'ring-teal-500/20', 'border-teal-500');
+    setTimeout(() => inp.classList.remove('ring-4', 'ring-teal-500/20', 'border-teal-500'), 1500);
 }
 
-/* ── File Upload ───────────────────────────────── */
 function handleFileSelect(input) {
     const file = input.files[0];
     if (!file) return;
@@ -895,20 +465,22 @@ function handleFileSelect(input) {
         return;
     }
 
-    document.getElementById('upload-placeholder').style.display = 'none';
+    document.getElementById('upload-placeholder').classList.add('hidden');
     const preview = document.getElementById('file-preview');
-    preview.style.display = 'flex';
+    preview.classList.remove('hidden');
+    preview.classList.add('flex');
     document.getElementById('file-name-text').textContent = file.name;
     document.getElementById('file-size-text').textContent = (file.size / 1024).toFixed(1) + ' KB';
 }
 
 function clearFile() {
     document.getElementById('id_profile_image').value = '';
-    document.getElementById('file-preview').style.display = 'none';
-    document.getElementById('upload-placeholder').style.display = '';
+    const preview = document.getElementById('file-preview');
+    preview.classList.add('hidden');
+    preview.classList.remove('flex');
+    document.getElementById('upload-placeholder').classList.remove('hidden');
 }
 
-/* ── Drag & Drop ───────────────────────────────── */
 const uploadArea = document.getElementById('upload-area');
 if (uploadArea) {
     ['dragenter','dragover'].forEach(e => uploadArea.addEventListener(e, ev => {
@@ -923,11 +495,11 @@ if (uploadArea) {
     }));
 }
 
-/* ── Form Submit Guard ─────────────────────────── */
 document.getElementById('staff-reg-form').addEventListener('submit', function(e) {
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+    btn.classList.add('opacity-80', 'cursor-not-allowed');
 });
 </script>
 {% endblock %}
