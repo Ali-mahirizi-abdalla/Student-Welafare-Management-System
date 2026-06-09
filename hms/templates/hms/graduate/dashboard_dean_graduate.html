@@ -1,68 +1,252 @@
 {% extends 'hms/base.html' %}
+{% load static %}
 
 {% block title %}Dean - Graduate School Dashboard - Campus Care{% endblock %}
 
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .font-inter { font-family: 'Inter', system-ui, sans-serif; }
+    
+    .table-row-hover {
+        transition: all 0.2s ease-in-out;
+    }
+    .table-row-hover:hover {
+        background-color: #f8fafc;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="space-y-6">
-    <div class="flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dean - Graduate School Dashboard</h1>
-            <p class="text-gray-500 dark:text-gray-400">Welcome back, {{ user.get_full_name }}</p>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="font-inter min-h-screen bg-slate-50/50 p-6 lg:p-10">
+    <div class="max-w-7xl mx-auto space-y-8">
         
-        <!-- Feature: 👥 Masters Students Only -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
-                👥
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden">
+            <!-- Decorative background blob -->
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full blur-3xl opacity-70 pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="w-1.5 h-8 bg-gradient-to-b from-blue-500 to-blue-700 rounded-full inline-block"></span>
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight">Dean - Graduate School Dashboard</h1>
+                </div>
+                <p class="text-slate-500 font-medium pl-4 max-w-2xl">Oversight of Master's and PhD students, theses, and graduate faculty.</p>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Masters Students Only</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
-        </div>
-\n
-        <!-- Feature: 👥 PhD Students Only -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
-                👥
+            <div class="relative z-10 hidden md:block">
+                <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-xl text-sm font-bold border border-blue-100 shadow-sm">
+                    <i class="fas fa-graduation-cap"></i> Academic Administration
+                </span>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">PhD Students Only</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
-        </div>
-\n
-        <!-- Feature: 📝 Thesis/Dissertation Tracking -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
-                📝
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Thesis/Dissertation Tracking</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
-        </div>
-\n
-        <!-- Feature: 🎓 Graduate Supervision -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
-                🎓
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Graduate Supervision</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
-        </div>
-\n
-        <!-- Feature: 📊 Graduate Reports -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 flex items-center justify-center mb-4 text-2xl">
-                📊
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Graduate Reports</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Manage and view details for this module.</p>
-            <button class="mt-4 px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Access Module</button>
         </div>
 
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Master's Students -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                <div class="flex items-center gap-5 relative z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xl shadow-lg shadow-blue-500/30">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Master's Students</p>
+                        <h2 class="text-3xl font-black text-slate-800">142</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhD Candidates -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-purple-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                <div class="flex items-center gap-5 relative z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white text-xl shadow-lg shadow-purple-500/30">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">PhD Candidates</p>
+                        <h2 class="text-3xl font-black text-slate-800">38</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theses in Review -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-amber-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                <div class="flex items-center gap-5 relative z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white text-xl shadow-lg shadow-amber-500/30">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Theses in Review</p>
+                        <h2 class="text-3xl font-black text-slate-800">14</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grad Faculty -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                <div class="flex items-center gap-5 relative z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center text-white text-xl shadow-lg shadow-emerald-500/30">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Grad Faculty</p>
+                        <h2 class="text-3xl font-black text-slate-800">45</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Tracking & Directory (Spans 2 cols) -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Thesis & Dissertation Tracking Table -->
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-600 border border-slate-100">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <h2 class="text-lg font-bold text-slate-800">Thesis & Dissertation Tracking</h2>
+                        </div>
+                        <button class="text-sm font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-colors">
+                            View All
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50/80 border-b border-slate-200">
+                                    <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-wider">Student</th>
+                                    <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-wider">Topic / Title</th>
+                                    <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-wider">Supervisor</th>
+                                    <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="table-row-hover bg-white relative z-0">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-sm text-slate-800">Jane Smith</div>
+                                        <div class="text-xs text-slate-500">PhD Computer Science</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-sm text-slate-700">AI in Healthcare Diagnostics</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-600">Dr. Robert Chen</td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-amber-50 text-amber-600 px-2.5 py-1 rounded-lg text-xs font-bold border border-amber-100">In Review</span>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover bg-white relative z-0">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-sm text-slate-800">Michael Johnson</div>
+                                        <div class="text-xs text-slate-500">MSc Data Analytics</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-sm text-slate-700">Predictive Models for Retail</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-600">Prof. Sarah Jenkins</td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-lg text-xs font-bold border border-emerald-100">Approved</span>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover bg-white relative z-0">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-sm text-slate-800">Emily Davis</div>
+                                        <div class="text-xs text-slate-500">PhD Environmental Sci</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-sm text-slate-700">Climate Change Effects on Coral</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-600">Dr. Alan Turing</td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg text-xs font-bold border border-blue-100">Defense Scheduled</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Management Modules -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">Graduate Supervision</h3>
+                        <p class="text-xs font-medium text-slate-500 mb-4">Manage supervisor allocations and track advisory workloads.</p>
+                        <div class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:gap-3 transition-all">
+                            Access Module <i class="fas fa-arrow-right text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">Graduate Reports</h3>
+                        <p class="text-xs font-medium text-slate-500 mb-4">Generate comprehensive reports on completion rates and statuses.</p>
+                        <div class="text-emerald-600 text-sm font-bold flex items-center gap-2 group-hover:gap-3 transition-all">
+                            Access Module <i class="fas fa-arrow-right text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Events & Quick Actions -->
+            <div class="space-y-8">
+                <!-- Grad School Events -->
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-600 border border-slate-100">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">Grad School Events</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-col items-center justify-center py-8 text-center">
+                            <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                                <i class="fas fa-calendar-times text-2xl text-slate-300"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">No upcoming events scheduled.</p>
+                        </div>
+                        <button class="w-full mt-4 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition-colors text-sm">
+                            <i class="fas fa-plus mr-1"></i> Add Event
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-xl"></div>
+                    <h3 class="text-lg font-bold mb-4 relative z-10"><i class="fas fa-bolt text-amber-400 mr-2"></i> Quick Actions</h3>
+                    <div class="space-y-3 relative z-10">
+                        <button class="w-full flex items-center justify-between px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-medium">
+                            <span>Approve Thesis Submissions</span>
+                            <span class="bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">3</span>
+                        </button>
+                        <button class="w-full flex items-center justify-between px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-medium">
+                            <span>Review Defense Schedules</span>
+                            <i class="fas fa-chevron-right text-xs text-slate-400"></i>
+                        </button>
+                        <button class="w-full flex items-center justify-between px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-medium">
+                            <span>Generate Term Report</span>
+                            <i class="fas fa-chevron-right text-xs text-slate-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
