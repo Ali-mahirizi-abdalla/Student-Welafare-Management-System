@@ -232,7 +232,7 @@ class StaffProfile(models.Model):
         ('auditor', 'Auditor'),
         ('diploma_coordinator', 'Diploma Coordinator'),
         ('dept_coordinator', 'Department Coordinator'),
-        ('librarian', 'Librarian'),
+        ('librarian', 'Head Of Library Services (HOLS)'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile')
