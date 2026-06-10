@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <div class="text-center mb-4">
                         <div class="position-relative d-inline-block">
-                            <img src="{% if student.user.profile_picture %}{{ student.user.profile_picture.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}"
+                            <img src="{% if student.user.profile_picture %}{{ student.user.profile_picture.url }}{% else %}https://ui-avatars.com/api/?name={{ student.user.get_full_name|urlencode }}&background=0f172a&color=fff{% endif %}"
                                 class="rounded-circle" width="120" height="120" alt="{{ student.user.get_full_name }}">
                             {% if student.is_away %}
                             <span class="position-absolute bottom-0 end-0 badge bg-warning">
