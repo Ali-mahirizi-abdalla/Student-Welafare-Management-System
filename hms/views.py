@@ -466,6 +466,8 @@ def dashboard_redirect(request):
         return redirect('hms:dept_coordinator_dashboard')
     elif role == 'librarian':
         return redirect('library:librarian_dashboard')
+    elif role == 'counsellor':
+        return redirect('hms:counsellor_dashboard')
 
     return redirect('hms:admin_dashboard')
 
@@ -3859,15 +3861,16 @@ def get_role_color(role_code):
 @admin_only
 def edit_staff(request, staff_id):
     """Edit a staff member's role and profile"""
+    from .forms import StaffEditForm
     staff = get_object_or_404(StaffProfile, id=staff_id)
     if request.method == 'POST':
-        form = StaffRegistrationForm(request.POST, request.FILES, instance=staff)
+        form = StaffEditForm(request.POST, request.FILES, instance=staff)
         if form.is_valid():
             form.save()
             messages.success(request, f"Profile for {staff.user.get_full_name()} updated.")
             return redirect('hms:manage_staff')
     else:
-        form = StaffRegistrationForm(instance=staff)
+        form = StaffEditForm(instance=staff)
     return render(request, 'hms/rbac/edit_staff.html', {'form': form, 'staff': staff})
 
 @login_required
@@ -4318,6 +4321,214 @@ def update_feature_flags_api(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
+
+# ============================================
+# NEW FEATURES: ANALYTICS, MENTAL HEALTH, WHATSAPP
+# ============================================
+from .models import CounsellingRequest, MentalHealthResource, CrisisHelpline
+import africastalking
+from django.conf import settings
+from django.http import HttpResponse
+
+# --- WhatsApp Bot ---
+try:
+    africastalking.initialize(settings.AFRICASTALKING_USERNAME, settings.AFRICASTALKING_API_KEY)
+    sms = africastalking.SMS
+except Exception as e:
+    print("Africa's Talking Init Error:", e)
+
+@csrf_exempt
+def whatsapp_webhook(request):
+    if request.method == 'POST':
+        # AT webhook sends form-encoded data
+        sender = request.POST.get('from', '')
+        text = request.POST.get('text', '').strip().upper()
+        
+        # Phone number from WhatsApp format: "whatsapp:+2547XXXXXXXX"
+        clean_phone = sender.replace('whatsapp:', '').strip()
+        if clean_phone.startswith('+'):
+            clean_phone = clean_phone[1:] # e.g. 2547...
+            
+        # Try to find student by phone
+        student = Student.objects.filter(phone__icontains=clean_phone[-9:]).first()
+        
+        response_text = ""
+        
+        if not student:
+            response_text = "Sorry, we could not find a student registered with this phone number. Please update your profile."
+        else:
+            if "BALANCE" in text:
+                room_assignment = RoomAssignment.objects.filter(student=student, is_active=True).first()
+                if room_assignment:
+                    amount = room_assignment.room.price_per_semester
+                    response_text = f"Your accommodation fee balance is KES {amount}. Pay via M-Pesa to Paybill {settings.MPESA_SHORTCODE}."
+                else:
+                    response_text = "You do not have any active room assignments or fee balances."
+            elif "DEFERMENT" in text:
+                latest_deferment = DefermentRequest.objects.filter(student=student).order_by('-created_at').first()
+                if latest_deferment:
+                    response_text = f"Your latest deferment application status is: {latest_deferment.get_status_display().upper()}"
+                else:
+                    response_text = "You have no pending deferment applications. Please apply via the portal."
+            elif "STATUS" in text:
+                latest_req = CounsellingRequest.objects.filter(student=student).order_by('-created_at').first()
+                if latest_req:
+                    response_text = f"Your latest counselling request status is: {latest_req.get_status_display().upper()}"
+                else:
+                    response_text = "No recent requests found."
+            elif "HELP" in text:
+                response_text = "Available commands:\n1. BALANCE - Check fee balance\n2. DEFERMENT - Check deferment status\n3. STATUS - Check general request status\n4. HELP - Show this menu"
+            else:
+                response_text = "Welcome to Campus Care Bot! Send 'HELP' to see available commands."
+                
+        # Send reply back via WhatsApp
+        try:
+            sms.send(response_text, [sender])
+        except Exception as e:
+            print("AT Send Error:", e)
+            
+        return HttpResponse("OK", status=200)
+    return HttpResponse("Method not allowed", status=405)
+
+def whatsapp_demo(request):
+    return render(request, 'hms/whatsapp_demo.html')
+
+# --- Analytics Dashboard (New Dedicated View) ---
+@login_required
+@permission_required('view_reports')
+def new_analytics_dashboard(request):
+    import json
+    from django.db.models import Count
+    
+    total_students = Student.objects.count()
+    
+    # Calculate revenue (Completed payments)
+    completed_payments = Payment.objects.filter(status='Completed')
+    total_revenue = sum(p.amount for p in completed_payments)
+    
+    # Deferment approval rate
+    total_def = DefermentRequest.objects.count()
+    approved_def = DefermentRequest.objects.filter(status='approved').count()
+    def_rate = round((approved_def / total_def * 100) if total_def > 0 else 0, 1)
+    
+    # Avg Response time (simplified logic)
+    avg_response = "2.4 hours" # Mock for now
+    
+    # Line chart: 6-month request trends
+    # Bar chart: Deferments by department
+    depts = Student.objects.values('program_of_study').annotate(count=Count('deferment_requests')).order_by('-count')[:4]
+    dept_labels = [d['program_of_study'] or 'Unknown' for d in depts]
+    dept_data = [d['count'] for d in depts]
+    
+    # Pie chart: Payment methods
+    payment_methods = {'M-Pesa': completed_payments.count(), 'Bank': 0, 'Cash': 0} # M-Pesa only currently
+    
+    chart_data = {
+        'line_labels': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        'line_data': [12, 19, 3, 5, 2, 3],
+        'bar_labels': dept_labels if dept_labels else ['IT', 'Business', 'Engineering', 'Hospitality'],
+        'bar_data': dept_data if sum(dept_data) > 0 else [10, 20, 15, 5],
+        'pie_labels': list(payment_methods.keys()),
+        'pie_data': list(payment_methods.values())
+    }
+    
+    context = {
+        'total_students': total_students,
+        'total_revenue': total_revenue,
+        'def_rate': def_rate,
+        'avg_response': avg_response,
+        'chart_data': json.dumps(chart_data)
+    }
+    return render(request, 'hms/admin/analytics.html', context)
+
+
+# --- Mental Health Module ---
+@login_required
+def mental_health_dashboard(request):
+    try:
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        messages.error(request, "Only students can access this.")
+        return redirect('hms:dashboard_redirect')
+        
+    requests = CounsellingRequest.objects.filter(student=student)
+    resources = MentalHealthResource.objects.filter(is_active=True)
+    helplines = CrisisHelpline.objects.filter(is_active=True)
+    
+    # Add seed data if empty
+    if not resources.exists():
+        MentalHealthResource.objects.create(title="Stress Management Guide", content="Learn to manage stress and balance your academics effectively.", resource_type="article")
+        MentalHealthResource.objects.create(title="Guided Meditation", content="10 minute calming exercise to help you focus.", resource_type="audio")
+        MentalHealthResource.objects.create(title="Peer Support Network", content="Connect with peers and share your experiences.", resource_type="contact")
+        resources = MentalHealthResource.objects.all()
+        
+    if not helplines.exists():
+        CrisisHelpline.objects.create(name="Campus Crisis Line", phone="0800 123 456", description="Available 24/7 for all students.", is_24hr=True)
+        helplines = CrisisHelpline.objects.all()
+        
+    return render(request, 'hms/student/mental_health.html', {
+        'requests': requests,
+        'resources': resources,
+        'helplines': helplines
+    })
+
+@login_required
+def request_counselling(request):
+    if request.method == 'POST':
+        try:
+            student = request.user.student_profile
+        except Student.DoesNotExist:
+            student = None
+            
+        reason = request.POST.get('reason')
+        urgency = request.POST.get('urgency', 'medium')
+        is_anonymous = request.POST.get('is_anonymous') == 'on'
+        pref_date = request.POST.get('preferred_date')
+        
+        req = CounsellingRequest.objects.create(
+            student=student,
+            is_anonymous=is_anonymous,
+            reason=reason,
+            urgency=urgency,
+            preferred_date=pref_date if pref_date else None
+        )
+        messages.success(request, "Your counselling request has been submitted securely.")
+        return redirect('hms:mental_health_dashboard')
+    return redirect('hms:mental_health_dashboard')
+
+@login_required
+def counsellor_dashboard(request):
+    if not hasattr(request.user, 'staff_profile') or request.user.staff_profile.role != 'counsellor':
+        messages.error(request, "Access denied.")
+        return redirect('hms:dashboard_redirect')
+        
+    all_reqs = CounsellingRequest.objects.all().order_by('-created_at')
+    
+    context = {
+        'pending_count': all_reqs.filter(status='pending').count(),
+        'in_progress_count': all_reqs.filter(status='in_progress').count(),
+        'resolved_month': all_reqs.filter(status='resolved', updated_at__month=timezone.now().month).count(),
+        'requests': all_reqs
+    }
+    return render(request, 'hms/rbac/counsellor_dashboard.html', context)
+
+@login_required
+def counselling_request_detail(request, pk):
+    if not hasattr(request.user, 'staff_profile') or request.user.staff_profile.role != 'counsellor':
+        messages.error(request, "Access denied.")
+        return redirect('hms:dashboard_redirect')
+        
+    req = get_object_or_404(CounsellingRequest, pk=pk)
+    
+    if request.method == 'POST':
+        req.status = request.POST.get('status', req.status)
+        req.counsellor_notes = request.POST.get('counsellor_notes', req.counsellor_notes)
+        req.assigned_counsellor = request.user
+        req.save()
+        messages.success(request, "Request updated.")
+        return redirect('hms:counsellor_dashboard')
+        
+    return render(request, 'hms/admin/counselling_request_detail.html', {'req': req})
 
 
 

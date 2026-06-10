@@ -233,6 +233,7 @@ class StaffProfile(models.Model):
         ('diploma_coordinator', 'Diploma Coordinator'),
         ('dept_coordinator', 'Department Coordinator'),
         ('librarian', 'Head Of Library Services (HOLS)'),
+        ('counsellor', 'Counsellor'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile')
@@ -268,6 +269,7 @@ class StaffProfile(models.Model):
             'diploma_coordinator': {'name': 'Amber', 'hex': '#D97706'},
             'dept_coordinator': {'name': 'Teal', 'hex': '#14B8A6'},
             'librarian': {'name': 'Indigo', 'hex': '#4F46E5'},
+            'counsellor': {'name': 'Rose', 'hex': '#F43F5E'},
         }
         return colors.get(self.role, {'name': 'Gray', 'hex': '#4B5563'})
 
@@ -284,7 +286,7 @@ class StaffProfile(models.Model):
             return 'STUDENT_SERVICES'
         if role in ['maintenance_sup', 'security_officer', 'emergency_coord']:
             return 'TECHNICAL_ESTATES'
-        if role in ['health_manager']:
+        if role in ['health_manager', 'counsellor']:
             return 'HEALTH_SERVICES'
         if role in ['warden']:
             return 'ACCOMMODATION'
@@ -771,4 +773,76 @@ class FeatureFlag(models.Model):
     def __str__(self):
         return f"{self.name}: {'ON' if self.is_enabled else 'OFF'}"
 
+# ============================================
+# MENTAL HEALTH MODULE
+# ============================================
+
+class CounsellingRequest(models.Model):
+    URGENCY_CHOICES = [
+        ('low', 'Low (General Advice/Support)'),
+        ('medium', 'Medium (Struggling, Need to talk soon)'),
+        ('high', 'High (Crisis, Need immediate help)'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+    ]
+
+    student = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='counselling_requests', null=True, blank=True)
+    is_anonymous = models.BooleanField(default=False, help_text="If true, the request will not be linked to the student profile visible to the counsellor.")
+    reason = models.TextField(help_text="Briefly describe what you are going through")
+    urgency = models.CharField(max_length=10, choices=URGENCY_CHOICES, default='medium')
+    preferred_date = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    # Counsellor response/notes
+    counsellor_notes = models.TextField(blank=True, null=True, help_text="Private notes for the counsellor")
+    assigned_counsellor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_counselling_cases')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        name = "Anonymous Student" if self.is_anonymous else f"{self.student.user.get_full_name() if self.student else 'Unknown'}"
+        return f"Counselling Request - {name} ({self.get_urgency_display()})"
+
+
+class MentalHealthResource(models.Model):
+    RESOURCE_TYPES = [
+        ('article', 'Article/Guide'),
+        ('audio', 'Audio/Meditation'),
+        ('video', 'Video Resource'),
+        ('contact', 'Contact/Support Group'),
+    ]
+
+    title = models.CharField(max_length=200)
+    content = models.TextField(help_text="Description or main content of the resource")
+    resource_type = models.CharField(max_length=20, choices=RESOURCE_TYPES, default='article')
+    external_link = models.URLField(blank=True, null=True, help_text="Link to external website or video")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+
+class CrisisHelpline(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    description = models.TextField(blank=True, null=True)
+    is_24hr = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-is_24hr', 'name']
+
+    def __str__(self):
+        return f"{self.name} - {self.phone}"
 

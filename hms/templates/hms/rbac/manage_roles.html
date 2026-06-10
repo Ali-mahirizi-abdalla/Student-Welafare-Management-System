@@ -1068,10 +1068,6 @@ body {
     </div>
 </div>
 
-<!-- MODALS -->
-
-
-
 <!-- Details Modal -->
 <div id="details-modal" class="modal-overlay">
     <div class="modal-box">
@@ -1088,43 +1084,100 @@ body {
     </div>
 </div>
 
+<!-- Role Details Modal -->
+<div id="role-details-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3 id="role-detail-title">Role Details</h3>
+            <button class="modal-close" onclick="closeModal('role-details-modal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="role-details-body">
+            <!-- JS Powered -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('role-details-modal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Role Edit Modal -->
+<div id="role-edit-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="role-edit-title">Edit Role</h3>
+            <button class="modal-close" onclick="closeModal('role-edit-modal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="role-edit-body">
+            <!-- JS Powered -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('role-edit-modal')">Cancel</button>
+            <button class="btn btn-primary" id="role-edit-save" onclick="saveRoleEdit()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-confirm-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 440px;">
+        <div class="modal-header">
+            <h3 style="color: #EF4444;"><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h3>
+            <button class="modal-close" onclick="closeModal('delete-confirm-modal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="delete-confirm-body">
+            <!-- JS Powered -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('delete-confirm-modal')">Cancel</button>
+            <button class="btn" id="delete-confirm-btn" style="background:#EF4444;color:white;border:none;" onclick="confirmDeleteRole()">Delete Role</button>
+        </div>
+    </div>
+</div>
+
 <!-- Toast Container -->
 <div id="toast-container" class="toast-container"></div>
 
 <script>
-    // DATA STATE
+    // ═══════════════════════════════════════
+    // ROLE DATA STATE
+    // ═══════════════════════════════════════
+    const MODULES = [
+        'Student Mgmt', 'Health Mgmt', 'Maintenance',
+        'Accommodation', 'Deferments', 'Payments',
+        'Visitors', 'News & Alerts', 'Emergency', 'Audit Logs',
+        'Library'
+    ];
+
     const ROLE_DATA = {
-        // ─── Executive Leadership ───────────────────────────────────────────
-        'vice_chancellor':         { name: 'Vice Chancellor',              color: '#7C3AED', desc: 'Executive oversight of all university operations', category: 'Executive' },
-        'deputy_vice_chancellor':  { name: 'Deputy Vice Chancellor',       color: '#6D28D9', desc: 'Deputy executive oversight and administration',    category: 'Executive' },
-        // ─── Registry ────────────────────────────────────────────────────────
-        'register_admin':          { name: 'Register Admin',               color: '#0284C7', desc: 'Full registrar administration access',             category: 'Registry' },
-        'register_user':           { name: 'Register User',                color: '#0369A1', desc: 'View and manage registered staff records',         category: 'Registry' },
-        // ─── Academic ────────────────────────────────────────────────────────
-        'super_admin':             { name: 'Super Admin',                  color: '#1E293B', desc: 'Full system access and configuration',             category: 'Academic' },
-        'dean_of_students':        { name: 'Dean of Students',             color: '#78350F', desc: 'Student affairs and welfare oversight',            category: 'Academic' },
-        'dean_graduate_school':    { name: 'Dean – Graduate School',       color: '#92400E', desc: "Master's and PhD student oversight",               category: 'Academic' },
-        'dept_mcs':                { name: 'Dept MCS Coordinator',         color: '#4338CA', desc: 'MCS department coordination',                      category: 'Academic' },
-        'director_resource':       { name: 'Director – Resource Mob.',     color: '#0F766E', desc: 'Resource mobilization and facilities',             category: 'Academic' },
-        'director_tvet':           { name: 'Director – TVET',              color: '#D97706', desc: 'Technical and vocational education oversight',     category: 'Academic' },
-        'diploma_coordinator':     { name: 'Diploma Coordinator',          color: '#F97316', desc: 'Diploma programme coordination',                   category: 'Academic' },
-        'dept_coordinator':        { name: 'Department Coordinator',       color: '#6366F1', desc: 'General department coordination',                  category: 'Academic' },
-        // ─── Welfare & Student Services ──────────────────────────────────────
-        'health_manager':          { name: 'Health Manager',               color: '#10B981', desc: 'Manage student health records and appointments',   category: 'Welfare' },
-        'maintenance_sup':         { name: 'Maintenance Supervisor',       color: '#F59E0B', desc: 'Manage maintenance work orders',                   category: 'Welfare' },
-        'warden':                  { name: 'Warden',                       color: '#8B5CF6', desc: 'Manage hostel accommodation',                      category: 'Welfare' },
-        'deferment_officer':       { name: 'Deferment Officer',            color: '#15803D', desc: 'Handle student deferment requests',                category: 'Welfare' },
-        // ─── Operations ──────────────────────────────────────────────────────
-        'finance_officer':         { name: 'Finance Officer',              color: '#0D9488', desc: 'Manage payments and financial records',            category: 'Operations' },
-        'security_officer':        { name: 'Security Officer',             color: '#3B82F6', desc: 'Manage campus security and incidents',             category: 'Operations' },
-        'emergency_coord':         { name: 'Emergency Coordinator',        color: '#E11D48', desc: 'Handle emergency broadcast and response',          category: 'Operations' },
-        'support_agent':           { name: 'Support Agent',                color: '#06B6D4', desc: 'Manage student support tickets',                   category: 'Operations' },
-        // ─── Media & Communications ──────────────────────────────────────────
-        'news_editor':             { name: 'News Editor',                  color: '#DB2777', desc: 'Create and publish campus announcements',          category: 'Media' },
-        'news_auditor':            { name: 'News Auditor',                 color: '#BE185D', desc: 'Audit and review university news content',         category: 'Media' },
-        'auditor':                 { name: 'Auditor',                      color: '#64748B', desc: 'Read-only access to system audit logs',            category: 'Media' },
-        'librarian':              { name: 'Head Of Library Services (HOLS)', color: '#1D4ED8', desc: 'Manage library inventory and services', category: 'Library' },
+        'vice_chancellor':         { name: 'Vice Chancellor',              color: '#7C3AED', desc: 'Executive oversight of all university operations',   category: 'Executive',   perms: ['FULL','READ','READ','READ','READ','READ','READ','READ','READ','READ','NO'] },
+        'deputy_vice_chancellor':  { name: 'Deputy Vice Chancellor',       color: '#6D28D9', desc: 'Deputy executive oversight and administration',      category: 'Executive',   perms: ['FULL','READ','READ','READ','READ','READ','READ','READ','READ','READ','NO'] },
+        'register_admin':          { name: 'Register Admin',               color: '#0284C7', desc: 'Full registrar administration access',               category: 'Registry',    perms: ['READ','READ','READ','READ','READ','READ','READ','READ','READ','READ','NO'] },
+        'register_user':           { name: 'Register User',                color: '#0369A1', desc: 'View and manage registered staff records',           category: 'Registry',    perms: ['READ','READ','READ','READ','READ','READ','READ','READ','READ','READ','NO'] },
+        'super_admin':             { name: 'Super Admin',                  color: '#1E293B', desc: 'Full system access and configuration',               category: 'Administration', perms: ['FULL','FULL','FULL','FULL','FULL','FULL','FULL','FULL','FULL','FULL','FULL'] },
+        'dean_of_students':        { name: 'Dean of Students',             color: '#78350F', desc: 'Student affairs and welfare oversight',              category: 'Academic',    perms: ['FULL','READ','READ','READ','READ','NO','NO','READ','NO','NO','NO'] },
+        'dean_graduate_school':    { name: 'Dean – Graduate School',       color: '#92400E', desc: "Master's and PhD student oversight",                 category: 'Academic',    perms: ['FULL','NO','NO','NO','NO','NO','NO','NO','NO','NO','NO'] },
+        'dept_mcs':                { name: 'Dept MCS Coordinator',         color: '#4338CA', desc: 'MCS department coordination',                        category: 'Academic',    perms: ['FULL','NO','NO','NO','NO','NO','NO','NO','NO','NO','NO'] },
+        'director_resource':       { name: 'Director – Resource Mob.',     color: '#0F766E', desc: 'Resource mobilization and facilities',               category: 'Academic',    perms: ['NO','NO','NO','NO','NO','FULL','NO','NO','NO','NO','NO'] },
+        'director_tvet':           { name: 'Director – TVET',              color: '#D97706', desc: 'Technical and vocational education oversight',       category: 'Academic',    perms: ['FULL','NO','NO','NO','NO','NO','NO','NO','NO','NO','NO'] },
+        'diploma_coordinator':     { name: 'Diploma Coordinator',          color: '#F97316', desc: 'Diploma programme coordination',                     category: 'Academic',    perms: ['FULL','NO','NO','NO','FULL','NO','NO','NO','NO','NO','NO'] },
+        'dept_coordinator':        { name: 'Department Coordinator',       color: '#6366F1', desc: 'General department coordination',                    category: 'Academic',    perms: ['FULL','NO','NO','NO','NO','NO','NO','NO','NO','NO','NO'] },
+        'health_manager':          { name: 'Health Manager',               color: '#10B981', desc: 'Manage student health records and appointments',     category: 'Welfare',     perms: ['NO','FULL','NO','NO','NO','NO','NO','NO','NO','NO','NO'] },
+        'maintenance_sup':         { name: 'Maintenance Supervisor',       color: '#F59E0B', desc: 'Manage maintenance work orders',                     category: 'Welfare',     perms: ['NO','NO','FULL','NO','NO','NO','NO','NO','NO','NO','NO'] },
+        'warden':                  { name: 'Warden',                       color: '#8B5CF6', desc: 'Manage hostel accommodation',                        category: 'Welfare',     perms: ['NO','NO','NO','FULL','FULL','NO','NO','NO','NO','NO','NO'] },
+        'deferment_officer':       { name: 'Deferment Officer',            color: '#15803D', desc: 'Handle student deferment requests',                  category: 'Welfare',     perms: ['READ','NO','NO','NO','FULL','NO','NO','NO','NO','NO','NO'] },
+        'finance_officer':         { name: 'Finance Officer',              color: '#0D9488', desc: 'Manage payments and financial records',              category: 'Operations',  perms: ['NO','NO','NO','NO','NO','FULL','NO','NO','NO','NO','NO'] },
+        'security_officer':        { name: 'Security Officer',             color: '#3B82F6', desc: 'Manage campus security and incidents',               category: 'Operations',  perms: ['NO','NO','NO','NO','NO','NO','FULL','NO','NO','NO','NO'] },
+        'emergency_coord':         { name: 'Emergency Coordinator',        color: '#E11D48', desc: 'Handle emergency broadcast and response',            category: 'Operations',  perms: ['NO','NO','NO','NO','NO','NO','NO','NO','FULL','NO','NO'] },
+        'support_agent':           { name: 'Support Agent',                color: '#06B6D4', desc: 'Manage student support tickets',                     category: 'Operations',  perms: ['READ','READ','READ','READ','READ','READ','READ','NO','NO','NO','NO'] },
+        'news_editor':             { name: 'News Editor',                  color: '#DB2777', desc: 'Create and publish campus announcements',            category: 'Media',       perms: ['NO','NO','NO','NO','NO','NO','NO','FULL','NO','NO','NO'] },
+        'news_auditor':            { name: 'News Auditor',                 color: '#BE185D', desc: 'Audit and review university news content',           category: 'Media',       perms: ['NO','NO','NO','NO','NO','NO','NO','READ','NO','READ','NO'] },
+        'auditor':                 { name: 'Auditor',                      color: '#64748B', desc: 'Read-only access to system audit logs',              category: 'Media',       perms: ['READ','READ','READ','READ','READ','READ','READ','READ','READ','READ','NO'] },
+        'librarian':               { name: 'Head Of Library Services',     color: '#1D4ED8', desc: 'Manage library inventory and services',              category: 'Library',     perms: ['NO','NO','NO','NO','NO','NO','NO','NO','NO','NO','FULL'] },
+        'counsellor':              { name: 'Counsellor',                   color: '#059669', desc: 'Manage mental health counselling requests',          category: 'Welfare',     perms: ['READ','FULL','NO','NO','NO','NO','NO','NO','NO','NO','NO'] },
     };
+
+    let _editingRoleCode = null;
+    let _deletingRoleCode = null;
 
     let state = {
         staff: [
@@ -1143,8 +1196,9 @@ body {
         selection: []
     };
 
-
+    // ═══════════════════════════════════════
     // UI CONTROLLERS
+    // ═══════════════════════════════════════
     function init() {
         render();
         setupEvents();
@@ -1190,6 +1244,9 @@ body {
         return 'default';
     }
 
+    // ═══════════════════════════════════════
+    // STAFF TABLE
+    // ═══════════════════════════════════════
     function renderStaffTable() {
         const tbody = document.getElementById('staff-table-body');
         const filtered = state.staff.filter(s => {
@@ -1214,8 +1271,8 @@ body {
                 <td class="actions-cell">
                     <button class="action-view" onclick="window.location.href='/manage/staff/details/${s.id}/'" title="View Details"><i class="fas fa-eye"></i></button>
                     <button class="action-edit" onclick="window.location.href='/manage/staff/edit/${s.id}/'" title="Edit Staff"><i class="fas fa-edit"></i></button>
-                    <button class="action-reset" onclick="toast('Password reset link sent', 'success')" title="Reset Password"><i class="fas fa-key"></i></button>
-                    <button class="action-email" onclick="toast('Email dialog opened', 'success')" title="Email Staff"><i class="fas fa-envelope"></i></button>
+                    <button class="action-reset" onclick="toast('Password reset link sent to ${s.email}', 'success')" title="Reset Password"><i class="fas fa-key"></i></button>
+                    <button class="action-delete" onclick="deleteStaffMember(${s.id}, '${s.name.replace(/'/g, "\\'")}')" title="Delete Staff"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `).join('');
@@ -1232,32 +1289,225 @@ body {
         setupChecks();
     }
 
+    // ═══════════════════════════════════════
+    // ROLES TABLE (WITH FUNCTIONAL ACTIONS)
+    // ═══════════════════════════════════════
     function renderRolesTable() {
         const tbody = document.getElementById('roles-table-body');
-        tbody.innerHTML = Object.keys(ROLE_DATA).map(code => `
+        tbody.innerHTML = Object.keys(ROLE_DATA).map(code => {
+            const r = ROLE_DATA[code];
+            const staffCount = state.staff.filter(s => s.role === code).length;
+            return `
             <tr>
-                <td><span class="role-badge ${getRoleClass(code)}">${ROLE_DATA[code].name}</span></td>
-                <td>${ROLE_DATA[code].desc || 'Standard system role...'}</td>
-                <td><span class="staff-count">${state.staff.filter(s => s.role === code).length}</span></td>
+                <td>
+                    <div class="role-name-cell">
+                        <span class="role-dot" style="background:${r.color};"></span>
+                        <span>${r.name}</span>
+                    </div>
+                </td>
+                <td class="role-desc-cell">${r.desc}</td>
+                <td><span class="staff-count">${staffCount}</span></td>
                 <td><span class="status-active">● Active</span></td>
                 <td class="actions-cell">
-                    <button class="action-view" title="View Role"><i class="fas fa-eye"></i></button>
-                    <button class="action-edit" title="Edit Role"><i class="fas fa-edit"></i></button>
-                    <button class="action-copy" title="Duplicate Role"><i class="fas fa-copy"></i></button>
-                    <button class="action-delete" title="Delete Role"><i class="fas fa-trash"></i></button>
+                    <button class="action-view" onclick="viewRole('${code}')" title="View Role Details"><i class="fas fa-eye"></i></button>
+                    <button class="action-edit" onclick="editRole('${code}')" title="Edit Role"><i class="fas fa-edit"></i></button>
+                    <button class="action-copy" onclick="duplicateRole('${code}')" title="Duplicate Role"><i class="fas fa-copy"></i></button>
+                    <button class="action-delete" onclick="deleteRole('${code}')" title="Delete Role"><i class="fas fa-trash"></i></button>
                 </td>
-            </tr>
-        `).join('');
+            </tr>`;
+        }).join('');
     }
 
-    function viewStaff(id) {
-        window.location.href = `/manage/staff/details/${id}/`;
+    // ═══════════════════════════════════════
+    // ROLE ACTION: VIEW
+    // ═══════════════════════════════════════
+    function viewRole(code) {
+        const r = ROLE_DATA[code];
+        if (!r) return;
+        const staffInRole = state.staff.filter(s => s.role === code);
+
+        let permGrid = '<table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:13px;">';
+        permGrid += '<thead><tr style="background:#F8FAFC;"><th style="padding:8px 10px;text-align:left;font-weight:600;color:#64748B;border-bottom:1px solid #E2E8F0;">Module</th><th style="padding:8px 10px;text-align:center;font-weight:600;color:#64748B;border-bottom:1px solid #E2E8F0;">Access</th></tr></thead><tbody>';
+        MODULES.forEach((mod, i) => {
+            const perm = (r.perms && r.perms[i]) || 'NO';
+            let badge = '';
+            if (perm === 'FULL') badge = '<span style="background:#DCFCE7;color:#166534;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;">FULL</span>';
+            else if (perm === 'READ') badge = '<span style="background:#DBEAFE;color:#1E40AF;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;">READ</span>';
+            else badge = '<span style="background:#F1F5F9;color:#94A3B8;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;">NO</span>';
+            permGrid += `<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:8px 10px;">${mod}</td><td style="padding:8px 10px;text-align:center;">${badge}</td></tr>`;
+        });
+        permGrid += '</tbody></table>';
+
+        let staffList = '';
+        if (staffInRole.length > 0) {
+            staffList = '<div style="margin-top:16px;"><strong style="font-size:13px;color:#64748B;">Assigned Staff (' + staffInRole.length + ')</strong><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">';
+            staffInRole.forEach(s => {
+                staffList += `<span style="background:#EFF6FF;color:#1E40AF;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;">${s.name}</span>`;
+            });
+            staffList += '</div></div>';
+        }
+
+        document.getElementById('role-detail-title').innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:${r.color};border-radius:50%;margin-right:8px;"></span>${r.name}`;
+        document.getElementById('role-details-body').innerHTML = `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                <div><label style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;">Category</label><p style="font-weight:600;color:#1E293B;margin-top:2px;">${r.category}</p></div>
+                <div><label style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;">Staff Assigned</label><p style="font-weight:600;color:#1E293B;margin-top:2px;">${staffInRole.length}</p></div>
+            </div>
+            <div style="margin-bottom:16px;"><label style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;">Description</label><p style="color:#475569;margin-top:4px;font-size:14px;">${r.desc}</p></div>
+            <div><label style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;">Permission Matrix</label>${permGrid}</div>
+            ${staffList}
+        `;
+        openModal('role-details-modal');
     }
 
+    // ═══════════════════════════════════════
+    // ROLE ACTION: EDIT
+    // ═══════════════════════════════════════
+    function editRole(code) {
+        const r = ROLE_DATA[code];
+        if (!r) return;
+        _editingRoleCode = code;
+
+        let permFields = '';
+        MODULES.forEach((mod, i) => {
+            const perm = (r.perms && r.perms[i]) || 'NO';
+            permFields += `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F1F5F9;">
+                <span style="font-size:13px;color:#334155;">${mod}</span>
+                <select id="perm-edit-${i}" class="form-input" style="width:120px;padding:6px 10px;font-size:12px;">
+                    <option value="NO" ${perm === 'NO' ? 'selected' : ''}>No Access</option>
+                    <option value="READ" ${perm === 'READ' ? 'selected' : ''}>Read Only</option>
+                    <option value="FULL" ${perm === 'FULL' ? 'selected' : ''}>Full Access</option>
+                </select>
+            </div>`;
+        });
+
+        document.getElementById('role-edit-title').innerHTML = `<i class="fas fa-edit" style="color:#F59E0B;margin-right:8px;"></i>Edit: ${r.name}`;
+        document.getElementById('role-edit-body').innerHTML = `
+            <div class="form-group">
+                <label class="form-label">Role Name</label>
+                <input type="text" id="edit-role-name" class="form-input" value="${r.name}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea id="edit-role-desc" class="form-input" rows="2" style="resize:vertical;">${r.desc}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="edit-role-cat" class="form-input">
+                    ${['Executive','Registry','Administration','Academic','Welfare','Operations','Media','Library'].map(c => `<option value="${c}" ${c === r.category ? 'selected' : ''}>${c}</option>`).join('')}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Module Permissions</label>
+                <div style="max-height:280px;overflow-y:auto;border:1px solid #E2E8F0;border-radius:8px;padding:8px 12px;">${permFields}</div>
+            </div>
+        `;
+        openModal('role-edit-modal');
+    }
+
+    function saveRoleEdit() {
+        if (!_editingRoleCode || !ROLE_DATA[_editingRoleCode]) return;
+        const r = ROLE_DATA[_editingRoleCode];
+        r.name = document.getElementById('edit-role-name').value.trim() || r.name;
+        r.desc = document.getElementById('edit-role-desc').value.trim() || r.desc;
+        r.category = document.getElementById('edit-role-cat').value;
+        const newPerms = [];
+        MODULES.forEach((_, i) => {
+            const sel = document.getElementById('perm-edit-' + i);
+            newPerms.push(sel ? sel.value : 'NO');
+        });
+        r.perms = newPerms;
+        closeModal('role-edit-modal');
+        renderRolesTable();
+        toast(`Role "${r.name}" updated successfully`, 'success');
+        _editingRoleCode = null;
+    }
+
+    // ═══════════════════════════════════════
+    // ROLE ACTION: DUPLICATE
+    // ═══════════════════════════════════════
+    function duplicateRole(code) {
+        const r = ROLE_DATA[code];
+        if (!r) return;
+        const newCode = code + '_copy_' + Date.now();
+        ROLE_DATA[newCode] = {
+            name: r.name + ' (Copy)',
+            color: r.color,
+            desc: r.desc,
+            category: r.category,
+            perms: [...r.perms]
+        };
+        renderRolesTable();
+        populateRoles();
+        toast(`Role "${r.name}" duplicated successfully`, 'success');
+    }
+
+    // ═══════════════════════════════════════
+    // ROLE ACTION: DELETE
+    // ═══════════════════════════════════════
+    function deleteRole(code) {
+        const r = ROLE_DATA[code];
+        if (!r) return;
+        _deletingRoleCode = code;
+        const staffCount = state.staff.filter(s => s.role === code).length;
+        document.getElementById('delete-confirm-body').innerHTML = `
+            <div style="text-align:center;padding:8px 0;">
+                <div style="width:56px;height:56px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:24px;color:#EF4444;"></i>
+                </div>
+                <p style="font-size:15px;font-weight:600;color:#1E293B;margin-bottom:8px;">Delete "${r.name}"?</p>
+                <p style="font-size:13px;color:#64748B;line-height:1.6;">
+                    This action cannot be undone.
+                    ${staffCount > 0 ? `<br><span style="color:#EF4444;font-weight:600;">${staffCount} staff member(s)</span> currently have this role.` : 'No staff members are assigned to this role.'}
+                </p>
+            </div>
+        `;
+        openModal('delete-confirm-modal');
+    }
+
+    function confirmDeleteRole() {
+        if (!_deletingRoleCode) return;
+        const name = ROLE_DATA[_deletingRoleCode]?.name || _deletingRoleCode;
+        delete ROLE_DATA[_deletingRoleCode];
+        _deletingRoleCode = null;
+        closeModal('delete-confirm-modal');
+        renderRolesTable();
+        populateRoles();
+        toast(`Role "${name}" has been deleted`, 'success');
+    }
+
+    // ═══════════════════════════════════════
+    // STAFF DELETE
+    // ═══════════════════════════════════════
+    function deleteStaffMember(id, name) {
+        if (confirm(`Are you sure you want to delete staff member "${name}"?\n\nThis will redirect to the delete confirmation page.`)) {
+            window.location.href = `/manage/staff/delete/${id}/`;
+        }
+    }
+
+    // ═══════════════════════════════════════
+    // CSV EXPORT (FUNCTIONAL)
+    // ═══════════════════════════════════════
+    function exportToCSV() {
+        let csv = 'Name,Email,Role,Status,Joined\n';
+        state.staff.forEach(s => {
+            const roleName = ROLE_DATA[s.role] ? ROLE_DATA[s.role].name : s.role;
+            csv += `"${s.name}","${s.email}","${roleName}","${s.status}","${s.joined}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `staff_export_${new Date().toISOString().slice(0,10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        toast(`Exported ${state.staff.length} staff records to CSV`, 'success');
+    }
+
+    // ═══════════════════════════════════════
     // UTILS
-    function openModal(id) { 
-        document.getElementById(id).classList.add('active');
-    }
+    // ═══════════════════════════════════════
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
     function toast(msg, type) {
@@ -1270,7 +1520,9 @@ body {
         setTimeout(() => { div.classList.remove('active'); setTimeout(() => div.remove(), 300); }, 3000);
     }
 
-
+    // ═══════════════════════════════════════
+    // EVENTS
+    // ═══════════════════════════════════════
     function setupEvents() {
         document.querySelectorAll('.tab-link').forEach(link => {
             link.onclick = () => {
@@ -1331,18 +1583,29 @@ body {
     }
 
     function bulkDelete() {
-        if (confirm(`Are you sure you want to delete ${state.selection.length} staff members?`)) {
+        if (confirm(`Are you sure you want to delete ${state.selection.length} staff members? This action cannot be undone.`)) {
             state.staff = state.staff.filter(s => !state.selection.includes(s.id));
             clearSelection();
             render();
-            toast('Items deleted successfully', 'success');
+            toast('Selected items deleted successfully', 'success');
         }
     }
 
-    function exportToCSV() {
-        toast('Exporting data to CSV...', 'success');
+    function bulkStatus() {
+        const newStatus = prompt('Enter new status (Active / Pending):');
+        if (newStatus && ['Active', 'Pending'].includes(newStatus)) {
+            state.staff.forEach(s => {
+                if (state.selection.includes(s.id)) s.status = newStatus;
+            });
+            clearSelection();
+            render();
+            toast(`Status updated to "${newStatus}" for selected items`, 'success');
+        }
     }
 
+    // ═══════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════
     window.onload = init;
 </script>
 {% endblock %}

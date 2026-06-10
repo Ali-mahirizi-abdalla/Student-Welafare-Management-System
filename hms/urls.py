@@ -222,6 +222,20 @@ urlpatterns = [
     path('notifications/', views.notifications_list, name='notifications'),
     path('notifications/read/<int:notif_id>/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/preferences/', views.notification_preferences, name='notification_preferences'),
+    
+    # --- New Features ---
+    # Analytics
+    path('analytics/', views.new_analytics_dashboard, name='new_analytics'),
+    
+    # WhatsApp Bot
+    path('whatsapp/webhook/', views.whatsapp_webhook, name='whatsapp_webhook'),
+    path('whatsapp/demo/', views.whatsapp_demo, name='whatsapp_demo'),
+    
+    # Mental Health Module
+    path('student/mental-health/', views.mental_health_dashboard, name='mental_health_dashboard'),
+    path('student/mental-health/request/', views.request_counselling, name='request_counselling'),
+    path('manage/counsellor/', views.counsellor_dashboard, name='counsellor_dashboard'),
+    path('manage/counsellor/request/<int:pk>/', views.counselling_request_detail, name='counselling_request_detail'),
 ]
 
 handler403 = 'hms.views.handler403'
