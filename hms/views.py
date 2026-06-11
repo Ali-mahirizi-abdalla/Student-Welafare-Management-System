@@ -304,7 +304,8 @@ def register_staff(request):
                 with transaction.atomic():
                     staff = form.save()
                     if invite:
-                        staff.role = invite.role  # Secure role assignment
+                        if invite.role != 'ANY':
+                            staff.role = invite.role  # Secure role assignment
                         staff.is_approved = False
                         staff.save()
                         invite.used_count += 1

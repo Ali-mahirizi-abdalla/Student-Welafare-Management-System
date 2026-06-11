@@ -190,7 +190,7 @@
                             Assigned Role <span class="text-rose-500 leading-none">*</span>
                         </label>
                         <div class="relative">
-                            {% if invite %}
+                            {% if invite and invite.role != 'ANY' %}
                             <input type="text" name="role_display" value="{% for val, label in role_choices %}{% if val == invite.role %}{{ label }}{% endif %}{% endfor %}" class="w-full pl-4 pr-10 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none cursor-not-allowed" readonly>
                             <input type="hidden" name="role" value="{{ invite.role }}">
                             {% else %}
