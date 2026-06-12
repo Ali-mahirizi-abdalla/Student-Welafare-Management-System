@@ -919,7 +919,7 @@ def dashboard_admin(request):
     # Bed capacity and room statistics
     total_rooms = Room.objects.count()
     occupied_rooms = Room.objects.filter(is_available=False).count()
-    total_bed_capacity = Room.objects.filter(is_available=True).aggregate(total=models.Sum('capacity'))['total'] or 0
+    total_bed_capacity = Room.objects.aggregate(total=models.Sum('capacity'))['total'] or 0
     
     # Meal plan status (students who have submitted meal choices for today)
     student_on_meals = Meal.objects.filter(date=today).values('student').distinct().count()
