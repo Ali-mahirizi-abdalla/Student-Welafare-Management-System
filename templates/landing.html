@@ -20,7 +20,7 @@
             line-height: 1.5;
         }
 
-        /* Navbar */
+        /* ======================== NAVBAR ======================== */
         .navbar {
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(12px);
@@ -43,19 +43,20 @@
         }
 
         .navbar-brand .logo-img {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, #0D9488, #0F172A);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 24px;
             color: white;
+            box-shadow: 0 4px 12px rgba(13,148,136,0.3);
         }
 
         .navbar-brand h1 {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             background: linear-gradient(135deg, #0F172A, #0D9488);
             -webkit-background-clip: text;
@@ -70,7 +71,7 @@
             font-weight: 400;
         }
 
-        /* Profile Dropdown */
+        /* ======================== PROFILE DROPDOWN ======================== */
         .profile-dropdown {
             position: relative;
         }
@@ -187,9 +188,9 @@
             margin: 0 12px;
         }
 
-        /* Hero Section with Image */
+        /* ======================== HERO SECTION ======================== */
         .hero {
-            padding: 60px 32px;
+            padding: 80px 32px 60px;
             background: linear-gradient(135deg, #0F172A 0%, #0D9488 100%);
             color: white;
             position: relative;
@@ -243,77 +244,6 @@
             margin-bottom: 32px;
         }
 
-        .hero-image {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-image .mockup {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(4px);
-        }
-
-        .mockup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 16px;
-        }
-
-        .mockup-header .dots {
-            display: flex;
-            gap: 6px;
-        }
-
-        .mockup-header .dots span {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-        }
-
-        .mockup-header .dots span:nth-child(1) { background: #EF4444; }
-        .mockup-header .dots span:nth-child(2) { background: #F59E0B; }
-        .mockup-header .dots span:nth-child(3) { background: #10B981; }
-
-        .mockup-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .mockup-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .mockup-card .icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .mockup-card .label {
-            font-size: 11px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .mockup-card .count {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-        }
-
         .hero-buttons {
             display: flex;
             gap: 16px;
@@ -338,25 +268,6 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        .btn-staff {
-            padding: 14px 32px;
-            background: #0F172A;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 40px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .btn-staff:hover {
-            background: #1E293B;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-
         .btn-secondary {
             padding: 14px 32px;
             background: rgba(255,255,255,0.15);
@@ -374,7 +285,83 @@
             background: rgba(255,255,255,0.25);
         }
 
-        /* Stats Section */
+        /* ======================== HERO MOCKUP ======================== */
+        .hero-image .mockup {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+        }
+
+        .mockup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 16px;
+        }
+
+        .mockup-header .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .mockup-header .dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .mockup-header .dots span:nth-child(1) { background: #EF4444; }
+        .mockup-header .dots span:nth-child(2) { background: #F59E0B; }
+        .mockup-header .dots span:nth-child(3) { background: #10B981; }
+
+        .mockup-header .title {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .mockup-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mockup-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s;
+        }
+
+        .mockup-card:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .mockup-card .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .mockup-card .count {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .mockup-card .label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ======================== STATS SECTION ======================== */
         .stats-section {
             padding: 60px 32px;
             background: white;
@@ -389,8 +376,20 @@
             text-align: center;
         }
 
+        .stat-item {
+            padding: 24px;
+            border-radius: 20px;
+            background: #F8FAFC;
+            transition: all 0.2s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1);
+        }
+
         .stat-item h3 {
-            font-size: 36px;
+            font-size: 40px;
             font-weight: 800;
             color: #0D9488;
         }
@@ -398,9 +397,10 @@
         .stat-item p {
             color: #64748B;
             font-size: 14px;
+            font-weight: 500;
         }
 
-        /* About Section with Image */
+        /* ======================== ABOUT SECTION ======================== */
         .about-section {
             padding: 60px 32px;
             background: #F8FAFC;
@@ -420,11 +420,73 @@
             justify-content: center;
         }
 
-        .about-image img {
+        .about-image .brand-card {
+            background: linear-gradient(135deg, #0F172A, #0D9488);
+            border-radius: 24px;
+            padding: 48px;
+            color: white;
+            text-align: center;
             width: 100%;
             max-width: 400px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px -12px rgba(13,148,136,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-image .brand-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+        }
+
+        .about-image .brand-card .logo-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-image .brand-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-image .brand-card p {
+            color: rgba(255,255,255,0.7);
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-image .brand-card .stats-mini {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-image .brand-card .stats-mini div {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .about-image .brand-card .stats-mini div .num {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .about-image .brand-card .stats-mini div .lbl {
+            font-size: 10px;
+            opacity: 0.7;
         }
 
         .about-text h2 {
@@ -455,13 +517,17 @@
             gap: 8px;
             font-size: 14px;
             color: #1E293B;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
         }
 
         .about-feature i {
             color: #0D9488;
         }
 
-        /* Features Section with Images */
+        /* ======================== FEATURES SECTION ======================== */
         .features-section {
             padding: 60px 32px;
             background: white;
@@ -478,12 +544,13 @@
         .feature-card {
             background: #F8FAFC;
             border-radius: 20px;
-            padding: 24px;
+            padding: 28px 20px;
             text-align: center;
             border: 1px solid #E2E8F0;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .feature-card::before {
@@ -495,7 +562,7 @@
             height: 3px;
             background: linear-gradient(90deg, #0D9488, #0F172A);
             transform: scaleX(0);
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
 
         .feature-card:hover::before {
@@ -503,28 +570,42 @@
         }
 
         .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px -12px rgba(0,0,0,0.15);
             border-color: #0D9488;
         }
 
         .feature-card .icon {
-            font-size: 40px;
+            font-size: 44px;
             margin-bottom: 12px;
+            display: block;
         }
 
         .feature-card h4 {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 700;
             margin-bottom: 8px;
+            color: #1E293B;
         }
 
         .feature-card p {
             font-size: 13px;
             color: #64748B;
+            line-height: 1.4;
         }
 
-        /* Staff Roles Section */
+        .feature-card .feature-tag {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 4px 12px;
+            background: #EFF6FF;
+            color: #0D9488;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* ======================== STAFF ROLES SECTION ======================== */
         .staff-section {
             padding: 60px 32px;
             background: #F8FAFC;
@@ -535,7 +616,7 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            gap: 14px;
         }
 
         .staff-link {
@@ -548,40 +629,88 @@
             border: 1px solid #E2E8F0;
             text-decoration: none;
             color: #1E293B;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
             font-size: 13px;
             font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
 
         .staff-link:hover {
             border-color: #0D9488;
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateX(6px);
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.08);
+            background: #F0FDF4;
         }
 
         .staff-link .role-icon {
             font-size: 20px;
+            width: 28px;
+            text-align: center;
         }
 
-        /* Footer */
+        /* ======================== FOOTER ======================== */
         .footer {
-            background: #0F172A;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
             color: white;
-            padding: 40px 32px;
+            padding: 48px 32px 32px;
             text-align: center;
+            border-top: 3px solid #0D9488;
+        }
+
+        .footer .footer-logo {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .footer .footer-logo i {
+            color: #0D9488;
         }
 
         .footer p {
             color: #94A3B8;
             font-size: 13px;
+            margin-bottom: 4px;
         }
 
         .footer a {
             color: #0D9488;
             text-decoration: none;
+            transition: color 0.2s;
         }
 
-        /* Responsive */
+        .footer a:hover {
+            color: #10B981;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer .footer-links a {
+            color: #94A3B8;
+            font-size: 13px;
+        }
+
+        .footer .footer-links a:hover {
+            color: white;
+        }
+
+        .footer .footer-divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin: 24px 0 16px;
+        }
+
+        /* ======================== RESPONSIVE ======================== */
         @media (max-width: 1024px) {
             .hero-container { grid-template-columns: 1fr; text-align: center; }
             .hero-text p { margin: 0 auto 32px; }
@@ -600,17 +729,23 @@
             .profile-btn .user-name { display: none; }
             .mockup-body { grid-template-columns: 1fr; }
             .about-features { grid-template-columns: 1fr; }
+            .about-image .brand-card .stats-mini { grid-template-columns: 1fr; }
+            .about-image .brand-card { padding: 32px; }
         }
 
         @media (max-width: 480px) {
             .staff-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr; }
+            .hero { padding: 40px 16px; }
+            .features-section { padding: 40px 16px; }
+            .about-section { padding: 40px 16px; }
+            .staff-section { padding: 40px 16px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- ======================== NAVBAR ======================== -->
 <nav class="navbar">
     <a href="/" class="navbar-brand">
         <div class="logo-img"><i class="fas fa-hands-helping"></i></div>
@@ -650,15 +785,15 @@
     </div>
 </nav>
 
-<!-- Hero Section with Image -->
+<!-- ======================== HERO SECTION ======================== -->
 <section class="hero">
     <div class="hero-container">
         <div class="hero-text">
             <h1>Digitizing Campus Life</h1>
             <p>One Platform. All Student Welfare Services. Deferments, Payments, Health, Maintenance, Library, and more.</p>
             <div class="hero-buttons">
-                <a href="{% url 'hms:login' %}" class="btn-primary"><i class="fas fa-user-graduate" style="margin-right: 8px;"></i>Student Portal</a>
-                <a href="{% url 'hms:login' %}" class="btn-staff"><i class="fas fa-user-tie" style="margin-right: 8px;"></i>Staff Portal</a>
+                <a href="{% url 'hms:register' %}" class="btn-primary">Student Portal</a>
+                <a href="{% url 'hms:login' %}" class="btn-secondary">Staff Portal</a>
                 <a href="#about" class="btn-secondary">Learn More</a>
             </div>
         </div>
@@ -668,7 +803,7 @@
                     <div class="dots">
                         <span></span><span></span><span></span>
                     </div>
-                    <span style="color:rgba(255,255,255,0.4); font-size:12px;">Campus Care Dashboard</span>
+                    <span class="title">Campus Care Dashboard</span>
                 </div>
                 <div class="mockup-body">
                     <div class="mockup-card"><div class="icon">📋</div><div class="count">0</div><div class="label">Deferments</div></div>
@@ -681,7 +816,7 @@
     </div>
 </section>
 
-<!-- Stats Section -->
+<!-- ======================== STATS SECTION ======================== -->
 <section class="stats-section">
     <div class="stats-grid">
         <div class="stat-item"><h3>23</h3><p>Staff Roles</p></div>
@@ -691,23 +826,18 @@
     </div>
 </section>
 
-<!-- About Section with Image -->
+<!-- ======================== ABOUT SECTION ======================== -->
 <section class="about-section" id="about">
     <div class="about-container">
         <div class="about-image">
-            <div style="background: linear-gradient(135deg, #0F172A, #0D9488); border-radius: 24px; padding: 40px; color: white; text-align: center; width:100%;">
-                <i class="fas fa-hands-helping" style="font-size: 64px; margin-bottom: 16px;"></i>
-                <h3 style="font-size: 24px;">Built for Students</h3>
-                <p style="color: rgba(255,255,255,0.7);">Simple. Fast. Reliable.</p>
-                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:12px;">
-                        <div style="font-size:20px; font-weight:700;">500+</div>
-                        <div style="font-size:11px; opacity:0.7;">Students</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:12px;">
-                        <div style="font-size:20px; font-weight:700;">23</div>
-                        <div style="font-size:11px; opacity:0.7;">Staff Roles</div>
-                    </div>
+            <div class="brand-card">
+                <div class="logo-icon"><i class="fas fa-hands-helping"></i></div>
+                <h3>Campus Care</h3>
+                <p>Student Welfare Management System</p>
+                <div class="stats-mini">
+                    <div><div class="num">10,000+</div><div class="lbl">Students</div></div>
+                    <div><div class="num">23</div><div class="lbl">Staff Roles</div></div>
+                    <div><div class="num">100%</div><div class="lbl">Digital</div></div>
                 </div>
             </div>
         </div>
@@ -727,25 +857,65 @@
     </div>
 </section>
 
-<!-- Features Section -->
+<!-- ======================== FEATURES SECTION (FLASHING CARDS) ======================== -->
 <section class="features-section">
     <div style="max-width:1200px; margin:0 auto; text-align:center; margin-bottom:40px;">
         <h2 style="font-size:32px; font-weight:700;">Key Features</h2>
         <p style="color:#64748B;">Everything you need for student welfare management</p>
     </div>
     <div class="features-grid">
-        <div class="feature-card"><div class="icon">📋</div><h4>Deferment</h4><p>Digital requests, 24-48 hour approval</p></div>
-        <div class="feature-card"><div class="icon">💰</div><h4>M-Pesa Payments</h4><p>Instant receipts, balance tracking</p></div>
-        <div class="feature-card"><div class="icon">🏥</div><h4>Health Booking</h4><p>Online appointments, SMS reminders</p></div>
-        <div class="feature-card"><div class="icon">🔧</div><h4>Maintenance</h4><p>Digital tickets, photo upload</p></div>
-        <div class="feature-card"><div class="icon">🏠</div><h4>Accommodation</h4><p>Room allocation, check-in/out</p></div>
-        <div class="feature-card"><div class="icon">📚</div><h4>Library</h4><p>Book tracking, due dates, fines</p></div>
-        <div class="feature-card"><div class="icon">🧠</div><h4>Mental Health</h4><p>Confidential counselling, anonymous option</p></div>
-        <div class="feature-card"><div class="icon">💬</div><h4>WhatsApp Bot</h4><p>Check balance via WhatsApp</p></div>
+        <div class="feature-card">
+            <span class="icon">📋</span>
+            <h4>Deferment</h4>
+            <p>Digital requests with 24-48 hour approval. Real-time status tracking.</p>
+            <span class="feature-tag">⚡ 86% Faster</span>
+        </div>
+        <div class="feature-card">
+            <span class="icon">💰</span>
+            <h4>M-Pesa Payments</h4>
+            <p>Instant receipts, balance tracking, and automated reconciliation.</p>
+            <span class="feature-tag">💳 1% Fee</span>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🏥</span>
+            <h4>Health Booking</h4>
+            <p>Online appointments with SMS reminders and medical history access.</p>
+            <span class="feature-tag">📱 24/7 Access</span>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🔧</span>
+            <h4>Maintenance</h4>
+            <p>Digital tickets with photo upload and status tracking.</p>
+            <span class="feature-tag">⏱️ 24hr Response</span>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🏠</span>
+            <h4>Accommodation</h4>
+            <p>Room allocation, check-in/out, and deferment sync.</p>
+            <span class="feature-tag">🛏️ 100% Digital</span>
+        </div>
+        <div class="feature-card">
+            <span class="icon">📚</span>
+            <h4>Library</h4>
+            <p>Book tracking, due dates, fines, and digital library card.</p>
+            <span class="feature-tag">📖 Smart Tracking</span>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🧠</span>
+            <h4>Mental Health</h4>
+            <p>Confidential counselling with anonymous option. 24/7 crisis helpline.</p>
+            <span class="feature-tag">🤝 Confidential</span>
+        </div>
+        <div class="feature-card">
+            <span class="icon">💬</span>
+            <h4>WhatsApp Bot</h4>
+            <p>Check fee balance and request status via WhatsApp.</p>
+            <span class="feature-tag">📱 Coming Soon</span>
+        </div>
     </div>
 </section>
 
-<!-- Staff Roles Section -->
+<!-- ======================== STAFF ROLES SECTION ======================== -->
 <section class="staff-section" id="staff-roles">
     <div style="max-width:1200px; margin:0 auto; text-align:center; margin-bottom:32px;">
         <h2 style="font-size:32px; font-weight:700;">23 Staff Roles</h2>
@@ -778,22 +948,33 @@
     </div>
 </section>
 
-<!-- Footer -->
+<!-- ======================== FOOTER ======================== -->
 <footer class="footer">
-    <p>© 2026 Campus Care | Student Welfare Management System</p>
-    <p style="margin-top:8px;">Developed by: Ali Mahirizi Abdalla | 📧 alimahrez744@gmail.com | 📱 0750168458</p>
-    <p style="margin-top:8px; font-size:12px;">
-        <a href="#about">About</a> • <a href="#staff-roles">Staff Roles</a> • <a href="{% url 'hms:login' %}">Login</a> • <a href="{% url 'hms:register' %}">Register</a>
+    <div class="footer-logo">
+        <i class="fas fa-hands-helping"></i> Campus Care
+    </div>
+    <p>Student Welfare Management System</p>
+    <p style="font-size:12px; color:#64748B; margin-top:4px;">Developed by: Ali Mahirizi Abdalla</p>
+    <p style="font-size:12px; color:#64748B;">
+        📧 <a href="mailto:alimahrez744@gmail.com">alimahrez744@gmail.com</a> &nbsp;|&nbsp; 📱 <a href="tel:0750168458">0750168458</a>
     </p>
+    <hr class="footer-divider">
+    <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#staff-roles">Staff Roles</a>
+        <a href="{% url 'hms:login' %}">Login</a>
+        <a href="{% url 'hms:register' %}">Register</a>
+    </div>
+    <p style="font-size:12px; color:#475569; margin-top:16px;">© 2026 Campus Care. All rights reserved.</p>
 </footer>
 
+<!-- ======================== SCRIPT ======================== -->
 <script>
     function toggleDropdown() {
         const menu = document.getElementById('dropdownMenu');
         menu.classList.toggle('open');
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
         const dropdown = document.querySelector('.profile-dropdown');
         if (!dropdown.contains(event.target)) {
