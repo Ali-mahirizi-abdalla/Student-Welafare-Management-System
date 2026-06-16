@@ -417,7 +417,7 @@ def user_login(request):
 def user_logout(request):
     """Accept both GET and POST to avoid CSRF errors from link-based logouts."""
     logout(request)
-    return redirect('hms:login')
+    return redirect('landing')
 
 def terms_and_conditions(request):
     """Terms and Conditions page"""
