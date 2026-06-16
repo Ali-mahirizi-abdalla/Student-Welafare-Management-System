@@ -5,9 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Care – Student Welfare Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #0D9488;
+            --primary-hover: #0F766E;
+            --primary-light: #F0FDF4;
+            --primary-glow: rgba(13, 148, 136, 0.15);
+            --dark: #0F172A;
+            --dark-soft: #1E293B;
+            --light: #F8FAFC;
+            --border: #E2E8F0;
+            --white: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,234 +32,273 @@
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #F8FAFC;
-            color: #0F172A;
-            line-height: 1.5;
+            font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif;
+            background: var(--light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
         }
 
         /* ======================== NAVBAR ======================== */
         .navbar {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #E2E8F0;
-            padding: 16px 32px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            transition: var(--transition);
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-decoration: none;
         }
 
         .navbar-brand .logo-img {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #0D9488, #0F172A);
-            border-radius: 14px;
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(13,148,136,0.3);
+            box-shadow: 0 8px 16px var(--primary-glow);
+            padding: 2px;
+        }
+
+        .navbar-brand .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
         }
 
         .navbar-brand h1 {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 800;
-            background: linear-gradient(135deg, #0F172A, #0D9488);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            letter-spacing: -0.5px;
+            color: var(--dark);
+            line-height: 1.1;
         }
 
         .navbar-brand span {
             font-size: 11px;
-            color: #64748B;
+            color: var(--text-muted);
+            font-weight: 500;
             display: block;
-            font-weight: 400;
+            margin-top: 1px;
         }
 
-        /* ======================== PROFILE DROPDOWN ======================== */
+        /* Profile Dropdown */
         .profile-dropdown {
             position: relative;
         }
 
         .profile-btn {
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 16px;
-            background: #F8FAFC;
-            border: 1px solid #E2E8F0;
-            border-radius: 40px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-family: inherit;
+            font-weight: 600;
+            color: var(--dark-soft);
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
 
         .profile-btn:hover {
-            background: #EFF6FF;
-            border-color: #0D9488;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px var(--primary-glow);
+            transform: translateY(-1px);
         }
 
         .profile-btn .avatar {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #0D9488, #0F172A);
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
         }
 
-        .profile-btn .user-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: #1E293B;
+        .profile-btn i.fa-chevron-down {
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
         }
 
-        .profile-btn i {
-            color: #94A3B8;
+        .profile-dropdown:hover .profile-btn i.fa-chevron-down {
+            transform: rotate(180deg);
         }
 
         .dropdown-menu {
             position: absolute;
-            top: 52px;
             right: 0;
-            background: white;
-            border: 1px solid #E2E8F0;
+            top: calc(100% + 8px);
+            width: 280px;
+            background: var(--white);
+            border: 1px solid var(--border);
             border-radius: 16px;
-            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
-            width: 240px;
-            display: none;
-            overflow: hidden;
-            z-index: 1001;
+            padding: 12px;
+            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
         }
 
         .dropdown-menu.open {
-            display: block;
-            animation: slideDown 0.2s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
         .dropdown-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid #E2E8F0;
+            padding: 8px 12px 12px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
         }
 
         .dropdown-header h4 {
             font-size: 14px;
-            font-weight: 600;
-            color: #1E293B;
+            font-weight: 700;
+            color: var(--dark);
         }
 
         .dropdown-header p {
             font-size: 12px;
-            color: #64748B;
+            color: var(--text-muted);
         }
 
         .dropdown-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 20px;
+            padding: 10px 12px;
+            color: var(--dark-soft);
             text-decoration: none;
-            color: #1E293B;
-            font-size: 14px;
-            transition: background 0.2s;
-            border: none;
-            background: none;
-            width: 100%;
-            cursor: pointer;
-            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: var(--transition);
         }
 
         .dropdown-item:hover {
-            background: #F8FAFC;
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
         .dropdown-item i {
-            width: 20px;
-            color: #0D9488;
             font-size: 16px;
+            width: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .dropdown-item:hover i {
+            color: var(--primary);
         }
 
         .dropdown-divider {
             height: 1px;
-            background: #E2E8F0;
-            margin: 0 12px;
+            background: var(--border);
+            margin: 8px 0;
         }
 
         /* ======================== HERO SECTION ======================== */
         .hero {
-            padding: 80px 32px 60px;
-            background: linear-gradient(135deg, #0F172A 0%, #0D9488 100%);
-            color: white;
+            padding: 100px 40px 80px;
+            background: radial-gradient(circle at 80% 20%, rgba(13, 148, 136, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 80%, rgba(15, 23, 42, 0.03) 0%, transparent 50%),
+                        var(--white);
             position: relative;
             overflow: hidden;
+            border-bottom: 1px solid var(--border);
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 80%, var(--light) 100%);
+            z-index: 1;
+            pointer-events: none;
         }
 
         .hero-container {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
             align-items: center;
             position: relative;
-            z-index: 1;
+            z-index: 2;
+        }
+
+        .hero-info-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--primary-light);
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            border-radius: 30px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero-info-pill i {
+            font-size: 14px;
         }
 
         .hero-text h1 {
-            font-size: 48px;
+            font-size: 52px;
             font-weight: 800;
-            margin-bottom: 16px;
+            letter-spacing: -1.5px;
             line-height: 1.1;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+
+        .hero-text h1 span {
+            background: linear-gradient(135deg, var(--primary) 0%, #10B981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-text p {
             font-size: 18px;
-            color: rgba(255,255,255,0.8);
-            max-width: 500px;
-            margin-bottom: 32px;
+            color: var(--text-muted);
+            margin-bottom: 36px;
+            max-width: 540px;
         }
 
         .hero-buttons {
@@ -251,59 +307,91 @@
             flex-wrap: wrap;
         }
 
-        .btn-primary {
-            padding: 14px 32px;
-            background: white;
-            color: #0D9488;
-            border: none;
-            border-radius: 40px;
-            font-size: 16px;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 15px;
             font-weight: 600;
-            cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 10px 20px -5px rgba(13, 148, 136, 0.3);
+            border: 1px solid transparent;
         }
 
         .btn-primary:hover {
+            background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 24px -5px rgba(13, 148, 136, 0.4);
         }
 
         .btn-secondary {
-            padding: 14px 32px;
-            background: rgba(255,255,255,0.15);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 40px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
+            background: var(--white);
+            color: var(--dark-soft);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
 
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.25);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        /* ======================== HERO MOCKUP ======================== */
-        .hero-image .mockup {
+        /* Hero Dashboard Mockup */
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.1) 0%, transparent 60%);
+            z-index: 0;
+            top: -15%;
+            left: -15%;
+            pointer-events: none;
+        }
+
+        .mockup {
             width: 100%;
-            max-width: 500px;
-            background: rgba(255,255,255,0.08);
+            max-width: 480px;
+            background: var(--white);
             border-radius: 24px;
-            padding: 20px;
-            border: 1px solid rgba(255,255,255,0.15);
-            backdrop-filter: blur(4px);
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.12);
+            overflow: hidden;
+            z-index: 1;
+            position: relative;
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: var(--transition);
+        }
+
+        .mockup:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-4px);
+            box-shadow: 0 30px 60px -10px rgba(15, 23, 42, 0.16);
         }
 
         .mockup-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 16px;
         }
 
         .mockup-header .dots {
@@ -312,8 +400,8 @@
         }
 
         .mockup-header .dots span {
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
         }
 
@@ -322,50 +410,120 @@
         .mockup-header .dots span:nth-child(3) { background: #10B981; }
 
         .mockup-header .title {
-            color: rgba(255,255,255,0.5);
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .mockup-body {
+            padding: 24px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 16px;
+            background: #FAFAFA;
         }
 
         .mockup-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 16px;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 18px 14px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.2s;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .mockup-card:hover {
-            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px);
         }
 
         .mockup-card .icon {
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 26px;
+            margin-bottom: 10px;
+            width: 46px;
+            height: 46px;
+            background: var(--light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .mockup-card .count {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 2px;
         }
 
         .mockup-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Floating Overlays on Mockup */
+        .mockup-badge {
+            position: absolute;
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            z-index: 2;
+            transition: var(--transition);
+        }
+
+        .badge-1 {
+            bottom: 30px;
+            left: -40px;
+        }
+
+        .badge-2 {
+            top: 60px;
+            right: -25px;
+        }
+
+        .mockup:hover ~ .badge-1 {
+            transform: translate(6px, -4px);
+        }
+
+        .mockup:hover ~ .badge-2 {
+            transform: translate(-6px, 4px);
+        }
+
+        .mockup-badge i {
+            color: #10B981;
+            font-size: 16px;
+        }
+
+        .mockup-badge span {
             font-size: 11px;
-            color: rgba(255,255,255,0.6);
+            font-weight: 700;
+            color: var(--dark-soft);
+        }
+
+        .mockup-badge p {
+            font-size: 9px;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         /* ======================== STATS SECTION ======================== */
         .stats-section {
-            padding: 60px 32px;
-            background: white;
+            padding: 60px 40px;
+            background: var(--white);
+            position: relative;
+            z-index: 10;
         }
 
         .stats-grid {
@@ -373,46 +531,52 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            text-align: center;
+            gap: 30px;
         }
 
         .stat-item {
-            padding: 24px;
+            padding: 30px 24px;
             border-radius: 20px;
-            background: #F8FAFC;
-            transition: all 0.2s;
+            background: var(--light);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: var(--transition);
         }
 
         .stat-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px rgba(13, 148, 136, 0.05);
         }
 
         .stat-item h3 {
-            font-size: 40px;
+            font-size: 36px;
             font-weight: 800;
-            color: #0D9488;
+            color: var(--primary);
+            margin-bottom: 6px;
+            letter-spacing: -1px;
         }
 
         .stat-item p {
-            color: #64748B;
-            font-size: 14px;
-            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* ======================== ABOUT SECTION ======================== */
         .about-section {
-            padding: 60px 32px;
-            background: #F8FAFC;
+            padding: 100px 40px;
+            background: var(--light);
         }
 
         .about-container {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 70px;
             align-items: center;
         }
 
@@ -422,14 +586,14 @@
         }
 
         .about-image .brand-card {
-            background: linear-gradient(135deg, #0F172A, #0D9488);
-            border-radius: 24px;
-            padding: 48px;
-            color: white;
+            background: linear-gradient(135deg, var(--dark), var(--primary));
+            border-radius: 28px;
+            padding: 50px 40px;
+            color: var(--white);
             text-align: center;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 40px -12px rgba(13,148,136,0.3);
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(13, 148, 136, 0.2);
             position: relative;
             overflow: hidden;
         }
@@ -437,310 +601,519 @@
         .about-image .brand-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255,255,255,0.03);
+            top: -40%;
+            right: -40%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 50%;
+            filter: blur(10px);
         }
 
         .about-image .brand-card .logo-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
+            width: 72px;
+            height: 72px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .about-image .brand-card .logo-icon img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
         }
 
         .about-image .brand-card h3 {
-            font-size: 28px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
         }
 
         .about-image .brand-card p {
-            color: rgba(255,255,255,0.7);
-            position: relative;
-            z-index: 1;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 30px;
         }
 
         .about-image .brand-card .stats-mini {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-            position: relative;
-            z-index: 1;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
         .about-image .brand-card .stats-mini div {
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px 12px;
+            backdrop-filter: blur(5px);
         }
 
         .about-image .brand-card .stats-mini div .num {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 2px;
         }
 
         .about-image .brand-card .stats-mini div .lbl {
             font-size: 10px;
-            opacity: 0.7;
+            opacity: 0.8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .about-text h2 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #0F172A, #0D9488);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: var(--dark);
         }
 
         .about-text p {
-            color: #475569;
+            color: var(--text-muted);
             font-size: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
         .about-features {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
         }
 
         .about-feature {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #1E293B;
-            padding: 8px 12px;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #E2E8F0;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark-soft);
+            padding: 12px 16px;
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
         .about-feature i {
-            color: #0D9488;
+            color: var(--primary);
+            font-size: 15px;
         }
 
-        /* ======================== FEATURES SECTION ======================== */
+        /* ======================== FEATURES GRID ======================== */
         .features-section {
-            padding: 60px 32px;
-            background: white;
+            padding: 100px 40px;
+            background: var(--white);
+        }
+
+        .section-header {
+            max-width: 600px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 16px;
         }
 
         .features-grid {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
         }
 
         .feature-card {
-            background: #F8FAFC;
-            border-radius: 20px;
-            padding: 28px 20px;
-            text-align: center;
-            border: 1px solid #E2E8F0;
-            transition: all 0.3s ease;
+            background: var(--light);
+            border-radius: 24px;
+            padding: 32px 24px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
             position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #0D9488, #0F172A);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
+            display: flex;
+            flex-direction: column;
         }
 
         .feature-card:hover {
+            background: var(--white);
+            border-color: var(--primary);
             transform: translateY(-6px);
-            box-shadow: 0 16px 32px -12px rgba(0,0,0,0.15);
-            border-color: #0D9488;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
         }
 
-        .feature-card .icon {
-            font-size: 44px;
-            margin-bottom: 12px;
-            display: block;
+        .feature-card .icon-wrapper {
+            width: 52px;
+            height: 52px;
+            background: var(--white);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .icon-wrapper {
+            background: var(--primary);
+            color: var(--white);
+            transform: scale(1.05);
         }
 
         .feature-card h4 {
             font-size: 17px;
             font-weight: 700;
-            margin-bottom: 8px;
-            color: #1E293B;
+            color: var(--dark);
+            margin-bottom: 10px;
         }
 
         .feature-card p {
-            font-size: 13px;
-            color: #64748B;
-            line-height: 1.4;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
         }
 
-        .feature-card .feature-tag {
-            display: inline-block;
-            margin-top: 12px;
+        .feature-badge {
+            align-self: flex-start;
             padding: 4px 12px;
-            background: #EFF6FF;
-            color: #0D9488;
-            border-radius: 40px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--primary);
+            transition: var(--transition);
         }
 
-        /* ======================== STAFF ROLES SECTION ======================== */
+        .feature-card:hover .feature-badge {
+            background: var(--primary-light);
+            border-color: rgba(13, 148, 136, 0.15);
+        }
+
+        /* ======================== STAFF ROLES (CATEGORIZED) ======================== */
         .staff-section {
-            padding: 60px 32px;
-            background: #F8FAFC;
+            padding: 100px 40px;
+            background: var(--light);
         }
 
-        .staff-grid {
+        .staff-categories {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
         }
 
-        .staff-link {
+        /* 3-column span for center card on bottom */
+        .staff-categories > div:nth-child(5) {
+            grid-column: span 2;
+        }
+
+        .category-card {
+            background: var(--white);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border-color: rgba(13, 148, 136, 0.15);
+        }
+
+        .category-card h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .category-card h3 i {
+            color: var(--primary);
+        }
+
+        .roles-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            padding: 14px 18px;
-            background: white;
+        }
+
+        .staff-categories > div:nth-child(5) .roles-list {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .role-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--light);
             border-radius: 12px;
-            border: 1px solid #E2E8F0;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark-soft);
             text-decoration: none;
-            color: #1E293B;
-            transition: all 0.25s ease;
-            font-size: 13px;
-            font-weight: 500;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: var(--transition);
+            border: 1px solid transparent;
         }
 
-        .staff-link:hover {
-            border-color: #0D9488;
-            transform: translateX(6px);
-            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.08);
-            background: #F0FDF4;
+        .role-pill:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: rgba(13, 148, 136, 0.1);
+            transform: translateX(4px);
         }
 
-        .staff-link .role-icon {
-            font-size: 20px;
-            width: 28px;
+        .role-pill .role-emoji {
+            font-size: 15px;
+            width: 20px;
             text-align: center;
         }
 
         /* ======================== FOOTER ======================== */
         .footer {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-            color: white;
-            padding: 48px 32px 32px;
-            text-align: center;
-            border-top: 3px solid #0D9488;
+            background: var(--dark);
+            color: var(--white);
+            padding: 80px 40px 40px;
+            border-top: 4px solid var(--primary);
         }
 
-        .footer .footer-logo {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand .footer-logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand .footer-logo img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .footer-brand p {
+            color: #94A3B8;
+            font-size: 14px;
+            margin-bottom: 20px;
+            max-width: 320px;
+        }
+
+        .footer-brand .developer-tag {
+            font-size: 12px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        .footer-links h4 {
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links ul li a {
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .footer-links ul li a:hover {
+            color: var(--primary);
+            padding-left: 4px;
+        }
+
+        .footer-contact h4 {
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+
+        .footer-contact p {
+            color: #94A3B8;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .footer .footer-logo i {
-            color: #0D9488;
-        }
-
-        .footer p {
-            color: #94A3B8;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-
-        .footer a {
-            color: #0D9488;
+        .footer-contact a {
+            color: var(--primary);
             text-decoration: none;
-            transition: color 0.2s;
+            font-weight: 600;
+            transition: var(--transition);
         }
 
-        .footer a:hover {
+        .footer-contact a:hover {
             color: #10B981;
         }
 
-        .footer .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
-        .footer .footer-links a {
-            color: #94A3B8;
-            font-size: 13px;
-        }
-
-        .footer .footer-links a:hover {
-            color: white;
-        }
-
-        .footer .footer-divider {
+        .footer-divider {
             border: none;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            margin: 24px 0 16px;
+            border-top: 1px solid #1E293B;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            color: #64748B;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         /* ======================== RESPONSIVE ======================== */
         @media (max-width: 1024px) {
-            .hero-container { grid-template-columns: 1fr; text-align: center; }
-            .hero-text p { margin: 0 auto 32px; }
-            .hero-image .mockup { max-width: 400px; margin: 0 auto; }
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .staff-grid { grid-template-columns: repeat(3, 1fr); }
-            .about-container { grid-template-columns: 1fr; }
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 50px;
+                text-align: center;
+            }
+            .hero-text p {
+                margin: 0 auto 36px;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .hero-image .mockup {
+                max-width: 420px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .staff-categories {
+                grid-template-columns: 1fr;
+            }
+            .staff-categories > div:nth-child(5) {
+                grid-column: span 1;
+            }
+            .staff-categories > div:nth-child(5) .roles-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-container {
+                grid-template-columns: 1fr repeat(2, 0.8fr);
+            }
         }
 
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .features-grid { grid-template-columns: 1fr; }
-            .staff-grid { grid-template-columns: repeat(2, 1fr); }
-            .hero h1 { font-size: 32px; }
-            .navbar { padding: 12px 16px; }
-            .profile-btn .user-name { display: none; }
-            .mockup-body { grid-template-columns: 1fr; }
-            .about-features { grid-template-columns: 1fr; }
-            .about-image .brand-card .stats-mini { grid-template-columns: 1fr; }
-            .about-image .brand-card { padding: 32px; }
+            .navbar {
+                padding: 14px 20px;
+            }
+            .navbar-brand h1 {
+                font-size: 17px;
+            }
+            .profile-btn .user-name {
+                display: none;
+            }
+            .hero-text h1 {
+                font-size: 38px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
         }
 
         @media (max-width: 480px) {
-            .staff-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .hero { padding: 40px 16px; }
-            .features-section { padding: 40px 16px; }
-            .about-section { padding: 40px 16px; }
-            .staff-section { padding: 40px 16px; }
+            .hero-buttons {
+                flex-direction: column;
+            }
+            .hero-buttons .btn {
+                width: 100%;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+            .roles-list, .staff-categories > div:nth-child(5) .roles-list {
+                grid-template-columns: 1fr;
+            }
+            .badge-1, .badge-2 {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -749,7 +1122,9 @@
 <!-- ======================== NAVBAR ======================== -->
 <nav class="navbar">
     <a href="/" class="navbar-brand">
-        <div class="logo-img"><img src="{% static 'img/campus_care_logo.png' %}" alt="Campus Care Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px;"></div>
+        <div class="logo-img">
+            <img src="{% static 'img/campus_care_logo.png' %}" alt="Campus Care Logo">
+        </div>
         <div>
             <h1>CAMPUS CARE</h1>
             <span>Student Welfare Management System</span>
@@ -768,19 +1143,19 @@
                 <h4>Welcome back</h4>
                 <p>{{ user.email }}</p>
             </div>
-            <a href="{% url 'hms:student_dashboard' %}" class="dropdown-item"><i class="fas fa-user-circle"></i> My Profile / Dashboard</a>
+            <a href="{% url 'hms:student_dashboard' %}" class="dropdown-item"><i class="fas fa-user-circle"></i> My Dashboard</a>
             <a href="{% url 'hms:logout' %}" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
             {% else %}
             <div class="dropdown-header">
                 <h4>Welcome to Campus Care</h4>
-                <p>Sign in or create an account</p>
+                <p>Access your welfare account</p>
             </div>
             <a href="{% url 'hms:login' %}" class="dropdown-item"><i class="fas fa-sign-in-alt"></i> Login</a>
             <a href="{% url 'hms:register' %}" class="dropdown-item"><i class="fas fa-user-plus"></i> Create Account</a>
             <a href="{% url 'hms:password_reset' %}" class="dropdown-item"><i class="fas fa-key"></i> Forgot Password</a>
             {% endif %}
             <div class="dropdown-divider"></div>
-            <a href="#about" class="dropdown-item"><i class="fas fa-info-circle"></i> About</a>
+            <a href="#about" class="dropdown-item"><i class="fas fa-info-circle"></i> About Page</a>
             <a href="#staff-roles" class="dropdown-item"><i class="fas fa-users"></i> Staff Roles</a>
         </div>
     </div>
@@ -790,12 +1165,15 @@
 <section class="hero">
     <div class="hero-container">
         <div class="hero-text">
-            <h1>Digitizing Campus Life</h1>
-            <p>One Platform. All Student Welfare Services. Deferments, Payments, Health, Maintenance, Library, and more.</p>
+            <div class="hero-info-pill">
+                <i class="fas fa-sparkles"></i> All-in-one Welfare Management Portal
+            </div>
+            <h1>Digitizing <span>Campus Life</span> & Student Welfare</h1>
+            <p>One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage your accommodation seamlessly.</p>
             <div class="hero-buttons">
-                <a href="{% url 'hms:register' %}" class="btn-primary">Student Portal</a>
-                <a href="{% url 'hms:login' %}" class="btn-secondary">Staff Portal</a>
-                <a href="#about" class="btn-secondary">Learn More</a>
+                <a href="{% url 'hms:register' %}" class="btn btn-primary"><i class="fas fa-graduation-cap"></i> Student Portal</a>
+                <a href="{% url 'hms:login' %}" class="btn btn-secondary"><i class="fas fa-user-tie"></i> Staff Portal</a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
             </div>
         </div>
         <div class="hero-image">
@@ -807,10 +1185,41 @@
                     <span class="title">Campus Care Dashboard</span>
                 </div>
                 <div class="mockup-body">
-                    <div class="mockup-card"><div class="icon">📋</div><div class="count">0</div><div class="label">Deferments</div></div>
-                    <div class="mockup-card"><div class="icon">💰</div><div class="count">0</div><div class="label">Payments</div></div>
-                    <div class="mockup-card"><div class="icon">🏥</div><div class="count">0</div><div class="label">Health</div></div>
-                    <div class="mockup-card"><div class="icon">🔧</div><div class="count">0</div><div class="label">Maintenance</div></div>
+                    <div class="mockup-card">
+                        <div class="icon">📋</div>
+                        <div class="count">0</div>
+                        <div class="label">Deferments</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="icon">💸</div>
+                        <div class="count">0</div>
+                        <div class="label">M-Pesa Trans</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="icon">🏥</div>
+                        <div class="count">0</div>
+                        <div class="label">Health Bookings</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="icon">🔧</div>
+                        <div class="count">0</div>
+                        <div class="label">Maintenance</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Interactive Floating Badges -->
+            <div class="mockup-badge badge-1">
+                <i class="fas fa-circle-check"></i>
+                <div>
+                    <span>M-Pesa Confirmed</span>
+                    <p>Instant Receipt</p>
+                </div>
+            </div>
+            <div class="mockup-badge badge-2">
+                <i class="fas fa-shield-halved" style="color: #0D9488;"></i>
+                <div>
+                    <span>Secure Access</span>
+                    <p>Role-based RBAC</p>
                 </div>
             </div>
         </div>
@@ -820,10 +1229,22 @@
 <!-- ======================== STATS SECTION ======================== -->
 <section class="stats-section">
     <div class="stats-grid">
-        <div class="stat-item"><h3>23</h3><p>Staff Roles</p></div>
-        <div class="stat-item"><h3>86%</h3><p>Faster Processing</p></div>
-        <div class="stat-item"><h3>100%</h3><p>Paperless</p></div>
-        <div class="stat-item"><h3>24/7</h3><p>Access</p></div>
+        <div class="stat-item">
+            <h3>23</h3>
+            <p>Staff Access Roles</p>
+        </div>
+        <div class="stat-item">
+            <h3>86%</h3>
+            <p>Processing Speedup</p>
+        </div>
+        <div class="stat-item">
+            <h3>100%</h3>
+            <p>Digital & Paperless</p>
+        </div>
+        <div class="stat-item">
+            <h3>24/7</h3>
+            <p>On-Demand Access</p>
+        </div>
     </div>
 </section>
 
@@ -832,141 +1253,234 @@
     <div class="about-container">
         <div class="about-image">
             <div class="brand-card">
-                <div class="logo-icon"><img src="{% static 'img/campus_care_logo.png' %}" alt="Campus Care Logo" style="width: 80px; height: 80px; object-fit: contain;"></div>
+                <div class="logo-icon">
+                    <img src="{% static 'img/campus_care_logo.png' %}" alt="Campus Care Logo">
+                </div>
                 <h3>Campus Care</h3>
                 <p>Student Welfare Management System</p>
                 <div class="stats-mini">
-                    <div><div class="num">10,000+</div><div class="lbl">Students</div></div>
-                    <div><div class="num">23</div><div class="lbl">Staff Roles</div></div>
-                    <div><div class="num">100%</div><div class="lbl">Digital</div></div>
+                    <div>
+                        <div class="num">10,000+</div>
+                        <div class="lbl">Students</div>
+                    </div>
+                    <div>
+                        <div class="num">100%</div>
+                        <div class="lbl">Automated</div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="about-text">
             <h2>About Campus Care</h2>
-            <p>Campus Care is a comprehensive Student Welfare Management System designed to digitize and streamline all student welfare services in one unified platform.</p>
-            <p>From deferment requests to M-Pesa payments, health appointments to library management, Campus Care brings everything together.</p>
+            <p>Campus Care is a comprehensive, state-of-the-art Student Welfare Management System designed to digitize and automate critical welfare services into a single integrated platform.</p>
+            <p>By replacing manual, paper-driven workflows, Campus Care guarantees secure, real-time access to student services, immediate coordinator actions, and efficient administrative oversight.</p>
             <div class="about-features">
-                <div class="about-feature"><i class="fas fa-check-circle"></i> Digital Deferments</div>
-                <div class="about-feature"><i class="fas fa-check-circle"></i> M-Pesa Payments</div>
-                <div class="about-feature"><i class="fas fa-check-circle"></i> Health Booking</div>
-                <div class="about-feature"><i class="fas fa-check-circle"></i> Maintenance Tracking</div>
-                <div class="about-feature"><i class="fas fa-check-circle"></i> Library Management</div>
-                <div class="about-feature"><i class="fas fa-check-circle"></i> 23 Staff Roles</div>
+                <div class="about-feature"><i class="fas fa-check-circle"></i> Seamless Approvals</div>
+                <div class="about-feature"><i class="fas fa-check-circle"></i> Direct M-Pesa Hook</div>
+                <div class="about-feature"><i class="fas fa-check-circle"></i> Secure Live Chat</div>
+                <div class="about-feature"><i class="fas fa-check-circle"></i> 23 Access Levels</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ======================== FEATURES SECTION (FLASHING CARDS) ======================== -->
+<!-- ======================== FEATURES GRID ======================== -->
 <section class="features-section">
-    <div style="max-width:1200px; margin:0 auto; text-align:center; margin-bottom:40px;">
-        <h2 style="font-size:32px; font-weight:700;">Key Features</h2>
-        <p style="color:#64748B;">Everything you need for student welfare management</p>
+    <div class="section-header">
+        <h2>System Features</h2>
+        <p>A list of active, robust welfare modules configured in the platform.</p>
     </div>
     <div class="features-grid">
+        <!-- 1. Deferments -->
         <div class="feature-card">
-            <span class="icon">📋</span>
-            <h4>Deferment</h4>
-            <p>Digital requests with 24-48 hour approval. Real-time status tracking.</p>
-            <span class="feature-tag">⚡ 86% Faster</span>
+            <div class="icon-wrapper"><i class="fas fa-file-signature"></i></div>
+            <h4>Academic Deferments</h4>
+            <p>Submit and track deferment requests. Automated workflow redirects applications directly to designated coordinators.</p>
+            <span class="feature-badge">Active</span>
         </div>
+        <!-- 2. M-Pesa Payments -->
         <div class="feature-card">
-            <span class="icon">💰</span>
+            <div class="icon-wrapper"><i class="fas fa-mobile-screen-button"></i></div>
             <h4>M-Pesa Payments</h4>
-            <p>Instant receipts, balance tracking, and automated reconciliation.</p>
-            <span class="feature-tag">💳 1% Fee</span>
+            <p>Settle room accommodation and library fines through direct M-Pesa STK Push callbacks with automated invoice update.</p>
+            <span class="feature-badge">M-Pesa Enabled</span>
         </div>
+        <!-- 3. Accommodation -->
         <div class="feature-card">
-            <span class="icon">🏥</span>
+            <div class="icon-wrapper"><i class="fas fa-hotel"></i></div>
+            <h4>Room Accommodation</h4>
+            <p>Explore available hostels and blocks, select rooms, handle room checkout, and request formal room changes.</p>
+            <span class="feature-badge">Active</span>
+        </div>
+        <!-- 4. Health Booking -->
+        <div class="feature-card">
+            <div class="icon-wrapper"><i class="fas fa-stethoscope"></i></div>
             <h4>Health Booking</h4>
-            <p>Online appointments with SMS reminders and medical history access.</p>
-            <span class="feature-tag">📱 24/7 Access</span>
+            <p>Schedule medical consultations at the campus clinic online, track clinic slots, and receive dynamic reminders.</p>
+            <span class="feature-badge">Active</span>
         </div>
+        <!-- 5. Mental Health -->
         <div class="feature-card">
-            <span class="icon">🔧</span>
-            <h4>Maintenance</h4>
-            <p>Digital tickets with photo upload and status tracking.</p>
-            <span class="feature-tag">⏱️ 24hr Response</span>
+            <div class="icon-wrapper"><i class="fas fa-heart-pulse"></i></div>
+            <h4>Confidential Counselling</h4>
+            <p>Submit secure counselling and mental support requests reviewed only by certified campus counselling officers.</p>
+            <span class="feature-badge">Confidential</span>
         </div>
+        <!-- 6. Maintenance -->
         <div class="feature-card">
-            <span class="icon">🏠</span>
-            <h4>Accommodation</h4>
-            <p>Room allocation, check-in/out, and deferment sync.</p>
-            <span class="feature-tag">🛏️ 100% Digital</span>
+            <div class="icon-wrapper"><i class="fas fa-screwdriver-wrench"></i></div>
+            <h4>Facility Maintenance</h4>
+            <p>Log maintenance requests for repairs in your hostel room. Upload issue details and monitor ticket execution.</p>
+            <span class="feature-badge">Active</span>
         </div>
+        <!-- 7. Library -->
         <div class="feature-card">
-            <span class="icon">📚</span>
-            <h4>Library</h4>
-            <p>Book tracking, due dates, fines, and digital library card.</p>
-            <span class="feature-tag">📖 Smart Tracking</span>
+            <div class="icon-wrapper"><i class="fas fa-book-open"></i></div>
+            <h4>Smart Library Services</h4>
+            <p>Access your student library profile, view currently borrowed items, check due dates, and settle fine balances.</p>
+            <span class="feature-badge">Active</span>
         </div>
+        <!-- 8. Tutoring Hub -->
         <div class="feature-card">
-            <span class="icon">🧠</span>
-            <h4>Mental Health</h4>
-            <p>Confidential counselling with anonymous option. 24/7 crisis helpline.</p>
-            <span class="feature-tag">🤝 Confidential</span>
+            <div class="icon-wrapper"><i class="fas fa-chalkboard-user"></i></div>
+            <h4>Peer Tutoring Hub</h4>
+            <p>Participate in peer-to-peer learning. Students can publish study support posts or find tutoring help from others.</p>
+            <span class="feature-badge">Active</span>
         </div>
+        <!-- 9. Lost & Found -->
         <div class="feature-card">
-            <span class="icon">💬</span>
+            <div class="icon-wrapper"><i class="fas fa-magnifying-glass"></i></div>
+            <h4>Lost & Found</h4>
+            <p>Report misplaced personal properties on campus or search resolved listings to claim lost items.</p>
+            <span class="feature-badge">Active</span>
+        </div>
+        <!-- 10. Direct Messaging -->
+        <div class="feature-card">
+            <div class="icon-wrapper"><i class="fas fa-comments"></i></div>
+            <h4>Secure Live Chat</h4>
+            <p>Direct communication hub enabling students to chat securely with support agents, wardens, or administrators.</p>
+            <span class="feature-badge">Live Chat</span>
+        </div>
+        <!-- 11. Visitor Management -->
+        <div class="feature-card">
+            <div class="icon-wrapper"><i class="fas fa-user-lock"></i></div>
+            <h4>Visitor Security</h4>
+            <p>Log visitor sign-ins, monitor active guests, and enforce sign-out workflows to maintain hostel security.</p>
+            <span class="feature-badge">Active</span>
+        </div>
+        <!-- 12. WhatsApp Bot -->
+        <div class="feature-card">
+            <div class="icon-wrapper"><i class="fab fa-whatsapp"></i></div>
             <h4>WhatsApp Bot</h4>
-            <p>Check fee balance and request status via WhatsApp.</p>
-            <span class="feature-tag">📱 Coming Soon</span>
+            <p>Quick access helper enabling query of fee status and tracking deferment requests directly via WhatsApp messaging.</p>
+            <span class="feature-badge">Demo Mode</span>
+        </div>
+        <!-- 13. Announcements -->
+        <div class="feature-card">
+            <div class="icon-wrapper"><i class="fas fa-bullhorn"></i></div>
+            <h4>Announcements & Alerts</h4>
+            <p>View administrative broadcasts and alerts, or receive real-time emergency signals published by staff.</p>
+            <span class="feature-badge">Active</span>
         </div>
     </div>
 </section>
 
-<!-- ======================== STAFF ROLES SECTION ======================== -->
+<!-- ======================== STAFF ROLES (CATEGORIZED) ======================== -->
 <section class="staff-section" id="staff-roles">
-    <div style="max-width:1200px; margin:0 auto; text-align:center; margin-bottom:32px;">
-        <h2 style="font-size:32px; font-weight:700;">23 Staff Roles</h2>
-        <p style="color:#64748B;">Role-based access for complete control</p>
+    <div class="section-header">
+        <h2>23 Access Roles</h2>
+        <p>Categorized layout of system access roles and administration points.</p>
     </div>
-    <div class="staff-grid">
-        <a href="#super-admin" class="staff-link"><span class="role-icon">👑</span> Super Admin</a>
-        <a href="#vc" class="staff-link"><span class="role-icon">👑</span> Vice Chancellor</a>
-        <a href="#dvc" class="staff-link"><span class="role-icon">📚</span> Deputy Vice Chancellor</a>
-        <a href="#register-admin" class="staff-link"><span class="role-icon">📋</span> Register Admin</a>
-        <a href="#register-user" class="staff-link"><span class="role-icon">👤</span> Register User</a>
-        <a href="#dean-students" class="staff-link"><span class="role-icon">👨🎓</span> Dean of Students</a>
-        <a href="#dean-graduate" class="staff-link"><span class="role-icon">🎓</span> Dean - Graduate School</a>
-        <a href="#director-resource" class="staff-link"><span class="role-icon">💰</span> Director - Resource Mobilization</a>
-        <a href="#director-tvet" class="staff-link"><span class="role-icon">🔧</span> Director - TVET</a>
-        <a href="#deferment-officer" class="staff-link"><span class="role-icon">📋</span> Deferment Officer</a>
-        <a href="#dept-mcs" class="staff-link"><span class="role-icon">💻</span> Dept MCS Coordinator</a>
-        <a href="#health-manager" class="staff-link"><span class="role-icon">🏥</span> Health Manager</a>
-        <a href="#maintenance-sup" class="staff-link"><span class="role-icon">🔧</span> Maintenance Supervisor</a>
-        <a href="#warden" class="staff-link"><span class="role-icon">🏠</span> Warden</a>
-        <a href="#finance-officer" class="staff-link"><span class="role-icon">💰</span> Finance Officer</a>
-        <a href="#security-officer" class="staff-link"><span class="role-icon">👤</span> Security Officer</a>
-        <a href="#news-editor" class="staff-link"><span class="role-icon">📢</span> News Editor</a>
-        <a href="#news-auditor" class="staff-link"><span class="role-icon">📜</span> News Auditor</a>
-        <a href="#emergency-coord" class="staff-link"><span class="role-icon">🚨</span> Emergency Coordinator</a>
-        <a href="#support-agent" class="staff-link"><span class="role-icon">💬</span> Support Agent</a>
-        <a href="#auditor" class="staff-link"><span class="role-icon">📜</span> Auditor</a>
-        <a href="#diploma-coord" class="staff-link"><span class="role-icon">🎓</span> Diploma Coordinator</a>
-        <a href="#dept-coord" class="staff-link"><span class="role-icon">🏫</span> Department Coordinator</a>
+    <div class="staff-categories">
+        <!-- 1. Executive -->
+        <div class="category-card">
+            <h3><i class="fas fa-building-columns"></i> Executive & Oversight</h3>
+            <div class="roles-list">
+                <a href="#super-admin" class="role-pill"><span class="role-emoji">👑</span> Super Admin</a>
+                <a href="#vc" class="role-pill"><span class="role-emoji">👑</span> Vice Chancellor</a>
+                <a href="#dvc" class="role-pill"><span class="role-emoji">📚</span> DVC Academic</a>
+                <a href="#dir-resource" class="role-pill"><span class="role-emoji">💰</span> Director Mobilization</a>
+                <a href="#auditor" class="role-pill"><span class="role-emoji">📜</span> Auditor</a>
+            </div>
+        </div>
+
+        <!-- 2. Admissions & Registry -->
+        <div class="category-card">
+            <h3><i class="fas fa-id-card"></i> Admissions & Registry</h3>
+            <div class="roles-list">
+                <a href="#register-admin" class="role-pill"><span class="role-emoji">📋</span> Register Admin</a>
+                <a href="#register-user" class="role-pill"><span class="role-emoji">👤</span> Register User</a>
+                <a href="#deferment-officer" class="role-pill"><span class="role-emoji">📋</span> Deferment Officer</a>
+            </div>
+        </div>
+
+        <!-- 3. Academic Coordinates -->
+        <div class="category-card">
+            <h3><i class="fas fa-book-bookmark"></i> Academic Coordinators</h3>
+            <div class="roles-list">
+                <a href="#dean-graduate" class="role-pill"><span class="role-emoji">🎓</span> Dean Grad School</a>
+                <a href="#director-tvet" class="role-pill"><span class="role-emoji">🔧</span> Director TVET</a>
+                <a href="#dept-mcs" class="role-pill"><span class="role-emoji">💻</span> MCS Coordinator</a>
+                <a href="#diploma-coord" class="role-pill"><span class="role-emoji">🎓</span> Diploma Coordinator</a>
+                <a href="#dept-coord" class="role-pill"><span class="role-emoji">🏫</span> Dept Coordinator</a>
+            </div>
+        </div>
+
+        <!-- 4. Operations & Security -->
+        <div class="category-card">
+            <h3><i class="fas fa-shield-heart"></i> Operations & Security</h3>
+            <div class="roles-list">
+                <a href="#finance-officer" class="role-pill"><span class="role-emoji">💰</span> Finance Officer</a>
+                <a href="#security-officer" class="role-pill"><span class="role-emoji">👤</span> Security Officer</a>
+                <a href="#emergency-coord" class="role-pill"><span class="role-emoji">🚨</span> Emergency Coordinator</a>
+                <a href="#news-editor" class="role-pill"><span class="role-emoji">📢</span> News Editor</a>
+                <a href="#news-auditor" class="role-pill"><span class="role-emoji">📜</span> News Auditor</a>
+            </div>
+        </div>
+
+        <!-- 5. Welfare & Facilities -->
+        <div class="category-card">
+            <h3><i class="fas fa-hand-holding-hand"></i> Welfare & Facilities</h3>
+            <div class="roles-list">
+                <a href="#dean-students" class="role-pill"><span class="role-emoji">👨‍🎓</span> Dean of Students</a>
+                <a href="#warden" class="role-pill"><span class="role-emoji">🏠</span> Warden</a>
+                <a href="#health-manager" class="role-pill"><span class="role-emoji">🏥</span> Health Manager</a>
+                <a href="#maintenance-sup" class="role-pill"><span class="role-emoji">🔧</span> Maintenance Supervisor</a>
+                <a href="#support-agent" class="role-pill"><span class="role-emoji">💬</span> Support Agent</a>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- ======================== FOOTER ======================== -->
 <footer class="footer">
-    <div class="footer-logo">
-        <img src="{% static 'img/campus_care_logo.png' %}" alt="Campus Care Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;"> Campus Care
+    <div class="footer-container">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <img src="{% static 'img/campus_care_logo.png' %}" alt="Campus Care Logo"> Campus Care
+            </div>
+            <p>An automated web portal to manage and streamline all dimensions of Student Welfare Services.</p>
+            <div class="developer-tag">Developed by: Ali Mahirizi Abdalla</div>
+        </div>
+        <div class="footer-links">
+            <h4>Navigations</h4>
+            <ul>
+                <li><a href="#about">About System</a></li>
+                <li><a href="#staff-roles">Access Levels</a></li>
+                <li><a href="{% url 'hms:login' %}">Sign In Portal</a></li>
+                <li><a href="{% url 'hms:register' %}">Create Student Profile</a></li>
+            </ul>
+        </div>
+        <div class="footer-contact">
+            <h4>Support Contacts</h4>
+            <p><i class="fas fa-envelope"></i> <a href="mailto:alimahrez744@gmail.com">alimahrez744@gmail.com</a></p>
+            <p><i class="fas fa-phone"></i> <a href="tel:0750168458">0750168458</a></p>
+        </div>
     </div>
-    <p>Student Welfare Management System</p>
-    <p style="font-size:12px; color:#64748B; margin-top:4px;">Developed by: Ali Mahirizi Abdalla</p>
-    <p style="font-size:12px; color:#64748B;">
-        📧 <a href="mailto:alimahrez744@gmail.com">alimahrez744@gmail.com</a> &nbsp;|&nbsp; 📱 <a href="tel:0750168458">0750168458</a>
-    </p>
     <hr class="footer-divider">
-    <div class="footer-links">
-        <a href="#about">About</a>
-        <a href="#staff-roles">Staff Roles</a>
-        <a href="{% url 'hms:login' %}">Login</a>
-        <a href="{% url 'hms:register' %}">Register</a>
+    <div class="footer-bottom">
+        <p>© 2026 Campus Care Welfare Portal. All rights reserved.</p>
     </div>
-    <p style="font-size:12px; color:#475569; margin-top:16px;">© 2026 Campus Care. All rights reserved.</p>
 </footer>
 
 <!-- ======================== SCRIPT ======================== -->
@@ -976,9 +1490,10 @@
         menu.classList.toggle('open');
     }
 
+    // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
         const dropdown = document.querySelector('.profile-dropdown');
-        if (!dropdown.contains(event.target)) {
+        if (dropdown && !dropdown.contains(event.target)) {
             document.getElementById('dropdownMenu').classList.remove('open');
         }
     });
