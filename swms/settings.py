@@ -297,7 +297,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ============================================
 LOGIN_URL = 'hms:login'
 LOGIN_REDIRECT_URL = 'hms:student_dashboard'
-LOGOUT_REDIRECT_URL = 'hms:login'
+LOGOUT_REDIRECT_URL = 'landing'
 
 AUTHENTICATION_BACKENDS = [
     'hms.backends.EmailBackend',
