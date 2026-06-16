@@ -74,6 +74,20 @@ class Student(models.Model):
 
     program_of_study = models.CharField(max_length=100, blank=True, null=True, help_text="Department or Program of Study")
     
+    ACADEMIC_SCHOOL_CHOICES = [
+        ('library', 'Library'),
+        ('sasa', 'SASA – School of Arts and Social Sciences'),
+        ('sed', 'SED – School of Education'),
+        ('sob', 'SOB – School of Business'),
+        ('shhs', 'SHHS – School of Health and Human Sciences'),
+        ('sees', 'SEES – School of Environmental and Earth Sciences'),
+        ('shss', 'SHSS – School of Humanities and Social Sciences'),
+        ('spas', 'SPAS – School of Performing Arts and Sports'),
+        ('finance', 'Finance'),
+        ('dean', 'Dean of School'),
+    ]
+    academic_school = models.CharField(max_length=50, choices=ACADEMIC_SCHOOL_CHOICES, blank=True, null=True, help_text="Academic School")
+
     hostel = models.CharField(max_length=50, blank=True, null=True, help_text="Name of the hostel/hall")
 
 

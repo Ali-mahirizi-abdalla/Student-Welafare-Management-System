@@ -439,6 +439,14 @@ class ProfileEditForm(forms.Form):
             'placeholder': 'e.g., Computer Science'
         })
     )
+    academic_school = forms.ChoiceField(
+        choices=[('', '-- Select Academic School --')] + Student.ACADEMIC_SCHOOL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition',
+            'id': 'academic_school'
+        })
+    )
 
 
     residence_type = forms.ChoiceField(
@@ -500,6 +508,7 @@ class ProfileEditForm(forms.Form):
             self.fields['university_id'].initial = student.university_id
             self.fields['gender'].initial = student.gender
             self.fields['program_of_study'].initial = student.program_of_study
+            self.fields['academic_school'].initial = student.academic_school
 
 
             self.fields['residence_type'].initial = student.residence_type
@@ -534,6 +543,7 @@ class ProfileEditForm(forms.Form):
             self.student.university_id = self.cleaned_data.get('university_id')
             self.student.gender = self.cleaned_data.get('gender')
             self.student.program_of_study = self.cleaned_data.get('program_of_study')
+            self.student.academic_school = self.cleaned_data.get('academic_school')
 
 
             self.student.residence_type = self.cleaned_data.get('residence_type')

@@ -943,6 +943,20 @@ def dashboard_admin(request):
         'health': Student.objects.filter(program_of_study__icontains='Health').count(),
     }
 
+    # School counts for flash cards
+    school_counts = {
+        'library': Student.objects.filter(academic_school='library').count(),
+        'sasa': Student.objects.filter(academic_school='sasa').count(),
+        'sed': Student.objects.filter(academic_school='sed').count(),
+        'sob': Student.objects.filter(academic_school='sob').count(),
+        'shhs': Student.objects.filter(academic_school='shhs').count(),
+        'sees': Student.objects.filter(academic_school='sees').count(),
+        'shss': Student.objects.filter(academic_school='shss').count(),
+        'spas': Student.objects.filter(academic_school='spas').count(),
+        'finance': Student.objects.filter(academic_school='finance').count(),
+        'dean': Student.objects.filter(academic_school='dean').count(),
+    }
+
     # Level of Study breakdown
     level_counts = {
         'diploma': Student.objects.filter(level_of_study='diploma').count(),
@@ -1013,6 +1027,7 @@ def dashboard_admin(request):
         'level_percentages': level_percentages,
         'total_students_all': total_students,
         'dept_counts': dept_counts,
+        'school_counts': school_counts,
         'role_banner': role_banner,
     }
 
@@ -1177,6 +1192,18 @@ def render_role_dashboard(request, title, desc):
             'environmental': Student.objects.filter(program_of_study__icontains='Environmental').count(),
             'spas': Student.objects.filter(Q(program_of_study__icontains='SPAS') | Q(program_of_study__icontains='Spatial')).count(),
             'health': Student.objects.filter(program_of_study__icontains='Health').count(),
+        },
+        'school_counts': {
+            'library': Student.objects.filter(academic_school='library').count(),
+            'sasa': Student.objects.filter(academic_school='sasa').count(),
+            'sed': Student.objects.filter(academic_school='sed').count(),
+            'sob': Student.objects.filter(academic_school='sob').count(),
+            'shhs': Student.objects.filter(academic_school='shhs').count(),
+            'sees': Student.objects.filter(academic_school='sees').count(),
+            'shss': Student.objects.filter(academic_school='shss').count(),
+            'spas': Student.objects.filter(academic_school='spas').count(),
+            'finance': Student.objects.filter(academic_school='finance').count(),
+            'dean': Student.objects.filter(academic_school='dean').count(),
         }
     }
     return render(request, 'hms/rbac/role_dashboard.html', context)

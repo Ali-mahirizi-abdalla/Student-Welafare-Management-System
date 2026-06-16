@@ -107,32 +107,31 @@
                     </div>
                 </div>
 
-                <!-- Program of Study -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Program of Study /
-                        Department</label>
-                    {{ profile_form.program_of_study }}
-                    {% if profile_form.program_of_study.errors %}
-                    <p class="text-xs text-red-600 mt-1">{{ profile_form.program_of_study.errors.0 }}</p>
-                    {% endif %}
+                <!-- Program of Study & Academic School -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Program of Study</label>
+                        {{ profile_form.program_of_study }}
+                        {% if profile_form.program_of_study.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ profile_form.program_of_study.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Academic School</label>
+                        {{ profile_form.academic_school }}
+                        {% if profile_form.academic_school.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ profile_form.academic_school.errors.0 }}</p>
+                        {% endif %}
+                    </div>
                 </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone
-                            Number</label>
-                        {{ profile_form.phone }}
-                        {% if profile_form.phone.errors %}
-                        <p class="text-xs text-red-600 mt-1">{{ profile_form.phone.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone
-                            Number</label>
-                        {{ profile_form.phone }}
-                        {% if profile_form.phone.errors %}
-                        <p class="text-xs text-red-600 mt-1">{{ profile_form.phone.errors.0 }}</p>
-                        {% endif %}
-                    </div>
+                <!-- Phone Number -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                    {{ profile_form.phone }}
+                    {% if profile_form.phone.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ profile_form.phone.errors.0 }}</p>
+                    {% endif %}
                 </div>
 
                 <!-- Residence Type -->
