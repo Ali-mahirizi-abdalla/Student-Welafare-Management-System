@@ -471,8 +471,10 @@
         /* Floating Overlays on Mockup */
         .mockup-badge {
             position: absolute;
-            background: var(--white);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             padding: 8px 14px;
             border-radius: 12px;
             display: flex;
@@ -484,21 +486,21 @@
         }
 
         .badge-1 {
-            bottom: 30px;
-            left: -40px;
+            bottom: -15px;
+            left: 24px;
         }
 
         .badge-2 {
-            top: 60px;
-            right: -25px;
+            top: -15px;
+            right: 24px;
         }
 
         .mockup:hover ~ .badge-1 {
-            transform: translate(6px, -4px);
+            transform: translateY(-4px);
         }
 
         .mockup:hover ~ .badge-2 {
-            transform: translate(-6px, 4px);
+            transform: translateY(4px);
         }
 
         .mockup-badge i {
@@ -1177,49 +1179,51 @@
             </div>
         </div>
         <div class="hero-image">
-            <div class="mockup">
-                <div class="mockup-header">
-                    <div class="dots">
-                        <span></span><span></span><span></span>
+            <div class="mockup-wrapper" style="position: relative; width: 100%; max-width: 480px; display: flex; justify-content: center;">
+                <div class="mockup">
+                    <div class="mockup-header">
+                        <div class="dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="title">Campus Care Dashboard</span>
                     </div>
-                    <span class="title">Campus Care Dashboard</span>
+                    <div class="mockup-body">
+                        <div class="mockup-card">
+                            <div class="icon">📋</div>
+                            <div class="count">0</div>
+                            <div class="label">Deferments</div>
+                        </div>
+                        <div class="mockup-card">
+                            <div class="icon">💸</div>
+                            <div class="count">0</div>
+                            <div class="label">M-Pesa Trans</div>
+                        </div>
+                        <div class="mockup-card">
+                            <div class="icon">🏥</div>
+                            <div class="count">0</div>
+                            <div class="label">Health Bookings</div>
+                        </div>
+                        <div class="mockup-card">
+                            <div class="icon">🔧</div>
+                            <div class="count">0</div>
+                            <div class="label">Maintenance</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="mockup-body">
-                    <div class="mockup-card">
-                        <div class="icon">📋</div>
-                        <div class="count">0</div>
-                        <div class="label">Deferments</div>
-                    </div>
-                    <div class="mockup-card">
-                        <div class="icon">💸</div>
-                        <div class="count">0</div>
-                        <div class="label">M-Pesa Trans</div>
-                    </div>
-                    <div class="mockup-card">
-                        <div class="icon">🏥</div>
-                        <div class="count">0</div>
-                        <div class="label">Health Bookings</div>
-                    </div>
-                    <div class="mockup-card">
-                        <div class="icon">🔧</div>
-                        <div class="count">0</div>
-                        <div class="label">Maintenance</div>
+                <!-- Interactive Floating Badges -->
+                <div class="mockup-badge badge-1">
+                    <i class="fas fa-circle-check" style="color: #10B981;"></i>
+                    <div>
+                        <span>M-Pesa Confirmed</span>
+                        <p>Instant Receipt</p>
                     </div>
                 </div>
-            </div>
-            <!-- Interactive Floating Badges -->
-            <div class="mockup-badge badge-1">
-                <i class="fas fa-circle-check"></i>
-                <div>
-                    <span>M-Pesa Confirmed</span>
-                    <p>Instant Receipt</p>
-                </div>
-            </div>
-            <div class="mockup-badge badge-2">
-                <i class="fas fa-shield-halved" style="color: #0D9488;"></i>
-                <div>
-                    <span>Secure Access</span>
-                    <p>Role-based RBAC</p>
+                <div class="mockup-badge badge-2">
+                    <i class="fas fa-shield-halved" style="color: #0D9488;"></i>
+                    <div>
+                        <span>Secure Access</span>
+                        <p>Role-based RBAC</p>
+                    </div>
                 </div>
             </div>
         </div>
