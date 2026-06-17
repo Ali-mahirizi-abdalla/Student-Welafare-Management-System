@@ -161,7 +161,6 @@ ROLE_BANNERS = {
 def register_student(request):
     """
     Handle student registration logic.
-    Requires a valid invitation token.
     """
     invite_token = request.GET.get('invite') or request.POST.get('invite')
     invite = None
@@ -170,17 +169,11 @@ def register_student(request):
         if not invite or not invite.is_valid():
             messages.error(request, "Invalid or expired student invitation link.")
             return redirect('hms:login')
-    else:
-        # No invite token — require login and admin permission for manual registration
-        if not request.user.is_authenticated:
-            messages.error(request, "A valid student invitation link is required to register.")
-            return redirect('hms:login')
-        # Authenticated admins can manually add students without a token
-        if not request.user.is_superuser:
-            staff_profile = getattr(request.user, 'staff_profile', None)
-            if not staff_profile or staff_profile.role not in ['super_admin', 'vice_chancellor', 'reg_admin']:
-                messages.error(request, "Access Denied: Only admins can manually register students.")
-                return redirect('hms:dashboard_redirect')
+            
+    is_admin_registration = request.user.is_authenticated and (
+        request.user.is_superuser or 
+        (hasattr(request.user, 'staff_profile') and request.user.staff_profile.role in ['super_admin', 'vice_chancellor', 'reg_admin'])
+    )
 
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
@@ -196,8 +189,11 @@ def register_student(request):
                         invite.used_count += 1
                         invite.save()
                         
-                # Only auto-login if they used an invite (self-registering)
-                if invite:
+                # Only redirect to admin dashboard if an admin is registering them manually
+                if is_admin_registration and not invite:
+                    messages.success(request, f"Student {student.user.get_full_name()} registered successfully!")
+                    return redirect('hms:dashboard_redirect')
+                else:
                     login(request, student.user, backend='django.contrib.auth.backends.ModelBackend')
                     messages.success(request, "Registration successful! Welcome to Campus Care.")
                     try:
@@ -206,9 +202,6 @@ def register_student(request):
                     except Exception:
                         pass
                     return redirect('hms:student_dashboard')
-                else:
-                    messages.success(request, f"Student {student.user.get_full_name()} registered successfully!")
-                    return redirect('hms:dashboard_redirect')
             except Exception as e:
                 messages.error(request, f"Registration failed: {str(e)}")
         else:
