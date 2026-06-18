@@ -1,5 +1,5 @@
 // CampusCare Service Worker
-const CACHE_NAME = 'campuscare-v1';
+const CACHE_NAME = 'campuscare-v2';
 const OFFLINE_URL = '/offline/';
 
 // Assets to cache immediately
