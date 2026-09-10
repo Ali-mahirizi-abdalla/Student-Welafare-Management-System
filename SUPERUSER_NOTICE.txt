@@ -1,0 +1,8 @@
+# Superuser Creation Notice
+
+A superuser account has been created for administrative access to the Django admin interface.
+
+- **Username**: Ali-Mahrez (or the username you provided during creation)
+- **Purpose**: Manage site content, users, and data via the Django admin dashboard.
+
+> **Important**: Keep the credentials secure and do not commit them to a public repository.
