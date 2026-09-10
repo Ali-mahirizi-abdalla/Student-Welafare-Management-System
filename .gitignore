@@ -37,6 +37,7 @@ staticfiles/
 .env.*.local
 *.env
 secrets_backup/
+.venv/
 venv/
 ENV/
 env/
