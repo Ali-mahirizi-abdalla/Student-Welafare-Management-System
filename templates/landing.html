@@ -5,1110 +5,1335 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Care – Student Welfare Management System</title>
-    
+
     <!-- SEO Meta Tags -->
     <meta name="google-site-verification" content="3Z1_mH2YOg-whHK9grZyyn3x9phP8UeUr_isg1u0ovU" />
     <meta name="description" content="One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage accommodation seamlessly.">
     <meta name="author" content="Ali Mahirizi Abdalla">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://campuscare.co.ke/">
-    <meta property="og:title" content="CampusCare">
+    <meta property="og:url" content="https://campus-care.co.ke/">
+    <meta property="og:title" content="Campus Care – Student Welfare Management System">
     <meta property="og:description" content="One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage accommodation seamlessly.">
-    <meta property="og:image" content="https://campuscare.co.ke/static/img/campuscare_logo.png">
-    <meta property="og:image:width" content="1024">
-    <meta property="og:image:height" content="1024">
-    <meta property="og:site_name" content="CampusCare">
+    <meta property="og:image" content="https://campus-care.co.ke/static/img/campuscare_og_image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Campus Care">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://campuscare.co.ke/">
-    <meta name="twitter:title" content="CampusCare">
+    <meta name="twitter:url" content="https://campus-care.co.ke/">
+    <meta name="twitter:title" content="Campus Care – Student Welfare Management System">
     <meta name="twitter:description" content="One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage accommodation seamlessly.">
-    <meta name="twitter:image" content="https://campuscare.co.ke/static/img/campuscare_logo.png">
+    <meta name="twitter:image" content="https://campus-care.co.ke/static/img/campuscare_og_image.png">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="{% static 'manifest.json' %}?v=2">
-    <meta name="theme-color" content="#001f3f">
+    <meta name="theme-color" content="#0A2540">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CampusCare">
     <link rel="apple-touch-icon" href="{% static 'img/icon-192.png' %}?v=2">
+
     <style>
-        /* ===== ROOT VARIABLES ===== */
+        /* ================================================================
+           DESIGN SYSTEM — Campus Care Institutional Landing
+           Primary: #0A2540 (Deep Navy)
+           Accent:  #F59E0B (Warm Amber)
+           ================================================================ */
         :root {
-            --primary: #004DDA;       /* Vibrant Blue base */
-            --secondary: #003DB3;     /* Darker shade */
-            --accent: #FF5A00;        /* Orange accent */
-            --bg: #F0F4FA;            /* Slightly blueish background */
-            --white: #FFFFFF;
-            --gray: #4A5568;
-            --dark: #1A202C;
-            --gradient: linear-gradient(135deg, #004DDA 0%, #002B7F 100%);
-            --shadow: 0 20px 40px -12px rgba(0,77,218,0.15);
-            --radius: 24px;
+            --navy:    #0A2540;
+            --navy-80: #1B3A5C;
+            --navy-60: #2D5078;
+            --amber:   #F59E0B;
+            --amber-light: #FEF3C7;
+            --white:   #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100:#F1F5F9;
+            --gray-200:#E2E8F0;
+            --gray-300:#CBD5E1;
+            --gray-400:#94A3B8;
+            --gray-500:#64748B;
+            --gray-600:#475569;
+            --gray-700:#334155;
+            --gray-800:#1E293B;
+            --gray-900:#0F172A;
+            --radius-sm:  8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow-sm: 0 1px 3px rgba(10,37,64,0.06), 0 1px 2px rgba(10,37,64,0.04);
+            --shadow-md: 0 4px 12px rgba(10,37,64,0.08);
+            --shadow-lg: 0 12px 40px rgba(10,37,64,0.12);
+            --shadow-xl: 0 20px 60px rgba(10,37,64,0.16);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        /* === RESET === */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--dark);
+            background: var(--white);
+            color: var(--gray-800);
             line-height: 1.6;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
+        img { max-width: 100%; display: block; }
+        a { text-decoration: none; color: inherit; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-        /* ===== ANIMATIONS ===== */
+        /* === CONTAINER === */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        @media (min-width: 768px) { .container { padding: 0 32px; } }
+        @media (min-width: 1024px) { .container { padding: 0 40px; } }
+
+        /* === ANIMATIONS === */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(13,148,136,0.2); }
-            50% { box-shadow: 0 0 40px rgba(13,148,136,0.4); }
-        }
-        @keyframes countUp {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .animate-on-scroll {
+        .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
         }
-        .animate-on-scroll.visible {
+        .reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* ===== NAVBAR ===== */
+        /* ================================================================
+           NAVBAR
+           ================================================================ */
         .navbar {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(16px);
-            padding: 16px 40px;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
+        }
+        .navbar.scrolled {
+            border-bottom-color: var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+        .navbar-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(226,232,240,0.5);
-            transition: all 0.3s;
+            height: 72px;
         }
-        .navbar.scrolled {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }
-
         .navbar-brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            text-decoration: none;
         }
-        .navbar-brand .logo {
-            width: 44px;
-            height: 44px;
-            background: var(--gradient);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(13,148,136,0.3);
+        .navbar-brand .logo-mark {
+            width: 40px; height: 40px;
+            border-radius: var(--radius-sm);
             overflow: hidden;
+            flex-shrink: 0;
         }
-        .navbar-brand .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .navbar-brand .logo-mark img {
+            width: 100%; height: 100%; object-fit: contain;
         }
-        .navbar-brand h1 {
-            font-size: 22px;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .navbar-brand .logo-text {
+            display: flex;
+            flex-direction: column;
         }
-        .navbar-brand span {
-            font-size: 10px;
-            color: var(--gray);
-            display: block;
+        .navbar-brand .logo-text strong {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+        .navbar-brand .logo-text span {
+            font-size: 11px;
+            color: var(--gray-500);
             font-weight: 400;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.2px;
         }
 
         .nav-links {
-            display: flex;
+            display: none;
             align-items: center;
             gap: 32px;
         }
         .nav-links a {
-            text-decoration: none;
-            color: var(--gray);
             font-size: 14px;
             font-weight: 500;
-            transition: color 0.2s;
+            color: var(--gray-600);
+            transition: color var(--transition);
             position: relative;
         }
-        .nav-links a:hover { color: var(--secondary); }
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--secondary);
-            transition: width 0.3s;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: var(--amber);
+            border-radius: 1px;
+            transition: width var(--transition);
         }
+        .nav-links a:hover { color: var(--navy); }
         .nav-links a:hover::after { width: 100%; }
+        @media (min-width: 768px) { .nav-links { display: flex; } }
 
-        .profile-dropdown {
-            position: relative;
-        }
-        .profile-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            background: var(--bg);
-            border: 1px solid #E2E8F0;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .profile-btn:hover {
-            border-color: var(--secondary);
-            background: #EFF6FF;
-        }
-        .profile-btn .avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-        }
-        .profile-btn .user-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-        .profile-btn i { color: var(--gray); }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 52px;
-            right: 0;
-            background: white;
-            border: 1px solid #E2E8F0;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            width: 220px;
-            display: none;
-            overflow: hidden;
-            z-index: 1001;
-        }
-        .dropdown-menu.open { display: block; animation: fadeUp 0.2s ease; }
-        .dropdown-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid #E2E8F0;
-        }
-        .dropdown-header h4 { font-size: 14px; font-weight: 600; color: var(--dark); }
-        .dropdown-header p { font-size: 12px; color: var(--gray); }
-        .dropdown-item {
+        .nav-actions {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 20px;
-            text-decoration: none;
-            color: var(--dark);
-            font-size: 14px;
-            transition: background 0.2s;
-            border: none;
-            background: none;
-            width: 100%;
-            cursor: pointer;
-            text-align: left;
         }
-        .dropdown-item:hover { background: var(--bg); }
-        .dropdown-item i { width: 20px; color: var(--secondary); }
-        .dropdown-divider { height: 1px; background: #E2E8F0; margin: 0 12px; }
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .btn-nav-primary {
+            background: var(--navy);
+            color: var(--white);
+        }
+        .btn-nav-primary:hover {
+            background: var(--navy-80);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(10,37,64,0.25);
+        }
+        .btn-nav-outline {
+            border: 1.5px solid var(--gray-200);
+            color: var(--navy);
+            background: var(--white);
+        }
+        .btn-nav-outline:hover {
+            border-color: var(--navy);
+            background: var(--gray-50);
+        }
 
-        /* ===== HERO ===== */
+        /* Mobile hamburger */
+        .mobile-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 8px;
+        }
+        .mobile-toggle span {
+            display: block;
+            width: 22px; height: 2px;
+            background: var(--navy);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        @media (min-width: 768px) { .mobile-toggle { display: none; } }
+
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px; left: 0; right: 0;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 16px 24px 24px;
+            box-shadow: var(--shadow-lg);
+            z-index: 999;
+        }
+        .mobile-menu.open { display: block; animation: fadeIn 0.2s ease; }
+        .mobile-menu a {
+            display: block;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu .mobile-cta {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .mobile-menu .mobile-cta .btn-nav { flex: 1; justify-content: center; }
+
+        /* ================================================================
+           HERO SECTION
+           ================================================================ */
         .hero {
-            padding: 140px 40px 80px;
-            background: var(--gradient);
-            color: white;
+            padding: 120px 0 80px;
+            background: var(--navy);
             position: relative;
             overflow: hidden;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
         }
+        /* Subtle geometric accents */
         .hero::before {
             content: '';
             position: absolute;
-            top: -40%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: rgba(255,255,255,0.04);
+            top: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%);
             border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
+            pointer-events: none;
         }
         .hero::after {
             content: '';
             position: absolute;
-            bottom: -20%;
-            left: -5%;
-            width: 400px;
-            height: 400px;
-            background: rgba(255,255,255,0.03);
+            bottom: -100px; left: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
             border-radius: 50%;
-            animation: float 10s ease-in-out infinite reverse;
+            pointer-events: none;
         }
-
-        .hero-container {
-            max-width: 1280px;
-            margin: 0 auto;
+        .hero-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            grid-template-columns: 1fr;
+            gap: 48px;
             align-items: center;
             position: relative;
             z-index: 1;
         }
-        .hero-text h1 {
-            font-size: 56px;
+        @media (min-width: 1024px) {
+            .hero { padding: 140px 0 100px; }
+            .hero-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
+        }
+        .hero-content { color: var(--white); }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(245,158,11,0.15);
+            border: 1px solid rgba(245,158,11,0.25);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--amber);
+            margin-bottom: 24px;
+        }
+        .hero-badge i { font-size: 10px; }
+        .hero-content h1 {
+            font-size: 36px;
             font-weight: 800;
-            line-height: 1.08;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
             margin-bottom: 20px;
-            letter-spacing: -1px;
         }
-        .hero-text h1 .highlight {
-            background: linear-gradient(135deg, #FDE047, #F59E0B);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .hero-content h1 .text-amber {
+            color: var(--amber);
         }
-        .hero-text p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.8);
-            max-width: 500px;
+        @media (min-width: 768px) {
+            .hero-content h1 { font-size: 48px; letter-spacing: -1px; }
+        }
+        @media (min-width: 1024px) {
+            .hero-content h1 { font-size: 52px; }
+        }
+        .hero-content p {
+            font-size: 17px;
+            line-height: 1.75;
+            color: rgba(255,255,255,0.7);
+            max-width: 520px;
             margin-bottom: 32px;
-            line-height: 1.8;
         }
         .hero-buttons {
             display: flex;
-            gap: 16px;
+            gap: 14px;
             flex-wrap: wrap;
         }
-        .btn-primary {
-            padding: 16px 36px;
-            background: white;
-            color: var(--secondary);
-            border: none;
-            border-radius: 60px;
-            font-size: 16px;
+        .btn-hero {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transition: all var(--transition);
         }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        .btn-hero-solid {
+            background: var(--white);
+            color: var(--navy);
         }
-        .btn-secondary {
-            padding: 16px 36px;
+        .btn-hero-solid:hover {
+            background: var(--gray-100);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .btn-hero-outline {
+            border: 1.5px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            background: rgba(255,255,255,0.06);
+        }
+        .btn-hero-outline:hover {
+            border-color: rgba(255,255,255,0.6);
             background: rgba(255,255,255,0.12);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 60px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            backdrop-filter: blur(4px);
-        }
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
-        /* ===== HERO MOCKUP ===== */
+        /* Hero Dashboard Mockup */
         .hero-mockup {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(8px);
-            border-radius: 24px;
-            padding: 24px;
+            background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.3);
         }
-        .mockup-header {
+        .mockup-chrome {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            gap: 8px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
             margin-bottom: 16px;
         }
-        .mockup-header .dots { display: flex; gap: 6px; }
-        .mockup-header .dots span {
-            width: 10px; height: 10px; border-radius: 50%;
+        .mockup-chrome .dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
         }
-        .mockup-header .dots span:nth-child(1) { background: #EF4444; }
-        .mockup-header .dots span:nth-child(2) { background: #F59E0B; }
-        .mockup-header .dots span:nth-child(3) { background: #10B981; }
-        .mockup-header .title { color: rgba(255,255,255,0.4); font-size: 12px; }
-        .mockup-grid {
+        .mockup-chrome .dot:nth-child(1) { background: #EF4444; }
+        .mockup-chrome .dot:nth-child(2) { background: #F59E0B; }
+        .mockup-chrome .dot:nth-child(3) { background: #22C55E; }
+        .mockup-chrome .url-bar {
+            flex: 1;
+            margin-left: 12px;
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 6px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.35);
+        }
+        .mockup-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+            margin-top: 14px;
+        }
+        .mockup-label:first-of-type { margin-top: 0; }
+        .mockup-cards {
             display: grid;
             gap: 6px;
         }
-        .mockup-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
-        .mockup-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
-        .mockup-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
-
-        .about-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            align-items: center;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .contact-box {
-            max-width: 700px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            padding: 40px;
-            border: 1px solid #E2E8F0;
-            box-shadow: var(--shadow);
-        }
-        .mockup-card {
-            border-radius: 8px;
+        .mockup-cards.cols-5 { grid-template-columns: repeat(5, 1fr); }
+        .mockup-cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+        .mock-card {
+            border-radius: 6px;
             padding: 8px;
-            text-align: left;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
-        .mockup-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.25); }
-        .mockup-card .icon-box { 
-            width: 18px; height: 18px; border-radius: 4px;
-            background: rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);
+        .mock-card .mc-icon {
+            font-size: 10px;
+            margin-bottom: 4px;
         }
-        .mockup-card .title { font-size: 7px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mockup-card .count { font-size: 12px; font-weight: 700; color: white; line-height: 1; margin-bottom: 2px;}
-        .mockup-card .label { font-size: 5px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px;}
-        
-        .mockup-section-title {
-            font-size: 7px; font-weight: 700; color: rgba(255,255,255,0.6);
-            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; margin-top: 14px;
+        .mock-card .mc-title {
+            font-size: 7px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mock-card .mc-num {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1.2;
+        }
+        .mock-card .mc-sub {
+            font-size: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.5);
         }
 
-        /* ===== STATS ===== */
-        .stats-section {
-            padding: 60px 40px;
-            background: white;
-            border-bottom: 1px solid #E2E8F0;
+        /* ================================================================
+           METRICS BAR
+           ================================================================ */
+        .metrics-bar {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 48px 0;
         }
-        .stats-grid {
-            max-width: 1280px;
-            margin: 0 auto;
+        .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 1fr;
             gap: 24px;
+        }
+        @media (min-width: 640px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .metric-item {
             text-align: center;
-        }
-        .stat-item {
-            padding: 24px;
-            border-radius: 20px;
-            background: var(--bg);
-            transition: all 0.3s;
+            padding: 24px 16px;
+            border-radius: var(--radius-lg);
+            background: var(--gray-50);
+            border: 1px solid var(--gray-100);
+            transition: all var(--transition);
             position: relative;
-            overflow: hidden;
         }
-        .stat-item::before {
+        .metric-item::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient);
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 40px; height: 3px;
+            background: var(--amber);
+            border-radius: 0 0 3px 3px;
         }
-        .stat-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
-        .stat-item .icon { font-size: 32px; margin-bottom: 8px; display: block; }
-        .stat-item .number {
-            font-size: 44px;
+        .metric-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--gray-200);
+        }
+        .metric-number {
+            font-size: 36px;
             font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: var(--navy);
+            line-height: 1;
+            margin-bottom: 4px;
         }
-        .stat-item .label { font-size: 14px; color: var(--gray); font-weight: 500; margin-top: 4px; }
-        .stat-item .trend {
-            font-size: 12px; color: var(--accent); margin-top: 8px;
-            display: flex; align-items: center; justify-content: center; gap: 4px;
+        .metric-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 4px;
         }
+        .metric-desc {
+            font-size: 12px;
+            color: var(--gray-400);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .metric-desc i { color: var(--amber); font-size: 10px; }
 
-        /* ===== FEATURES ===== */
-        .features-section {
-            padding: 80px 40px;
-            background: var(--bg);
-        }
+        /* ================================================================
+           SECTION HEADERS
+           ================================================================ */
         .section-header {
             text-align: center;
-            max-width: 700px;
+            max-width: 640px;
             margin: 0 auto 48px;
         }
         .section-header h2 {
-            font-size: 36px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -0.5px;
             margin-bottom: 12px;
         }
-        .section-header h2 span {
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        @media (min-width: 768px) {
+            .section-header h2 { font-size: 38px; }
         }
-        .section-header p { color: var(--gray); font-size: 16px; }
+        .section-header h2 .text-amber { color: var(--amber); }
+        .section-header p {
+            font-size: 16px;
+            color: var(--gray-500);
+            line-height: 1.7;
+        }
 
+        /* ================================================================
+           FEATURES GRID
+           ================================================================ */
+        .features-section {
+            padding: 80px 0;
+            background: var(--gray-50);
+        }
+        @media (min-width: 768px) { .features-section { padding: 100px 0; } }
         .features-grid {
-            max-width: 1280px;
-            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 640px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 1280px) {
+            .features-grid { grid-template-columns: repeat(4, 1fr); }
         }
         .feature-card {
-            background: white;
-            border-radius: 20px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
             padding: 28px 24px;
-            border: 1px solid #E2E8F0;
-            transition: all 0.3s;
-            cursor: pointer;
+            transition: all var(--transition);
             position: relative;
             overflow: hidden;
         }
-        .feature-card::before {
+        .feature-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 3px;
-            background: var(--gradient);
+            background: linear-gradient(90deg, var(--navy), var(--amber));
             transform: scaleX(0);
-            transition: transform 0.3s;
+            transform-origin: left;
+            transition: transform var(--transition);
         }
-        .feature-card:hover::before { transform: scaleX(1); }
         .feature-card:hover {
             transform: translateY(-6px);
-            box-shadow: var(--shadow);
-            border-color: var(--secondary);
+            box-shadow: var(--shadow-lg);
+            border-color: transparent;
         }
-        .feature-card .icon { font-size: 40px; margin-bottom: 12px; display: block; }
-        .feature-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-        .feature-card p { font-size: 13px; color: var(--gray); line-height: 1.6; }
-        .feature-card .tag {
-            display: inline-block;
-            margin-top: 12px;
+        .feature-card:hover::after { transform: scaleX(1); }
+        .feature-icon {
+            width: 48px; height: 48px;
+            border-radius: var(--radius-md);
+            background: var(--gray-50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+            transition: background var(--transition);
+        }
+        .feature-card:hover .feature-icon {
+            background: var(--amber-light);
+        }
+        .feature-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .feature-card p {
+            font-size: 13px;
+            color: var(--gray-500);
+            line-height: 1.65;
+            margin-bottom: 14px;
+        }
+        .feature-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
             padding: 4px 12px;
-            background: #EFF6FF;
-            color: var(--secondary);
-            border-radius: 40px;
+            background: var(--amber-light);
+            color: #92400E;
+            border-radius: 100px;
             font-size: 11px;
             font-weight: 600;
         }
 
-        /* ===== STAFF ROLES ===== */
+        /* ================================================================
+           STAFF ROLES
+           ================================================================ */
         .staff-section {
-            padding: 80px 40px;
-            background: white;
+            padding: 80px 0;
+            background: var(--white);
         }
+        @media (min-width: 768px) { .staff-section { padding: 100px 0; } }
         .staff-grid {
-            max-width: 1280px;
-            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
         }
-        .staff-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            background: var(--bg);
-            border-radius: 14px;
-            border: 1px solid #E2E8F0;
-            text-decoration: none;
-            color: var(--dark);
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.3s;
+        @media (min-width: 640px) {
+            .staff-grid { grid-template-columns: repeat(3, 1fr); }
         }
-        .staff-link:hover {
-            border-color: var(--secondary);
-            transform: translateX(6px);
-            background: #F0FDF4;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        @media (min-width: 1024px) {
+            .staff-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
         }
-        .staff-link .role-icon { font-size: 20px; width: 28px; text-align: center; }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: var(--primary);
-            color: white;
-            padding: 60px 40px 32px;
-            border-top: 4px solid var(--secondary);
-        }
-        .footer-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-        }
-        .footer-brand .logo-footer {
-            font-size: 24px;
-            font-weight: 700;
+        .role-pill {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 12px;
-        }
-        .footer-brand p { color: #94A3B8; font-size: 14px; max-width: 300px; }
-        .footer h5 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: white; }
-        .footer a {
-            display: block;
-            color: #94A3B8;
-            text-decoration: none;
+            padding: 12px 16px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-100);
+            border-radius: var(--radius-sm);
             font-size: 13px;
-            margin-bottom: 8px;
-            transition: color 0.2s;
+            font-weight: 500;
+            color: var(--gray-700);
+            transition: all var(--transition);
         }
-        .footer a:hover { color: white; }
-        .footer .social {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
+        .role-pill:hover {
+            background: var(--amber-light);
+            border-color: var(--amber);
+            color: var(--navy);
+            transform: translateX(4px);
         }
-        .footer .social a {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 50%;
+        .role-pill .role-icon {
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            background: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            color: #94A3B8;
-            transition: all 0.2s;
+            font-size: 14px;
+            flex-shrink: 0;
+            border: 1px solid var(--gray-200);
         }
-        .footer .social a:hover { background: var(--secondary); color: white; }
-        .footer .copyright {
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            padding-top: 24px;
-            margin-top: 40px;
-            color: #475569;
-            font-size: 13px;
+        .role-pill:hover .role-icon {
+            background: var(--white);
+            border-color: var(--amber);
         }
-        .footer .copyright a { display: inline; color: var(--secondary); }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .hero-container { grid-template-columns: 1fr; text-align: center; }
-            .hero-text p { margin: 0 auto 32px; }
-            .hero-text h1 { font-size: 40px; }
-            .hero-mockup { max-width: 500px; margin: 0 auto; }
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .staff-grid { grid-template-columns: repeat(2, 1fr); }
-            .footer-container { grid-template-columns: 1fr 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .about-container { grid-template-columns: 1fr; gap: 32px; }
-            .mockup-grid.cols-6 { grid-template-columns: repeat(3, 1fr); }
+        /* ================================================================
+           ABOUT SECTION
+           ================================================================ */
+        .about-section {
+            padding: 80px 0;
+            background: var(--gray-50);
         }
-        @media (max-width: 768px) {
-            .navbar { padding: 12px 20px; }
-            .nav-links { display: none; }
-            .hero { padding: 120px 20px 60px; }
-            .hero-text h1 { font-size: 32px; }
-            .features-grid { grid-template-columns: 1fr; }
-            .staff-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .footer-container { grid-template-columns: 1fr; }
-            .mockup-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
-            .mockup-grid.cols-6 { grid-template-columns: repeat(3, 1fr); }
-            .mockup-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
-            .contact-grid { grid-template-columns: 1fr; gap: 16px; }
-            .stats-section, .features-section, .staff-section { padding: 40px 20px; }
-            .footer { padding: 40px 20px 24px; }
+        @media (min-width: 768px) { .about-section { padding: 100px 0; } }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            align-items: center;
         }
-        @media (max-width: 576px) {
-            .navbar-brand span { display: none; }
-            .contact-box { padding: 24px 16px; }
+        @media (min-width: 1024px) {
+            .about-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
+        }
+        .about-text p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--gray-600);
+            margin-bottom: 16px;
+        }
+        .about-checklist {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .about-check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+        .about-check-item i {
+            color: var(--amber);
+            font-size: 12px;
+        }
+        .about-visual-card {
+            background: var(--navy);
+            border-radius: var(--radius-xl);
+            padding: 48px 36px;
+            text-align: center;
+            color: var(--white);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        .about-visual-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .about-visual-card .about-logo {
+            width: 72px; height: 72px;
+            margin: 0 auto 20px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .about-visual-card .about-logo img {
+            width: 100%; height: 100%; object-fit: contain;
+        }
+        .about-visual-card h3 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .about-visual-card .about-subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 28px;
+        }
+        .about-stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .about-stat-box {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            padding: 20px 16px;
+        }
+        .about-stat-box .stat-num {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--amber);
+        }
+        .about-stat-box .stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 2px;
+        }
+
+        /* ================================================================
+           FOOTER
+           ================================================================ */
+        .footer {
+            background: var(--navy);
+            color: var(--white);
+            padding: 64px 0 0;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            padding-bottom: 48px;
+        }
+        @media (min-width: 640px) {
+            .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+        }
+        @media (min-width: 1024px) {
+            .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; }
+        }
+        .footer-brand-col .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .footer-brand-col .footer-logo img {
+            width: 32px; height: 32px; object-fit: contain;
+        }
+        .footer-brand-col .footer-logo strong {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .footer-brand-col p {
+            font-size: 14px;
+            color: var(--gray-400);
+            line-height: 1.7;
+            max-width: 280px;
+            margin-bottom: 16px;
+        }
+        .footer-social {
+            display: flex;
+            gap: 10px;
+        }
+        .footer-social a {
+            width: 36px; height: 36px;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--gray-400);
+            transition: all var(--transition);
+        }
+        .footer-social a:hover {
+            background: var(--amber);
+            color: var(--navy);
+        }
+        .footer-col h5 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--gray-300);
+            margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: block;
+            font-size: 14px;
+            color: var(--gray-400);
+            margin-bottom: 10px;
+            transition: color var(--transition);
+        }
+        .footer-col a:hover { color: var(--white); }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+        .footer-bottom a { color: var(--amber); }
+
+        /* ================================================================
+           UTILITY
+           ================================================================ */
+        .sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Mobile responsiveness for mockup */
+        @media (max-width: 639px) {
+            .hero-mockup { padding: 14px; }
+            .mockup-cards.cols-5 { grid-template-columns: repeat(3, 1fr); }
+            .mockup-cards.cols-4 { grid-template-columns: repeat(2, 1fr); }
+            .about-checklist { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; }
+            .btn-hero { width: 100%; justify-content: center; }
+            .hero-content { text-align: center; }
+            .hero-content p { margin-left: auto; margin-right: auto; }
         }
         @media (max-width: 480px) {
-            .hero-text h1 { font-size: 28px; }
-            .hero-buttons { flex-direction: column; width: 100%; }
-            .btn-primary, .btn-secondary { width: 100%; text-align: center; justify-content: center; }
-            .hero-mockup { padding: 12px; }
-            .mockup-grid.cols-5 { grid-template-columns: repeat(2, 1fr); }
-            .mockup-grid.cols-6 { grid-template-columns: repeat(2, 1fr); }
+            .hero-content h1 { font-size: 30px; }
+            .mockup-cards.cols-5 { grid-template-columns: repeat(2, 1fr); }
+            .navbar-brand .logo-text span { display: none; }
         }
-        @media (max-width: 400px) {
-            .navbar-brand h1 { font-size: 18px; }
-            .navbar-brand .logo { width: 36px; height: 36px; font-size: 18px; }
-            .profile-btn .user-name { display: none; }
-            .profile-btn { padding: 6px 10px; }
-        }
-
-
     </style>
 </head>
 <body>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar" id="navbar">
-    <a href="#" class="navbar-brand">
-        <div class="logo"><img src="{% static 'img/campuscare_logo.png' %}" alt="Campus Care Logo" style="width: 100%; height: 100%; object-fit: contain;"></div>
-        <div>
-            <h1>CAMPUS CARE</h1>
-            <span>Student Welfare Management System</span>
+<!-- ================================================================
+     NAVBAR
+     ================================================================ -->
+<nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar-inner">
+        <a href="#" class="navbar-brand" aria-label="Campus Care Home">
+            <div class="logo-mark">
+                <img src="{% static 'img/campuscare_logo.png' %}" alt="Campus Care Logo">
+            </div>
+            <div class="logo-text">
+                <strong>Campus Care</strong>
+                <span>Student Welfare System</span>
+            </div>
+        </a>
+
+        <div class="nav-links" role="menubar">
+            <a href="#features" role="menuitem">Features</a>
+            <a href="#staff-roles" role="menuitem">Roles</a>
+            <a href="#about" role="menuitem">About</a>
+            <a href="#contact" role="menuitem">Contact</a>
         </div>
-    </a>
-    <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#staff-roles">Roles</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+
+        <div class="nav-actions">
+            <a href="{% url 'hms:login' %}" class="btn-nav btn-nav-outline" id="nav-login-btn" aria-label="Sign in to your account">
+                <i class="fas fa-sign-in-alt"></i>
+                <span class="btn-label">Sign In</span>
+            </a>
+            <a href="{% url 'hms:register' %}" class="btn-nav btn-nav-primary" id="nav-register-btn" aria-label="Create a new student account">
+                <span class="btn-label">Get Started</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle mobile menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
     </div>
-    <div class="profile-dropdown">
-        <button class="profile-btn" onclick="toggleDropdown()">
-            <div class="avatar"><i class="fas fa-user"></i></div>
-            <span class="user-name">Login</span>
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <div class="dropdown-header"><h4>Welcome</h4><p>Sign in or create account</p></div>
-            <a href="{% url 'hms:login' %}" class="dropdown-item"><i class="fas fa-sign-in-alt"></i> Login</a>
-            <a href="{% url 'hms:register' %}" class="dropdown-item"><i class="fas fa-user-plus"></i> Create Account</a>
-            <a href="{% url 'hms:password_reset' %}" class="dropdown-item"><i class="fas fa-key"></i> Forgot Password</a>
-            <div class="dropdown-divider"></div>
-            <a href="#features" class="dropdown-item"><i class="fas fa-th-list"></i> Features</a>
-            <a href="#staff-roles" class="dropdown-item"><i class="fas fa-users"></i> Staff Roles</a>
-            <a href="#about" class="dropdown-item"><i class="fas fa-info-circle"></i> About</a>
-            <a href="#contact" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+
+    <!-- Mobile dropdown -->
+    <div class="mobile-menu" id="mobileMenu" role="menu">
+        <a href="#features" role="menuitem">Features</a>
+        <a href="#staff-roles" role="menuitem">Staff Roles</a>
+        <a href="#about" role="menuitem">About</a>
+        <a href="#contact" role="menuitem">Contact</a>
+        <div class="mobile-cta">
+            <a href="{% url 'hms:login' %}" class="btn-nav btn-nav-outline" aria-label="Sign in">Sign In</a>
+            <a href="{% url 'hms:register' %}" class="btn-nav btn-nav-primary" aria-label="Get started">Get Started</a>
         </div>
     </div>
 </nav>
 
-<!-- ===== HERO ===== -->
-<section class="hero" id="home">
-    <div class="hero-container">
-        <div class="hero-text">
-            <h1>Digitizing Campus Life &<br><span class="highlight">Student Welfare</span></h1>
+<!-- ================================================================
+     HERO SECTION
+     ================================================================ -->
+<section class="hero" id="home" aria-labelledby="hero-heading">
+    <div class="container hero-grid">
+        <!-- Left: Content -->
+        <div class="hero-content">
+            <div class="hero-badge"><i class="fas fa-circle"></i> Student Welfare Platform</div>
+            <h1 id="hero-heading">Digitizing Campus Life &amp;<br><span class="text-amber">Student Welfare.</span></h1>
             <p>One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage your accommodation seamlessly.</p>
             <div class="hero-buttons">
-                <a href="{% url 'hms:register' %}" class="btn-primary"><i class="fas fa-user-plus"></i> Student Portal</a>
-                <a href="{% url 'hms:login' %}" class="btn-secondary"><i class="fas fa-user-tie"></i> Staff Portal</a>
-                <a href="#features" class="btn-secondary"><i class="fas fa-info-circle"></i> Learn More</a>
+                <a href="{% url 'hms:register' %}" class="btn-hero btn-hero-solid" id="hero-student-btn" aria-label="Access the Student Portal">
+                    <i class="fas fa-graduation-cap"></i> Student Portal
+                </a>
+                <a href="{% url 'hms:login' %}" class="btn-hero btn-hero-outline" id="hero-staff-btn" aria-label="Access the Staff Portal">
+                    <i class="fas fa-user-tie"></i> Staff Portal
+                </a>
             </div>
         </div>
-        <div class="hero-mockup">
-            <div class="mockup-header">
-                <div class="dots"><span></span><span></span><span></span></div>
-                <span class="title">Campus Care Dashboard</span>
-            </div>
-            <div class="mockup-section-title" style="margin-top: 0;">ACADEMIC SCHOOLS & DEPARTMENTS</div>
-            <div class="mockup-grid cols-5">
-                <!-- 10 schools -->
-                <div class="mockup-card" style="background: linear-gradient(135deg, #1d4ed8, #1e3a8a); border-top: 2px solid #60a5fa;"><div class="icon-box">📚</div><div class="title">Library</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); border-top: 2px solid #c4b5fd;"><div class="icon-box">🎨</div><div class="title">SASA</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb); border-top: 2px solid #93c5fd;"><div class="icon-box">🎓</div><div class="title">SED</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #f59e0b, #d97706); border-top: 2px solid #fcd34d;"><div class="icon-box">💼</div><div class="title">SOB</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #ef4444, #dc2626); border-top: 2px solid #fca5a5;"><div class="icon-box">🏥</div><div class="title">SHHS</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                
-                <div class="mockup-card" style="background: linear-gradient(135deg, #10b981, #059669); border-top: 2px solid #6ee7b7;"><div class="icon-box">🌍</div><div class="title">SEES</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #ec4899, #db2777); border-top: 2px solid #f9a8d4;"><div class="icon-box">🏛️</div><div class="title">SHSS</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #6366f1, #4f46e5); border-top: 2px solid #a5b4fc;"><div class="icon-box">🎭</div><div class="title">SPAS</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #d946ef, #a21caf); border-top: 2px solid #f0abfc;"><div class="icon-box">📜</div><div class="title">Diploma</div><div class="count">0</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #14b8a6, #0d9488); border-top: 2px solid #5eead4;"><div class="icon-box">💰</div><div class="title">Finance</div><div class="count">0</div><div class="label">STUDENTS</div></div>
+
+        <!-- Right: Dashboard Mockup -->
+        <div class="hero-mockup" aria-hidden="true">
+            <div class="mockup-chrome">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                <span class="url-bar">campus-care.co.ke/dashboard</span>
             </div>
 
-            <div class="mockup-section-title">KEY METRICS</div>
-            <div class="mockup-grid cols-4">
-                <div class="mockup-card" style="background: linear-gradient(135deg, #4f46e5, #3730a3); border-top: 2px solid #818cf8;"><div class="icon-box">📊</div><div class="title">In Session</div><div class="count">57</div><div class="label">STUDENTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #d97706, #b45309); border-top: 2px solid #fcd34d;"><div class="icon-box">📅</div><div class="title">Deferment</div><div class="count">0</div><div class="label">REQUESTS</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #0891b2, #155e75); border-top: 2px solid #67e8f9;"><div class="icon-box">🏢</div><div class="title">Attachment</div><div class="count">2</div><div class="label">EXTERNAL</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #059669, #064e3b); border-top: 2px solid #6ee7b7;"><div class="icon-box">🎓</div><div class="title">Graduating</div><div class="count">0</div><div class="label">FINALISTS</div></div>
+            <div class="mockup-label">Academic Schools</div>
+            <div class="mockup-cards cols-5">
+                <div class="mock-card" style="background: linear-gradient(135deg,#1d4ed8,#1e3a8a)"><div class="mc-icon">📚</div><div class="mc-title">Library</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#8b5cf6,#6d28d9)"><div class="mc-icon">🎨</div><div class="mc-title">SASA</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#3b82f6,#2563eb)"><div class="mc-icon">🎓</div><div class="mc-title">SED</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#f59e0b,#d97706)"><div class="mc-icon">💼</div><div class="mc-title">SOB</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#ef4444,#dc2626)"><div class="mc-icon">🏥</div><div class="mc-title">SHHS</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#10b981,#059669)"><div class="mc-icon">🌍</div><div class="mc-title">SEES</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#ec4899,#db2777)"><div class="mc-icon">🏛️</div><div class="mc-title">SHSS</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#6366f1,#4f46e5)"><div class="mc-icon">🎭</div><div class="mc-title">SPAS</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#d946ef,#a21caf)"><div class="mc-icon">📜</div><div class="mc-title">Diploma</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#14b8a6,#0d9488)"><div class="mc-icon">💰</div><div class="mc-title">Finance</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
             </div>
 
-            <div class="mockup-section-title">LEVEL OF STUDY</div>
-            <div class="mockup-grid cols-6">
-                <div class="mockup-card" style="background: linear-gradient(135deg, #0d9488, #115e59); border-top: 2px solid #5eead4;"><div class="icon-box">📄</div><div class="title">Postgrad</div><div class="count">0</div><div class="label">DIPLOMA</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #d97706, #b45309); border-top: 2px solid #fcd34d;"><div class="icon-box">💡</div><div class="title">Diploma</div><div class="count">2</div><div class="label">DIPLOMA</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border-top: 2px solid #93c5fd;"><div class="icon-box">🎓</div><div class="title">Bachelor's</div><div class="count">55</div><div class="label">BACHELOR'S</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #9333ea, #7e22ce); border-top: 2px solid #d8b4fe;"><div class="icon-box">🎓</div><div class="title">Master's</div><div class="count">0</div><div class="label">MASTER'S</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #e11d48, #be123c); border-top: 2px solid #fda4af;"><div class="icon-box">📄</div><div class="title">Ph.D</div><div class="count">0</div><div class="label">DOCTORATE</div></div>
-                <div class="mockup-card" style="background: linear-gradient(135deg, #ea580c, #c2410c); border-top: 2px solid #fdba74;"><div class="icon-box">✨</div><div class="title">Certificate</div><div class="count">0</div><div class="label">CERTIFICATE</div></div>
+            <div class="mockup-label">Key Metrics</div>
+            <div class="mockup-cards cols-4">
+                <div class="mock-card" style="background: linear-gradient(135deg,#4f46e5,#3730a3)"><div class="mc-icon">📊</div><div class="mc-title">In Session</div><div class="mc-num">57</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#d97706,#b45309)"><div class="mc-icon">📅</div><div class="mc-title">Deferment</div><div class="mc-num">0</div><div class="mc-sub">Requests</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#0891b2,#155e75)"><div class="mc-icon">🏢</div><div class="mc-title">Attachment</div><div class="mc-num">2</div><div class="mc-sub">External</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#059669,#064e3b)"><div class="mc-icon">🎓</div><div class="mc-title">Graduating</div><div class="mc-num">0</div><div class="mc-sub">Finalists</div></div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ===== STATS ===== -->
-<section class="stats-section">
-    <div class="stats-grid">
-        <div class="stat-item">
-            <span class="icon">🎓</span>
-            <div class="number">10,000+</div>
-            <div class="label">Students Served</div>
-            <div class="trend"><i class="fas fa-arrow-up"></i> Growing Daily</div>
-        </div>
-        <div class="stat-item">
-            <span class="icon">👑</span>
-            <div class="number">23</div>
-            <div class="label">Staff Access Roles</div>
-            <div class="trend"><i class="fas fa-check-circle"></i> Complete Control</div>
-        </div>
-        <div class="stat-item">
-            <span class="icon">⚡</span>
-            <div class="number">86%</div>
-            <div class="label">Processing Speedup</div>
-            <div class="trend"><i class="fas fa-arrow-up"></i> Faster Approvals</div>
-        </div>
-        <div class="stat-item">
-            <span class="icon">🌙</span>
-            <div class="number">24/7</div>
-            <div class="label">On-Demand Access</div>
-            <div class="trend"><i class="fas fa-check-circle"></i> Always Available</div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== FEATURES ===== -->
-<section class="features-section" id="features">
-    <div class="section-header">
-        <h2>Everything You Need. <span>All in One Place.</span></h2>
-        <p>From deferments to payments, health to maintenance — Campus Care brings all student welfare services together.</p>
-    </div>
-    <div class="features-grid">
-        <div class="feature-card">
-            <span class="icon">📋</span>
-            <h4>Academic Deferments</h4>
-            <p>Submit and track deferment requests. Automated workflow redirects to designated coordinators. 86% faster approval.</p>
-            <span class="tag">⚡ 86% Faster</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">💰</span>
-            <h4>M-Pesa Payments</h4>
-            <p>Settle room accommodation and library fines through direct M-Pesa STK Push callbacks with automated invoice update.</p>
-            <span class="tag">💳 M-Pesa Enabled</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🏠</span>
-            <h4>Room Accommodation</h4>
-            <p>Explore available hostels, select rooms, handle room checkout, and request formal room changes seamlessly.</p>
-            <span class="tag">🛏️ Active</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🏥</span>
-            <h4>Health Booking</h4>
-            <p>Schedule medical consultations at the campus clinic online, track clinic slots, and receive dynamic reminders.</p>
-            <span class="tag">📱 24/7 Access</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🧠</span>
-            <h4>Confidential Counselling</h4>
-            <p>Submit secure counselling and mental support requests reviewed only by certified campus counselling officers.</p>
-            <span class="tag">🤝 Anonymous</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🔧</span>
-            <h4>Facility Maintenance</h4>
-            <p>Log maintenance requests for repairs in your hostel room. Upload issue details and monitor ticket execution.</p>
-            <span class="tag">⏱️ 24hr Response</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">📚</span>
-            <h4>Smart Library Services</h4>
-            <p>Access your student library profile, view currently borrowed items, check due dates, and settle fine balances.</p>
-            <span class="tag">📖 Active</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">💬</span>
-            <h4>WhatsApp Bot</h4>
-            <p>Quick access helper enabling query of fee status and tracking deferment requests directly via WhatsApp messaging.</p>
-            <span class="tag">📱 Demo Mode</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">👤</span>
-            <h4>Visitor Security</h4>
-            <p>Log visitor sign-ins, monitor active guests, and enforce sign-out workflows to maintain hostel security.</p>
-            <span class="tag">🔒 Active</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">💬</span>
-            <h4>Secure Live Chat</h4>
-            <p>Direct communication hub enabling students to chat securely with support agents, wardens, or administrators.</p>
-            <span class="tag">💬 Live Chat</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">📢</span>
-            <h4>Announcements & Alerts</h4>
-            <p>View administrative broadcasts and alerts, or receive real-time emergency signals published by staff.</p>
-            <span class="tag">📢 Active</span>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🤝</span>
-            <h4>Peer Tutoring Hub</h4>
-            <p>Participate in peer-to-peer learning. Students can publish study support posts or find tutoring help from others.</p>
-            <span class="tag">📚 Active</span>
-        </div>
-    </div>
-</section>
-
-<!-- ===== STAFF ROLES ===== -->
-<section class="staff-section" id="staff-roles">
-    <div class="section-header">
-        <h2>23 <span>Staff Access Roles</span></h2>
-        <p>Role-based access for complete control. Each role sees only what they need.</p>
-    </div>
-    <div class="staff-grid">
-        <a href="#" class="staff-link"><span class="role-icon">👑</span> Super Admin</a>
-        <a href="#" class="staff-link"><span class="role-icon">👑</span> Vice Chancellor</a>
-        <a href="#" class="staff-link"><span class="role-icon">📚</span> Deputy Vice Chancellor</a>
-        <a href="#" class="staff-link"><span class="role-icon">📋</span> Register Admin</a>
-        <a href="#" class="staff-link"><span class="role-icon">👤</span> Register User</a>
-        <a href="#" class="staff-link"><span class="role-icon">👨🎓</span> Dean of Students</a>
-        <a href="#" class="staff-link"><span class="role-icon">🎓</span> Dean - Graduate School</a>
-        <a href="#" class="staff-link"><span class="role-icon">💰</span> Director - Resource Mobilization</a>
-        <a href="#" class="staff-link"><span class="role-icon">🔧</span> Director - TVET</a>
-        <a href="#" class="staff-link"><span class="role-icon">📋</span> Deferment Officer</a>
-        <a href="#" class="staff-link"><span class="role-icon">💻</span> Dept MCS Coordinator</a>
-        <a href="#" class="staff-link"><span class="role-icon">🏥</span> Health Manager</a>
-        <a href="#" class="staff-link"><span class="role-icon">🔧</span> Maintenance Supervisor</a>
-        <a href="#" class="staff-link"><span class="role-icon">🏠</span> Warden</a>
-        <a href="#" class="staff-link"><span class="role-icon">💰</span> Finance Officer</a>
-        <a href="#" class="staff-link"><span class="role-icon">👤</span> Security Officer</a>
-        <a href="#" class="staff-link"><span class="role-icon">📢</span> News Editor</a>
-        <a href="#" class="staff-link"><span class="role-icon">📜</span> News Auditor</a>
-        <a href="#" class="staff-link"><span class="role-icon">🚨</span> Emergency Coordinator</a>
-        <a href="#" class="staff-link"><span class="role-icon">💬</span> Support Agent</a>
-        <a href="#" class="staff-link"><span class="role-icon">📜</span> Auditor</a>
-        <a href="#" class="staff-link"><span class="role-icon">🎓</span> Diploma Coordinator</a>
-        <a href="#" class="staff-link"><span class="role-icon">🏫</span> Department Coordinator</a>
-        <a href="#" class="staff-link"><span class="role-icon">📚</span> Head Of Library Services (HOLS)</a>
-    </div>
-</section>
-
-<!-- ===== ABOUT ===== -->
-<section class="features-section" id="about" style="background:white;">
-    <div class="section-header">
-        <h2>About <span>Campus Care</span></h2>
-        <p>An automated web portal to manage and streamline all dimensions of Student Welfare Services.</p>
-    </div>
-    <div class="about-container">
-        <div>
-            <p style="color:var(--gray); font-size:16px; line-height:1.8; margin-bottom:20px;">
-                Campus Care is a comprehensive, state-of-the-art Student Welfare Management System designed to digitize and automate critical welfare services into a single integrated platform.
-            </p>
-            <p style="color:var(--gray); font-size:16px; line-height:1.8;">
-                By replacing manual, paper-driven workflows, Campus Care guarantees secure, real-time access to student services, immediate coordinator actions, and efficient administrative oversight.
-            </p>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px; margin-top:24px;">
-                <div style="display:flex; align-items:center; gap:8px; padding:12px; background:var(--bg); border-radius:12px;">
-                    <i class="fas fa-check-circle" style="color:var(--secondary);"></i>
-                    <span style="font-weight:500;">Seamless Approvals</span>
-                </div>
-                <div style="display:flex; align-items:center; gap:8px; padding:12px; background:var(--bg); border-radius:12px;">
-                    <i class="fas fa-check-circle" style="color:var(--secondary);"></i>
-                    <span style="font-weight:500;">Direct M-Pesa Hook</span>
-                </div>
-                <div style="display:flex; align-items:center; gap:8px; padding:12px; background:var(--bg); border-radius:12px;">
-                    <i class="fas fa-check-circle" style="color:var(--secondary);"></i>
-                    <span style="font-weight:500;">Secure Live Chat</span>
-                </div>
-                <div style="display:flex; align-items:center; gap:8px; padding:12px; background:var(--bg); border-radius:12px;">
-                    <i class="fas fa-check-circle" style="color:var(--secondary);"></i>
-                    <span style="font-weight:500;">23 Access Levels</span>
-                </div>
+<!-- ================================================================
+     METRICS BAR
+     ================================================================ -->
+<section class="metrics-bar reveal" aria-label="Platform statistics">
+    <div class="container">
+        <div class="metrics-grid">
+            <div class="metric-item">
+                <div class="metric-number">10,000+</div>
+                <div class="metric-label">Students Served</div>
+                <div class="metric-desc"><i class="fas fa-arrow-up"></i> Growing Daily</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-number">23</div>
+                <div class="metric-label">Staff Access Roles</div>
+                <div class="metric-desc"><i class="fas fa-check-circle"></i> Complete Control</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-number">86%</div>
+                <div class="metric-label">Processing Speedup</div>
+                <div class="metric-desc"><i class="fas fa-arrow-up"></i> Faster Approvals</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-number">24/7</div>
+                <div class="metric-label">On-Demand Access</div>
+                <div class="metric-desc"><i class="fas fa-check-circle"></i> Always Available</div>
             </div>
         </div>
-        <div style="background:var(--gradient); border-radius:24px; padding:40px; color:white; text-align:center; box-shadow:0 20px 40px -12px rgba(13,148,136,0.3);">
-            <img src="{% static 'img/campuscare_logo.png' %}" alt="Campus Care Logo" style="width: 64px; height: 64px; object-fit: contain; margin-bottom: 16px;">
-            <h3 style="font-size:28px; font-weight:700;">Campus Care</h3>
-            <p style="opacity:0.7;">Student Welfare Management System</p>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:16px; margin-top:24px;">
-                <div style="background:rgba(255,255,255,0.1); border-radius:12px; padding:16px;">
-                    <div style="font-size:28px; font-weight:700;">10,000+</div>
-                    <div style="font-size:12px; opacity:0.7;">Students</div>
+    </div>
+</section>
+
+<!-- ================================================================
+     FEATURES GRID
+     ================================================================ -->
+<section class="features-section" id="features" aria-labelledby="features-heading">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 id="features-heading">Everything You Need. <span class="text-amber">All in One Place.</span></h2>
+            <p>From deferments to payments, health to maintenance — Campus Care brings all student welfare services together.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <div class="feature-icon">📋</div>
+                <h4>Academic Deferments</h4>
+                <p>Submit and track deferment requests. Automated workflow redirects to designated coordinators. 86% faster approval.</p>
+                <span class="feature-tag"><i class="fas fa-bolt"></i> 86% Faster</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">💰</div>
+                <h4>M-Pesa Payments</h4>
+                <p>Settle room accommodation and library fines through direct M-Pesa STK Push callbacks with automated invoice update.</p>
+                <span class="feature-tag"><i class="fas fa-mobile-alt"></i> STK Push</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🏠</div>
+                <h4>Room Accommodation</h4>
+                <p>Explore available hostels, select rooms, handle room checkout, and request formal room changes seamlessly.</p>
+                <span class="feature-tag"><i class="fas fa-bed"></i> Hostel Selection</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🏥</div>
+                <h4>Health Booking</h4>
+                <p>Schedule medical consultations at the campus clinic online, track clinic slots, and receive dynamic reminders.</p>
+                <span class="feature-tag"><i class="fas fa-calendar-check"></i> Clinic Slots</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🧠</div>
+                <h4>Confidential Counselling</h4>
+                <p>Submit secure counselling and mental support requests reviewed only by certified campus counselling officers.</p>
+                <span class="feature-tag"><i class="fas fa-shield-alt"></i> Anonymous</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🔧</div>
+                <h4>Facility Maintenance</h4>
+                <p>Log maintenance requests for repairs in your hostel room. Upload issue details and monitor ticket execution.</p>
+                <span class="feature-tag"><i class="fas fa-tools"></i> Ticket System</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">📚</div>
+                <h4>Smart Library Services</h4>
+                <p>Access your student library profile, view currently borrowed items, check due dates, and settle fine balances.</p>
+                <span class="feature-tag"><i class="fas fa-book"></i> Borrowed &amp; Fines</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">💬</div>
+                <h4>WhatsApp Bot</h4>
+                <p>Quick access helper enabling query of fee status and tracking deferment requests directly via WhatsApp messaging.</p>
+                <span class="feature-tag"><i class="fab fa-whatsapp"></i> Fee Queries</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">👤</div>
+                <h4>Visitor Security</h4>
+                <p>Log visitor sign-ins, monitor active guests, and enforce sign-out workflows to maintain hostel security.</p>
+                <span class="feature-tag"><i class="fas fa-id-badge"></i> Sign-In Flow</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🔒</div>
+                <h4>Secure Live Chat</h4>
+                <p>Direct communication hub enabling students to chat securely with support agents, wardens, or administrators.</p>
+                <span class="feature-tag"><i class="fas fa-comment-dots"></i> Support Agents</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">📢</div>
+                <h4>Announcements &amp; Alerts</h4>
+                <p>View administrative broadcasts and alerts, or receive real-time emergency signals published by staff.</p>
+                <span class="feature-tag"><i class="fas fa-bell"></i> Emergency Signals</span>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🤝</div>
+                <h4>Peer Tutoring Hub</h4>
+                <p>Participate in peer-to-peer learning. Students can publish study support posts or find tutoring help from others.</p>
+                <span class="feature-tag"><i class="fas fa-chalkboard-teacher"></i> Study Support</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     STAFF ROLES
+     ================================================================ -->
+<section class="staff-section" id="staff-roles" aria-labelledby="roles-heading">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 id="roles-heading">23 <span class="text-amber">Staff Access Roles.</span></h2>
+            <p>Role-based access for complete control. Each role sees only what they need.</p>
+        </div>
+        <div class="staff-grid reveal">
+            <div class="role-pill"><span class="role-icon">👑</span> Super Admin</div>
+            <div class="role-pill"><span class="role-icon">🏛️</span> Vice Chancellor</div>
+            <div class="role-pill"><span class="role-icon">📋</span> Deputy Vice Chancellor</div>
+            <div class="role-pill"><span class="role-icon">📝</span> Register Admin</div>
+            <div class="role-pill"><span class="role-icon">👤</span> Register User</div>
+            <div class="role-pill"><span class="role-icon">🎓</span> Dean of Students</div>
+            <div class="role-pill"><span class="role-icon">📚</span> Dean — Graduate School</div>
+            <div class="role-pill"><span class="role-icon">💼</span> Dir. Resource Mobilization</div>
+            <div class="role-pill"><span class="role-icon">🔧</span> Director — TVET</div>
+            <div class="role-pill"><span class="role-icon">📑</span> Deferment Officer</div>
+            <div class="role-pill"><span class="role-icon">💻</span> Dept MCS Coordinator</div>
+            <div class="role-pill"><span class="role-icon">🏥</span> Health Manager</div>
+            <div class="role-pill"><span class="role-icon">🔩</span> Maintenance Supervisor</div>
+            <div class="role-pill"><span class="role-icon">🏠</span> Warden</div>
+            <div class="role-pill"><span class="role-icon">💰</span> Finance Officer</div>
+            <div class="role-pill"><span class="role-icon">🛡️</span> Security Officer</div>
+            <div class="role-pill"><span class="role-icon">📰</span> News Editor</div>
+            <div class="role-pill"><span class="role-icon">📜</span> News Auditor</div>
+            <div class="role-pill"><span class="role-icon">🚨</span> Emergency Coordinator</div>
+            <div class="role-pill"><span class="role-icon">💬</span> Support Agent</div>
+            <div class="role-pill"><span class="role-icon">🔍</span> Auditor</div>
+            <div class="role-pill"><span class="role-icon">🎓</span> Diploma Coordinator</div>
+            <div class="role-pill"><span class="role-icon">🏫</span> Department Coordinator</div>
+            <div class="role-pill"><span class="role-icon">📖</span> Head of Library (HOLS)</div>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     ABOUT SECTION
+     ================================================================ -->
+<section class="about-section" id="about" aria-labelledby="about-heading">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 id="about-heading">About <span class="text-amber">Campus Care.</span></h2>
+            <p>An automated web portal to manage and streamline all dimensions of Student Welfare Services.</p>
+        </div>
+        <div class="about-grid">
+            <div class="about-text reveal">
+                <p>Campus Care is a comprehensive, state-of-the-art Student Welfare Management System designed to digitize and automate critical welfare services into a single integrated platform.</p>
+                <p>By replacing manual, paper-driven workflows, Campus Care guarantees secure, real-time access to student services, immediate coordinator actions, and efficient administrative oversight.</p>
+                <div class="about-checklist">
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Seamless Approvals</div>
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Direct M-Pesa Hook</div>
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Secure Live Chat</div>
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> 23 Access Levels</div>
                 </div>
-                <div style="background:rgba(255,255,255,0.1); border-radius:12px; padding:16px;">
-                    <div style="font-size:28px; font-weight:700;">100%</div>
-                    <div style="font-size:12px; opacity:0.7;">Automated</div>
+            </div>
+            <div class="about-visual-card reveal">
+                <div class="about-logo">
+                    <img src="{% static 'img/campuscare_logo.png' %}" alt="Campus Care Logo">
+                </div>
+                <h3>Campus Care</h3>
+                <div class="about-subtitle">Student Welfare Management System</div>
+                <div class="about-stats-row">
+                    <div class="about-stat-box">
+                        <div class="stat-num">10,000+</div>
+                        <div class="stat-label">Students</div>
+                    </div>
+                    <div class="about-stat-box">
+                        <div class="stat-num">100%</div>
+                        <div class="stat-label">Automated</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ===== CONTACT ===== -->
-<section class="features-section" id="contact" style="background:var(--bg);">
-    <div class="section-header">
-        <h2>Get in <span>Touch</span></h2>
-        <p>Ready to transform campus welfare? Reach out to us.</p>
-    </div>
-    <div class="contact-box">
-        <div class="contact-grid">
-            <div style="text-align:center; padding:24px; background:var(--bg); border-radius:16px;">
-                <i class="fas fa-envelope" style="font-size:32px; color:var(--secondary); margin-bottom:12px;"></i>
-                <h4 style="font-weight:600;">Email</h4>
-                <a href="mailto:info@campuscare.co.ke" style="color:var(--secondary); text-decoration:none;">info@campuscare.co.ke</a>
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="footer" id="contact" role="contentinfo" aria-label="Footer">
+    <div class="container">
+        <div class="footer-grid">
+            <!-- Brand Column -->
+            <div class="footer-brand-col">
+                <div class="footer-logo">
+                    <img src="{% static 'img/campuscare_logo.png' %}" alt="Campus Care Logo">
+                    <strong>Campus Care</strong>
+                </div>
+                <p>Student Welfare Management System — Digitizing campus life for students everywhere.</p>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/campuscare1.0?igsh=MW1tN3V2dnh5MHRwcw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/ali-mahirizi-abdalla-39869a349" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/Ali-mahirizi-abdalla" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
             </div>
-            <div style="text-align:center; padding:24px; background:var(--bg); border-radius:16px;">
-                <i class="fas fa-phone" style="font-size:32px; color:var(--secondary); margin-bottom:12px;"></i>
-                <h4 style="font-weight:600;">Phone</h4>
-                <a href="tel:0750168458" style="color:var(--secondary); text-decoration:none;">0750 168 458</a>
-            </div>
-        </div>
-        <div style="text-align:center; margin-top:24px; padding-top:24px; border-top:1px solid #E2E8F0;">
-            <p style="color:var(--gray);">Developed by: <strong style="color:var(--dark);">Ali Mahirizi Abdalla</strong></p>
-            <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
-                <a href="#" style="color:var(--gray); font-size:13px;">About System</a>
-                <span style="color:#E2E8F0;">|</span>
-                <a href="#staff-roles" style="color:var(--gray); font-size:13px;">Access Levels</a>
-                <span style="color:#E2E8F0;">|</span>
-                <a href="{% url 'hms:login' %}" style="color:var(--gray); font-size:13px;">Sign In Portal</a>
-                <span style="color:#E2E8F0;">|</span>
-                <a href="{% url 'hms:register' %}" style="color:var(--gray); font-size:13px;">Create Student Profile</a>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-brand">
-            <div class="logo-footer"><img src="{% static 'img/campuscare_logo.png' %}" alt="Logo" style="width: 24px; height: 24px; object-fit: contain;"> Campus Care</div>
-            <p>Student Welfare Management System — Digitizing campus life for students everywhere.</p>
-            <div class="social">
-                <a href="https://www.instagram.com/campuscare1.0?igsh=MW1tN3V2dnh5MHRwcw==" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.linkedin.com/in/ali-mahirizi-abdalla-39869a349?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/Ali-mahirizi-abdalla" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+            <!-- Product -->
+            <div class="footer-col">
+                <h5>Product</h5>
+                <a href="#features">Features</a>
+                <a href="#staff-roles">Staff Roles</a>
+                <a href="#about">About</a>
+                <a href="{% url 'hms:register' %}">Student Portal</a>
+            </div>
+
+            <!-- Company -->
+            <div class="footer-col">
+                <h5>Company</h5>
+                <a href="#about">Our Mission</a>
+                <a href="#contact">Contact</a>
+                <a href="{% url 'hms:login' %}">Staff Login</a>
+            </div>
+
+            <!-- Support -->
+            <div class="footer-col">
+                <h5>Support</h5>
+                <a href="mailto:support@campus-care.co.ke">Help Center</a>
+                <a href="{% url 'hms:password_reset' %}">Reset Password</a>
+                <a href="{% url 'hms:terms' %}">Terms of Service</a>
+            </div>
+
+            <!-- Legal / Contact -->
+            <div class="footer-col">
+                <h5>Contact</h5>
+                <a href="mailto:support@campus-care.co.ke"><i class="fas fa-envelope" style="width:16px;"></i> support@campus-care.co.ke</a>
+                <a href="tel:0750168458"><i class="fas fa-phone" style="width:16px;"></i> 0750 168 458</a>
+                <a href="#"><i class="fas fa-map-marker-alt" style="width:16px;"></i> Nairobi, Kenya</a>
             </div>
         </div>
-        <div>
-            <h5>Quick Links</h5>
-            <a href="#features">Features</a>
-            <a href="#staff-roles">Staff Roles</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+
+        <div class="footer-bottom">
+            &copy; 2026 <a href="#">Campus Care</a>. All rights reserved. Developed by <strong>Ali Mahirizi Abdalla</strong>
         </div>
-        <div>
-            <h5>Support</h5>
-            <a href="/help/">Help Center</a>
-            <a href="/faq/">FAQ</a>
-            <a href="/privacy/">Privacy Policy</a>
-            <a href="/terms/">Terms of Service</a>
-        </div>
-        <div>
-            <h5>Contact</h5>
-            <a href="mailto:info@campuscare.co.ke"><i class="fas fa-envelope"></i> info@campuscare.co.ke</a>
-            <a href="tel:0750168458"><i class="fas fa-phone"></i> 0750 168 458</a>
-            <a href="#"><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</a>
-        </div>
-    </div>
-    <div class="copyright">
-        © 2026 <a href="#">Campus Care</a>. All rights reserved. Developed by <strong>Ali Mahirizi Abdalla</strong>
     </div>
 </footer>
 
-
-
-<!-- ===== SCRIPT ===== -->
+<!-- ================================================================
+     SCRIPTS
+     ================================================================ -->
 <script>
-    function toggleDropdown() {
-        const menu = document.getElementById('dropdownMenu');
-        menu.classList.toggle('open');
-    }
+    // ---- Navbar scroll effect ----
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
 
-    document.addEventListener('click', function(event) {
-        const dropdown = document.querySelector('.profile-dropdown');
-        if (!dropdown.contains(event.target)) {
-            document.getElementById('dropdownMenu').classList.remove('open');
-        }
+    // ---- Mobile menu toggle ----
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        mobileToggle.setAttribute('aria-expanded', isOpen);
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+        });
     });
 
-    // Navbar scroll effect
-    window.addEventListener('scroll', function() {
-        const navbar = document.getElementById('navbar');
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-
-    // Scroll animation
-    const observer = new IntersectionObserver((entries) => {
+    // ---- Scroll reveal animation ----
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Register Service Worker for PWA
+    // ---- Smooth scroll for anchor links ----
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                const offset = navbar.offsetHeight + 16;
+                const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // ---- Register Service Worker for PWA ----
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('{% static "sw.js" %}')
-                .then(reg => console.log('Service Worker registered:', reg.scope))
-                .catch(err => console.log('Service Worker registration failed:', err));
+                .then(reg => console.log('SW registered:', reg.scope))
+                .catch(err => console.log('SW registration failed:', err));
         });
     }
 </script>
