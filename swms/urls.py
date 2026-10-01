@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import HttpResponse
 
 from subscription.views import intasend_webhook
+from hms.views import landing_page
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='landing.html'), name='landing'),
+    path('', landing_page, name='landing'),
     path('google17891a7c3e3a6e03.html', lambda r: HttpResponse("google-site-verification: google17891a7c3e3a6e03.html", content_type="text/html")),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),

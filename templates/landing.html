@@ -8,14 +8,14 @@
 
     <!-- SEO Meta Tags -->
     <meta name="google-site-verification" content="3Z1_mH2YOg-whHK9grZyyn3x9phP8UeUr_isg1u0ovU" />
-    <meta name="description" content="One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage accommodation seamlessly.">
+    <meta name="description" content="Official university portal for student accommodation, academic deferments, clinic appointments, hostel maintenance, and M-Pesa fee payments.">
     <meta name="author" content="Ali Mahirizi Abdalla">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://campus-care.co.ke/">
     <meta property="og:title" content="Campus Care – Student Welfare Management System">
-    <meta property="og:description" content="One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage accommodation seamlessly.">
+    <meta property="og:description" content="Official university portal for student accommodation, academic deferments, clinic appointments, hostel maintenance, and M-Pesa fee payments.">
     <meta property="og:image" content="https://campus-care.co.ke/static/img/campuscare_og_image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -25,7 +25,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://campus-care.co.ke/">
     <meta name="twitter:title" content="Campus Care – Student Welfare Management System">
-    <meta name="twitter:description" content="One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage accommodation seamlessly.">
+    <meta name="twitter:description" content="Official university portal for student accommodation, academic deferments, clinic appointments, hostel maintenance, and M-Pesa fee payments.">
     <meta name="twitter:image" content="https://campus-care.co.ke/static/img/campuscare_og_image.png">
 
     <!-- Fonts -->
@@ -978,9 +978,9 @@
     <div class="container hero-grid">
         <!-- Left: Content -->
         <div class="hero-content">
-            <div class="hero-badge"><i class="fas fa-circle"></i> Student Welfare Platform</div>
-            <h1 id="hero-heading">Digitizing Campus Life &amp;<br><span class="text-amber">Student Welfare.</span></h1>
-            <p>One unified, modern platform for all student welfare services. Submit deferments, pay hostel fees, book health visits, chat with staff, and manage your accommodation seamlessly.</p>
+            <div class="hero-badge"><i class="fas fa-university"></i> Student Welfare Services</div>
+            <h1 id="hero-heading">Student Welfare &amp;<br><span class="text-amber">Campus Services Portal.</span></h1>
+            <p>Apply for hostel accommodation, submit deferment applications, book campus clinic appointments, report room maintenance, and pay fees via M-Pesa.</p>
             <div class="hero-buttons">
                 <a href="{% url 'hms:register' %}" class="btn-hero btn-hero-solid" id="hero-student-btn" aria-label="Access the Student Portal">
                     <i class="fas fa-graduation-cap"></i> Student Portal
@@ -1000,24 +1000,24 @@
 
             <div class="mockup-label">Academic Schools</div>
             <div class="mockup-cards cols-5">
-                <div class="mock-card" style="background: linear-gradient(135deg,#1d4ed8,#1e3a8a)"><div class="mc-icon">📚</div><div class="mc-title">Library</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#8b5cf6,#6d28d9)"><div class="mc-icon">🎨</div><div class="mc-title">SASA</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#3b82f6,#2563eb)"><div class="mc-icon">🎓</div><div class="mc-title">SED</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#f59e0b,#d97706)"><div class="mc-icon">💼</div><div class="mc-title">SOB</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#ef4444,#dc2626)"><div class="mc-icon">🏥</div><div class="mc-title">SHHS</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#10b981,#059669)"><div class="mc-icon">🌍</div><div class="mc-title">SEES</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#ec4899,#db2777)"><div class="mc-icon">🏛️</div><div class="mc-title">SHSS</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#6366f1,#4f46e5)"><div class="mc-icon">🎭</div><div class="mc-title">SPAS</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#d946ef,#a21caf)"><div class="mc-icon">📜</div><div class="mc-title">Diploma</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#14b8a6,#0d9488)"><div class="mc-icon">💰</div><div class="mc-title">Finance</div><div class="mc-num">0</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#1d4ed8,#1e3a8a)"><div class="mc-icon">📚</div><div class="mc-title">Library</div><div class="mc-num">{{ school_counts.library|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#8b5cf6,#6d28d9)"><div class="mc-icon">🎨</div><div class="mc-title">SASA</div><div class="mc-num">{{ school_counts.sasa|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#3b82f6,#2563eb)"><div class="mc-icon">🎓</div><div class="mc-title">SED</div><div class="mc-num">{{ school_counts.sed|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#f59e0b,#d97706)"><div class="mc-icon">💼</div><div class="mc-title">SOB</div><div class="mc-num">{{ school_counts.sob|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#ef4444,#dc2626)"><div class="mc-icon">🏥</div><div class="mc-title">SHHS</div><div class="mc-num">{{ school_counts.shhs|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#10b981,#059669)"><div class="mc-icon">🌍</div><div class="mc-title">SEES</div><div class="mc-num">{{ school_counts.sees|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#ec4899,#db2777)"><div class="mc-icon">🏛️</div><div class="mc-title">SHSS</div><div class="mc-num">{{ school_counts.shss|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#6366f1,#4f46e5)"><div class="mc-icon">🎭</div><div class="mc-title">SPAS</div><div class="mc-num">{{ school_counts.spas|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#d946ef,#a21caf)"><div class="mc-icon">📜</div><div class="mc-title">Diploma</div><div class="mc-num">{{ school_counts.diploma|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#14b8a6,#0d9488)"><div class="mc-icon">💰</div><div class="mc-title">Finance</div><div class="mc-num">{{ school_counts.finance|default:0 }}</div><div class="mc-sub">Students</div></div>
             </div>
 
             <div class="mockup-label">Key Metrics</div>
             <div class="mockup-cards cols-4">
-                <div class="mock-card" style="background: linear-gradient(135deg,#4f46e5,#3730a3)"><div class="mc-icon">📊</div><div class="mc-title">In Session</div><div class="mc-num">57</div><div class="mc-sub">Students</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#d97706,#b45309)"><div class="mc-icon">📅</div><div class="mc-title">Deferment</div><div class="mc-num">0</div><div class="mc-sub">Requests</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#0891b2,#155e75)"><div class="mc-icon">🏢</div><div class="mc-title">Attachment</div><div class="mc-num">2</div><div class="mc-sub">External</div></div>
-                <div class="mock-card" style="background: linear-gradient(135deg,#059669,#064e3b)"><div class="mc-icon">🎓</div><div class="mc-title">Graduating</div><div class="mc-num">0</div><div class="mc-sub">Finalists</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#4f46e5,#3730a3)"><div class="mc-icon">📊</div><div class="mc-title">In Session</div><div class="mc-num">{{ students_in_session|default:0 }}</div><div class="mc-sub">Students</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#d97706,#b45309)"><div class="mc-icon">📅</div><div class="mc-title">Deferment</div><div class="mc-num">{{ total_deferments|default:0 }}</div><div class="mc-sub">Requests</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#0891b2,#155e75)"><div class="mc-icon">🏢</div><div class="mc-title">Attachment</div><div class="mc-num">{{ students_on_attachment|default:0 }}</div><div class="mc-sub">External</div></div>
+                <div class="mock-card" style="background: linear-gradient(135deg,#059669,#064e3b)"><div class="mc-icon">🎓</div><div class="mc-title">Graduating</div><div class="mc-num">{{ students_graduating|default:0 }}</div><div class="mc-sub">Finalists</div></div>
             </div>
         </div>
     </div>
@@ -1026,28 +1026,28 @@
 <!-- ================================================================
      METRICS BAR
      ================================================================ -->
-<section class="metrics-bar reveal" aria-label="Platform statistics">
+<section class="metrics-bar reveal" aria-label="Platform overview">
     <div class="container">
         <div class="metrics-grid">
             <div class="metric-item">
-                <div class="metric-number">10,000+</div>
-                <div class="metric-label">Students Served</div>
-                <div class="metric-desc"><i class="fas fa-arrow-up"></i> Growing Daily</div>
+                <div class="metric-number">{{ total_students|default:0 }}</div>
+                <div class="metric-label">Registered Students</div>
+                <div class="metric-desc"><i class="fas fa-user-graduate"></i> Active Profiles</div>
             </div>
             <div class="metric-item">
-                <div class="metric-number">23</div>
+                <div class="metric-number">{{ staff_roles_count|default:23 }}</div>
                 <div class="metric-label">Staff Access Roles</div>
-                <div class="metric-desc"><i class="fas fa-check-circle"></i> Complete Control</div>
+                <div class="metric-desc"><i class="fas fa-shield-alt"></i> Controlled Permissions</div>
             </div>
             <div class="metric-item">
-                <div class="metric-number">86%</div>
-                <div class="metric-label">Processing Speedup</div>
-                <div class="metric-desc"><i class="fas fa-arrow-up"></i> Faster Approvals</div>
+                <div class="metric-number">{{ total_rooms|default:0 }}</div>
+                <div class="metric-label">Hostel Rooms</div>
+                <div class="metric-desc"><i class="fas fa-bed"></i> {{ allocated_rooms|default:0 }} Occupied</div>
             </div>
             <div class="metric-item">
-                <div class="metric-number">24/7</div>
-                <div class="metric-label">On-Demand Access</div>
-                <div class="metric-desc"><i class="fas fa-check-circle"></i> Always Available</div>
+                <div class="metric-number">{{ total_deferments|default:0 }}</div>
+                <div class="metric-label">Deferments Filed</div>
+                <div class="metric-desc"><i class="fas fa-file-alt"></i> Tracked Workflows</div>
             </div>
         </div>
     </div>
@@ -1059,81 +1059,81 @@
 <section class="features-section" id="features" aria-labelledby="features-heading">
     <div class="container">
         <div class="section-header reveal">
-            <h2 id="features-heading">Everything You Need. <span class="text-amber">All in One Place.</span></h2>
-            <p>From deferments to payments, health to maintenance — Campus Care brings all student welfare services together.</p>
+            <h2 id="features-heading">Student Services &amp; <span class="text-amber">Welfare Modules.</span></h2>
+            <p>Access your university welfare services, track applications, and handle payments in one place.</p>
         </div>
         <div class="features-grid">
             <div class="feature-card reveal">
                 <div class="feature-icon">📋</div>
                 <h4>Academic Deferments</h4>
-                <p>Submit and track deferment requests. Automated workflow redirects to designated coordinators. 86% faster approval.</p>
-                <span class="feature-tag"><i class="fas fa-bolt"></i> 86% Faster</span>
+                <p>Submit course deferment requests online. Track approvals through your department coordinator and dean.</p>
+                <span class="feature-tag"><i class="fas fa-file-alt"></i> Online Form</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">💰</div>
                 <h4>M-Pesa Payments</h4>
-                <p>Settle room accommodation and library fines through direct M-Pesa STK Push callbacks with automated invoice update.</p>
-                <span class="feature-tag"><i class="fas fa-mobile-alt"></i> STK Push</span>
+                <p>Pay hostel accommodation and library fines through Lipa na M-Pesa STK push with instant invoice settlement.</p>
+                <span class="feature-tag"><i class="fas fa-mobile-alt"></i> M-Pesa STK</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">🏠</div>
-                <h4>Room Accommodation</h4>
-                <p>Explore available hostels, select rooms, handle room checkout, and request formal room changes seamlessly.</p>
-                <span class="feature-tag"><i class="fas fa-bed"></i> Hostel Selection</span>
+                <h4>Hostel Accommodation</h4>
+                <p>View vacant rooms across student halls, book semester rooms, request room transfers, and manage checkout.</p>
+                <span class="feature-tag"><i class="fas fa-bed"></i> Room Allocation</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">🏥</div>
-                <h4>Health Booking</h4>
-                <p>Schedule medical consultations at the campus clinic online, track clinic slots, and receive dynamic reminders.</p>
-                <span class="feature-tag"><i class="fas fa-calendar-check"></i> Clinic Slots</span>
+                <h4>Clinic Appointments</h4>
+                <p>Book consultation appointments at the university health center and view open doctor and nurse slots.</p>
+                <span class="feature-tag"><i class="fas fa-calendar-check"></i> Health Center</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">🧠</div>
-                <h4>Confidential Counselling</h4>
-                <p>Submit secure counselling and mental support requests reviewed only by certified campus counselling officers.</p>
-                <span class="feature-tag"><i class="fas fa-shield-alt"></i> Anonymous</span>
+                <h4>Student Counselling</h4>
+                <p>Request confidential sessions with campus counsellors. Student records and requests are kept strictly private.</p>
+                <span class="feature-tag"><i class="fas fa-lock"></i> Confidential</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">🔧</div>
-                <h4>Facility Maintenance</h4>
-                <p>Log maintenance requests for repairs in your hostel room. Upload issue details and monitor ticket execution.</p>
-                <span class="feature-tag"><i class="fas fa-tools"></i> Ticket System</span>
+                <h4>Hostel Repairs</h4>
+                <p>Report plumbing, lighting, or carpentry issues in your room. Hostel caretakers update ticket status as work proceeds.</p>
+                <span class="feature-tag"><i class="fas fa-tools"></i> Maintenance</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">📚</div>
-                <h4>Smart Library Services</h4>
-                <p>Access your student library profile, view currently borrowed items, check due dates, and settle fine balances.</p>
-                <span class="feature-tag"><i class="fas fa-book"></i> Borrowed &amp; Fines</span>
+                <h4>Library Account</h4>
+                <p>View currently borrowed books, check due dates, and clear overdue fines through your student portal.</p>
+                <span class="feature-tag"><i class="fas fa-book"></i> Books &amp; Dues</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">💬</div>
-                <h4>WhatsApp Bot</h4>
-                <p>Quick access helper enabling query of fee status and tracking deferment requests directly via WhatsApp messaging.</p>
-                <span class="feature-tag"><i class="fab fa-whatsapp"></i> Fee Queries</span>
+                <h4>WhatsApp Assistant</h4>
+                <p>Inquire about fee balances and check deferment request status directly through WhatsApp prompts.</p>
+                <span class="feature-tag"><i class="fab fa-whatsapp"></i> WhatsApp</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">👤</div>
-                <h4>Visitor Security</h4>
-                <p>Log visitor sign-ins, monitor active guests, and enforce sign-out workflows to maintain hostel security.</p>
-                <span class="feature-tag"><i class="fas fa-id-badge"></i> Sign-In Flow</span>
+                <h4>Hostel Visitor Register</h4>
+                <p>Record visitor check-ins and check-outs at hall reception desks to ensure student safety.</p>
+                <span class="feature-tag"><i class="fas fa-id-badge"></i> Gate Register</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">🔒</div>
-                <h4>Secure Live Chat</h4>
-                <p>Direct communication hub enabling students to chat securely with support agents, wardens, or administrators.</p>
-                <span class="feature-tag"><i class="fas fa-comment-dots"></i> Support Agents</span>
+                <h4>Direct Messaging</h4>
+                <p>Send messages directly to wardens, health officers, or coordinators regarding your welfare requests.</p>
+                <span class="feature-tag"><i class="fas fa-comment-dots"></i> Staff Chat</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">📢</div>
-                <h4>Announcements &amp; Alerts</h4>
-                <p>View administrative broadcasts and alerts, or receive real-time emergency signals published by staff.</p>
-                <span class="feature-tag"><i class="fas fa-bell"></i> Emergency Signals</span>
+                <h4>Campus Notices</h4>
+                <p>Read official university announcements, welfare circulars, and urgent security notifications.</p>
+                <span class="feature-tag"><i class="fas fa-bell"></i> Official Notices</span>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">🤝</div>
-                <h4>Peer Tutoring Hub</h4>
-                <p>Participate in peer-to-peer learning. Students can publish study support posts or find tutoring help from others.</p>
-                <span class="feature-tag"><i class="fas fa-chalkboard-teacher"></i> Study Support</span>
+                <h4>Peer Study Groups</h4>
+                <p>Join department study discussions and connect with fellow students for peer revision support.</p>
+                <span class="feature-tag"><i class="fas fa-chalkboard-teacher"></i> Study Groups</span>
             </div>
         </div>
     </div>
@@ -1145,8 +1145,8 @@
 <section class="staff-section" id="staff-roles" aria-labelledby="roles-heading">
     <div class="container">
         <div class="section-header reveal">
-            <h2 id="roles-heading">23 <span class="text-amber">Staff Access Roles.</span></h2>
-            <p>Role-based access for complete control. Each role sees only what they need.</p>
+            <h2 id="roles-heading">23 <span class="text-amber">Staff Access Portals.</span></h2>
+            <p>Role-based dashboards for administrators, faculty coordinators, health personnel, and wardens.</p>
         </div>
         <div class="staff-grid reveal">
             <div class="role-pill"><span class="role-icon">👑</span> Super Admin</div>
@@ -1184,17 +1184,17 @@
     <div class="container">
         <div class="section-header reveal">
             <h2 id="about-heading">About <span class="text-amber">Campus Care.</span></h2>
-            <p>An automated web portal to manage and streamline all dimensions of Student Welfare Services.</p>
+            <p>University student welfare management and administrative services.</p>
         </div>
         <div class="about-grid">
             <div class="about-text reveal">
-                <p>Campus Care is a comprehensive, state-of-the-art Student Welfare Management System designed to digitize and automate critical welfare services into a single integrated platform.</p>
-                <p>By replacing manual, paper-driven workflows, Campus Care guarantees secure, real-time access to student services, immediate coordinator actions, and efficient administrative oversight.</p>
+                <p>Campus Care is the central web portal for university student welfare services. It links students with hall wardens, academic coordinators, health staff, and finance officers.</p>
+                <p>Students can complete room bookings, submit deferments, schedule clinic visits, and clear payments directly from any smartphone or computer without queuing for physical forms.</p>
                 <div class="about-checklist">
-                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Seamless Approvals</div>
-                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Direct M-Pesa Hook</div>
-                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Secure Live Chat</div>
-                    <div class="about-check-item"><i class="fas fa-check-circle"></i> 23 Access Levels</div>
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Online Deferments</div>
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Lipa na M-Pesa</div>
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Direct Staff Chat</div>
+                    <div class="about-check-item"><i class="fas fa-check-circle"></i> Role-Based Dashboards</div>
                 </div>
             </div>
             <div class="about-visual-card reveal">
@@ -1205,12 +1205,12 @@
                 <div class="about-subtitle">Student Welfare Management System</div>
                 <div class="about-stats-row">
                     <div class="about-stat-box">
-                        <div class="stat-num">10,000+</div>
-                        <div class="stat-label">Students</div>
+                        <div class="stat-num">12</div>
+                        <div class="stat-label">Service Modules</div>
                     </div>
                     <div class="about-stat-box">
-                        <div class="stat-num">100%</div>
-                        <div class="stat-label">Automated</div>
+                        <div class="stat-num">23</div>
+                        <div class="stat-label">Staff Portals</div>
                     </div>
                 </div>
             </div>
@@ -1230,7 +1230,7 @@
                     <img src="{% static 'img/campuscare_logo.png' %}" alt="Campus Care Logo">
                     <strong>Campus Care</strong>
                 </div>
-                <p>Student Welfare Management System — Digitizing campus life for students everywhere.</p>
+                <p>Student Welfare Management System — University student services and welfare operations.</p>
                 <div class="footer-social">
                     <a href="https://www.instagram.com/campuscare1.0?igsh=MW1tN3V2dnh5MHRwcw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.linkedin.com/in/ali-mahirizi-abdalla-39869a349" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>

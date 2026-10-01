@@ -4736,4 +4736,63 @@ def manage_student_invitation_action(request, invite_id):
     return redirect('hms:generate_student_link')
 
 
+def landing_page(request):
+    """Landing page view fetching real dynamic data from the database."""
+    try:
+        total_students = Student.objects.count()
+        total_staff = StaffProfile.objects.count()
+        total_rooms = Room.objects.count()
+        allocated_rooms = RoomAssignment.objects.filter(is_active=True).count()
+        total_deferments = DefermentRequest.objects.count()
+        total_maintenance = MaintenanceRequest.objects.count()
+        total_health = HealthAppointment.objects.count()
+        total_payments = Payment.objects.filter(status='Completed').count()
+        
+        students_on_attachment = Student.objects.filter(is_on_attachment=True).count()
+        students_graduating = Student.objects.filter(is_graduating=True).count()
+        students_in_session = max(0, total_students - students_on_attachment - students_graduating)
+        if students_in_session == 0 and total_students > 0:
+            students_in_session = total_students
 
+        school_counts = {
+            'library': Student.objects.filter(academic_school='library').count(),
+            'sasa': Student.objects.filter(academic_school='sasa').count(),
+            'sed': Student.objects.filter(academic_school='sed').count(),
+            'sob': Student.objects.filter(academic_school='sob').count(),
+            'shhs': Student.objects.filter(academic_school='shhs').count(),
+            'sees': Student.objects.filter(academic_school='sees').count(),
+            'shss': Student.objects.filter(academic_school='shss').count(),
+            'spas': Student.objects.filter(academic_school='spas').count(),
+            'diploma': Student.objects.filter(academic_school='diploma').count(),
+            'finance': Student.objects.filter(academic_school='finance').count(),
+        }
+    except Exception:
+        total_students = 0
+        total_staff = 0
+        total_rooms = 0
+        allocated_rooms = 0
+        total_deferments = 0
+        total_maintenance = 0
+        total_health = 0
+        total_payments = 0
+        students_in_session = 0
+        students_on_attachment = 0
+        students_graduating = 0
+        school_counts = {k: 0 for k in ['library', 'sasa', 'sed', 'sob', 'shhs', 'sees', 'shss', 'spas', 'diploma', 'finance']}
+
+    context = {
+        'total_students': total_students,
+        'total_staff': total_staff,
+        'total_rooms': total_rooms,
+        'allocated_rooms': allocated_rooms,
+        'total_deferments': total_deferments,
+        'total_maintenance': total_maintenance,
+        'total_health': total_health,
+        'total_payments': total_payments,
+        'students_in_session': students_in_session,
+        'students_on_attachment': students_on_attachment,
+        'students_graduating': students_graduating,
+        'school_counts': school_counts,
+        'staff_roles_count': len(StaffProfile.ROLE_CHOICES),
+    }
+    return render(request, 'landing.html', context)
