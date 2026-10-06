@@ -901,20 +901,32 @@
             border: 0;
         }
 
-        /* Mobile responsiveness for mockup */
-        @media (max-width: 639px) {
-            .hero-mockup { padding: 14px; }
-            .mockup-cards.cols-5 { grid-template-columns: repeat(3, 1fr); }
-            .mockup-cards.cols-4 { grid-template-columns: repeat(2, 1fr); }
+        /* Mobile responsiveness */
+        @media (max-width: 767px) {
+            .nav-actions .btn-nav { display: none; }
+            .hero-mockup { padding: 16px; border-radius: var(--radius-lg); }
+            .mockup-cards.cols-5, .mockup-cards.cols-4 { grid-template-columns: repeat(2, 1fr); }
             .about-checklist { grid-template-columns: 1fr; }
-            .hero-buttons { flex-direction: column; }
+            .hero-buttons { flex-direction: column; gap: 12px; }
             .btn-hero { width: 100%; justify-content: center; }
             .hero-content { text-align: center; }
-            .hero-content p { margin-left: auto; margin-right: auto; }
+            .hero-content p { margin-left: auto; margin-right: auto; font-size: 15px; }
+            
+            .staff-grid { display: flex; flex-wrap: wrap; justify-content: center; }
+            .role-pill { font-size: 12px; padding: 8px 12px; }
+            .role-pill .role-icon { width: 24px; height: 24px; font-size: 12px; }
+            
+            .about-visual-card { padding: 32px 20px; }
+            .about-visual-card h3 { font-size: 24px; }
+            .about-stats-row { grid-template-columns: 1fr; gap: 12px; }
+            
+            .metrics-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
         }
         @media (max-width: 480px) {
-            .hero-content h1 { font-size: 30px; }
-            .mockup-cards.cols-5 { grid-template-columns: repeat(2, 1fr); }
+            .hero-content h1 { font-size: 28px; }
+            .mockup-cards.cols-5 { grid-template-columns: 1fr; }
+            .mockup-cards.cols-4 { grid-template-columns: 1fr; }
             .navbar-brand .logo-text span { display: none; }
         }
     </style>
