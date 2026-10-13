@@ -25,11 +25,10 @@ services:
       - key: ALLOWED_HOSTS
         value: "swms-web.onrender.com,.onrender.com,campus-care.co.ke,www.campus-care.co.ke,localhost,127.0.0.1"
       
-      # Automatically link the PostgreSQL database
+      # Database URL – set manually on the Render Dashboard (Environment tab)
+      # using your Aiven PostgreSQL connection string.
       - key: DATABASE_URL
-        fromDatabase:
-          name: swms-db
-          property: connectionString
+        sync: false
 
       # Automatically link the Redis service (for caching / Celery)
       - key: REDIS_URL
@@ -45,12 +44,3 @@ services:
     name: swms-redis
     plan: free
     ipAllowList: [] # Access restricted only to internal services (secure)
-
-# -----------------------------------------------------------------------------
-# 3. PostgreSQL Managed Database
-# -----------------------------------------------------------------------------
-databases:
-  - name: swms-db
-    databaseName: swms_db
-    user: swms_user
-    plan: free
